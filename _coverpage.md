@@ -1,5 +1,5 @@
 <!-- _coverpage.md -->
-![](photo-with-title.png)
+![](photo-with-title.jpg)
 # 选择改变命运
 
 > 💪 人生重在框架
