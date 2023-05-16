@@ -1,5 +1,5 @@
 ## 选择改变命运
-![](image/001_Image_1.png)
+![](image/001_Image_1.jpg)
 
 选择改变命运。
 
