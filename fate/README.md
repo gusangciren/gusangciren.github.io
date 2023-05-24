@@ -735,7 +735,7 @@
 
 ## 终身学习的习惯。
 
-离开了大学我们还怎么学习。李笑来有一个公式：Google + English = Everything 。首先你得有一个Goole，推荐使用Goole本尊[http://www.google.com/ncr](http://www.google.com/ncr)  ，再读个简单的[使用教程](http://xiaolai.co/books/1ef3bd91da19da1423a7c04fe1882ec9/C04.html)。 然后你还需要一个梯子（VPN）， [BitzNet]( )  
+离开了大学我们还怎么学习。李笑来有一个公式：Google + English = Everything 。首先你得有一个Goole，推荐使用Goole本尊[http://www.google.com/ncr](http://www.google.com/ncr)  ，再读个简单的[使用教程](http://xiaolai.co/books/1ef3bd91da19da1423a7c04fe1882ec9/C04.html)。 然后你还需要一个梯子，推荐一个物美价廉的[梯子](https://sockboom.shop/auth/register?affid=246156)  。
 
 你就可以读“互联网”这本大书了，你肯定要经常使用维基百科、的。必须要关注几个行业`YouTube`博主吧， 想要创业是一定看完这个课程吧。 《How To Start A Startup - A YC Course》。    想学习编程、计算机有关的知识，你一定得有一定[Github](https://github.com/)账号吧。  上[TED](https://www.ted.com/)看几场经典演讲。还有， [李笑来]（http://xiaolai.co/search） 的书籍和文章全在网上免费公开着，他的书籍我反复看了好几遍。
 
