@@ -1,5 +1,5 @@
 # 《选择改变命运》
-![](images/001_Image_1.jpg)
+![](images/017_Image_1.jpg)
 
 ## 书名： 选择改变命运
 
