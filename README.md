@@ -1,4 +1,4 @@
-# Gusang's word
+# @Gusang's works
 
 —— 人生的尴尬在于，之前决策的时候并不可能有之后那么丰富的经验……
 
