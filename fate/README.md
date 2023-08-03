@@ -1,5 +1,5 @@
-![](images/017_Image_1.png)
-![](images/024_Image_1.png)
+![](images/017_Image_1.jpg)
+
 ># 《选择改变命运》
 >>* **分享此书** ----- `gusangciren.github.io`
 >>* **关注微信公众号** ----- 通过[此文章](https://mp.weixin.qq.com/s/PxL3WxmYhTj6CH1Hyyzp2A)关注。
