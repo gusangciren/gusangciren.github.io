@@ -1,13 +1,10 @@
 ![](images/017_Image_1.jpg)
 
+># 《选择改变命运:靠学识赢得未来》
+>* **分享此书** ----- `gusangciren.github.io`
+>* **关注微信公众号** ----- 通过[此文章](https://mp.weixin.qq.com/s/PxL3WxmYhTj6CH1Hyyzp2A)关注。
 
 **<p align="center">「善战之人，先胜，而后战」</p>**
-
-
-
->##  《选择改变命运:靠学识赢得未来》
->>* **分享此书** ----- `gusangciren.github.io`
->>* **关注微信公众号** ----- 通过[此文章](https://mp.weixin.qq.com/s/PxL3WxmYhTj6CH1Hyyzp2A)关注。
 
 我们的人生是由**十几个重大的选择和无数个微小的选择**构成的，而这些选择所产生的结果，我称之为命运。
 
