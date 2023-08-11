@@ -1,5 +1,9 @@
 ![](images/017_Image_1.jpg)
+
+
 **<p align="center">「善战之人，先胜，而后战」</p>**
+
+
 
 >##  《选择改变命运:靠学识赢得未来》
 >>* **分享此书** ----- `gusangciren.github.io`
