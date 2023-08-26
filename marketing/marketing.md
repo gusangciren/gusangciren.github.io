@@ -1,4 +1,4 @@
-![](images/003_Image_1.jpg)
+![](images/005_Image_1.jpg)
 
 讲产品思维、营销思维的书籍。
 
@@ -8,7 +8,8 @@
 
 下面有推特截屏。
 
-书籍图片，
+
+![](images/004_Image_1.jpg)
 
 后续才知道纳瓦尔有一本书，里面收录了许多他的分享和思考，叫做《The Almanack of Naval Ravikant》，在英文界中比较出名。
 
@@ -1113,3 +1114,7 @@ Fortunes require leverage. Business leverage comes from capital, people, and pro
 
 
 将自己擅长的事情和社会需求结合起来。不只是老板的需求。
+
+
+
+![](images/006_Image_1.jpg)
