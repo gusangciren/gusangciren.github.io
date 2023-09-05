@@ -7,9 +7,9 @@
 > **《[选择改变命运](/fate/)》**
 
 ### 持续迭代的书籍
-> * [Marketing](/marketing/marketing.md)
+> * [《个体崛起：打造过硬的营销力和产品力》](/marketing/marketing.md)
 
 ### 微信公众号文章
-> * [Github-Book](/article/wechat/contents.md)
+> * [文章目录](/article/wechat/contents.md)
 
 
