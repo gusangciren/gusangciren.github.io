@@ -1,5 +1,5 @@
 <!-- _coverpage.md -->
-![]()
+![](photo-with-title.png)
 
 # @Gusang's works
 
