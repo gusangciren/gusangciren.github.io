@@ -11,5 +11,4 @@
 
 ### 微信公众号文章
 > * [文章目录](/article/wechat/contents.md)
-![](images/025_Image_1.png)
-![](025_Image_1.png)
+![](wechat-channel.png)
