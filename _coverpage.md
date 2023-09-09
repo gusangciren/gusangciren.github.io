@@ -1,7 +1,12 @@
 <!-- _coverpage.md -->
-![](photo-with-title.jpg)
 
 # @Gusang's works
 
+“愿上帝赐予我力量，
+去改变我所能改变的；
+赐予我勇气，
+去接受我不能改变的；
+并赐予我智慧，
+去分辨这两者。” 
 
 [我想读《选择改变命运》](/README.md)
