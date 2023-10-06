@@ -1141,4 +1141,19 @@ openAI的ChatGPT是收费的，但由于各家公司的自利行为，出现很�
 
 ## (未完待续。)
 
+### &&其他
+关于境内可能存在的访问困难
+境内访问本站（本站内容是托管在 [github.com](https://github.com/) 上）可能会有访问困难，其原因在于境内可能存在的 DNS 污染，所以，可以通过修改系统 hosts 文件解决：
+
+Mac 的 hosts 文件位置为： `/etc/hosts`
+
+Windows 的 hosts 文件位置为：`C:\Windows\System32\drivers\etc\hosts`
+
+在 hosts 文件中添加以下内容：
+
+    192.30.253.112   github.com
+    185.199.111.153  assets-cdn.github.com
+    151.101.193.194  github.global.ssl.fastly.net
+
+如此这般之后，理论上访问困难问题就可以解决了。
 
