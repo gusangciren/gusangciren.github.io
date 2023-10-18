@@ -155,6 +155,8 @@ git pull
 
 
 # 第二章：Markdown语法
+
+[Markdown基础教程](https://www.runoob.com/markdown/md-link.html) —— （https://www.runoob.com/markdown/md-link.html）
 你要学会markdown 语言。
 如果没有照片插入，直接就GitHub编辑就可以，如果有照片就要拉取到本地操作。
 ***
