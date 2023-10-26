@@ -1,37 +1,88 @@
-[Docsify官网](https://docsify.js.org/#/)。
-https://docsify.js.org/#/zh-cn/quickstart?id=%e5%88%9d%e5%a7%8b%e5%8c%96%e9%a1%b9%e7%9b%ae
+你需要一个[Github.com](https://github.com) 或者[Gitee](https://gitee.com/)账号，在这里，我以`Github`为准，操作步骤和运行逻辑是差不多呢，gitee就是github的镜像网站。
 
-部署到Github Pages
-Github Pages官网入口：https://pages.github.com/
+那么，github是什么？干什么用的？为啥我必须得有一个它的账号呢？github是一个同性交友软件，跑偏了，GitHub是一个面向开源及私有软件项目的代码托管平台（别被吓到了，你不用会编程语言，用Markdown，一个超文本标记语言，下文讲），GitHub拥有1亿以上的开发人员，400万以上组织机构和3.3亿以上资料库。 因此，我还认为Github是一个社交软件以及一个超级的计算机相关学习的学习平台（会有很多有趣的项目），和下载软件的应用商店（很多软件都是开源的，非要下载带有广告的盗版软件）。因此，你必须有一个。
 
-Markdown编辑器
-Typora官网入口：https://www.typora.io/
+你在阅读我们教程，出现了任何的问题，回头细度此文章，，可以读一读Github的产品使用说明书 - [github简介](https://learn.microsoft.com/zh-cn/training/modules/introduction-to-github/?WT.mc_id=OSS-MVP-5003485) 。
 
+找到一个"ChatGPT"，[讯飞星火](https://xinghuo.xfyun.cn)就很好，碰到任何不懂的问题，要么直接问AI，要么在Chrome里搜索，再解决不了，找我（怎么联系我，自己想办法）。在人工智能时代，好学的人是最幸福的，个性化教育成为可能，个性化老师的成本几乎为零，你可以带着你的“玻璃心”去学习，不用怕没面子。
 
-![](images/008_Image_1.jpg)
-
-### github-book
-证明的方法是使用 [github.com](https://github.com) 这个网站以及版本控制工具 **git**。
-
-
-另外，在你阅读的过程中，发现有错别字啊、代码错误啊，甚至有 “更好的表述” 等等，都可以通过 `pull request` 来帮我改进 —— 这也是一种 “工作证明”。
-
+你可以问：我是一个零基础初学者，我想要用Docsify搭建一个个人博客并在github上部署，请用详细的步骤教给我。
 
 ### 具体步骤
-
 请按照以下步骤操作：
+> 1. 打开 [github.com](https://github.com) --- `https://github.com` 网站，注册一个帐号（**建议把账户名直接设置成自己的名字。**），这并不难，几个英文单词而让你退回原点，那你没有那么渴望，放弃吧，别浪费时间了，放弃放下去。
+> 2. 由于Github的服务器在境外，可能存在境内访问的困难（我的`https://gusangciren.github.io`是托管在 github），其原因在于境内可能存在的 DNS 污染，所以，可以通过修改系统 hosts 文件解决：
 
-> 1. 注册 [github.com](https://github.com) 帐号 —— 无论如何你都必须有 github 账户；账户名直接是自己的名字。
+Mac 的 hosts 文件位置为： /etc/hosts
+Windows 的 hosts 文件位置为：C:\Windows\System32\drivers\etc\hosts
+
+在 hosts 文件中添加以下内容：
+
+            192.30.253.112   github.com
+            185.199.111.153  assets-cdn.github.com
+            151.101.193.194  github.global.ssl.fastly.net
+            Copy to clipboardErrorCopied
+
+如此这般之后，理论上访问困难问题就可以解决了。
+
+> 3. 你还可以选择[Gitee](https://gitee.com/) ，但我更推荐Github，小弟是不可能完全模仿的了大哥的样子。—— 无论如何你都必须有一个 github 账户 。
+
+
+> 4. 
+
+> 5.
+
+> 6.
+> 7.
+> 8.
+> 9.
+> 10. 
 如果设置了自己的名字，那么就是名字. github. io。然后在setting 设置里可以做一些操作，自己去看。
 
 这就是你的网址。
-> 2. 使用浏览器访问 [https://github.com/selfteaching/the-craft-of-selfteaching](https://github.com/selfteaching/the-craft-of-selfteaching)；
-> 3. 在页面右上部找到 “Fork” 按钮，将该仓库 Fork 到你自己的账户中；
+
+
 > 4. 使用 `git clone` 命令或者使用 [Desktop for Github](https://desktop.github.com/) 将 [the craft of selfteaching](https://github.com/selfteaching/the-craft-of-selfteaching) 这个你 Fork 过来的仓库克隆到本地；
 > 5. 按照 [Jupyterlab 的安装与配置](T-appendix.jupyter-installation-and-setup.md) 的说明在本地搭建好 Jupyterlab —— 如果在 Jupyterlab 中浏览本书的话，其中的所有代码都是可以 “当场执行” 的，并且，你还可以直接改着玩……
 > 6. 在阅读过程中，可以不断通过修改文章中的代码作为练习 —— 这样做的结果就是已阅读过的文件会发生变化…… 每读完一章，甚至时时刻刻，你都可以通过 `git commit` 命令向你自己 Fork 过来的仓库提交变化 —— 这就是你的阅读工作证明；
 > 7. 仓库里有一个目录，`my-notes`，你可以把你在学习过程中写的笔记放在那里；
 > 8. 仓库里还有另外一个目录，`from-readers`；那是用来收集读者反馈的 —— 将来你可以写一篇《我的自学之路》，放在这个目录里，单独创建一个分支，而后提交 `pull request`，接受其他读者投票，若是达到一定的赞同率，那么你的文章就会被收录到主仓库中被更多人看到，激励更多的人像你一样走上自学之路……
+
+
+
+
+ 
+**git**。
+  
+  
+
+
+
+
+
+
+
+
+## 个人博客网站搭建与部署。
+
+
+### 写什么？用什么写？
+写什么？
+自己想去。
+
+用什么写？
+用Markdown。
+
+![](images/008_Image_1.jpg)
+
+
+
+
+
+
+
+
+
 
 当然，为了这么做，你还要多学一样反正你早晚都必须学会的东西，Git —— 请参阅附录《[Git 入门](T-appendix.git-introduction.md)》。
 
@@ -164,28 +215,21 @@ git pull
 
 
 
-# 第二章：Markdown语法
-
-[Markdown基础教程](https://www.runoob.com/markdown/md-link.html) —— （https://www.runoob.com/markdown/md-link.html）
-你要学会markdown 语言。
-如果没有照片插入，直接就GitHub编辑就可以，如果有照片就要拉取到本地操作。
-***
-标题
-
-            # 一级标题
-            ## 二级标题
-            ### 三级标题
-            
-
-
-加粗
-            
-            **加粗的内容**，没有加粗不带星号。 
-
-
-最重要的就是图片，图片的Markdown格式是这样的`[]()!`多了一个`!`符号。我们应该把所有的图片文件放在一个文件夹，然后push（上传）到GitHub上面。
 
 # 第三章：使用 Git
+
+在使用 Git 和 GitHub 时，你可能会想知道这两者之间的区别。
+
+Git 是一种分布式版本控制系统 (DVCS)，多名开发人员或其他参与者可通过它共同处理同一项目。 它提供了一种方法来使用一个或多个本地分支并将它们推送到远程存储库。 Git 负责在本地计算机上发生的与 GitHub 相关的所有操作。 重要的 Git 功能包括：
+
+已在本地计算机上安装和使用
+处理版本控制
+支持分支
+若要详细了解 Git，请参阅使用 Git。
+
+GitHub 是一种将 Git 用作其核心技术的云平台。 它简化了协作处理项目的过程，提供了网络、命令行工具，以及可使开发人员和用户一起工作的总体流程。 GitHub 充当前面在 Git 部分中提到的“远程存储库”。
+
+
 在本书中，你需要使用命令行窗口来执行许多操作。你可以使用 Windows 下的 CMD.exe，或是 macOS 和 Linux 下的终端（Terminal）。其他常用的命令还有 cd 命令，用来切换目录（change directory）；mkdir 命令用来创建目录（make directory）。
 
     $ mkdir watchlist
@@ -234,6 +278,22 @@ Git 默认会追踪项目文件夹（或者说代码仓库）里所有文件的�
     .DS_Store
     
 使用 Control + O 和 Enter 键保存，然后按下 Control + X 键退出。在后续章节，对于简单的文件，都会使用 nano 创建，这部分操作你也可以使用编辑器的图形界面来完成。
+
+
+
+
+[Docsify官网](https://docsify.js.org/#/)。
+https://docsify.js.org/#/zh-cn/quickstart?id=%e5%88%9d%e5%a7%8b%e5%8c%96%e9%a1%b9%e7%9b%ae
+
+部署到Github Pages
+Github Pages官网入口：https://pages.github.com/
+
+Markdown编辑器
+Typora官网入口：https://www.typora.io/
+
+
+
+
 
 ### 将程序托管到 GitHub
 这一步是可选的。将程序托管到 GitHub、GitLab 或是 BitBucket 等平台上，可以更方便地备份、协作和部署。这些托管平台作为 Git 服务器，你可以为本地仓库创建远程仓库。
@@ -289,3 +349,27 @@ ssh-rsa AAAAB3Nza...省略 N 个字符...3aph book@greyli
     $ git push -u origin master # 如果你没有把仓库托管到 GitHub，则跳过这条命令，后面章节亦同
     
 这里最后一行命令添加了`-u` 参数，会将推送的目标仓库和分支设为默认值，后续的推送直接使用 `git push `命令即可。在 GitHub 上，你可以通过 https://github.com/你的用户名/watchlist 查看你的仓库内容。
+
+
+
+
+# 第二章：Markdown语法
+
+[Markdown基础教程](https://www.runoob.com/markdown/md-link.html) —— （https://www.runoob.com/markdown/md-link.html）
+你要学会markdown 语言。
+如果没有照片插入，直接就GitHub编辑就可以，如果有照片就要拉取到本地操作。
+***
+标题
+
+            # 一级标题
+            ## 二级标题
+            ### 三级标题
+            
+
+
+加粗
+            
+            **加粗的内容**，没有加粗不带星号。 
+
+
+最重要的就是图片，图片的Markdown格式是这样的`[]()!`多了一个`!`符号。我们应该把所有的图片文件放在一个文件夹，然后push（上传）到GitHub上面。
