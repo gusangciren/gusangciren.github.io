@@ -27,8 +27,11 @@ Windows 的 hosts 文件位置为：C:\Windows\System32\drivers\etc\hosts
 
 你还可以选择[Gitee](https://gitee.com/) ，但我更推荐Github，小弟是不可能完全模仿的了大哥的样子。—— 无论如何你都必须有一个 github 账户 。
 > 3. 下一步，打开刚刚注册的账号，点击【New】按钮，去新建一个仓库，用于存放你的博客搭建的代码和文章。
+
 ![](images/010_Image_1.jpg)
-> 4. 来到以下页面，如果你听从了我的建议把账户名称设置成自己姓名，那么，仓库的名称就是name + `.github.io`。输入自己的名称，系统也会提示你“这是一个特殊（special）的仓库”。如果设置成了其他名称，请按照如下格式设置`username.github.io`。这就是你的网站域名，我的就是如此的格式`gusangciren.github.io`。当然，你可以更改你的域名成`.com`。还有，把【public】点开，那么，公开的一个仓库就创建成功了。
+
+> 5. 来到以下页面，如果你听从了我的建议把账户名称设置成自己姓名，那么，仓库的名称就是name + `.github.io`。输入自己的名称，系统也会提示你“这是一个特殊（special）的仓库”。如果设置成了其他名称，请按照如下格式设置`username.github.io`。这就是你的网站域名，我的就是如此的格式`gusangciren.github.io`。当然，你可以更改你的域名成`.com`。还有，把【public】点开，那么，公开的一个仓库就创建成功了。
+> 6. 
 ![](images/011_Image_1.jpg)
 
 我写的有不懂，搭配着这个看 —— [GitHub Pages 快速入门](https://docs.github.com/zh/pages/quickstart) ，再有不懂，细问、不停地追问AI就可以。当初自己搭建这个博客，遇到了许多麻烦，不知道找谁，搜索也不全面，而如今，AI真是个好“老师”。
