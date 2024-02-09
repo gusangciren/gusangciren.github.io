@@ -9,6 +9,11 @@
 ### 持续迭代的书籍
 > * [《个体崛起：打造过硬的营销力和产品力》](/marketing/marketing.md)
 > * [《经济学毁了“我”》](/article/economics.md)
+
+### 演讲合集
+> * [《**张一鸣**演讲及相关》](/speech//张一鸣.md)
+> *  [《**马云**演讲及相关》](/speech//马云.md)
+
 ### 微信公众号文章
 > * [文章目录](/article/wechat/contents.md)
 ![](wechat-channel.png)
