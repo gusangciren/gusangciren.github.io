@@ -11,6 +11,7 @@
 > * [《经济学毁了“我”》](/article/economics.md)
 
 ### 演讲合集
+> *[*张小龙*演讲及相关](/speech/zhangxiaolong.md)
 > * [《*张一鸣*演讲及相关》](/speech/zhangyiming.md)
 > *  [《*马云*演讲及相关》](/speech/mayun.md)
 
