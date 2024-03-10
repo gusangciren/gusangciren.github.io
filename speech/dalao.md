@@ -14,3 +14,5 @@
 > * [程序员的猫](https://catcoding.me/)
 > * [Bill Gates-比尔·盖茨](https://www.gatesnotes.com/?WT.mc_id=20200000000000_Blog_BG-TW_&WT.tsrc=BGTW)
 > *[Sahil lavingia-萨希尔·拉文吉亚] (https://sahillavingia.com/)
+
+> *[Harvard Business Review-哈佛商业评论] (https://hbr.org/)
