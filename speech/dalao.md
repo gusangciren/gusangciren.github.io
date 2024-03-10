@@ -27,7 +27,7 @@
 
 > * [Bill Gates-比尔·盖茨](https://www.gatesnotes.com/?WT.mc_id=20200000000000_Blog_BG-TW_&WT.tsrc=BGTW)
 
-> *[Sahil lavingia-萨希尔·拉文吉亚] (https://sahillavingia.com/)
+> * [Sahil lavingia-萨希尔·拉文吉亚] (https://sahillavingia.com/)
 
 #### 商业咨询网站
-> *[Harvard Business Review-哈佛商业评论] (https://hbr.org/)
+> * [Harvard Business Review-哈佛商业评论] (https://hbr.org/)
