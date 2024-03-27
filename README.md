@@ -15,6 +15,7 @@
 > * [《*张一鸣*演讲及相关》](/speech/zhangyiming.md)
 > *  [《*马云*演讲及相关》](/speech/mayun.md)
 > *  [牛人个人博客](/speech/dalao.md)
+> *  [李笑来](/speech/xiaolai.md)
 
 ### 微信公众号文章
 > * [文章目录](/article/wechat/contents.md)
