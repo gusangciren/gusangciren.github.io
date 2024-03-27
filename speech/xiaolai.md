@@ -1,3 +1,7 @@
+> * [李笑来个人博客网站](www.lixiaolai.com)
+> * [《人人都能用英语》](http://zhibimo.com/books/xiaolai/everyone-can-use-english)
+> * [《把时间当作朋友》（第3版）](http://zhibimo.com/books/xiaolai/ba-shi-jian-dang-zuo-peng-you)
+
 财富自由之路（修订版）链接列表
 
 11
@@ -59,7 +63,13 @@
 
 链接F-1：《把时间当作朋友》豆瓣页面，goo.gl/URvY。
 链接F-2：参见goo.gl/C4VdE。
-链接F-3：www.lixiaolai.com。
+
+
+47
+[47-1] http://www.reidhoffman.org/article/2135。你可以自己访问这个网址，为了节省篇幅，我就不在这里放图片了。
+
+48
+[48-1]你可以在http://caifu.xinshengdaxue.com上查看所有留言，我没有对这些留言进行任何删减或编辑。
 
 链接1-1：人类能将自己的思考作为思考对象的能力称作“元认知能力”，参见goo.gl/3Brp。
 链接1-2：约翰·纳什：John Forbes Nash, Jr.，1928年6月13日—2015年5月23日，美国数学家，诺贝尔经济学奖得主，参见维基百科goo.gl/RAhgr。
