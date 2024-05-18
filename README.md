@@ -19,4 +19,5 @@
 
 ### 微信公众号文章
 > * [文章目录](/article/wechat/contents.md)
+> * [加我微信看“朋友圈”](https://work.weixin.qq.com/ca/cawcdec41bebc5b089)
 ![](wechat-channel.png)
