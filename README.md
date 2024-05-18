@@ -19,5 +19,5 @@
 
 ### 微信公众号文章
 > * [文章目录](/article/wechat/contents.md)
-> * [加我微信看“朋友圈”](https://work.weixin.qq.com/ca/cawcdec41bebc5b089)
+> * [加我微信，看“朋友圈”](https://work.weixin.qq.com/ca/cawcdec41bebc5b089) ，有关商业思维、自媒体运营、自学能力、写作阅读能力相关干货。
 ![](wechat-channel.png)
