@@ -13,6 +13,7 @@
 ### 持续迭代的书籍
 > * [《个体崛起：打造过硬的营销力和产品力》](/marketing/marketing.md)
 > * [《经济学毁了“我”》](/article/economics.md)
+> * [《AI-Artificial Intelligence》](AI/ai-en-cn.md)
 
 ### 微信公众号
 ![](wechat-channel.png)
