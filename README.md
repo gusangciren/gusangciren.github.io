@@ -10,10 +10,9 @@
 
 > **《 [一个人的商业模式](/model/一个人商业模式.md) 》**
 
-### 持续迭代的书籍
-> * [《个体崛起：打造过硬的营销力和产品力》](/marketing/marketing.md)
-> * [《经济学毁了“我”》](/article/economics.md)
-> * [《AI-Artificial Intelligence》](AI/ai-en-cn.md)
+### 小型出版行-翻译社
+> * [《斯坦福大学创业成长课》](publisher/startup.md)
+> * [《国外优质文章分享》](publisher/小型出版社-翻译社.md)
 
 ### 微信公众号
 ![](wechat-channel.png)
