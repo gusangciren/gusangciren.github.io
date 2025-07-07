@@ -2,14 +2,14 @@
 一年后，你会后悔没有从今天开始。
 
 
-### 作品-Book
+### 1）作品-Book
 
 > **《 [选择改变命运](/fate/) 》**
 > —— 人生的尴尬在于，之前决策的时候并不可能有之后那么丰富的经验……
 
 
 
-### 微信公众号
+### 2）微信公众号
 
 #### 给你准备了几样见面礼，还请你笑纳。
 
@@ -28,7 +28,7 @@
 
 
 
-### UAC周刊
+### 3）UAC周刊
 ![](zhoukan-1.jpg)
 
 > **《 [UAC周刊：颠覆大众固有认知，推送不被算法喜爱的文章](https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzkyOTE4MDcyOA==&action=getalbum&album_id=3931407159660855300&scene=126#wechat_redirect) 》**
