@@ -3,7 +3,7 @@
 
 这是我的网站地址：`gusangciren.github.io`
 
-这里有一个留言板，可以和我对话。
+
 
 ---
 
@@ -11,14 +11,14 @@
 > [《**选择改变命运**》](/fate/)
 
 
-> [《**第一个100块**》`七步曲`-网页阅读](/100/)
-> * [第一个100块：一个重要的逻辑。「0」](https://mp.weixin.qq.com/s/88ByMQWhPO5KsRGqAS4n6Q?token=1323808512&lang=zh_CN)
-> * [第一个100块 ：一棵摇钱树苗。「1」](https://mp.weixin.qq.com/s/zK6DqYmYfOIi1JuqOTc2bQ?token=1323808512&lang=zh_CN)
-> * [第一个100块：如何获得观众？「2」](https://mp.weixin.qq.com/s/VEzLE-Sm4XI6EvS8RPtJRA?token=1323808512&lang=zh_CN)
-> * [第一个100块：成长的副产品。「3」](https://mp.weixin.qq.com/s/lMCOEt15Rd9H5S2FYXiZRQ?token=1323808512&lang=zh_CN)
-> * [第一个100块： 为观众提供服务。「4」](https://mp.weixin.qq.com/s/K4_yHJb9LcwboJArfZ9OWw?token=1323808512&lang=zh_CN)
-> * [第一个100块： 在你睡觉的时候赚钱。「5」](https://mp.weixin.qq.com/s/q-ykcwulqG-pZNJxL_bwMw?token=1323808512&lang=zh_CN)
-> * [第一个100块： 年入百万。「6」]()
+> [《**第一个100块`七步曲`-网页阅读**》](/100/)
+> * [一个重要的逻辑。「0」](https://mp.weixin.qq.com/s/88ByMQWhPO5KsRGqAS4n6Q?token=1323808512&lang=zh_CN)
+> * [一棵摇钱树苗。「1」](https://mp.weixin.qq.com/s/zK6DqYmYfOIi1JuqOTc2bQ?token=1323808512&lang=zh_CN)
+> * [如何获得观众？「2」](https://mp.weixin.qq.com/s/VEzLE-Sm4XI6EvS8RPtJRA?token=1323808512&lang=zh_CN)
+> * [成长的副产品。「3」](https://mp.weixin.qq.com/s/lMCOEt15Rd9H5S2FYXiZRQ?token=1323808512&lang=zh_CN)
+> * [为观众提供服务。「4」](https://mp.weixin.qq.com/s/K4_yHJb9LcwboJArfZ9OWw?token=1323808512&lang=zh_CN)
+> * [在你睡觉的时候赚钱。「5」](https://mp.weixin.qq.com/s/q-ykcwulqG-pZNJxL_bwMw?token=1323808512&lang=zh_CN)
+> * [年入百万。「6」]()
 
 ---
 
