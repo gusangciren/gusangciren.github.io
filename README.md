@@ -1,13 +1,17 @@
 # @Gusang's works  
 一年后，你会后悔没有从今天开始。
 
+这是我的网站地址：`gusangciren.github.io`
+
+这里有一个留言板，可以和我对话。
+
 ---
 
 ### 1）作品-Book  
 > [《**选择改变命运**》](/fate/)
 
 
-> [《第一个100块》七步曲](/100/)
+> [《**第一个100块**》`七步曲`-网页阅读](/100/)
 > * [第一个100块：一个重要的逻辑。「0」](https://mp.weixin.qq.com/s/88ByMQWhPO5KsRGqAS4n6Q?token=1323808512&lang=zh_CN)
 > * [第一个100块 ：一棵摇钱树苗。「1」](https://mp.weixin.qq.com/s/zK6DqYmYfOIi1JuqOTc2bQ?token=1323808512&lang=zh_CN)
 > * [第一个100块：如何获得观众？「2」](https://mp.weixin.qq.com/s/VEzLE-Sm4XI6EvS8RPtJRA?token=1323808512&lang=zh_CN)
@@ -23,10 +27,6 @@
 
 ![](wechat-1.png)  
 
-这些礼物是我日常生活中的精华总结，以及它会告诉你：  
-- 我可以怎么帮助你？  
-- 我们会有怎么样的大花？  
-
 **扫描二维码，关注微信公众号,`公众号后台`输入「关键字」自动回复：**  
 
 
@@ -40,7 +40,7 @@
 
 ---
 
-### 3）**[《UAC周刊：最新大众固有认知，推送不被算法喜爱的文章》](https://mp.weixin.qq.com/mp/appmsgaibum?biz=MzkyOTE4MDcyOA--&action=geta1bum&a1bum_id=3931407159660855300&scene=126Hwechat_redirect)**   
+### 3）[《UAC周刊：最新大众固有认知，推送不被算法喜爱的文章》](https://mp.weixin.qq.com/mp/appmsgaibum?biz=MzkyOTE4MDcyOA--&action=geta1bum&a1bum_id=3931407159660855300&scene=126Hwechat_redirect)
 
 ![](zhoukan-1.jpg)  
 
