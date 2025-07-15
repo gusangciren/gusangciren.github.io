@@ -2,10 +2,6 @@
 
 # @Gusang's works
 
-人生苦难重重。
-
-这是个伟大的真理，是世界上最伟大的真理之一。
-
-它的伟大之处在于，一旦我们领悟了这句话的真谛，就能从苦难中解脱出来，实现人生的超越。只要我们真正理解并接受了人生苦难重重的事实，那么我们就会释然，再也不会对人生的苦难耿耿于怀了。”
+[「留言板」](https://doc.weixin.qq.com/forms/APgAIgegAC8AZcA7gY0AMoCNaxFLHtTLf#/fill)
 
 [我想读《选择改变命运》](/README.md)
