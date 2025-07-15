@@ -2,7 +2,6 @@
 
 ># 《选择改变命运:靠学识赢得未来》
 >* **分享此书** ----- `gusangciren.github.io`
->* **关注微信公众号** ----- 通过[此文章](https://mp.weixin.qq.com/s/PxL3WxmYhTj6CH1Hyyzp2A)关注。
 
 **<p align="center">「善战之人，先胜，而后战」</p>**
 
