@@ -17,7 +17,7 @@
 > * [为观众提供服务。「4」](https://mp.weixin.qq.com/s/K4_yHJb9LcwboJArfZ9OWw?token=1323808512&lang=zh_CN)
 > * [在你睡觉的时候赚钱。「5」](https://mp.weixin.qq.com/s/q-ykcwulqG-pZNJxL_bwMw?token=1323808512&lang=zh_CN)
 > * [年入百万。「6」]()
-> * [合集-持续更新-记得订阅》](https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzkyOTE4MDcyOA==&action=getalbum&album_id=4040771453392732161#wechat_redirect)
+> * [`合集`-持续更新-记得订阅](https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzkyOTE4MDcyOA==&action=getalbum&album_id=4040771453392732161#wechat_redirect)
 
 ---
 
@@ -35,15 +35,15 @@
 
 
 最受欢迎的文章：
-> [终身学习的习惯.](https://mp.weixin.qq.com/s/8hTgXYyc2JEf0BzRyTxf7Q?token=1323808512&lang=zh_CN)
-> [所有人都应该看看这一篇文章.](https://mp.weixin.qq.com/s/Wz2yPurU5db85RZ4tq2dfg?token=1323808512&lang=zh_CN)
-> [分享一个超有用的学习方法.](https://mp.weixin.qq.com/s/GymHqbSLgACzMJKcPEtBaQ?token=1323808512&lang=zh_CN)
-> [这是一个不搞明白就吃亏一辈子的道理.](https://mp.weixin.qq.com/s/Q1mhJ18ImQZnVoBephvHJg?token=1323808512&lang=zh_CN)
-> [没有一句废话，全是干货！共6条.](https://mp.weixin.qq.com/s/nXBGwloH9PeW-ZutbpNh_A?token=1323808512&lang=zh_CN)
-> [没有一句废话，全是干货！共6条.](https://mp.weixin.qq.com/s/cXqtcP_nV9_R3VXNT9c7Ww?token=1323808512&lang=zh_CN)
-> [这是一部对我人生影响最大的30分钟短片.](https://mp.weixin.qq.com/s/G8PSKupXIKnG1oMVsWMbkA?token=1323808512&lang=zh_CN)
-> [这一些概念，害了多少中国男男女女？](https://mp.weixin.qq.com/s/XIDv6zMHIY3g3KwkKvEpYQ?token=1323808512&lang=zh_CN)
-> [发布一篇文章之前，你需要知道的1件事。](https://mp.weixin.qq.com/s/Cqdw7-9Ezi8zD401iqy2wA)
+> * [终身学习的习惯.](https://mp.weixin.qq.com/s/8hTgXYyc2JEf0BzRyTxf7Q?token=1323808512&lang=zh_CN)
+> * [所有人都应该看看这一篇文章.](https://mp.weixin.qq.com/s/Wz2yPurU5db85RZ4tq2dfg?token=1323808512&lang=zh_CN)
+> * [分享一个超有用的学习方法.](https://mp.weixin.qq.com/s/GymHqbSLgACzMJKcPEtBaQ?token=1323808512&lang=zh_CN)
+> * [这是一个不搞明白就吃亏一辈子的道理.](https://mp.weixin.qq.com/s/Q1mhJ18ImQZnVoBephvHJg?token=1323808512&lang=zh_CN)
+> * [没有一句废话，全是干货！共6条.](https://mp.weixin.qq.com/s/nXBGwloH9PeW-ZutbpNh_A?token=1323808512&lang=zh_CN)
+> * [没有一句废话，全是干货！共6条.](https://mp.weixin.qq.com/s/cXqtcP_nV9_R3VXNT9c7Ww?token=1323808512&lang=zh_CN)
+> * [这是一部对我人生影响最大的30分钟短片.](https://mp.weixin.qq.com/s/G8PSKupXIKnG1oMVsWMbkA?token=1323808512&lang=zh_CN)
+> * [这一些概念，害了多少中国男男女女？](https://mp.weixin.qq.com/s/XIDv6zMHIY3g3KwkKvEpYQ?token=1323808512&lang=zh_CN)
+> * [发布一篇文章之前，你需要知道的1件事。](https://mp.weixin.qq.com/s/Cqdw7-9Ezi8zD401iqy2wA)
 
 ---
 
