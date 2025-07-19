@@ -9,7 +9,7 @@
 > [《**选择改变命运:靠学识赢得未来**》](/fate/)
 
 
-> [《**第一个100块`七步曲`-网页版阅读**》](/100/)
+> [《**第一个100块`七步曲`-网页版阅读**》](/100/第一个100块.md)
 > * [一个重要的逻辑。「0」](https://mp.weixin.qq.com/s/88ByMQWhPO5KsRGqAS4n6Q?token=1323808512&lang=zh_CN)
 > * [一棵摇钱树苗。「1」](https://mp.weixin.qq.com/s/zK6DqYmYfOIi1JuqOTc2bQ?token=1323808512&lang=zh_CN)
 > * [如何获得观众？「2」](https://mp.weixin.qq.com/s/VEzLE-Sm4XI6EvS8RPtJRA?token=1323808512&lang=zh_CN)
