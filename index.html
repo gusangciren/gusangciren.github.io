@@ -1,1 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>种一个梦</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="种一个梦 - 个人作品集" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify/lib/themes/vue.css" />
+    <style>
+      img {text-align: center;}
+      html {scroll-behavior: smooth;}
+      /* 搜索关键词高亮 */
+      .search-keyword {
+        background: #ffe066;
+        color: #222;
+        border-radius: 3px;
+        padding: 0 4px;
+        font-weight: bold;
+      }
+      /* 滚动条样式优化 */
+      ::-webkit-scrollbar {width: 6px; height: 6px;}
+      ::-webkit-scrollbar-thumb {background: #ccc; border-radius: 3px;}
+    </style>
+  </head>
+  <body>
+    <div id="app">您稍等...</div>
+    <script>
+      window.$docsify = {
+        name: "种一个梦",
+        repo: "https://github.com/gusangciren/gusangciren.github.io",
+        loadSidebar: true,
+        loadNavbar: true,
+        coverpage: true,
+        maxLevel: 5,
+        subMaxLevel: 4,
+        mergeNavbar: true,
+        search: {
+          maxAge: 86400000,
+          paths: "auto",
+          placeholder: "搜索",
+          noData: "找不到结果",
+          depth: 6,
+          hideOtherSidebarContent: false,
+        },
+      };
+    </script>
+    <script>
+      // 点击搜索结果后自动滚动到关键词位置 + 高亮
+      document.addEventListener("DOMContentLoaded", function() {
+        window.addEventListener("hashchange", highlightKeyword);
+        highlightKeyword();
+      });
 
+      function highlightKeyword() {
+        var params = new URLSearchParams(location.search);
+        var keyword = params.get("search");
+        if (!keyword) return;
+        var term = decodeURIComponent(keyword).trim();
+        if (!term) return;
+
+        // 等页面渲染完成
+        setTimeout(function() {
+          var walker = document.createTreeWalker(
+            document.body,
+            NodeFilter.SHOW_TEXT,
+            null,
+            false
+          );
+          var found = false;
+          var node;
+          while ((node = walker.nextNode())) {
+            var val = node.nodeValue;
+            if (val && val.toLowerCase().includes(term.toLowerCase())) {
+              var parent = node.parentElement;
+              if (parent && !parent.classList.contains('search-keyword')) {
+                // 避开 script/style/iframe 等标签
+                var tag = parent.tagName.toLowerCase();
+                if (['script','style','noscript','iframe'].indexOf(tag) !== -1) continue;
+                // 只高亮文字节点父元素内的首次匹配
+                var regex = new RegExp(
+                  "(" + term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")",
+                  "gi"
+                );
+                var html = parent.innerHTML;
+                if (html.indexOf('class="search-keyword"') === -1) {
+                  parent.innerHTML = html.replace(
+                    regex,
+                    "<mark class=\"search-keyword\">$1</mark>"
+                  );
+                }
+                // 滚动到该位置
+                parent.scrollIntoView({ behavior: "smooth", block: "center" });
+                found = true;
+                break;
+              }
+            }
+          }
+        }, 600);
+      }
+    </script>
+    <script src="//cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/emoji.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
+  </body>
+</html>
