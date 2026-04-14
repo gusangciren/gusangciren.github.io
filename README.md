@@ -34,16 +34,7 @@
 > `后台回复「2」`：推送7条让我受益至今的关于「写作」的资源链接。
 
 
-最受欢迎的文章：
-> * [终身学习的习惯.](https://mp.weixin.qq.com/s/8hTgXYyc2JEf0BzRyTxf7Q?token=1323808512&lang=zh_CN)
-> * [所有人都应该看看这一篇文章.](https://mp.weixin.qq.com/s/Wz2yPurU5db85RZ4tq2dfg?token=1323808512&lang=zh_CN)
-> * [分享一个超有用的学习方法.](https://mp.weixin.qq.com/s/GymHqbSLgACzMJKcPEtBaQ?token=1323808512&lang=zh_CN)
-> * [这是一个不搞明白就吃亏一辈子的道理.](https://mp.weixin.qq.com/s/Q1mhJ18ImQZnVoBephvHJg?token=1323808512&lang=zh_CN)
-> * [没有一句废话，全是干货！共6条.](https://mp.weixin.qq.com/s/nXBGwloH9PeW-ZutbpNh_A?token=1323808512&lang=zh_CN)
-> * [没有一句废话，全是干货！共6条.](https://mp.weixin.qq.com/s/cXqtcP_nV9_R3VXNT9c7Ww?token=1323808512&lang=zh_CN)
-> * [这是一部对我人生影响最大的30分钟短片.](https://mp.weixin.qq.com/s/G8PSKupXIKnG1oMVsWMbkA?token=1323808512&lang=zh_CN)
-> * [这一些概念，害了多少中国男男女女？](https://mp.weixin.qq.com/s/XIDv6zMHIY3g3KwkKvEpYQ?token=1323808512&lang=zh_CN)
-> * [发布一篇文章之前，你需要知道的1件事。](https://mp.weixin.qq.com/s/Cqdw7-9Ezi8zD401iqy2wA)
+[🔗-公众号文章网站同步](/article/wechat/contents.md)
 
 ---
 
