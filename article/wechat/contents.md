@@ -4,4 +4,7 @@
 
 >* 003.如何快速进入一个领域的五个步骤--[公众号版](https://mp.weixin.qq.com/s/wkcGOmMP89kmP1zHFsEPyg)
 
+>* 004.你在使用 AI，还是在被 AI "截肢"？--[公众号版](#) ，[网页版](/article/wechat/AI截肢.md)
+
+>* 005.你讨厌的销售，我是怎么理解的？--[公众号版](#) ，[网页版](/article/wechat/销售的理解.md)
 
