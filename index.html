@@ -12,15 +12,19 @@
     <style>
       img {text-align: center;}
       html {scroll-behavior: smooth;}
-      /* 搜索关键词高亮 */
-      .search-keyword {
+      /* 搜索关键词高亮样式 */
+      .search-hit {
         background: #ffe066;
-        color: #222;
+        color: #1a1a1a;
         border-radius: 3px;
         padding: 0 4px;
-        font-weight: bold;
+        font-weight: 700;
       }
-      /* 滚动条样式优化 */
+      /* 搜索后首次滚动提示 */
+      .search-hit:first-of-type {
+        box-shadow: 0 0 0 3px rgba(255,224,102,0.5);
+        transition: box-shadow 0.3s;
+      }
       ::-webkit-scrollbar {width: 6px; height: 6px;}
       ::-webkit-scrollbar-thumb {background: #ccc; border-radius: 3px;}
     </style>
@@ -48,58 +52,147 @@
       };
     </script>
     <script>
-      // 点击搜索结果后自动滚动到关键词位置 + 高亮
-      document.addEventListener("DOMContentLoaded", function() {
-        window.addEventListener("hashchange", highlightKeyword);
-        highlightKeyword();
-      });
+      (function() {
+        var highlighted = false;
+        var observer = null;
 
-      function highlightKeyword() {
-        var params = new URLSearchParams(location.search);
-        var keyword = params.get("search");
-        if (!keyword) return;
-        var term = decodeURIComponent(keyword).trim();
-        if (!term) return;
+        function getSearchTerm() {
+          // Docsify search 会把关键词放在 URL query 参数中
+          // 格式: ?search=关键词 或 #/path?search=关键词
+          var params = new URLSearchParams(location.search);
+          var term = params.get("search");
+          if (!term) {
+            // 也检查 hash 中的 query
+            var hash = location.hash;
+            if (hash) {
+              var qIdx = hash.indexOf("?");
+              if (qIdx !== -1) {
+                var hashParams = new URLSearchParams(hash.substring(qIdx));
+                term = hashParams.get("search");
+              }
+            }
+          }
+          return term ? decodeURIComponent(term).trim() : null;
+        }
 
-        // 等页面渲染完成
-        setTimeout(function() {
+        function highlightTerm(term) {
+          if (!term || highlighted) return;
+          highlighted = true;
+
+          var regex = new RegExp(
+            "(" + term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")",
+            "gi"
+          );
+          var body = document.body;
+          var hitCount = 0;
+          var firstHit = null;
+
+          // 遍历所有文字节点
           var walker = document.createTreeWalker(
-            document.body,
+            body,
             NodeFilter.SHOW_TEXT,
             null,
             false
           );
-          var found = false;
           var node;
           while ((node = walker.nextNode())) {
             var val = node.nodeValue;
-            if (val && val.toLowerCase().includes(term.toLowerCase())) {
-              var parent = node.parentElement;
-              if (parent && !parent.classList.contains('search-keyword')) {
-                // 避开 script/style/iframe 等标签
-                var tag = parent.tagName.toLowerCase();
-                if (['script','style','noscript','iframe'].indexOf(tag) !== -1) continue;
-                // 只高亮文字节点父元素内的首次匹配
-                var regex = new RegExp(
-                  "(" + term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")",
-                  "gi"
-                );
-                var html = parent.innerHTML;
-                if (html.indexOf('class="search-keyword"') === -1) {
-                  parent.innerHTML = html.replace(
-                    regex,
-                    "<mark class=\"search-keyword\">$1</mark>"
-                  );
-                }
-                // 滚动到该位置
-                parent.scrollIntoView({ behavior: "smooth", block: "center" });
-                found = true;
-                break;
-              }
+            if (!val || !val.match(regex)) continue;
+
+            var parent = node.parentElement;
+            if (!parent) continue;
+
+            var tag = parent.tagName.toLowerCase();
+            // 避开这些标签
+            if (["script","style","noscript","iframe","input","textarea","code","pre"].indexOf(tag) !== -1) continue;
+            // 避开已经高亮的
+            if (parent.closest(".search-hit")) continue;
+
+            // 高亮 this 节点的文字
+            var span = document.createElement("span");
+            var parentText = parent.innerHTML;
+            // 只替换第一个匹配
+            var replaced = false;
+            var newHtml = parentText.replace(regex, function(m) {
+              if (replaced) return m;
+              replaced = true;
+              return "<mark class=\"search-hit\">" + m + "</mark>";
+            });
+            if (replaced && parentText !== newHtml) {
+              parent.innerHTML = newHtml;
+              if (!firstHit) firstHit = parent;
+              hitCount++;
             }
           }
-        }, 600);
-      }
+
+          // 滚动到第一个匹配位置
+          if (firstHit) {
+            setTimeout(function() {
+              firstHit.scrollIntoView({ behavior: "smooth", block: "center" });
+            }, 100);
+          }
+        }
+
+        function reset() {
+          highlighted = false;
+          // 移除旧的高亮
+          var marks = document.querySelectorAll(".search-hit");
+          for (var i = 0; i < marks.length; i++) {
+            var mark = marks[i];
+            var text = document.createTextNode(mark.textContent);
+            mark.parentNode.replaceChild(text, mark);
+          }
+        }
+
+        // 方法1: Docsify 的 doneEach 钩子（文章加载完成后触发）
+        window.$docsify = window.$docsify || {};
+        var originalDoneEach = window.$docsify.doneEach;
+        window.$docsify.doneEach = function() {
+          if (originalDoneEach) originalDoneEach.apply(this, arguments);
+          var term = getSearchTerm();
+          if (term) {
+            reset();
+            highlightTerm(term);
+          }
+        };
+
+        // 方法2: hash 变化时也检查
+        window.addEventListener("hashchange", function() {
+          setTimeout(function() {
+            var term = getSearchTerm();
+            if (term) {
+              reset();
+              highlightTerm(term);
+            } else {
+              highlighted = false;
+            }
+          }, 300);
+        });
+
+        // 方法3: MutationObserver 兜底（等文章内容真正渲染进来）
+        function setupObserver() {
+          if (observer) observer.disconnect();
+          observer = new MutationObserver(function(mutations) {
+            var term = getSearchTerm();
+            if (term) {
+              var content = document.querySelector(".markdown-body") ||
+                            document.querySelector("#main") ||
+                            document.getElementById("app");
+              if (content && content.innerHTML.length > 50) {
+                reset();
+                highlightTerm(term);
+                observer.disconnect();
+              }
+            }
+          });
+          var app = document.getElementById("app");
+          if (app) {
+            observer.observe(app, { childList: true, subtree: true });
+          }
+        }
+        document.addEventListener("DOMContentLoaded", setupObserver);
+        setTimeout(setupObserver, 1000);
+      })();
     </script>
     <script src="//cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/emoji.min.js"></script>
