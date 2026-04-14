@@ -6,3 +6,9 @@
 - 文章精选
   - [有关成长，我能想到就这么多](/article/grow.md)
   - [能指导生活的经济学](/article/经济学.md)
+
+- 公众号：种一个梦
+  - [公众号文章目录](/article/wechat/contents.md)
+  - [你在使用 AI，还是在被 AI "截肢"？](/article/wechat/AI截肢.md)
+  - [你讨厌的销售，我是怎么理解的？](/article/wechat/销售的理解.md)
+
