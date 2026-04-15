@@ -193,6 +193,55 @@
         color: #fff !important;
       }
 
+      /* ── 侧边栏可折叠分类 ── */
+      .sidebar-nav > li {
+        position: relative;
+      }
+      .sidebar-nav > li > p {
+        cursor: pointer;
+        user-select: none;
+        font-weight: 500;
+        font-size: 13px;
+        color: #555;
+        padding: 10px 0 4px 0;
+        margin: 0;
+        transition: color 0.2s;
+      }
+      .sidebar-nav > li > p:hover {
+        color: var(--theme-color, #42b983);
+      }
+      .sidebar-nav > li > p::before {
+        content: '';
+        display: inline-block;
+        width: 0;
+        height: 0;
+        border-left: 5px solid #bbb;
+        border-top: 4px solid transparent;
+        border-bottom: 4px solid transparent;
+        margin-right: 8px;
+        transition: transform 0.25s ease, border-left-color 0.25s;
+        vertical-align: middle;
+        position: relative;
+        top: -1px;
+      }
+      .sidebar-nav > li > p:hover::before {
+        border-left-color: var(--theme-color, #42b983);
+      }
+      .sidebar-nav > li.collapsed > p::before {
+        transform: rotate(-90deg);
+      }
+      .sidebar-nav > li > ul {
+        overflow: hidden;
+        max-height: 600px;
+        opacity: 1;
+        transition: max-height 0.3s ease, opacity 0.25s ease;
+      }
+      .sidebar-nav > li.collapsed > ul {
+        max-height: 0;
+        opacity: 0;
+        pointer-events: none;
+      }
+
       /* ── 滚动条 ── */
       ::-webkit-scrollbar { width: 5px; }
       ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
@@ -260,6 +309,32 @@
             hook.doneEach(function() {
               // 文章加载完后检查是否需要高亮
               setTimeout(function() { window._hlCheck && window._hlCheck(); }, 300);
+            });
+            // 侧边栏可折叠分类
+            hook.doneEach(function() {
+              var nav = document.querySelector('.sidebar-nav');
+              if (!nav || nav._collapsibleInit) return;
+              nav._collapsibleInit = true;
+
+              var topItems = nav.children;
+              for (var i = 0; i < topItems.length; i++) {
+                var li = topItems[i];
+                if (li.tagName !== 'LI') continue;
+                var p = li.querySelector(':scope > p');
+                var sub = li.querySelector(':scope > ul');
+                if (!p || !sub) continue;
+
+                // 如果子列表里没有 active 链接，默认折叠
+                var hasActive = sub.querySelector('.active');
+                if (!hasActive) {
+                  li.classList.add('collapsed');
+                }
+
+                p.addEventListener('click', function() {
+                  var parent = this.parentElement;
+                  parent.classList.toggle('collapsed');
+                });
+              }
             });
           }
         ]
