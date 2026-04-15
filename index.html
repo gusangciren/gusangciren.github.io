@@ -2,45 +2,140 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <title>种一个梦</title>
+    <title>像企业家一样写作</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="description" content="种一个梦 - 个人作品集" />
+    <meta name="description" content="像企业家一样写作" />
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify/lib/themes/vue.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400&display=swap" rel="stylesheet" />
     <style>
       img {text-align: center;}
       html {scroll-behavior: smooth;}
 
-      /* 搜索结果计数条 */
+      /* ── 品牌 logo ── */
+      .sidebar-toggle {
+        display: none !important; /* 隐藏默认侧边栏切换按钮 */
+      }
+      .sidebar-toggle span {
+        background-color: #ddd !important;
+      }
+      /* 顶栏品牌文字 */
+      .app-name-link {
+        font-family: 'Noto Serif SC', 'Songti SC', 'SimSun', serif !important;
+        font-size: 14px !important;
+        font-weight: 300 !important;
+        letter-spacing: 0.06em !important;
+        color: #444 !important;
+        opacity: 0.85;
+      }
+      .app-name-link:hover {opacity: 1 !important;}
+
+      /* 隐藏 docsify 自带的搜索框（我们用自定义悬浮按钮） */
+      .search {
+        display: none !important;
+      }
+
+      /* ── 悬浮搜索按钮 ── */
+      #float-search-btn {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        z-index: 10000;
+        width: 48px;
+        height: 48px;
+        background: #fff;
+        border: 1.5px solid #e8e8e8;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        transition: all 0.2s ease;
+        flex-direction: column;
+        gap: 0;
+      }
+      #float-search-btn:hover {
+        box-shadow: 0 4px 20px rgba(0,0,0,0.13);
+        transform: translateY(-1px);
+        border-color: #bbb;
+      }
+      #float-search-btn svg {
+        width: 18px;
+        height: 18px;
+        color: #555;
+      }
+
+      /* ── 悬浮搜索弹窗 ── */
+      #float-search-modal {
+        display: none;
+        position: fixed;
+        bottom: 86px;
+        right: 28px;
+        z-index: 10001;
+        width: 320px;
+        background: #fff;
+        border: 1.5px solid #e8e8e8;
+        border-radius: 12px;
+        box-shadow: 0 8px 40px rgba(0,0,0,0.13);
+        overflow: hidden;
+      }
+      #float-search-modal.open {display: block;}
+
+      #float-search-input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 14px 16px;
+        font-size: 15px;
+        border: none;
+        border-bottom: 1px solid #f0f0f0;
+        outline: none;
+        font-family: 'Noto Serif SC', 'Songti SC', serif;
+        color: #333;
+        background: #fff;
+      }
+      #float-search-input::placeholder {color: #bbb; font-weight: 300;}
+
+      #float-search-hint {
+        padding: 8px 16px;
+        font-size: 11px;
+        color: #ccc;
+        text-align: center;
+        letter-spacing: 0.03em;
+      }
+
+      /* ── 搜索结果计数条 ── */
       #search-nav-bar {
         display: none;
         position: fixed;
-        top: 60px;
+        top: 58px;
         right: 20px;
         z-index: 9999;
         background: #fff;
-        border: 2px solid #ffe066;
-        border-radius: 8px;
-        padding: 10px 16px;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-        font-size: 14px;
-        max-width: 280px;
+        border: 1.5px solid #e8e8e8;
+        border-radius: 10px;
+        padding: 12px 18px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        font-size: 13px;
+        max-width: 260px;
         text-align: center;
       }
       #search-nav-bar.visible {display: block;}
-
       #search-nav-bar .label {
-        color: #666;
-        margin-bottom: 8px;
-        font-size: 13px;
+        color: #aaa;
+        margin-bottom: 6px;
+        font-size: 11px;
+        letter-spacing: 0.05em;
       }
       #search-nav-bar .count {
-        font-size: 24px;
-        font-weight: 700;
-        color: #f5a623;
-        margin-bottom: 6px;
+        font-size: 22px;
+        font-weight: 400;
+        color: #333;
+        margin-bottom: 10px;
       }
       #search-nav-bar .btns {
         display: flex;
@@ -48,45 +143,69 @@
         justify-content: center;
       }
       #search-nav-bar button {
-        background: #ffe066;
-        border: none;
-        border-radius: 5px;
+        background: #f5f5f5;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
         padding: 5px 14px;
-        font-size: 13px;
+        font-size: 12px;
         cursor: pointer;
-        font-weight: 600;
-        transition: background 0.2s;
+        color: #555;
+        transition: all 0.2s;
       }
-      #search-nav-bar button:hover {background: #f5a623; color: #fff;}
-      #search-nav-bar button:disabled {background: #ddd; cursor: not-allowed; color: #999;}
+      #search-nav-bar button:hover {background: #eee; border-color: #ccc;}
+      #search-nav-bar button:disabled {background: #f9f9f9; color: #ccc; border-color: #eee; cursor: not-allowed;}
 
-      /* 关键词高亮样式 - 非常醒目 */
+      /* ── 关键词高亮 ── */
       .search-hl {
-        background: #ffe066 !important;
-        color: #c0392b !important;
-        border-radius: 3px;
-        padding: 1px 5px !important;
-        font-weight: 700 !important;
-        box-shadow: 0 0 0 2px rgba(255,224,102,0.4);
+        background: #fff3b0 !important;
+        color: #8b6914 !important;
+        border-radius: 2px;
+        padding: 1px 4px !important;
       }
-      /* 当前活动的高亮 */
       .search-hl.active {
         background: #f5a623 !important;
         color: #fff !important;
-        box-shadow: 0 0 0 3px rgba(245,166,35,0.5);
       }
 
-      ::-webkit-scrollbar {width: 6px;}
-      ::-webkit-scrollbar-thumb {background: #ccc; border-radius: 3px;}
+      /* ── 滚动条 ── */
+      ::-webkit-scrollbar {width: 5px;}
+      ::-webkit-scrollbar-thumb {background: #ddd; border-radius: 3px;}
+
+      /* ── 移动端适配 ── */
+      @media (max-width: 768px) {
+        #float-search-btn {bottom: 20px; right: 16px;}
+        #float-search-modal {right: 12px; bottom: 78px; width: calc(100vw - 24px);}
+        #search-nav-bar {right: 12px; top: 50px; max-width: 200px;}
+      }
     </style>
   </head>
   <body>
-    <div id="app">您稍等...</div>
+    <div id="app">加载中...</div>
 
-    <!-- 搜索结果导航条 -->
+    <!-- 悬浮搜索按钮 -->
+    <button id="float-search-btn" onclick="toggleSearchModal()" title="搜索文章">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+    </button>
+
+    <!-- 搜索弹窗 -->
+    <div id="float-search-modal">
+      <input
+        id="float-search-input"
+        type="text"
+        placeholder="搜索文章…"
+        autocomplete="off"
+        oninput="handleSearchInput(this.value)"
+        onkeydown="handleSearchKeydown(event)"
+      />
+      <div id="float-search-hint">按 Enter 跳转 · Esc 关闭</div>
+    </div>
+
+    <!-- 搜索结果导航条（右上角） -->
     <div id="search-nav-bar">
-      <div class="label">关键词出现次数</div>
-      <div class="count" id="hl-count">0</div>
+      <div class="label">关键词出现</div>
+      <div class="count" id="hl-count">0 处</div>
       <div class="btns">
         <button id="hl-prev" onclick="searchHlNav(-1)">← 上一处</button>
         <button id="hl-next" onclick="searchHlNav(1)">下一处 →</button>
@@ -95,7 +214,7 @@
 
     <script>
       window.$docsify = {
-        name: "种一个梦",
+        name: "像企业家一样写作",
         repo: "https://github.com/gusangciren/gusangciren.github.io",
         loadSidebar: true,
         loadNavbar: true,
@@ -114,12 +233,79 @@
       };
     </script>
     <script>
+      // ══════════════════════════════════════
+      // 悬浮搜索弹窗控制
+      // ══════════════════════════════════════
+      var _searchModalOpen = false;
+
+      function toggleSearchModal() {
+        var modal = document.getElementById("float-search-modal");
+        var btn = document.getElementById("float-search-btn");
+        _searchModalOpen = !_searchModalOpen;
+        if (_searchModalOpen) {
+          modal.classList.add("open");
+          btn.style.transform = "scale(0.92)";
+          setTimeout(function() {
+            document.getElementById("float-search-input").focus();
+          }, 50);
+        } else {
+          modal.classList.remove("open");
+          btn.style.transform = "";
+          document.getElementById("float-search-input").value = "";
+        }
+      }
+
+      function handleSearchKeydown(e) {
+        if (e.key === "Escape") {
+          toggleSearchModal();
+        } else if (e.key === "Enter") {
+          triggerDocsifySearch();
+        }
+      }
+
+      function handleSearchInput(val) {
+        triggerDocsifySearch();
+      }
+
+      function triggerDocsifySearch() {
+        var val = document.getElementById("float-search-input").value.trim();
+        // 找到 docsify 的搜索 input 并赋值，触发搜索
+        var inputs = document.querySelectorAll("input[type=search], .search input");
+        for (var i = 0; i < inputs.length; i++) {
+          var inp = inputs[i];
+          if (inp.offsetParent !== null) { // visible
+            inp.value = val;
+            inp.dispatchEvent(new Event("input", { bubbles: true }));
+            inp.focus();
+            break;
+          }
+        }
+        // 同时设置 hash search
+        if (val) {
+          var encoded = encodeURIComponent(val);
+          // 跳到首页（搜索在首页触发）
+          location.hash = "#/?search=" + encoded;
+        }
+      }
+
+      // 全局 Ctrl/Cmd + K 快捷键
+      document.addEventListener("keydown", function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+          e.preventDefault();
+          toggleSearchModal();
+        }
+        if (e.key === "Escape" && _searchModalOpen) {
+          toggleSearchModal();
+        }
+      });
+
+      // ══════════════════════════════════════
+      // 搜索结果高亮 + 导航
+      // ══════════════════════════════════════
       (function() {
         var hlNodes = [];
         var hlIndex = -1;
-        var currentTerm = "";
 
-        // 从 URL 中提取搜索关键词
         function getTerm() {
           var params = new URLSearchParams(location.search);
           var t = params.get("search");
@@ -132,24 +318,17 @@
           return t ? decodeURIComponent(t).trim() : null;
         }
 
-        // 高亮并建立节点列表
         function build() {
           var term = getTerm();
           if (!term) return;
-          currentTerm = term;
           hlNodes = [];
           hlIndex = -1;
 
-          var regex = new RegExp(
-            "(" + term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")",
-            "gi"
-          );
+          var esc = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+          var regex = new RegExp("(" + esc + ")", "gi");
 
           var walker = document.createTreeWalker(
-            document.body,
-            NodeFilter.SHOW_TEXT,
-            null,
-            false
+            document.body, NodeFilter.SHOW_TEXT, null, false
           );
           var node;
           while ((node = walker.nextNode())) {
@@ -159,15 +338,11 @@
             if (!parent) continue;
             var tag = parent.tagName.toLowerCase();
             if (["script","style","noscript","iframe","input","textarea","code","pre"].indexOf(tag) !== -1) continue;
-            if (parent.closest(".search-hl")) continue;
+            if (parent.closest(".search-hl, #float-search-modal, #float-search-btn, #search-nav-bar")) continue;
             var html = parent.innerHTML;
-            var replaced = false;
-            var newHtml = html.replace(regex, function(m) {
-              if (replaced) return m;
-              replaced = true;
-              return "<mark class=\"search-hl\">" + m + "</mark>";
-            });
-            if (replaced && newHtml !== html) {
+            if (html.match(/<mark class="search-hl"/)) continue;
+            var newHtml = html.replace(regex, '<mark class="search-hl">$1</mark>');
+            if (newHtml !== html) {
               parent.innerHTML = newHtml;
               var marks = parent.querySelectorAll(".search-hl");
               for (var i = 0; i < marks.length; i++) {
@@ -189,61 +364,49 @@
           var nextBtn = document.getElementById("hl-next");
           if (prevBtn) prevBtn.disabled = count <= 1;
           if (nextBtn) nextBtn.disabled = count <= 1;
-          if (count > 0) {
-            bar.classList.add("visible");
-          } else {
-            bar.classList.remove("visible");
-          }
+          bar.classList.toggle("visible", count > 0);
         }
 
         function navigateTo(idx) {
           if (hlNodes.length === 0) return;
-          // 移除旧的活动高亮
           var active = document.querySelector(".search-hl.active");
           if (active) active.classList.remove("active");
-          // 边界
           if (idx < 0) idx = 0;
           if (idx >= hlNodes.length) idx = hlNodes.length - 1;
           hlIndex = idx;
           var node = hlNodes[idx];
-          if (!node) return;
-          node.classList.add("active");
-          node.scrollIntoView({ behavior: "smooth", block: "center" });
+          if (node) {
+            node.classList.add("active");
+            node.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
         }
 
-        // 供按钮调用
         window.searchHlNav = function(dir) {
           navigateTo(hlIndex + dir);
         };
 
-        // Docsify 路由完成后检查
         function checkAndRun() {
           var term = getTerm();
-          if (term) {
-            // 等文章内容渲染完成（给 Docsify 足够时间）
-            var tryCount = 0;
-            var interval = setInterval(function() {
-              tryCount++;
-              var body = document.querySelector(".markdown-body");
-              if (body && body.innerHTML.length > 100) {
-                clearInterval(interval);
-                build();
-              } else if (tryCount > 20) {
-                clearInterval(interval);
-              }
-            }, 200);
+          if (!term) {
+            var bar = document.getElementById("search-nav-bar");
+            if (bar) bar.classList.remove("visible");
+            return;
           }
+          var tries = 0;
+          var interval = setInterval(function() {
+            tries++;
+            var body = document.querySelector(".markdown-body");
+            if (body && body.innerHTML.length > 100) {
+              clearInterval(interval);
+              build();
+            } else if (tries > 25) {
+              clearInterval(interval);
+            }
+          }, 200);
         }
 
-        // hash 变化 + 首次加载
-        window.addEventListener("hashchange", function() {
-          setTimeout(checkAndRun, 400);
-        });
-
-        // DOMReady 后启动
-        document.addEventListener("DOMContentLoaded", function() {
-          setTimeout(checkAndRun, 800);
-        });
+        window.addEventListener("hashchange", function() { setTimeout(checkAndRun, 400); });
+        document.addEventListener("DOMContentLoaded", function() { setTimeout(checkAndRun, 800); });
       })();
     </script>
     <script src="//cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script>
