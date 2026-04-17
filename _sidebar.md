@@ -1,8 +1,5 @@
 <!-- _sidebar.md -->
 
-- 🎯 课程
-  - [像企业家一样写作](/course.md)
-
 - 📖 作品集
   - [选择改变命运](/README.md)
   - [个体崛起：打造过硬的营销力和产品力](/marketing/marketing.md)
