@@ -9,6 +9,7 @@
 - 💡 观点
   - [你在使用 AI，还是在被 AI "截肢"？](/article/wechat/AI截肢.md)
   - [你讨厌的销售，我是怎么理解的？](/article/wechat/销售的理解.md)
+  - [如果你能坚持每周都发布一篇文章，那么···](/article/wechat/如果你能坚持每周都发布一篇文章，那么···.md)
 
 - 🛠 技巧
   - [Docsify 搭建个人博客教程](/article/gitbook.md)
