@@ -1,0 +1,194 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="社群 — 像企业家一样写作">
+  <div class="community-page">
+    <div class="community-inner">
+
+      <!-- UAC 周刊 -->
+      <section class="community-section">
+        <h1 class="community-title">UAC 周刊</h1>
+        <p class="community-subtitle">最新大众固有认知，推送不被算法喜爱的文章</p>
+
+        <div class="weekly-intro">
+          <p>我的分享工作得益于「UAC 社群」付费读者的赞助支持，如果你喜欢我的作品，你也会喜欢我的周刊，可加入社群一起成长。</p>
+        </div>
+
+        <div class="weekly-features">
+          <div class="weekly-feature">每周四更新符合"独特且正确"价值主张的文章</div>
+          <div class="weekly-feature">策展"五年之后"仍然值得反复阅读的内容</div>
+          <div class="weekly-feature">分享偏离大众固有认知、违反直觉的内容</div>
+        </div>
+
+        <div class="pricing-box">
+          <h3>价格策略</h3>
+          <p>本合集计划——<strong>每周四更新一篇文章，计划做三年</strong>，这是一场与自己的马拉松，邀请你的加入。（创建时间 2025.04）</p>
+          <p class="price-highlight">售价 <strong>39元</strong>，一杯精品咖啡价格，这是一场对你我长达三年的"知识定投"。</p>
+          <p>如果你均摊到每篇文章的价格一篇三毛钱左右。（若你读到某一个地方，想退费，可以找我退费。）</p>
+          <p>对了，付费完成后，你将获得<strong>两份名额权限</strong>，你可以把另一份赠予于一你关心的人。</p>
+          <p>请做出你的"投资"选择。</p>
+          <p class="pricing-note">其中获得的读者报酬，我将用于购买更好更优质的内容材料，为大家提供更好的内容服务。此类内容也会作为付费读者专属材料，在合集中免费提供。<br/>也是一种众筹。</p>
+        </div>
+
+        <div class="philosophy-box">
+          <p>如果一件事情需要持续交付价值、且长期稳定交付价值，那就必须是"双赢或多赢"。因为读者的时间是有限的，同样，内容创作者的时间也是有限的、不可选的。</p>
+          <p>我想直接从读者那里获取报酬，我就只需要为读者的成长认真负责，而不是广告变现一样，把读者注意力贱卖给广告商。</p>
+        </div>
+
+        <div class="cta-area">
+          <a href="#" class="cta-button-primary">加入 UAC 周刊</a>
+          <span class="cta-hint">点击链接即可跳转到微信支付</span>
+        </div>
+      </section>
+
+      <!-- Divider -->
+      <div class="section-divider"></div>
+
+      <!-- 写作课程 -->
+      <section class="community-section">
+        <h1 class="community-title">像企业家一样写作 · 线上课程</h1>
+        <p class="community-subtitle">78+位同学已加入</p>
+
+        <p class="course-intro">从思维方式到实操方法，系统学习企业家式写作。不是教你写爆款，而是教你建立可持续的内容创作系统。</p>
+
+        <div class="course-features">
+          <div class="feature">
+            <span class="feature-icon">🧠</span>
+            <h3>思维升级</h3>
+            <p>像企业家一样思考写作：系统化、产品化、可持续</p>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">🔧</span>
+            <h3>实操方法</h3>
+            <p>7步黄金骨架 + 8大叙事库，从0到1写出好内容</p>
+          </div>
+          <div class="feature">
+            <span class="feature-icon">💰</span>
+            <h3>变现闭环</h3>
+            <p>写作 → 影响力 → 产品的完整路径</p>
+          </div>
+        </div>
+
+        <div class="course-outline">
+          <h2>课程大纲</h2>
+          <div class="outline-list">
+            <div class="outline-item"><span class="outline-num">01</span><strong>企业家式写作思维</strong></div>
+            <div class="outline-item"><span class="outline-num">02</span><strong>7步黄金骨架</strong></div>
+            <div class="outline-item"><span class="outline-num">03</span><strong>8大叙事库</strong></div>
+            <div class="outline-item"><span class="outline-num">04</span><strong>内容产品化</strong></div>
+            <div class="outline-item"><span class="outline-num">05</span><strong>从0到1构建内容资产</strong></div>
+          </div>
+        </div>
+
+        <div class="cta-area">
+          <a href="#" class="cta-button-secondary">了解课程详情</a>
+          <span class="cta-hint">购买链接即将更新</span>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</BaseLayout>
+
+<style is:global>
+  .community-page { padding: 48px 24px; }
+  .community-inner { max-width: 720px; margin: 0 auto; }
+
+  .community-section { margin-bottom: 48px; }
+  .section-divider {
+    height: 1px; background: var(--color-border);
+    margin: 48px auto; max-width: 200px;
+  }
+
+  .community-title {
+    font-family: var(--font-serif); font-size: 2rem;
+    font-weight: 600; margin-bottom: 8px;
+  }
+  .community-subtitle {
+    color: var(--color-accent); font-weight: 500;
+    font-size: 1.05rem; margin-bottom: 24px;
+  }
+
+  /* Weekly */
+  .weekly-intro p { color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 20px; }
+  .weekly-features {
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 10px; padding: 24px;
+    margin-bottom: 28px;
+  }
+  .weekly-feature {
+    padding: 10px 0;
+    color: var(--color-text); font-size: 15px;
+    line-height: 1.6;
+  }
+  .weekly-feature::before {
+    content: "• ";
+    color: var(--color-accent);
+    font-weight: bold;
+  }
+
+  .pricing-box {
+    background: rgba(245, 80, 0, 0.03);
+    border-left: 3px solid var(--color-accent);
+    padding: 24px; border-radius: 0 8px 8px 0;
+    margin-bottom: 28px;
+  }
+  .pricing-box h3 { font-family: var(--font-serif); font-size: 1.2rem; margin-bottom: 16px; }
+  .pricing-box p { color: var(--color-text-secondary); line-height: 1.9; margin-bottom: 12px; font-size: 15px; }
+  .price-highlight { font-size: 16px !important; }
+  .price-highlight strong { color: var(--color-accent); font-size: 1.4em; }
+  .pricing-note { font-size: 14px !important; color: var(--color-text-secondary); opacity: 0.85; }
+
+  .philosophy-box p {
+    color: var(--color-text-secondary); line-height: 1.9;
+    margin-bottom: 12px; font-size: 15px;
+  }
+
+  /* Course features */
+  .course-intro { color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 28px; }
+  .course-features {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px; margin-bottom: 32px;
+  }
+  .feature {
+    background: var(--color-card-bg); border: 1px solid var(--color-border);
+    border-radius: 10px; padding: 20px; text-align: center;
+  }
+  .feature-icon { font-size: 2rem; display: block; margin-bottom: 12px; }
+  .feature h3 { font-size: 1rem; margin-bottom: 8px; }
+  .feature p { font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; }
+
+  .course-outline { margin-bottom: 32px; }
+  .course-outline h2 { font-family: var(--font-serif); font-size: 1.2rem; margin-bottom: 20px; }
+  .outline-item {
+    display: flex; gap: 16px; padding: 12px 0;
+    border-bottom: 1px solid var(--color-border); align-items: center;
+  }
+  .outline-num { font-size: 1.2rem; font-weight: 300; color: var(--color-accent); width: 36px; }
+  .outline-item strong { font-size: 14px; }
+
+  /* CTA */
+  .cta-area { text-align: center; padding: 32px 0 16px; }
+  .cta-button-primary {
+    display: inline-block; padding: 14px 40px;
+    background: var(--color-accent); color: white;
+    text-decoration: none; border-radius: 8px;
+    font-size: 17px; font-weight: 600;
+  }
+  .cta-button-secondary {
+    display: inline-block; padding: 12px 36px;
+    background: transparent; color: var(--color-text);
+    text-decoration: none; border: 1px solid var(--color-border);
+    border-radius: 8px; font-size: 16px; font-weight: 500;
+    transition: border-color 0.2s;
+  }
+  .cta-button-secondary:hover { border-color: var(--color-accent); color: var(--color-accent); }
+  .cta-hint { display: block; margin-top: 10px; font-size: 13px; color: var(--color-text-secondary); }
+
+  @media (max-width: 640px) {
+    .community-title { font-size: 1.6rem; }
+    .course-features { grid-template-columns: 1fr; }
+  }
+</style>
