@@ -32,10 +32,7 @@ const sortedPosts = filteredPosts.sort((a, b) => new Date(b.data.date) - new Dat
         <!-- Book 1: 选择改变命运 -->
         <a href="/book#book1" class="book-card">
           <div class="book-card-cover">
-            <div class="book-placeholder">
-              <span>📖</span>
-              <p>选择改变命运</p>
-            </div>
+            <img src="/images/book1-cover.png" alt="选择改变命运" class="book-cover-img" />
           </div>
           <div class="book-card-info">
             <h3>《选择改变命运》</h3>
@@ -47,10 +44,7 @@ const sortedPosts = filteredPosts.sort((a, b) => new Date(b.data.date) - new Dat
         <!-- Book 2: 第一个100块 -->
         <a href="/book#book2" class="book-card">
           <div class="book-card-cover">
-            <div class="book-placeholder">
-              <span>🔄</span>
-              <p>第一个100块</p>
-            </div>
+            <img src="/images/book2-cover.png" alt="第一个100块" class="book-cover-img" />
           </div>
           <div class="book-card-info">
             <h3>《第一个100块》</h3>
@@ -266,22 +260,15 @@ const sortedPosts = filteredPosts.sort((a, b) => new Date(b.data.date) - new Dat
     border-color: rgba(245, 80, 0, 0.2);
   }
   .book-card-cover { flex-shrink: 0; }
-  .book-placeholder {
-    width: 120px; height: 168px;
-    background: linear-gradient(145deg, #fafafa 0%, #f0f0f0 100%);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 10px;
-    box-shadow: inset 0 1px 2px rgba(255,255,255,0.8), 0 2px 4px rgba(0,0,0,0.04);
+  .book-cover-img {
+    width: 120px; height: auto;
+    border-radius: 6px;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
-  .book-placeholder span { font-size: 2.2rem; filter: grayscale(0.2); }
-  .book-placeholder p {
-    font-family: var(--font-serif);
-    font-size: 12px; font-weight: 600;
-    text-align: center;
-    color: var(--color-text-secondary);
-    padding: 0 8px;
+  .book-card:hover .book-cover-img {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 16px 44px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.08);
   }
   .book-card-info h3 {
     font-family: var(--font-serif);
