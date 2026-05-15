@@ -7,6 +7,10 @@ series: "选择改变命运"
 seriesOrder: 1
 ---
 
+![封面](/images/fate/017_Image_1.jpg)
+
+
+
 ## 第一章：为什么选择如此重要？
 >**让子弹飞一会儿**
 

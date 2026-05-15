@@ -65,6 +65,9 @@ seriesOrder: 9
 
 用一句话就是，观察是否具有一些良好的习惯。
 
+![插图](/images/fate/007_Image_1.jpg)
+
+
 
 
 # 大的人生选择
