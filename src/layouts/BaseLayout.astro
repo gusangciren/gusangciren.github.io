@@ -14,12 +14,17 @@ const { title, description = '像企业家一样写作 — 用写作构建你的
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <title>{title}</title>
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png" />
   </head>
   <body>
     <nav class="navbar">
       <div class="nav-inner">
-        <a href="/" class="logo">像企业家一样写作</a>
+        <a href="/" class="logo">
+          <img src="/images/logo-header.png" alt="Logo" class="logo-img" />
+          <span>像企业家一样写作</span>
+        </a>
         <div class="nav-links">
           <a href="/blog">文章</a>
           <a href="/book">书籍</a>
@@ -85,12 +90,29 @@ const { title, description = '像企业家一样写作 — 用写作构建你的
     justify-content: space-between;
   }
   .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     font-family: var(--font-serif);
-    font-size: 16px;
-    font-weight: 300;
-    letter-spacing: 0.08em;
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
     color: var(--color-text);
     text-decoration: none;
+    padding: 4px 8px;
+    border-radius: 24px;
+    transition: background 0.2s;
+  }
+  .logo:hover {
+    background: rgba(245, 80, 0, 0.06);
+  }
+  .logo-img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    border: 1.5px solid rgba(245, 80, 0, 0.15);
   }
   .nav-links {
     display: flex;

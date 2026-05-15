@@ -10,10 +10,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div id="book1" class="book-section">
         <div class="book-hero">
           <div class="book-cover">
-            <div class="book-placeholder" id="book1-cover">
-              <span>📖</span>
-              <p>选择改变命运</p>
-            </div>
+            <img src="/images/book1-cover.png" alt="选择改变命运" class="book-cover-img" />
           </div>
           <div class="book-details">
             <h1>《选择改变命运：靠学识赢得未来》</h1>
@@ -53,10 +50,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div id="book2" class="book-section">
         <div class="book-hero">
           <div class="book-cover">
-            <div class="book-placeholder" id="book2-cover">
-              <span>🔄</span>
-              <p>第一个100块</p>
-            </div>
+            <img src="/images/book2-cover.png" alt="第一个100块" class="book-cover-img" />
           </div>
           <div class="book-details">
             <h1>《闭环："第一个100块"七步曲》</h1>
@@ -99,16 +93,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   .book-hero { display: flex; gap: 48px; align-items: flex-start; margin-bottom: 48px; }
   .book-cover { flex-shrink: 0; }
-  .book-placeholder {
-    width: 200px; height: 280px;
-    background: var(--color-card-bg);
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 12px;
+  .book-cover-img {
+    width: 200px; height: auto;
+    border-radius: 6px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
-  .book-placeholder span { font-size: 3rem; }
-  .book-placeholder p { font-family: var(--font-serif); font-size: 16px; font-weight: 600; }
+  .book-cover-img:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25), 0 8px 24px rgba(0,0,0,0.15);
+  }
   .book-details h1 {
     font-family: var(--font-serif); font-size: 1.8rem;
     font-weight: 600; margin-bottom: 8px;
