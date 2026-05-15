@@ -7,7 +7,7 @@ series: "选择改变命运"
 seriesOrder: 1
 ---
 
-![封面](/images/fate/017_Image_1.jpg)
+![封面](/images/fate/17_Image_1.jpg)
 
 
 

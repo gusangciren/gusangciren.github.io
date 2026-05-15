@@ -60,7 +60,7 @@ seriesOrder: 5
 
 我们大脑倾向于直线增长（1、2、3、4、5）的方式预估未来，也就是不善于思考加速度的变化（1、2、4、8、16）。
 
-![插图](/images/fate/015_Image_1.png)
+![插图](/images/fate/15_Image_1.png)
 
 
 
@@ -191,7 +191,7 @@ seriesOrder: 5
 
 思考就是迂回生产，思考就是提高加速度。
 
-![插图](/images/fate/002_Image_1.jpg)
+![插图](/images/fate/02_Image_1.jpg)
 
 
 

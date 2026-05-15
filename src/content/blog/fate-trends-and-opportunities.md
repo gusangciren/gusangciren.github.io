@@ -125,7 +125,7 @@ seriesOrder: 12
 
 老龄化、新能源都是长期的供需失衡。
 
-![插图](/images/fate/004_Image_1.jpg)
+![插图](/images/fate/04_Image_1.jpg)
 
 
 

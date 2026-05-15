@@ -47,7 +47,7 @@ seriesOrder: 8
 
 有谁能“享受”下面图片梗的乐趣。
 
-![插图](/images/fate/023_Image_1.png)
+![插图](/images/fate/23_Image_1.png)
 
 
 
