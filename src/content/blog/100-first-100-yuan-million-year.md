@@ -61,7 +61,6 @@ Lean Startup Methodologies里常常提到的一个方法论：
 ![插图](/images/100/018_Image_1.png)
 
 
-![](/images/100/018_Image_1.png)
 
 来源：jamesclear.com
 
@@ -143,7 +142,6 @@ Lean Startup Methodologies里常常提到的一个方法论：
 ![插图](/images/100/019_Image_1.png)
 
 
-![](/images/100/019_Image_1.png)
 
 复利发生的机理：
 
