@@ -101,6 +101,4 @@ seriesOrder: 0
 
 让我们一起开始探索"极简闭环"。
 
----
 
-> 📖 **下一章**：[第一个100块：如何从零获得第一批观众](/blog/first-100-yuan-how-to-get-audience)
