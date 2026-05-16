@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "src/content/blog/100-first-100-yuan-serve-your-audience.md",
+                "file": "src/content/blog/what-happens-when-you-publish-weekly.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "100-first-100-yuan-serve-your-audience"
+              "title": "what-happens-when-you-publish-weekly"
             }
           }
         ]
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "src/content/blog/100-first-100-yuan-serve-your-audience.md",
+                "file": "src/content/blog/what-happens-when-you-publish-weekly.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "100-first-100-yuan-serve-your-audience 的反向链接列表"
+              "title": "what-happens-when-you-publish-weekly 的反向链接列表"
             }
           },
           {
@@ -113,12 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "src/content/blog/100-first-100-yuan-serve-your-audience.md",
+                "file": "src/content/blog/what-happens-when-you-publish-weekly.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "100-first-100-yuan-serve-your-audience 的出链列表"
+              "title": "what-happens-when-you-publish-weekly 的出链列表"
             }
           },
           {
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "src/content/blog/100-first-100-yuan-serve-your-audience.md",
+                "file": "src/content/blog/what-happens-when-you-publish-weekly.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "100-first-100-yuan-serve-your-audience 的大纲"
+              "title": "what-happens-when-you-publish-weekly 的大纲"
             }
           }
         ]
@@ -183,21 +183,19 @@
       "bases:新建数据库": false
     }
   },
-  "active": "5f76c58bad46892a",
+  "active": "e99c3ad4847928cb",
   "lastOpenFiles": [
-    "src/pages/community.astro",
-    "dist/index.html",
-    "dist/book/index.html",
-    "dist/book",
-    "dist/blog/first-100-yuan-money-tree/index.html",
-    "dist/blog/what-happens-when-you-publish-weekly/index.html",
-    "dist/blog/sales-is-problem-solving/index.html",
-    "dist/blog/first-100-yuan-serve-your-audience/index.html",
-    "dist/blog/first-100-yuan-million-year/index.html",
-    "dist/blog/first-100-yuan-important-logic/index.html",
-    "dist/blog/first-100-yuan-how-to-get-audience/index.html",
-    "dist/images/100/013_Image_1.png",
-    "dist/images/fate/03_Image_1.jpg",
+    "dist/blog/writing-is-thinking",
+    "dist/blog/what-happens-when-you-publish-weekly",
+    "dist/blog/using-ai-or-ai-amputating-you",
+    "dist/blog/understand-sales",
+    "dist/blog/sales-is-problem-solving",
+    "dist/blog/publish-weekly-4-weeks-results",
+    "dist/blog/product-for-monetization",
+    "dist/blog/index.html",
+    "dist/blog/how-to-install-claude-code",
+    "dist/blog/fate-habit-of-slack",
+    "dist/blog/first-100-yuan-serve-your-audience",
     "dist/images/fate/17_Image_1.jpg",
     "dist/images/fate/16_Image_1.jpg",
     "dist/images/fate/15_Image_1.png",
@@ -205,15 +203,28 @@
     "dist/images/fate/13_Image_1.jpg",
     "dist/images/fate/12_Image_1.png",
     "dist/images/fate/11_Image_1.jpg",
-    "dist/images/fate/07_Image_1.jpg",
+    "dist/images/fate/10_Image_1.jpg",
+    "dist/images/fate/09_Image_1.png",
+    "dist/images/fate/08_Image_1.jpg",
+    "src/content/blog/writing-is-thinking.md",
+    "src/content/blog/publish-weekly-4-weeks-results.md",
+    "src/content/blog/product-for-monetization.md",
+    "src/content/blog/how-to-install-claude-code.md",
+    "src/content/blog/ai-plus-code-my-os-upgrade.md",
+    "src/content/blog/using-ai-or-ai-amputating-you.md",
+    "src/content/blog/understand-sales.md",
+    "src/content/blog/content-irreplaceable.md",
+    "src/content/blog/creator-without-inspiration.md",
+    "2026-04-20.md",
+    "src/content/blog/what-happens-when-you-publish-weekly.md",
+    "src/content/blog/100-first-100-yuan-byproduct-of-growth.md",
+    "src/content/blog/100-first-100-yuan-serve-your-audience.md",
     "src/content/blog/100-first-100-yuan-money-tree.md",
     "src/content/blog/100-first-100-yuan-million-year.md",
     "src/content/blog/100-first-100-yuan-important-logic.md",
     "src/content/blog/100-first-100-yuan-how-to-get-audience.md",
     "src/content/blog/100-first-100-yuan-earn-while-you-sleep.md",
-    "src/content/blog/100-first-100-yuan-byproduct-of-growth.md",
     "src/content/blog/ai-wont-eliminate-people.md",
-    "src/content/blog/100-first-100-yuan-serve-your-audience.md",
     "README.md"
   ]
 }
