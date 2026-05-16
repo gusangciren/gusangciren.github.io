@@ -11,7 +11,6 @@ seriesOrder: 0
 
 在正式开始分享“桶”的闭环方法论之前，让我们澄清一件事。 
 
-![插图](/images/100/001_Image_1.png)
 
 
 世界上的人群大致可以分为两类。你是哪一种呢？
@@ -68,7 +67,6 @@ seriesOrder: 0
 
 幸运公式很简单：做Doing*说Telling。
 
-![插图](/images/100/002_Image_1.png)
 
 
 

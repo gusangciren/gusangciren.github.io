@@ -11,7 +11,6 @@ seriesOrder: 6
 
 即使是"普通人"也可以创造产品(或销售别人的产品)，成为全职型企业家---这只要你自己的许可。
 
-![插图](/images/100/017_Image_1.png)
 
 如果你有三到五种平均单价为30 元的产品，每天销售 25 到 30 件，**恭喜你！**你有一个年营收一百万的生意。见头图公式。
 
@@ -58,7 +57,6 @@ Lean Startup Methodologies里常常提到的一个方法论：
 
 （以下为jamesclear的四种产品/服务「书籍、大师课、期刊、App」，它就是一个基于解决「如何养成习惯」问题而创造出的收入组合流。）
 
-![插图](/images/100/018_Image_1.png)
 
 
 
@@ -139,7 +137,6 @@ Lean Startup Methodologies里常常提到的一个方法论：
 
 《Case Study - StoryLearning》 
 
-![插图](/images/100/019_Image_1.png)
 
 
 
