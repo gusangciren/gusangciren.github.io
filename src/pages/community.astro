@@ -7,9 +7,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   description="每周四推送不被算法喜爱的文章，已有78+位同学加入。系统学习企业家式写作，用内容构建你的个人品牌。"
 >
   <!-- Hero -->
-  <section class="hero">
-    <div class="hero-inner">
-      <span class="hero-badge">📬 每周四更新</span>
+  <section class="community-hero">
+    <div class="community-hero-inner">
+      <span class="hero-badge">每周四更新</span>
       <h1>UAC 周刊</h1>
       <p class="hero-sub">不被算法喜爱的文章，写给认真思考的人</p>
       <div class="hero-price">
@@ -32,7 +32,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <p>每周四推送一篇深度文章，涵盖写作方法论、个人品牌、内容变现。不追热点，只写经得起时间考验的内容。</p>
         </div>
         <div class="benefit-card">
-          <div class="benefit-icon">🎯</div>
+          <div class="benefit-icon">🎓</div>
           <h3>系统写作课程</h3>
           <p>从选题到发布的完整写作系统。不是碎片技巧，而是可复用的企业家式写作方法论。</p>
         </div>
@@ -96,11 +96,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <span class="price-unit">/ 三年</span>
         </div>
         <ul class="pricing-features">
-          <li>✓ 每周一篇深度文章（持续三年）</li>
-          <li>✓ 完整写作课程体系</li>
-          <li>✓ 专属交流群</li>
-          <li>✓ 过往所有内容库</li>
-          <li>✓ 写作模板与工具包</li>
+          <li>✅ 每周一篇深度文章（持续三年）</li>
+          <li>✅ 完整写作课程体系</li>
+          <li>✅ 专属交流群</li>
+          <li>✅ 过往所有内容库</li>
+          <li>✅ 写作模板与工具包</li>
         </ul>
         <a href="#" class="btn-primary btn-large btn-full">立即加入</a>
         <p class="pricing-note">一次付费，三年服务。无自动续费，无隐藏消费。</p>
@@ -133,147 +133,3 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
   </section>
 </BaseLayout>
-
-<style is:global>
-  /* Hero */
-  .hero {
-    padding: 100px 24px 80px;
-    text-align: center;
-    background: linear-gradient(180deg, rgba(245,80,0,0.04) 0%, transparent 100%);
-    border-bottom: 1px solid var(--color-border);
-  }
-  .hero-inner { max-width: 560px; margin: 0 auto; }
-  .hero-badge {
-    display: inline-block;
-    padding: 6px 16px;
-    background: rgba(245,80,0,0.1);
-    color: var(--color-accent);
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 20px;
-  }
-  .hero h1 {
-    font-family: var(--font-serif);
-    font-size: 2.8rem;
-    font-weight: 600;
-    margin-bottom: 12px;
-    letter-spacing: 0.02em;
-  }
-  .hero-sub {
-    font-size: 1.15rem;
-    color: var(--color-text-secondary);
-    margin-bottom: 24px;
-  }
-  .hero-price { margin: 24px 0 28px; }
-  .price-tag { font-size: 3rem; font-weight: 700; color: var(--color-accent); }
-  .price-period { font-size: 1.2rem; color: var(--color-text-secondary); }
-  .btn-large { padding: 14px 40px; font-size: 17px; border-radius: 10px; }
-  .btn-full { display: block; text-align: center; }
-  .hero-note { margin-top: 16px; font-size: 14px; color: var(--color-text-secondary); }
-  .btn-primary {
-    display: inline-block;
-    padding: 10px 28px;
-    background: var(--color-accent);
-    color: #fff;
-    text-decoration: none;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 500;
-    transition: opacity 0.2s;
-  }
-  .btn-primary:hover { opacity: 0.88; }
-
-  /* Section Common */
-  .section { padding: 64px 24px; }
-  .section-inner { max-width: 960px; margin: 0 auto; }
-  .section-title {
-    font-family: var(--font-serif);
-    font-size: 1.6rem;
-    font-weight: 600;
-    text-align: center;
-    margin-bottom: 40px;
-  }
-  .section-accent { background: rgba(245,80,0,0.03); }
-
-  /* Benefits Grid */
-  .benefits-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 24px;
-  }
-  .benefit-card {
-    padding: 28px;
-    background: var(--color-card-bg);
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    text-align: center;
-    transition: box-shadow 0.2s, transform 0.2s;
-  }
-  .benefit-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); transform: translateY(-2px); }
-  .benefit-icon { font-size: 2rem; margin-bottom: 12px; }
-  .benefit-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
-  .benefit-card p { font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; }
-
-  /* Philosophy */
-  .philosophy { max-width: 640px; margin: 0 auto; text-align: center; }
-  .philosophy h2 { font-family: var(--font-serif); font-size: 2rem; font-weight: 600; margin-bottom: 16px; }
-  .philosophy-lead { font-size: 1.2rem; color: var(--color-accent); font-weight: 500; margin-bottom: 16px; }
-  .philosophy p { color: var(--color-text-secondary); margin-bottom: 12px; line-height: 1.8; }
-
-  /* Content List */
-  .content-list { display: flex; flex-direction: column; gap: 20px; }
-  .content-item {
-    padding: 28px;
-    background: var(--color-card-bg);
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    transition: box-shadow 0.2s;
-  }
-  .content-item:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
-  .content-tag {
-    display: inline-block;
-    padding: 4px 12px;
-    background: rgba(245,80,0,0.08);
-    color: var(--color-accent);
-    border-radius: 4px;
-    font-size: 13px;
-    font-weight: 500;
-    margin-bottom: 12px;
-  }
-  .content-item h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; }
-  .content-item p { font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; }
-
-  /* Pricing */
-  .section-pricing { background: linear-gradient(180deg, transparent 0%, rgba(245,80,0,0.03) 100%); }
-  .pricing-card {
-    max-width: 440px;
-    margin: 0 auto;
-    padding: 40px;
-    background: var(--color-card-bg);
-    border: 2px solid var(--color-accent);
-    border-radius: 16px;
-    text-align: center;
-  }
-  .pricing-card h2 { font-family: var(--font-serif); font-size: 1.6rem; font-weight: 600; margin-bottom: 16px; }
-  .pricing-price { margin: 24px 0; }
-  .price-number { font-size: 3.5rem; font-weight: 700; color: var(--color-accent); }
-  .price-unit { font-size: 1.2rem; color: var(--color-text-secondary); }
-  .pricing-features { list-style: none; text-align: left; margin: 28px 0; padding: 0; }
-  .pricing-features li { padding: 10px 0; font-size: 15px; border-bottom: 1px solid var(--color-border); }
-  .pricing-features li:last-child { border-bottom: none; }
-  .pricing-note { margin-top: 16px; font-size: 13px; color: var(--color-text-secondary); }
-
-  /* FAQ */
-  .faq-list { max-width: 640px; margin: 0 auto; }
-  .faq-item { padding: 24px 0; border-bottom: 1px solid var(--color-border); }
-  .faq-item:last-child { border-bottom: none; }
-  .faq-item h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 8px; }
-  .faq-item p { font-size: 14px; color: var(--color-text-secondary); line-height: 1.7; }
-
-  @media (max-width: 640px) {
-    .hero h1 { font-size: 2.2rem; }
-    .benefits-grid { grid-template-columns: 1fr; }
-    .pricing-card { padding: 28px 20px; }
-  }
-</style>

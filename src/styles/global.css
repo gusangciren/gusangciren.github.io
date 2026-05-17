@@ -11,7 +11,7 @@
   --color-card-bg: #ffffff;
   --max-width: 720px;
   --font-serif: 'Noto Serif SC', 'Source Han Serif SC', serif;
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 * {
@@ -204,7 +204,7 @@ footer {
   font-weight: 600;
 }
 
-/* ========== CTA Box ========== */
+/* ========== CTA Box (from article pages) ========== */
 .cta-box {
   max-width: var(--max-width);
   margin: 3em auto;
@@ -218,20 +218,6 @@ footer {
   color: var(--color-text-secondary);
   margin-bottom: 1em;
   font-size: 15px;
-}
-.cta-button {
-  display: inline-block;
-  padding: 10px 28px;
-  background: var(--color-accent);
-  color: white;
-  text-decoration: none;
-  border-radius: 8px;
-  font-size: 15px;
-  font-weight: 500;
-  transition: opacity 0.2s;
-}
-.cta-button:hover {
-  opacity: 0.9;
 }
 
 /* ========== Article header (from [...slug].astro) ========== */
@@ -337,12 +323,229 @@ footer {
   background: #2d2a26;
   transform: translateY(-1px);
 }
-.cta-icon {
-  font-size: 1.1em;
+
+/* ========== Book Page ========== */
+html { scroll-behavior: smooth; }
+.book-page { padding: 48px 24px; }
+.book-inner { max-width: 720px; margin: 0 auto; }
+
+.book-section { margin-bottom: 64px; }
+.book-divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: 64px auto;
+  max-width: 200px;
 }
-.cta-text {
-  white-space: nowrap;
+
+.book-hero { display: flex; gap: 48px; align-items: flex-start; margin-bottom: 48px; }
+.book-cover { flex-shrink: 0; }
+.book-cover-img {
+  width: 200px; height: auto;
+  border-radius: 6px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+.book-cover-img:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25), 0 8px 24px rgba(0,0,0,0.15);
+}
+.book-details h1 {
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  font-weight: 600; margin-bottom: 8px;
+}
+.tagline { color: var(--color-accent); font-weight: 500; font-size: 1.05rem; margin-bottom: 4px; }
+.motto {
+  font-family: var(--font-serif);
+  color: var(--color-text-secondary);
+  font-style: italic;
+  margin-bottom: 16px;
+  font-size: 15px;
+}
+.book-details p { color: var(--color-text-secondary); line-height: 1.8; margin-bottom: 12px; }
+
+.chapters { margin-top: 16px; }
+.chapters h2 { font-family: var(--font-serif); font-size: 1.3rem; margin-bottom: 24px; }
+.chapter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 0;
+}
+.chapter-item {
+  display: flex; gap: 12px; padding: 14px 16px;
+  border-bottom: 1px solid var(--color-border);
+  align-items: flex-start;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.15s;
+}
+.chapter-item:hover { background: rgba(245, 80, 0, 0.04); }
+.chapter-num {
+  font-size: 1.2rem; font-weight: 300; color: var(--color-accent);
+  width: 30px; flex-shrink: 0; line-height: 1.5;
+}
+.chapter-item strong { font-size: 14px; display: block; }
+.chapter-item p { font-size: 13px; color: var(--color-text-secondary); margin: 2px 0 0; }
+
+/* ========== Community Page ========== */
+.community-hero {
+  padding: 100px 24px 80px;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(245,80,0,0.04) 0%, transparent 100%);
+  border-bottom: 1px solid var(--color-border);
+}
+.community-hero-inner { max-width: 560px; margin: 0 auto; }
+.hero-badge {
+  display: inline-block;
+  padding: 6px 16px;
+  background: rgba(245,80,0,0.1);
+  color: var(--color-accent);
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+.community-hero h1 {
+  font-family: var(--font-serif);
+  font-size: 2.8rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  letter-spacing: 0.02em;
+}
+.hero-sub {
+  font-size: 1.15rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 24px;
+}
+.hero-price { margin: 24px 0 28px; }
+.price-tag { font-size: 3rem; font-weight: 700; color: var(--color-accent); }
+.price-period { font-size: 1.2rem; color: var(--color-text-secondary); }
+
+.section { padding: 64px 24px; }
+.section-inner { max-width: 960px; margin: 0 auto; }
+.section-title {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 40px;
+}
+.section-accent { background: rgba(245,80,0,0.03); }
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px;
+}
+.benefit-card {
+  padding: 28px;
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  text-align: center;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.benefit-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); transform: translateY(-2px); }
+.benefit-icon { font-size: 2rem; margin-bottom: 12px; }
+.benefit-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
+.benefit-card p { font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; }
+
+.philosophy { max-width: 640px; margin: 0 auto; text-align: center; }
+.philosophy h2 { font-family: var(--font-serif); font-size: 2rem; font-weight: 600; margin-bottom: 16px; }
+.philosophy-lead { font-size: 1.2rem; color: var(--color-accent); font-weight: 500; margin-bottom: 16px; }
+.philosophy p { color: var(--color-text-secondary); margin-bottom: 12px; line-height: 1.8; }
+
+.content-list { display: flex; flex-direction: column; gap: 20px; }
+.content-item {
+  padding: 28px;
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  transition: box-shadow 0.2s;
+}
+.content-item:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+.content-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  background: rgba(245,80,0,0.08);
+  color: var(--color-accent);
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+.content-item h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; }
+.content-item p { font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; }
+
+.pricing-card {
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 40px;
+  background: var(--color-card-bg);
+  border: 2px solid var(--color-accent);
+  border-radius: 16px;
+  text-align: center;
+}
+.pricing-card h2 { font-family: var(--font-serif); font-size: 1.6rem; font-weight: 600; margin-bottom: 16px; }
+.pricing-price { margin: 24px 0; }
+.price-number { font-size: 3.5rem; font-weight: 700; color: var(--color-accent); }
+.price-unit { font-size: 1.2rem; color: var(--color-text-secondary); }
+.pricing-features { list-style: none; text-align: left; margin: 28px 0; padding: 0; }
+.pricing-features li { padding: 10px 0; font-size: 15px; border-bottom: 1px solid var(--color-border); }
+.pricing-features li:last-child { border-bottom: none; }
+.pricing-note { margin-top: 16px; font-size: 13px; color: var(--color-text-secondary); }
+
+.faq-list { max-width: 640px; margin: 0 auto; }
+.faq-item { padding: 24px 0; border-bottom: 1px solid var(--color-border); }
+.faq-item:last-child { border-bottom: none; }
+.faq-item h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 8px; }
+.faq-item p { font-size: 14px; color: var(--color-text-secondary); line-height: 1.7; }
+
+/* ========== Resources Page ========== */
+.resources-page { padding: 48px 24px; }
+.resources-inner { max-width: 720px; margin: 0 auto; }
+.resources-header { text-align: center; margin-bottom: 48px; }
+.resources-header h1 { font-family: var(--font-serif); font-size: 2rem; font-weight: 600; margin-bottom: 12px; }
+.resources-header p { color: var(--color-text-secondary); font-size: 1.05rem; }
+.resource-category { margin-bottom: 48px; }
+.resource-category h2 { font-family: var(--font-serif); font-size: 1.4rem; font-weight: 600; margin-bottom: 20px; padding-bottom: 8px; border-bottom: 2px solid var(--color-accent); display: inline-block; }
+.resource-list { display: flex; flex-direction: column; gap: 12px; }
+.resource-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+.resource-item:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); border-color: var(--color-accent); }
+.resource-icon {
+  font-size: 1.5rem;
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(245,80,0,0.06);
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.resource-info { flex: 1; }
+.resource-info strong { font-size: 15px; display: block; margin-bottom: 2px; }
+.resource-info span { font-size: 13px; color: var(--color-text-secondary); }
+.resource-download {
+  padding: 6px 16px;
+  background: var(--color-accent);
+  color: #fff;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+.resource-download:hover { opacity: 0.9; }
 
 /* ========== Responsive ========== */
 @media (max-width: 640px) {
@@ -374,4 +577,9 @@ footer {
   .next-title {
     text-align: center;
   }
+  .book-hero { flex-direction: column; align-items: center; text-align: center; }
+  .chapter-grid { grid-template-columns: 1fr; }
+  .benefits-grid { grid-template-columns: 1fr; }
+  .community-hero h1 { font-size: 2.2rem; }
+  .pricing-card { padding: 28px 20px; }
 }
