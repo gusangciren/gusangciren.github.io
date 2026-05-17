@@ -1,20 +1,26 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import PostCard from '../components/PostCard.astro';
+import CTASection from '../components/CTASection.astro';
 
 import { getCollection } from 'astro:content';
 
 const posts = await getCollection('blog');
 const filteredPosts = posts.filter(p => p.data.series !== '第一个100块' && p.data.series !== '选择改变命运');
-
 const sortedPosts = filteredPosts.sort((a, b) => new Date(b.data.date) - new Date(a.data.date));
+
+const { featured = posts.slice(0, 6) } = Astro.props;
 ---
 
 <BaseLayout title="像企业家一样写作">
   <!-- Hero -->
   <section class="hero">
     <div class="hero-inner">
-      <h1>像企业家一样写作</h1>
-      <p class="hero-sub">用写作构建你的个人品牌和商业系统</p>
+      <h1>Build, sell, write, create, invest, and own.</h1>
+      <p class="hero-cn">构建，销售，写作，创造，投资，掌控。</p>
+      <p class="hero-habit">Make these habits.</p>
+      <p class="hero-habit-cn">保持这些习惯。</p>
       <div class="hero-actions">
         <a href="/blog" class="btn-primary">读文章</a>
         <a href="/book" class="btn-secondary">看书籍</a>
@@ -23,40 +29,30 @@ const sortedPosts = filteredPosts.sort((a, b) => new Date(b.data.date) - new Dat
     </div>
   </section>
 
-  <!-- Books -->
+  <!-- Books Preview -->
   <section class="section section-books">
     <div class="section-inner">
-      <h2 class="books-title">书籍作品</h2>
-
-      <div class="books-container">
-        <!-- Book 1: 选择改变命运 -->
-        <a href="/book#book1" class="book-card">
-          <div class="book-card-cover">
-            <img src="/images/book1-cover.png" alt="选择改变命运" class="book-cover-img" />
-          </div>
-          <div class="book-card-info">
+      <SectionHeader title="书籍作品" link="/book" />
+      <div class="books-preview">
+        <a href="/book#choice-changes-fate" class="book-preview-card">
+          <img src="/images/book1-cover.png" alt="选择改变命运" class="book-preview-cover" />
+          <div>
             <h3>《选择改变命运》</h3>
-            <p class="book-card-tagline">靠学识赢得未来</p>
-            <p>人生由十几个重大选择和无数微小选择构成。在重大选择面前做出最优选择。</p>
+            <p>靠学识赢得未来</p>
           </div>
         </a>
-
-        <!-- Book 2: 第一个100块 -->
-        <a href="/book#book2" class="book-card">
-          <div class="book-card-cover">
-            <img src="/images/book2-cover.png" alt="第一个100块" class="book-cover-img" />
-          </div>
-          <div class="book-card-info">
+        <a href="/book#first-100-yuan" class="book-preview-card">
+          <img src="/images/book2-cover.png" alt="第一个100块" class="book-preview-cover" />
+          <div>
             <h3>《第一个100块》</h3>
-            <p class="book-card-tagline">从0到1的内容变现闭环</p>
-            <p>用企业家思维重新理解写作。七个步骤，每一步都是真实踩过的坑。</p>
+            <p>从0到1的内容变现闭环</p>
           </div>
         </a>
       </div>
     </div>
   </section>
 
-  <!-- Community -->
+  <!-- Community Preview -->
   <section class="section">
     <div class="section-inner">
       <div class="course-layout">
@@ -73,252 +69,19 @@ const sortedPosts = filteredPosts.sort((a, b) => new Date(b.data.date) - new Dat
   <!-- Latest Articles -->
   <section class="section">
     <div class="section-inner">
-      <div class="section-header">
-        <h2>最新文章</h2>
-        <a href="/blog" class="see-all">查看全部 →</a>
-      </div>
+      <SectionHeader title="最新文章" link="/blog" />
       <div class="card-grid">
         {sortedPosts.slice(0, 6).map((post) => (
-          <a href={`/blog/${post.data.slug}`} class="card">
-            <div class="card-body">
-              <span class="card-date">
-                {new Date(post.data.date).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
-              </span>
-              <h3>{post.data.title}</h3>
-              <p>{post.data.description || ''}</p>
-            </div>
-          </a>
+          <PostCard post={post} />
         ))}
       </div>
     </div>
   </section>
+
+  <!-- CTA -->
+  <section class="section">
+    <div class="section-inner">
+      <CTASection />
+    </div>
+  </section>
 </BaseLayout>
-
-<style is:global>
-  /* Hero */
-  .hero {
-    padding: 80px 24px 60px;
-    text-align: center;
-    border-bottom: 1px solid var(--color-border);
-  }
-  .hero-inner {
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  .hero h1 {
-    font-family: var(--font-serif);
-    font-size: 2.4rem;
-    font-weight: 300;
-    letter-spacing: 0.06em;
-    margin-bottom: 16px;
-  }
-  .hero-sub {
-    font-size: 1.1rem;
-    color: var(--color-text-secondary);
-    margin-bottom: 32px;
-  }
-  .hero-actions {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  /* Buttons */
-  .btn-primary {
-    display: inline-block;
-    padding: 10px 28px;
-    background: var(--color-accent);
-    color: white;
-    text-decoration: none;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 500;
-    transition: opacity 0.2s;
-  }
-  .btn-primary:hover { opacity: 0.9; }
-  .btn-secondary {
-    display: inline-block;
-    padding: 10px 28px;
-    background: transparent;
-    color: var(--color-text);
-    text-decoration: none;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    font-size: 15px;
-    transition: border-color 0.2s;
-  }
-  .btn-secondary:hover { border-color: var(--color-text); }
-
-  /* Sections */
-  .section {
-    padding: 60px 24px;
-  }
-  .section-accent {
-    background: rgba(245, 80, 0, 0.03);
-  }
-  .section-inner {
-    max-width: 960px;
-    margin: 0 auto;
-  }
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 32px;
-  }
-  .section-header h2 {
-    font-family: var(--font-serif);
-    font-size: 1.5rem;
-    font-weight: 600;
-  }
-  .see-all {
-    font-size: 14px;
-    color: var(--color-accent);
-    text-decoration: none;
-  }
-
-  /* Card Grid */
-  .card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
-  }
-  .card {
-    text-decoration: none;
-    color: inherit;
-    background: var(--color-card-bg);
-    border: 1px solid var(--color-border);
-    border-radius: 10px;
-    transition: box-shadow 0.2s, transform 0.2s;
-  }
-  .card:hover {
-    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-    transform: translateY(-2px);
-  }
-  .card-body {
-    padding: 20px;
-  }
-  .card-date {
-    font-size: 13px;
-    color: var(--color-text-secondary);
-  }
-  .card h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin: 8px 0;
-    line-height: 1.4;
-  }
-  .card p {
-    font-size: 14px;
-    color: var(--color-text-secondary);
-    line-height: 1.6;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  /* Books - Centered & Elegant */
-  .section-books {
-    background: linear-gradient(180deg, rgba(245, 80, 0, 0.02) 0%, rgba(245, 80, 0, 0.06) 100%);
-    border-top: 1px solid rgba(245, 80, 0, 0.08);
-    border-bottom: 1px solid rgba(245, 80, 0, 0.08);
-  }
-  .books-title {
-    font-family: var(--font-serif);
-    font-size: 1.6rem;
-    font-weight: 600;
-    text-align: center;
-    margin-bottom: 40px;
-    letter-spacing: 0.02em;
-  }
-  .books-container {
-    display: flex;
-    gap: 32px;
-    justify-content: center;
-    flex-wrap: wrap;
-    max-width: 800px;
-    margin: 0 auto;
-  }
-  .book-card {
-    flex: 0 1 360px;
-    display: flex;
-    gap: 20px;
-    text-decoration: none;
-    color: inherit;
-    background: #fff;
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    padding: 24px;
-    transition: all 0.25s ease;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  }
-  .book-card:hover {
-    box-shadow: 0 8px 24px rgba(245, 80, 0, 0.12);
-    transform: translateY(-3px);
-    border-color: rgba(245, 80, 0, 0.2);
-  }
-  .book-card-cover { flex-shrink: 0; }
-  .book-cover-img {
-    width: 120px; height: auto;
-    border-radius: 6px;
-    box-shadow: 0 8px 28px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  .book-card:hover .book-cover-img {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 16px 44px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.08);
-  }
-  .book-card-info h3 {
-    font-family: var(--font-serif);
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-  .book-card-tagline {
-    font-size: 0.95rem;
-    color: var(--color-accent);
-    font-weight: 500;
-    margin-bottom: 8px;
-  }
-  .book-card-info p {
-    font-size: 14px;
-    color: var(--color-text-secondary);
-    line-height: 1.6;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  /* Course */
-  .course-layout {
-    text-align: center;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  .course-info h2 {
-    font-family: var(--font-serif);
-    font-size: 1.8rem;
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-  .course-tagline {
-    font-size: 1rem;
-    color: var(--color-text-secondary);
-    margin-bottom: 16px;
-  }
-  .course-info p {
-    color: var(--color-text-secondary);
-    margin-bottom: 24px;
-    line-height: 1.8;
-  }
-
-  @media (max-width: 640px) {
-    .hero { padding: 60px 16px 40px; }
-    .hero h1 { font-size: 1.8rem; }
-    .book-layout { flex-direction: column; text-align: center; }
-    .book-highlights { text-align: left; }
-  }
-</style>

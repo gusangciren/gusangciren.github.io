@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import CTASection from '../../components/CTASection.astro';
 import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -20,8 +21,7 @@ if (post.data.series && post.data.seriesOrder) {
   const seriesPosts = allPosts.filter(
     p => p.data.series === post.data.series && p.data.seriesOrder
   );
-  seriesPosts.sort((a, b) => a.data.seriesOrder - b.data.seriesOrder);
-
+  seriesPosts.sort((a, b) => a.data.seriesOrder! - b.data.seriesOrder!);
   const currentIndex = seriesPosts.findIndex(p => p.data.slug === post.data.slug);
   if (currentIndex >= 0 && currentIndex < seriesPosts.length - 1) {
     nextPost = seriesPosts[currentIndex + 1];
@@ -29,7 +29,7 @@ if (post.data.series && post.data.seriesOrder) {
 }
 ---
 
-<BaseLayout title={`${post.data.title} — 像企业家一样写作`}>
+<BaseLayout title={`${post.data.title} — 像企业家一样写作`} description={post.data.description}>
   <article class="prose">
     <header class="article-header">
       <h1>{post.data.title}</h1>
@@ -54,12 +54,6 @@ if (post.data.series && post.data.seriesOrder) {
       </div>
     )}
 
-    <div class="cta-box">
-      <p>觉得有用？看看我的书和课程</p>
-      <div class="cta-buttons">
-        <a href="/book" class="cta-btn cta-btn-primary">选择改变命运</a>
-        <a href="/community" class="cta-btn cta-btn-secondary">写作课程</a>
-      </div>
-    </div>
+    <CTASection />
   </article>
 </BaseLayout>
