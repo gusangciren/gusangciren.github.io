@@ -52,13 +52,6 @@ const booksWithChapters = books.map(book => {
                 <BookChapterItem post={chapter} />
               ))}
             </div>
-            {chapters.length > 6 && (
-              <div style="text-align: center; margin-top: 16px;">
-                <a href={`/book/${slug}`} style="color: var(--color-accent, #f55000); font-size: 0.85rem; text-decoration: none;">
-                  还有 {chapters.length - 6} 篇文章 →
-                </a>
-              </div>
-            )}
           </div>
         )}
       </div>
