@@ -7,9 +7,11 @@
   },
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "node generate-search.js",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "gen-search": "node generate-search.js"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.18",
