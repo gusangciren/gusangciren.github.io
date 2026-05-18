@@ -2,7 +2,6 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import PostCard from '../components/PostCard.astro';
-import CTASection from '../components/CTASection.astro';
 
 import { getCollection } from 'astro:content';
 
@@ -94,13 +93,6 @@ const { featured = posts.slice(0, 6) } = Astro.props;
           <PostCard post={post} />
         ))}
       </div>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="section">
-    <div class="section-inner">
-      <CTASection />
     </div>
   </section>
 </BaseLayout>
