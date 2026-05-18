@@ -1,0 +1,13 @@
+---
+interface Props {
+  title: string;
+  link?: string;
+  linkText?: string;
+}
+const { title, link, linkText = '查看全部 →' } = Astro.props;
+---
+
+<div class="section-header">
+  <h2>{title}</h2>
+  {link && <a href={link} class="see-all">{linkText}</a>}
+</div>

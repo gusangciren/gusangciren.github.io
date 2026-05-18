@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const filteredPosts = (await getCollection('blog')).filter(p => p.data.series !== '第一个100块' && p.data.series !== '选择改变命运');
+const sortedPosts = filteredPosts.sort((a, b) => new Date(b.data.date) - new Date(a.data.date));
+
+// Group by series
+const seriesMap = {};
+const standalone = [];
+for (const post of sortedPosts) {
+  if (post.data.series) {
+    const s = post.data.series;
+    if (!seriesMap[s]) seriesMap[s] = [];
+    seriesMap[s].push(post);
+  } else {
+    standalone.push(post);
+  }
+}
+for (const s of Object.keys(seriesMap)) {
+  seriesMap[s].sort((a, b) => (a.data.seriesOrder || 0) - (b.data.seriesOrder || 0));
+}
+---
+
+<BaseLayout title="文章 — 像企业家一样写作">
+  <div class="blog-page">
+    <div class="blog-inner">
+      <h1>文章</h1>
+      <p class="blog-desc">关于写作、思维和商业的思考</p>
+
+      {Object.entries(seriesMap).map(([name, seriesPosts]) => (
+        <div class="series-section">
+          <h2 class="series-title">📚 {name}</h2>
+          <div class="post-list">
+            {seriesPosts.map((post) => (
+              <a href={`/blog/${post.data.slug}`} class="post-item">
+                <span class="post-date">
+                  {new Date(post.data.date).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
+                </span>
+                <h3>{post.data.title}</h3>
+                <p>{post.data.description || ''}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
+
+      {standalone.length > 0 && (
+        <div class="series-section">
+          <h2 class="series-title">最新文章</h2>
+          <div class="post-list">
+            {standalone.map((post) => (
+              <a href={`/blog/${post.data.slug}`} class="post-item">
+                <span class="post-date">
+                  {new Date(post.data.date).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
+                </span>
+                <h3>{post.data.title}</h3>
+                <p>{post.data.description || ''}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+</BaseLayout>
+
+<style is:global>
+  .blog-page { padding: 48px 24px; }
+  .blog-inner { max-width: 720px; margin: 0 auto; }
+  .blog-inner h1 { font-family: var(--font-serif); font-size: 2rem; font-weight: 600; margin-bottom: 8px; }
+  .blog-desc { color: var(--color-text-secondary); margin-bottom: 40px; }
+  .series-section { margin-bottom: 40px; }
+  .series-title { font-family: var(--font-serif); font-size: 1.2rem; font-weight: 600; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--color-border); }
+  .post-list { display: flex; flex-direction: column; gap: 0; }
+  .post-item {
+    text-decoration: none; color: inherit; padding: 20px 0;
+    border-bottom: 1px solid var(--color-border); display: block;
+    transition: padding-left 0.2s;
+  }
+  .post-item:hover { padding-left: 8px; }
+  .post-date { font-size: 13px; color: var(--color-text-secondary); }
+  .post-item h3 { font-size: 1.1rem; font-weight: 600; margin: 6px 0; line-height: 1.4; }
+  .post-item p { font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; }
+</style>

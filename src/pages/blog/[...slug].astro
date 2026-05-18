@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CTASection from '../../components/CTASection.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.data.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+// Find next post in series
+let nextPost = null;
+if (post.data.series && post.data.seriesOrder) {
+  const allPosts = await getCollection('blog');
+  const seriesPosts = allPosts.filter(
+    p => p.data.series === post.data.series && p.data.seriesOrder
+  );
+  seriesPosts.sort((a, b) => a.data.seriesOrder! - b.data.seriesOrder!);
+  const currentIndex = seriesPosts.findIndex(p => p.data.slug === post.data.slug);
+  if (currentIndex >= 0 && currentIndex < seriesPosts.length - 1) {
+    nextPost = seriesPosts[currentIndex + 1];
+  }
+}
+---
+
+<BaseLayout title={`${post.data.title} — 像企业家一样写作`} description={post.data.description}>
+  <article class="prose">
+    <header class="article-header">
+      <h1>{post.data.title}</h1>
+      <div class="article-meta">
+        {post.data.series && (
+          <span class="article-series">{post.data.series}</span>
+        )}
+        <time>
+          {new Date(post.data.date).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </time>
+      </div>
+    </header>
+    <Content />
+
+    {nextPost && (
+      <div class="next-chapter">
+        <a href={`/blog/${nextPost.data.slug}`} class="next-chapter-link">
+          <span class="next-label">下一章</span>
+          <span class="next-title">{nextPost.data.title}</span>
+          <span class="next-arrow">→</span>
+        </a>
+      </div>
+    )}
+
+    <CTASection />
+  </article>
+</BaseLayout>

@@ -1,0 +1,54 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png" />
+    <!-- Static CSS — no build hash, safe for incremental deploys -->
+    <link rel="stylesheet" href="/global.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&display=swap" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-inner">
+        <a href="/" class="logo">
+          <img src="/images/logo-header.png" alt="Logo" class="logo-img" />
+          <span>像企业家一样写作</span>
+        </a>
+        <div class="nav-links">
+          <a href="/blog">文章</a>
+          <a href="/book">书籍</a>
+          <a href="/community">社群</a>
+          <a href="/resources">资源</a>
+        </div>
+      </div>
+    </nav>
+    <main>
+      <slot />
+    </main>
+    <footer>
+      <div class="footer-inner">
+        <p>© 2026 像企业家一样写作</p>
+        <div class="footer-links">
+          <a href="https://mp.weixin.qq.com/" target="_blank">公众号：种一个梦</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
