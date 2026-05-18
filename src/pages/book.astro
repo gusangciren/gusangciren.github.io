@@ -6,7 +6,6 @@ import BookChapterItem from '../components/BookChapterItem.astro';
 const books = await getCollection('books');
 const posts = await getCollection('blog');
 
-// Sort books by order
 books.sort((a, b) => a.data.order - b.data.order);
 
 // For each book, find its chapters from blog collection
@@ -31,17 +30,34 @@ const booksWithChapters = books.map(book => {
             {book.data.subtitle && <p class="tagline">{book.data.subtitle}</p>}
             {book.data.motto && <p class="motto">「{book.data.motto}」</p>}
             <p>{book.data.description}</p>
+
+            {chapters.length > 0 && (
+              <div class="chapters-nav">
+                <a href={`/book/${book.slug}`} class="view-chapters-btn">
+                  {book.data.chapterSize
+                    ? `查看章节一览（${Math.ceil(chapters.length / book.data.chapterSize)}章 / ${chapters.length}篇） →`
+                    : `查看全部文章（${chapters.length}篇） →`}
+                </a>
+              </div>
+            )}
           </div>
         </div>
 
-        {chapters.length > 0 && (
+        {/* 普通书籍：直接在列表页展示文章（最多显示6篇预览） */}
+        {!book.data.chapterSize && chapters.length > 0 && (
           <div class="chapters">
-            <h2>全书{chapters.length}章</h2>
             <div class="chapter-grid">
-              {chapters.map(chapter => (
+              {chapters.slice(0, 6).map(chapter => (
                 <BookChapterItem post={chapter} />
               ))}
             </div>
+            {chapters.length > 6 && (
+              <div style="text-align: center; margin-top: 16px;">
+                <a href={`/book/${book.slug}`} style="color: var(--color-accent, #f55000); font-size: 0.85rem; text-decoration: none;">
+                  还有 {chapters.length - 6} 篇文章 →
+                </a>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -95,11 +111,33 @@ const booksWithChapters = books.map(book => {
     color: var(--color-text-secondary, #888);
     font-style: italic;
     margin-bottom: 16px;
+    padding-left: 14px;
+    border-left: 3px solid var(--color-accent, #f55000);
   }
   .book-details > p:last-child {
     font-size: 15px;
     color: var(--color-text-secondary, #888);
     line-height: 1.8;
+  }
+  .chapters-nav {
+    margin-top: 20px;
+  }
+  .view-chapters-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: var(--color-accent-light, #fff5f0);
+    border: 1px solid rgba(245,80,0,0.2);
+    border-radius: 8px;
+    color: var(--color-accent, #f55000);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .view-chapters-btn:hover {
+    background: var(--color-accent, #f55000);
+    color: white;
+    border-color: var(--color-accent, #f55000);
   }
   .chapters {
     margin-top: 40px;

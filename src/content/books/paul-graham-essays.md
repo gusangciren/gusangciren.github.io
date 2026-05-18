@@ -6,4 +6,5 @@ description: 185篇Paul Graham经典文章中文全译本。Paul Graham是程序
 cover: /images/pg-cover.png
 seriesName: Paul Graham 文集
 order: 3
+chapterSize: 10
 ---

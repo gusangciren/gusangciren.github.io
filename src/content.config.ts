@@ -23,6 +23,7 @@ const books = defineCollection({
     cover: z.string(),
     seriesName: z.string(),
     order: z.number().default(0),
+    chapterSize: z.number().optional(),
   }),
 });
 
