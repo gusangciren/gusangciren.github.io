@@ -13,14 +13,15 @@ const booksWithChapters = books.map(book => {
   const chapters = posts
     .filter(p => p.data.series === book.data.seriesName && p.data.seriesOrder)
     .sort((a, b) => a.data.seriesOrder! - b.data.seriesOrder!);
-  return { book, chapters };
+  const slug = book.id.replace(/\.(md|mdx)$/i, '');
+  return { book, chapters, slug };
 });
 ---
 
 <BaseLayout title="书籍 — 像企业家一样写作">
   <div class="book-page">
-    {booksWithChapters.map(({ book, chapters }) => (
-      <div id={book.slug} class="book-section">
+    {booksWithChapters.map(({ book, chapters, slug }) => (
+      <div id={slug} class="book-section">
         <div class="book-hero">
           <div class="book-cover">
             <img src={book.data.cover} alt={book.data.title} class="book-cover-img" />
@@ -33,7 +34,7 @@ const booksWithChapters = books.map(book => {
 
             {chapters.length > 0 && (
               <div class="chapters-nav">
-                <a href={`/book/${book.slug}`} class="view-chapters-btn">
+                <a href={`/book/${slug}`} class="view-chapters-btn">
                   {book.data.chapterSize
                     ? `查看章节一览（${Math.ceil(chapters.length / book.data.chapterSize)}章 / ${chapters.length}篇） →`
                     : `查看全部文章（${chapters.length}篇） →`}
@@ -53,7 +54,7 @@ const booksWithChapters = books.map(book => {
             </div>
             {chapters.length > 6 && (
               <div style="text-align: center; margin-top: 16px;">
-                <a href={`/book/${book.slug}`} style="color: var(--color-accent, #f55000); font-size: 0.85rem; text-decoration: none;">
+                <a href={`/book/${slug}`} style="color: var(--color-accent, #f55000); font-size: 0.85rem; text-decoration: none;">
                   还有 {chapters.length - 6} 篇文章 →
                 </a>
               </div>
