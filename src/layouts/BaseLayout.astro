@@ -1,6 +1,4 @@
 ---
-import '../styles/global.css';
-
 export interface Props {
   title: string;
   description?: string;
@@ -20,6 +18,8 @@ const { title, description } = Astro.props;
     <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png" />
+    <!-- Static CSS — no build hash, safe for incremental deploys -->
+    <link rel="stylesheet" href="/global.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&display=swap" />

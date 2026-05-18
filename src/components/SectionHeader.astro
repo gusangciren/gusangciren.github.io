@@ -11,26 +11,3 @@ const { title, link, linkText = '查看全部 →' } = Astro.props;
   <h2>{title}</h2>
   {link && <a href={link} class="see-all">{linkText}</a>}
 </div>
-
-<style>
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 32px;
-  }
-  .section-header h2 {
-    font-family: var(--font-serif, Georgia, serif);
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin: 0;
-  }
-  .see-all {
-    font-size: 14px;
-    color: var(--color-accent, #f55000);
-    text-decoration: none;
-  }
-  .see-all:hover {
-    text-decoration: underline;
-  }
-</style>
