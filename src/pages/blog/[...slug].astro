@@ -30,6 +30,9 @@ if (post.data.series && post.data.seriesOrder) {
 ---
 
 <BaseLayout title={`${post.data.title} — 像企业家一样写作`} description={post.data.description}>
+  <!-- 阅读进度条 -->
+  <div id="reading-progress" class="reading-progress"></div>
+
   <article class="prose">
     <header class="article-header">
       <h1>{post.data.title}</h1>
@@ -57,3 +60,38 @@ if (post.data.series && post.data.seriesOrder) {
     <CTASection />
   </article>
 </BaseLayout>
+
+<style is:global>
+  .reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: #f55000;
+    width: 0%;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .reading-progress.show {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  (function() {
+    const bar = document.getElementById('reading-progress');
+    if (!bar) return;
+
+    function updateProgress() {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      bar.style.width = progress + '%';
+      bar.classList.toggle('show', scrollTop > 50);
+    }
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+  })();
+</script>
