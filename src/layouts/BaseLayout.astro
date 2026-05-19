@@ -76,23 +76,30 @@ const { title, description } = Astro.props;
       position: fixed;
       bottom: 28px;
       right: 28px;
-      width: 52px;
-      height: 52px;
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
       border: none;
       background: var(--color-accent, #f55000);
       color: #fff;
       box-shadow: 0 6px 24px rgba(245,80,0,0.35);
-      cursor: pointer;
+      cursor: grab;
       z-index: 998;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: box-shadow 0.2s;
+      user-select: none;
+      touch-action: none;
     }
     .search-fab:hover {
-      transform: scale(1.1);
       box-shadow: 0 8px 30px rgba(245,80,0,0.5);
+    }
+    .search-fab.dragging {
+      cursor: grabbing;
+      box-shadow: 0 12px 40px rgba(245,80,0,0.55);
+      transform: scale(1.08);
+      transition: box-shadow 0.1s, transform 0.1s;
     }
 
     /* ===== 搜索浮层 ===== */
@@ -217,7 +224,7 @@ const { title, description } = Astro.props;
     }
 
     @media (max-width: 640px) {
-      .search-fab { bottom: 20px; right: 20px; width: 46px; height: 46px; }
+      .search-fab { bottom: 20px; right: 20px; width: 48px; height: 48px; }
       .search-modal { width: 96%; border-radius: 12px; }
       #search-input { padding: 16px 18px; font-size: 1rem; }
     }
@@ -307,10 +314,64 @@ const { title, description } = Astro.props;
       container.innerHTML = html;
     }
 
-    document.getElementById('search-toggle').addEventListener('click', async () => {
-      await loadSearchIndex();
-      openSearch();
-    });
+    // ===== 搜索 FAB 拖动逻辑 =====
+    (function() {
+      const fab = document.getElementById('search-toggle');
+      const FAB_SIZE = 56;
+      let isDragging = false;
+      let startX, startY, startLeft, startTop;
+      let dragMoved = false;
+
+      function onDown(clientX, clientY) {
+        isDragging = true;
+        dragMoved = false;
+        startX = clientX;
+        startY = clientY;
+        const rect = fab.getBoundingClientRect();
+        startLeft = rect.left;
+        startTop = rect.top;
+        fab.classList.add('dragging');
+      }
+
+      function onMove(clientX, clientY) {
+        if (!isDragging) return;
+        const dx = clientX - startX;
+        const dy = clientY - startY;
+        if (!dragMoved && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+          dragMoved = true;
+          // 切换到绝对 left/top 定位
+          fab.style.bottom = 'auto';
+          fab.style.right = 'auto';
+          fab.style.left = startLeft + 'px';
+          fab.style.top = startTop + 'px';
+        }
+        if (dragMoved) {
+          let newLeft = Math.max(4, Math.min(startLeft + dx, window.innerWidth - FAB_SIZE - 4));
+          let newTop  = Math.max(4, Math.min(startTop  + dy, window.innerHeight - FAB_SIZE - 4));
+          fab.style.left = newLeft + 'px';
+          fab.style.top  = newTop  + 'px';
+        }
+      }
+
+      function onUp() {
+        if (!isDragging) return;
+        isDragging = false;
+        fab.classList.remove('dragging');
+        if (!dragMoved) {
+          // 判定为点击，打开搜索
+          loadSearchIndex().then(() => openSearch());
+        }
+      }
+
+      fab.addEventListener('mousedown', e => { if (e.button === 0) { onDown(e.clientX, e.clientY); e.preventDefault(); } });
+      document.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+      document.addEventListener('mouseup', onUp);
+
+      fab.addEventListener('touchstart', e => { onDown(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); }, { passive: false });
+      document.addEventListener('touchmove', e => { if (isDragging) { onMove(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); } }, { passive: false });
+      document.addEventListener('touchend', onUp);
+    })();
+
     document.getElementById('search-close').addEventListener('click', closeSearch);
     document.getElementById('search-overlay').addEventListener('click', (e) => {
       if (e.target === e.currentTarget) closeSearch();
@@ -322,7 +383,7 @@ const { title, description } = Astro.props;
       if (e.key === 'Escape') closeSearch();
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
-        document.getElementById('search-toggle').click();
+        loadSearchIndex().then(() => openSearch());
       }
     });
     });
