@@ -19,6 +19,7 @@ const { title, description } = Astro.props;
     <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png" />
     <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml" />
+    <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
     <!-- Static CSS — no build hash, safe for incremental deploys -->
     <link rel="stylesheet" href="/global.css" />
     <!-- 自托管字体 -->
@@ -163,7 +164,6 @@ const { title, description } = Astro.props;
     .search-close-btn:hover {
       color: var(--color-accent, #f55000);
     }
-
     .search-results {
       max-height: 50vh;
       overflow-y: auto;

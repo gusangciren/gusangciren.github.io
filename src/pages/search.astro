@@ -1,0 +1,322 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const q = Astro.url.searchParams.get('q') || '';
+const pageTitle = q ? `搜索「${q}」` : '搜索';
+---
+
+<BaseLayout title={pageTitle} description="搜索文章和书籍">
+  <main class="search-page">
+    <div class="search-header">
+      <h1 class="search-title">🔍 搜索</h1>
+      <div class="search-input-wrap">
+        <input
+          type="text"
+          id="search-input"
+          placeholder="输入关键词搜索文章和书籍…"
+          autocomplete="off"
+          autofocus
+        />
+        <button id="search-clear" class="search-clear" title="清除">✕</button>
+      </div>
+    </div>
+
+    <div id="search-results" class="search-results">
+      <div class="search-empty">输入关键词开始搜索…</div>
+    </div>
+
+    <div class="search-stats" id="search-stats"></div>
+  </main>
+</BaseLayout>
+
+<style>
+  .search-page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  .search-header {
+    margin-bottom: 32px;
+  }
+
+  .search-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0 0 20px 0;
+  }
+
+  .search-input-wrap {
+    position: relative;
+  }
+
+  #search-input {
+    width: 100%;
+    padding: 16px 48px 16px 20px;
+    font-size: 1.1rem;
+    border: 2px solid var(--color-border-primary);
+    border-radius: 12px;
+    background: var(--color-background-primary);
+    color: var(--color-text-primary);
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+  }
+
+  #search-input:focus {
+    border-color: #f55000;
+  }
+
+  .search-clear {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    display: none;
+  }
+
+  .search-clear.show {
+    display: block;
+  }
+
+  .search-results {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .search-result-item {
+    display: block;
+    padding: 16px 20px;
+    border: 1px solid var(--color-border-tertiary);
+    border-radius: 10px;
+    background: var(--color-background-primary);
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .search-result-item:hover {
+    border-color: #f55000;
+    background: var(--color-background-secondary);
+    transform: translateX(4px);
+  }
+
+  .search-result-title {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin-bottom: 6px;
+  }
+
+  .search-result-type {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: #f55000;
+    color: #fff;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  .search-result-type.book {
+    background: #2d5a27;
+  }
+
+  .search-result-desc {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .search-result-desc mark {
+    background: rgba(255, 224, 102, 0.6);
+    color: inherit;
+    border-radius: 2px;
+    padding: 0 1px;
+  }
+
+  .search-empty {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--color-text-tertiary);
+    font-size: 1rem;
+  }
+
+  .search-stats {
+    margin-top: 24px;
+    text-align: center;
+    color: var(--color-text-tertiary);
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: 640px) {
+    .search-page {
+      padding: 32px 16px 60px;
+    }
+    .search-title {
+      font-size: 1.4rem;
+    }
+  }
+</style>
+
+<script>
+  let _searchIndex = null;
+
+  async function loadSearchIndex() {
+    if (_searchIndex) return _searchIndex;
+    try {
+      const resp = await fetch('/search.json?t=' + Date.now());
+      _searchIndex = await resp.json();
+    } catch (e) {
+      _searchIndex = { posts: [], books: [] };
+    }
+    return _searchIndex;
+  }
+
+  function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function getSnippet(text, keyword, radius) {
+    radius = radius || 40;
+    if (!text) return '';
+    const idx = text.toLowerCase().indexOf(keyword.toLowerCase());
+    if (idx === -1) return text.substring(0, 100);
+    const start = Math.max(0, idx - radius);
+    const end = Math.min(text.length, idx + keyword.length + radius);
+    let s = text.substring(start, end);
+    if (start > 0) s = '…' + s;
+    if (end < text.length) s = s + '…';
+    return s;
+  }
+
+  function highlightKeyword(text, keyword) {
+    if (!keyword.trim()) return text;
+    const regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
+    return text.replace(regex, '<mark>$1</mark>');
+  }
+
+  function renderResults(query) {
+    const container = document.getElementById('search-results');
+    const stats = document.getElementById('search-stats');
+    const clearBtn = document.getElementById('search-clear');
+
+    clearBtn.classList.toggle('show', query.length > 0);
+
+    if (!query.trim()) {
+      container.innerHTML = '<div class="search-empty">输入关键词搜索文章和书籍…</div>';
+      stats.textContent = '';
+      return;
+    }
+
+    const q = query.toLowerCase();
+    const index = _searchIndex || { posts: [], books: [] };
+
+    const matchedPosts = index.posts.filter(p =>
+      p.title.toLowerCase().includes(q) ||
+      (p.desc || '').toLowerCase().includes(q) ||
+      (p.content || '').toLowerCase().includes(q)
+    );
+
+    const matchedBooks = index.books.filter(b =>
+      b.title.toLowerCase().includes(q) ||
+      (b.desc || '').toLowerCase().includes(q) ||
+      (b.content || '').toLowerCase().includes(q)
+    );
+
+    if (matchedPosts.length === 0 && matchedBooks.length === 0) {
+      container.innerHTML = '<div class="search-empty">没有找到「' + query + '」的相关结果</div>';
+      stats.textContent = '';
+      return;
+    }
+
+    let html = '';
+
+    matchedBooks.forEach(b => {
+      const snippet = getSnippet(b.content || '', q, 40);
+      const displayDesc = highlightKeyword((b.desc || '') || snippet, query);
+      html += '<a href="/book/' + b.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+        '<div class="search-result-title"><span class="search-result-type book">书籍</span>' + highlightKeyword(b.title, query) + '</div>' +
+        '<div class="search-result-desc">' + displayDesc + '</div>' +
+      '</a>';
+    });
+
+    matchedPosts.forEach(p => {
+      const snippet = getSnippet(p.content || '', q, 40);
+      const displayDesc = highlightKeyword((p.desc || '') || snippet, query);
+      html += '<a href="/blog/' + p.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+        '<div class="search-result-title"><span class="search-result-type">文章</span>' + highlightKeyword(p.title, query) + '</div>' +
+        '<div class="search-result-desc">' + displayDesc + '</div>' +
+      '</a>';
+    });
+
+    container.innerHTML = html;
+    const total = matchedPosts.length + matchedBooks.length;
+    stats.textContent = '共找到 ' + total + ' 个结果';
+  }
+
+  // 初始化
+  document.addEventListener('DOMContentLoaded', async () => {
+    const input = document.getElementById('search-input');
+    const clearBtn = document.getElementById('search-clear');
+
+    // 从 URL 读取搜索词
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialQuery = urlParams.get('q') || '';
+    if (initialQuery) {
+      input.value = initialQuery;
+    }
+
+    // 加载索引
+    await loadSearchIndex();
+
+    // 渲染初始结果（如果有）
+    if (initialQuery) {
+      renderResults(initialQuery);
+    }
+
+    // 绑定输入事件
+    input.addEventListener('input', (e) => {
+      const query = e.target.value;
+      renderResults(query);
+      // 更新 URL（不刷新页面）
+      const url = new URL(window.location);
+      if (query) {
+        url.searchParams.set('q', query);
+      } else {
+        url.searchParams.delete('q');
+      }
+      window.history.replaceState({}, '', url);
+    });
+
+    // 清除按钮
+    clearBtn.addEventListener('click', () => {
+      input.value = '';
+      input.focus();
+      renderResults('');
+      const url = new URL(window.location);
+      url.searchParams.delete('q');
+      window.history.replaceState({}, '', url);
+    });
+
+    // 回车跳转
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && input.value.trim()) {
+        const url = new URL(window.location);
+        url.searchParams.set('q', input.value.trim());
+        window.history.replaceState({}, '', url);
+      }
+    });
+  });
+</script>
