@@ -59,26 +59,31 @@ const { featured = posts.slice(0, 6) } = Astro.props;
   </section>
 
   <!-- Community Preview -->
-  <section class="section">
+  <section class="section section-community">
     <div class="section-inner">
       <div class="community-preview">
         <div class="community-cards">
           <div class="community-card">
-            <div class="community-icon">✉</div>
+            <div class="community-icon-wrap"><span class="community-icon">✉</span></div>
             <h4>UAC 周刊</h4>
             <p>每周四推送，不被算法过滤的深度文章，直达邮箱</p>
           </div>
           <div class="community-card">
-            <div class="community-icon">✎</div>
+            <div class="community-icon-wrap"><span class="community-icon">✎</span></div>
             <h4>写作课程</h4>
-            <p>系统学习企业家式写作，一起成长</p>
+            <p>系统学习企业家式写作，让我们写作并变现</p>
+          </div>
+          <div class="community-card">
+            <div class="community-icon-wrap"><span class="community-icon">✦</span></div>
+            <h4>社群圈子</h4>
+            <p>与 84+ 位同学一起交流写作与成长</p>
           </div>
         </div>
         <div class="community-cta">
           <div class="community-stat">
-            已有 <span class="stat-number">84+</span> 位同学加入
+            已有 <strong>84+</strong> 位同学加入
           </div>
-          <a href="/community" class="btn-primary">了解详情</a>
+          <a href="/community" class="btn-primary">立即加入 →</a>
         </div>
       </div>
     </div>
