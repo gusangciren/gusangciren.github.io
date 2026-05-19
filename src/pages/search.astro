@@ -243,20 +243,20 @@ const pageTitle = q ? `搜索「${q}」` : '搜索';
 
     let html = '';
 
-    matchedBooks.forEach(b => {
-      const snippet = getSnippet(b.content || '', q, 40);
-      const displayDesc = highlightKeyword((b.desc || '') || snippet, query);
-      html += '<a href="/book/' + b.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
-        '<div class="search-result-title"><span class="search-result-type book">书籍</span>' + highlightKeyword(b.title, query) + '</div>' +
-        '<div class="search-result-desc">' + displayDesc + '</div>' +
-      '</a>';
-    });
-
     matchedPosts.forEach(p => {
       const snippet = getSnippet(p.content || '', q, 40);
       const displayDesc = highlightKeyword((p.desc || '') || snippet, query);
       html += '<a href="/blog/' + p.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
         '<div class="search-result-title"><span class="search-result-type">文章</span>' + highlightKeyword(p.title, query) + '</div>' +
+        '<div class="search-result-desc">' + displayDesc + '</div>' +
+      '</a>';
+    });
+
+    matchedBooks.forEach(b => {
+      const snippet = getSnippet(b.content || '', q, 40);
+      const displayDesc = highlightKeyword((b.desc || '') || snippet, query);
+      html += '<a href="/book/' + b.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+        '<div class="search-result-title"><span class="search-result-type book">书籍</span>' + highlightKeyword(b.title, query) + '</div>' +
         '<div class="search-result-desc">' + displayDesc + '</div>' +
       '</a>';
     });
