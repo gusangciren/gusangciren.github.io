@@ -1,65 +1,107 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const pdfs = [
+  { name: '100M Offers', author: 'Alex Hormozi', icon: '📈', file: '/resources/100M_Offers_-_Alex_Hormozi.pdf' },
+  { name: 'Breakthrough Advertising', author: 'Eugene Swartz', icon: '📣', file: '/resources/Breakthrough_advertising_-_Eugene_Swartz.pdf' },
+  { name: 'Case Study · StoryLearning', author: 'Olly Richards', icon: '🗣️', file: '/resources/Case%20Study%20-%20StoryLearning%20_%20OllyRichards.pdf' },
+  { name: 'Leads', author: 'Alex Hormozi', icon: '🎯', file: '/resources/Leads_-_Alex_hormozi.pdf' },
+  { name: 'Snow Leopard', author: 'Nicolas Cole', icon: '🐆', file: '/resources/snow_leopard_-_nicolas_cole.pdf' },
+];
+
+const wallpapers = [
+  { file: '/resources/2778c2174c280000bca95903b70a2476.jpg', name: '壁纸 01' },
+  { file: '/resources/2dd7720b5a5187e16d6c4dbcc12e410c.png', name: '壁纸 02' },
+  { file: '/resources/841a441a04e1b958f5287a6a84bbeb33.png', name: '壁纸 03' },
+  { file: '/resources/d9c7269ee0c6f4e4bce4e820db9d5584.jpg', name: '壁纸 04' },
+];
 ---
 
 <BaseLayout title="资源下载 — 像企业家一样写作">
   <div class="resources-page">
-    <div class="resources-inner">
-
-      <div class="resources-header">
-        <h1>资源下载</h1>
-        <p>精选阅读材料和实用工具，持续更新</p>
-      </div>
-
-      <!-- PDF 阅读 -->
-      <div class="resource-category">
-        <h2>📄 精选阅读</h2>
-        <div class="resource-list">
-          <div class="resource-item">
-            <div class="resource-icon">📄</div>
-            <div class="resource-info">
-              <strong>深度思考指南</strong>
-              <span>PDF · 12 页 · 2026年更新</span>
-            </div>
-            <a href="/resources/deep-thinking-guide.pdf" class="resource-download" download>下载</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- 手机壁纸 -->
-      <div class="resource-category">
-        <h2>🖼️ 手机壁纸</h2>
-        <div class="resource-list">
-          <div class="resource-item">
-            <div class="resource-icon">🖼️</div>
-            <div class="resource-info">
-              <strong>极简系列 · 晨雾</strong>
-              <span>高清壁纸 · 适合 OLED 屏幕</span>
-            </div>
-            <a href="/resources/wallpaper-morning-mist.jpg" class="resource-download" download>下载</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- 工具模板 -->
-      <div class="resource-category">
-        <h2>🛠️ 工具模板</h2>
-        <div class="resource-list">
-          <div class="resource-item">
-            <div class="resource-icon">🛠️</div>
-            <div class="resource-info">
-              <strong>写作选题模板</strong>
-              <span>Notion 模板 · 可直接复制使用</span>
-            </div>
-            <a href="/resources/writing-topic-template" class="resource-download">获取</a>
-          </div>
-        </div>
-      </div>
-
-      <p style="text-align:center; color:var(--color-text-secondary); font-size:14px; margin-top:48px;">
-        更多资源持续整理中，欢迎关注公众号「种一个梦」获取最新更新
-      </p>
-
+    <div class="resources-header">
+      <h1>📚 精选资源</h1>
+      <p>创业必读 PDF · 极简手机壁纸，持续更新</p>
     </div>
+
+    <!-- PDF 区域 -->
+    <div class="section-label">
+      <h2>📄 精选阅读</h2>
+      <span>{pdfs.length} 本</span>
+    </div>
+
+    <div class="pdf-grid">
+      {pdfs.map(pdf => (
+        <a href={pdf.file} class="pdf-card" download>
+          <div class="pdf-card-cover"><span>{pdf.icon}</span></div>
+          <div class="pdf-card-body">
+            <div class="title">{pdf.name}</div>
+            <div class="meta">{pdf.author} · PDF</div>
+            <span class="dl-btn">下载 →</span>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <!-- 壁纸区域 -->
+    <div class="section-label">
+      <h2>🖼️ 手机壁纸</h2>
+      <span>{wallpapers.length} 张</span>
+    </div>
+
+    <div class="wallpaper-grid">
+      {wallpapers.map(wp => (
+        <a href={wp.file} class="wallpaper-card" download title={wp.name}>
+          <img src={wp.file} alt={wp.name} />
+          <div class="wallpaper-overlay"><span>{wp.name} · 点击下载</span></div>
+        </a>
+      ))}
+    </div>
+
+    <p class="footer-note">
+      更多资源持续整理中，欢迎关注公众号「种一个梦」获取最新更新
+    </p>
   </div>
 </BaseLayout>
+
+<style is:global>
+  .resources-page { max-width: 960px; margin: 0 auto; padding: 100px 24px 80px; }
+
+  .resources-header { text-align: center; padding: 0 0 40px; }
+  .resources-header h1 { font-family: var(--font-serif, Georgia, serif); font-size: 2rem; font-weight: 700; color: var(--color-text, #1a1a1a); margin-bottom: 8px; }
+  .resources-header p { color: var(--color-text-secondary, #888); font-size: 0.95rem; }
+
+  .section-label { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--color-border, #e5e5e5); }
+  .section-label h2 { font-size: 0.85rem; font-weight: 600; color: var(--color-text-secondary, #888); letter-spacing: 0.1em; text-transform: uppercase; }
+  .section-label span { color: #aaa; font-size: 0.8rem; }
+
+  /* PDF 卡片网格 */
+  .pdf-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 48px; }
+  .pdf-card { background: var(--color-card-bg, #fff); border-radius: 12px; overflow: hidden; border: 1px solid var(--color-border, #e5e5e5); transition: all 0.2s; cursor: pointer; text-decoration: none; color: inherit; display: block; }
+  .pdf-card:hover { border-color: var(--color-accent, #f55000); box-shadow: 0 8px 32px rgba(245,80,0,0.1); transform: translateY(-3px); }
+  .pdf-card-cover { height: 160px; background: linear-gradient(135deg, var(--color-accent, #f55000) 0%, #ff8c00 100%); display: flex; align-items: center; justify-content: center; }
+  .pdf-card-cover span { font-size: 2.5rem; }
+  .pdf-card-body { padding: 14px 16px; }
+  .pdf-card-body .title { font-size: 0.88rem; font-weight: 600; color: var(--color-text, #1a1a1a); margin-bottom: 4px; line-height: 1.4; }
+  .pdf-card-body .meta { font-size: 0.75rem; color: #aaa; }
+  .dl-btn { display: inline-block; margin-top: 10px; font-size: 0.78rem; font-weight: 600; color: var(--color-accent, #f55000); border: 1.5px solid var(--color-accent, #f55000); border-radius: 20px; padding: 4px 14px; transition: all 0.2s; }
+  .pdf-card:hover .dl-btn { background: var(--color-accent, #f55000); color: #fff; }
+
+  /* 壁纸网格 */
+  .wallpaper-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 48px; }
+  .wallpaper-card { border-radius: 10px; overflow: hidden; cursor: pointer; position: relative; aspect-ratio: 9/16; text-decoration: none; }
+  .wallpaper-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
+  .wallpaper-card:hover img { transform: scale(1.05); }
+  .wallpaper-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%); display: flex; align-items: flex-end; padding: 12px; opacity: 0; transition: opacity 0.2s; }
+  .wallpaper-card:hover .wallpaper-overlay { opacity: 1; }
+  .wallpaper-overlay span { color: #fff; font-size: 0.75rem; font-weight: 500; background: rgba(255,255,255,0.2); backdrop-filter: blur(8px); border-radius: 20px; padding: 4px 12px; }
+
+  .footer-note { text-align: center; color: var(--color-text-secondary, #888); font-size: 14px; margin-top: 48px; }
+
+  @media (max-width: 640px) {
+    .pdf-grid { grid-template-columns: repeat(2, 1fr); }
+    .wallpaper-grid { grid-template-columns: repeat(2, 1fr); }
+    .resources-page { padding-top: 80px; }
+    .resources-header h1 { font-size: 1.6rem; }
+  }
+</style>
