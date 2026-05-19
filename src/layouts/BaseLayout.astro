@@ -18,11 +18,12 @@ const { title, description } = Astro.props;
     <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png" />
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml" />
     <!-- Static CSS — no build hash, safe for incremental deploys -->
     <link rel="stylesheet" href="/global.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&display=swap" />
+    <!-- 自托管字体 -->
+    <link rel="preload" href="/fonts/NotoSerifSC-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/fonts/fonts.css" />
   </head>
   <body>
     <nav class="navbar">

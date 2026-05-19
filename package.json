@@ -16,6 +16,8 @@
   "dependencies": {
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.2",
-    "astro": "^6.3.3"
+    "astro": "^6.3.3",
+    "fontsource-noto-sans-sc": "^4.0.0",
+    "fontsource-noto-serif-sc": "^4.0.0"
   }
 }

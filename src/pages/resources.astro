@@ -31,15 +31,15 @@ const wallpapers = [
     </div>
 
     <div class="pdf-grid">
-      {pdfs.map(pdf => (
-        <a href={pdf.file} class="pdf-card" download>
+      {pdfs.map((pdf, i) => (
+        <button class="pdf-card" data-pdf={pdf.file} data-index={i} type="button">
           <div class="pdf-card-cover"><span>{pdf.icon}</span></div>
           <div class="pdf-card-body">
             <div class="title">{pdf.name}</div>
             <div class="meta">{pdf.author} · PDF</div>
-            <span class="dl-btn">下载 →</span>
+            <span class="dl-btn">预览 / 下载 →</span>
           </div>
-        </a>
+        </button>
       ))}
     </div>
 
@@ -51,11 +51,32 @@ const wallpapers = [
 
     <div class="wallpaper-grid">
       {wallpapers.map(wp => (
-        <a href={wp.file} class="wallpaper-card" download title={wp.name}>
-          <img src={wp.file} alt={wp.name} />
-          <div class="wallpaper-overlay"><span>{wp.name} · 点击下载</span></div>
-        </a>
+        <button class="wallpaper-card" data-src={wp.file} data-name={wp.name} type="button">
+          <img src={wp.file} alt={wp.name} loading="lazy" />
+          <div class="wallpaper-overlay"><span>{wp.name} · 点击预览</span></div>
+        </button>
       ))}
+    </div>
+
+    <!-- 壁纸预览弹层 -->
+    <div id="wallpaper-lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="壁纸预览">
+      <button id="lightbox-close" class="lightbox-close" aria-label="关闭">✕</button>
+      <img id="lightbox-img" src="" alt="" />
+      <a id="lightbox-download" href="" class="lightbox-download" download>↓ 下载原图</a>
+    </div>
+
+    <!-- PDF 预览弹层 -->
+    <div id="pdf-overlay" class="pdf-overlay" role="dialog" aria-modal="true" aria-label="PDF 预览">
+      <div class="pdf-modal">
+        <div class="pdf-toolbar">
+          <span class="pdf-name" id="pdf-name"></span>
+          <div class="pdf-actions">
+            <a id="pdf-download-btn" href="" class="pdf-dl-btn" download>↓ 下载</a>
+            <button id="pdf-close" class="pdf-close-btn" aria-label="关闭">✕</button>
+          </div>
+        </div>
+        <iframe id="pdf-frame" src="" width="100%" height="100%"></iframe>
+      </div>
     </div>
 
     <p class="footer-note">
@@ -77,7 +98,7 @@ const wallpapers = [
 
   /* PDF 卡片网格 */
   .pdf-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 48px; }
-  .pdf-card { background: var(--color-card-bg, #fff); border-radius: 12px; overflow: hidden; border: 1px solid var(--color-border, #e5e5e5); transition: all 0.2s; cursor: pointer; text-decoration: none; color: inherit; display: block; }
+  .pdf-card { background: var(--color-card-bg, #fff); border-radius: 12px; overflow: hidden; border: 1px solid var(--color-border, #e5e5e5); transition: all 0.2s; cursor: pointer; text-decoration: none; color: inherit; display: block; width: 100%; text-align: left; }
   .pdf-card:hover { border-color: var(--color-accent, #f55000); box-shadow: 0 8px 32px rgba(245,80,0,0.1); transform: translateY(-3px); }
   .pdf-card-cover { height: 160px; background: linear-gradient(135deg, var(--color-accent, #f55000) 0%, #ff8c00 100%); display: flex; align-items: center; justify-content: center; }
   .pdf-card-cover span { font-size: 2.5rem; }
@@ -89,12 +110,95 @@ const wallpapers = [
 
   /* 壁纸网格 */
   .wallpaper-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 48px; }
-  .wallpaper-card { border-radius: 10px; overflow: hidden; cursor: pointer; position: relative; aspect-ratio: 9/16; text-decoration: none; }
+  .wallpaper-card { border-radius: 10px; overflow: hidden; cursor: pointer; position: relative; aspect-ratio: 9/16; background: none; border: none; padding: 0; }
   .wallpaper-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
   .wallpaper-card:hover img { transform: scale(1.05); }
   .wallpaper-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%); display: flex; align-items: flex-end; padding: 12px; opacity: 0; transition: opacity 0.2s; }
   .wallpaper-card:hover .wallpaper-overlay { opacity: 1; }
   .wallpaper-overlay span { color: #fff; font-size: 0.75rem; font-weight: 500; background: rgba(255,255,255,0.2); backdrop-filter: blur(8px); border-radius: 20px; padding: 4px 12px; }
+
+  /* ===== 壁纸预览弹层 ===== */
+  .lightbox {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 24px;
+  }
+  .lightbox.show { display: flex; }
+  .lightbox img {
+    max-width: 100%;
+    max-height: 85vh;
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .lightbox-close {
+    position: absolute; top: 20px; right: 20px;
+    background: rgba(255,255,255,0.1); border: none; color: #fff;
+    width: 40px; height: 40px; border-radius: 50%;
+    font-size: 1.2rem; cursor: pointer;
+    transition: background 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .lightbox-close:hover { background: rgba(255,255,255,0.2); }
+  .lightbox-download {
+    margin-top: 16px;
+    padding: 10px 24px;
+    background: rgba(255,255,255,0.15);
+    color: #fff; border-radius: 8px;
+    text-decoration: none; font-size: 14px;
+    transition: background 0.2s;
+    backdrop-filter: blur(8px);
+  }
+  .lightbox-download:hover { background: rgba(255,255,255,0.25); }
+
+  /* ===== PDF 预览弹层 ===== */
+  .pdf-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .pdf-overlay.show { display: flex; }
+  .pdf-modal {
+    background: #fff;
+    border-radius: 16px;
+    width: 100%; max-width: 800px;
+    height: 90vh;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.3);
+  }
+  .pdf-toolbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 20px;
+    border-bottom: 1px solid #e5e5e5;
+    background: #fafaf9;
+    flex-shrink: 0;
+  }
+  .pdf-name { font-size: 14px; font-weight: 500; color: #333; }
+  .pdf-actions { display: flex; gap: 8px; align-items: center; }
+  .pdf-dl-btn {
+    padding: 6px 16px; background: var(--color-accent, #f55000);
+    color: #fff; border-radius: 6px; font-size: 13px; font-weight: 500;
+    text-decoration: none; transition: opacity 0.2s;
+  }
+  .pdf-dl-btn:hover { opacity: 0.88; }
+  .pdf-close-btn {
+    background: none; border: 1px solid #e5e5e5; color: #666;
+    width: 32px; height: 32px; border-radius: 6px;
+    font-size: 1rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .pdf-close-btn:hover { border-color: #999; color: #333; }
+  #pdf-frame { border: none; flex: 1; }
 
   .footer-note { text-align: center; color: var(--color-text-secondary, #888); font-size: 14px; margin-top: 48px; }
 
@@ -103,5 +207,78 @@ const wallpapers = [
     .wallpaper-grid { grid-template-columns: repeat(2, 1fr); }
     .resources-page { padding-top: 80px; }
     .resources-header h1 { font-size: 1.6rem; }
+    .pdf-modal { height: 85vh; border-radius: 12px; }
   }
 </style>
+
+<script is:inline>
+  // ===== 壁纸预览 =====
+  (function() {
+    var lightbox = document.getElementById('wallpaper-lightbox');
+    var lightboxImg = document.getElementById('lightbox-img');
+    var lightboxDl = document.getElementById('lightbox-download');
+    var closeBtn = document.getElementById('lightbox-close');
+
+    document.querySelectorAll('.wallpaper-card').forEach(function(card) {
+      card.addEventListener('click', function() {
+        var src = this.getAttribute('data-src');
+        var name = this.getAttribute('data-name');
+        lightboxImg.src = src;
+        lightboxImg.alt = name;
+        lightboxDl.href = src;
+        lightboxDl.download = name;
+        lightbox.classList.add('show');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    function closeLightbox() {
+      lightbox.classList.remove('show');
+      lightboxImg.src = '';
+      document.body.style.overflow = '';
+    }
+
+    closeBtn.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', function(e) {
+      if (e.target === lightbox) closeLightbox();
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && lightbox.classList.contains('show')) closeLightbox();
+    });
+  })();
+
+  // ===== PDF 预览 =====
+  (function() {
+    var overlay = document.getElementById('pdf-overlay');
+    var frame = document.getElementById('pdf-frame');
+    var nameEl = document.getElementById('pdf-name');
+    var dlBtn = document.getElementById('pdf-download-btn');
+    var closeBtn = document.getElementById('pdf-close');
+
+    document.querySelectorAll('.pdf-card').forEach(function(card) {
+      card.addEventListener('click', function() {
+        var pdfFile = this.getAttribute('data-pdf');
+        var title = this.querySelector('.title').textContent;
+        nameEl.textContent = title;
+        dlBtn.href = pdfFile;
+        frame.src = pdfFile;
+        overlay.classList.add('show');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    function closePdf() {
+      overlay.classList.remove('show');
+      frame.src = '';
+      document.body.style.overflow = '';
+    }
+
+    closeBtn.addEventListener('click', closePdf);
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) closePdf();
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && overlay.classList.contains('show')) closePdf();
+    });
+  })();
+</script>
