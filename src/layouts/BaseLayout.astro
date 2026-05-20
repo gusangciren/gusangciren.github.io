@@ -62,10 +62,10 @@ const { title, description } = Astro.props;
     </button>
 
     <!-- ===== 微信电子书弹窗 ===== -->
-    <div id="ebook-popup-overlay" class="ebook-popup-overlay">
+    <div id="ebook-popup-overlay" class="ebook-popup-overlay" onclick="if(event.target===this){this.classList.remove('active');document.body.style.overflow='';}">
       <div class="ebook-popup-card">
         <div class="ebook-popup-topbar"></div>
-        <button id="ebook-popup-close" class="ebook-popup-close" aria-label="关闭">✕</button>
+        <button id="ebook-popup-close" class="ebook-popup-close" aria-label="关闭" onclick="event.stopPropagation();document.getElementById('ebook-popup-overlay').classList.remove('active');document.body.style.overflow='';">✕</button>
         <div class="ebook-popup-body">
           <!-- 送你 -->
           <div class="ebook-popup-gift">送你一本我的电子书</div>
@@ -326,6 +326,7 @@ const { title, description } = Astro.props;
       position: absolute;
       top: 14px;
       right: 14px;
+      z-index: 10;
       background: none;
       border: none;
       font-size: 22px;

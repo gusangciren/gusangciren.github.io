@@ -309,7 +309,7 @@ footer {
 }
 .cta-btn-primary {
   background: var(--color-accent);
-  color: white;
+  color: white !important;
 }
 .cta-btn-primary:hover {
   opacity: 0.9;
@@ -317,7 +317,7 @@ footer {
 }
 .cta-btn-secondary {
   background: #1c1917;
-  color: white;
+  color: white !important;
 }
 .cta-btn-secondary:hover {
   background: #2d2a26;
