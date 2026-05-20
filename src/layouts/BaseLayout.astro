@@ -61,6 +61,60 @@ const { title, description } = Astro.props;
       </svg>
     </button>
 
+    <!-- ===== 微信电子书弹窗 ===== -->
+    <div id="ebook-popup-overlay" class="ebook-popup-overlay">
+      <div class="ebook-popup-card">
+        <div class="ebook-popup-topbar"></div>
+        <button id="ebook-popup-close" class="ebook-popup-close" aria-label="关闭">✕</button>
+        <div class="ebook-popup-body">
+          <!-- 送你 -->
+          <div class="ebook-popup-gift">送你一本我的电子书</div>
+          <!-- 书名 -->
+          <div class="ebook-popup-bigtitle">《闭环：在你睡觉时赚钱》</div>
+          <div class="ebook-popup-bigsub">从0到1的自媒体方法论</div>
+
+          <!-- 社会认同 -->
+          <div class="ebook-popup-proof">
+            <span class="ebook-proof-avatars">
+              <span class="ebook-proof-avatar" style="background: #f5e0d0;">
+                <span style="font-size:12px;font-weight:700;color:#c45c2e;">M</span>
+              </span>
+              <span class="ebook-proof-avatar" style="background: #d0e8e0;">
+                <span style="font-size:12px;font-weight:700;color:#3a7a5e;">S</span>
+              </span>
+              <span class="ebook-proof-avatar" style="background: #d8dff0;">
+                <span style="font-size:12px;font-weight:700;color:#4a6aab;">L</span>
+              </span>
+            </span>
+            <span><span class="ebook-proof-count">327</span> 人已领取</span>
+          </div>
+
+          <!-- 二维码 -->
+          <div class="ebook-popup-qr">
+            <img src="/images/wechat-qr.png" alt="微信二维码" />
+          </div>
+
+          <!-- 下载按钮 — 仅手机展示 -->
+          <a class="ebook-popup-download" href="/images/wechat-qr.png" download>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            下载二维码到手机
+          </a>
+
+          <!-- 流程提示 -->
+          <p class="ebook-popup-steps">
+            <span class="step">扫二维码</span> → <span class="step">添加好友</span> → 回复<span class="keyword-value">闭环</span> → <span class="step">立马领取</span>
+          </p>
+        </div>
+        <div class="ebook-popup-footer">
+          <p>免费领取 · 无需购买任何产品 · 24 小时内回复</p>
+        </div>
+      </div>
+    </div>
+
     <main>
       <slot />
     </main>
@@ -218,6 +272,210 @@ const { title, description } = Astro.props;
       border-radius: 3px;
       animation: searchHighlightPop 0.35s ease;
     }
+
+    /* ===== 微信电子书弹窗 ===== */
+    .ebook-popup-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 9998;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .ebook-popup-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+    .ebook-popup-card {
+      background: #fff;
+      border-radius: 20px;
+      max-width: 400px;
+      width: 100%;
+      overflow: hidden;
+      box-shadow: 0 12px 56px rgba(245,80,0,0.10), 0 4px 16px rgba(0,0,0,0.06);
+      border: 2px solid transparent;
+      position: relative;
+      transform: translateY(24px) scale(0.96);
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-align: center;
+    }
+    .ebook-popup-overlay.active .ebook-popup-card {
+      transform: translateY(0) scale(1);
+    }
+    /* 橙色渐变边框 */
+    .ebook-popup-card::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 22px;
+      padding: 2px;
+      background: linear-gradient(135deg, #F55000, #ff9a44, #F55000);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+    .ebook-popup-topbar {
+      height: 4px;
+      background: linear-gradient(90deg, #F55000, #ff8a3d, #ffb366);
+    }
+    .ebook-popup-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: none;
+      border: none;
+      font-size: 22px;
+      color: #a8a29e;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, color 0.2s;
+    }
+    .ebook-popup-close:hover {
+      background: #f5f5f4;
+      color: #1c1917;
+    }
+    .ebook-popup-body {
+      padding: 36px 28px 26px;
+      position: relative;
+    }
+    /* 送你 */
+    .ebook-popup-gift {
+      font-size: 15px;
+      color: #44403c;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: 0.03em;
+    }
+    /* 书名 */
+    .ebook-popup-bigtitle {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #1c1917;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+      margin-bottom: 6px;
+    }
+    .ebook-popup-bigsub {
+      font-size: 14px;
+      color: #78716c;
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+    /* 社会认同 */
+    .ebook-popup-proof {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #78716c;
+      margin-bottom: 18px;
+    }
+    .ebook-proof-avatars {
+      display: flex;
+    }
+    .ebook-proof-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      margin-left: -8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .ebook-proof-avatar:first-child { margin-left: 0; }
+    .ebook-proof-count {
+      color: #F55000;
+      font-weight: 600;
+    }
+    /* 二维码 */
+    .ebook-popup-qr {
+      display: inline-block;
+      padding: 12px;
+      border: 2px dashed #e7e5e4;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      background: #fff;
+    }
+    .ebook-popup-qr img {
+      display: block;
+      width: 200px;
+      height: 200px;
+      object-fit: contain;
+    }
+    /* 下载按钮 — 仅手机展示 */
+    .ebook-popup-download {
+      display: none;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      color: #F55000;
+      margin-bottom: 10px;
+      text-decoration: none;
+      cursor: pointer;
+      padding: 5px 12px;
+      border-radius: 6px;
+      transition: background 0.2s;
+      background: rgba(245,80,0,0.06);
+    }
+    .ebook-popup-download:hover {
+      background: rgba(245,80,0,0.12);
+    }
+    @media (max-width: 768px) {
+      .ebook-popup-download { display: inline-flex; }
+    }
+    /* 流程文案 */
+    .ebook-popup-steps {
+      font-size: 15px;
+      color: #44403c;
+      margin: 18px 0 4px;
+      line-height: 1.7;
+      font-weight: 500;
+    }
+    .ebook-popup-steps .step {
+      display: inline-block;
+      margin: 0 2px;
+    }
+    .ebook-popup-steps .keyword-value {
+      color: #F55000;
+      font-weight: 800;
+      font-size: 17px;
+      position: relative;
+    }
+    .ebook-popup-steps .keyword-value::after {
+      content: '';
+      position: absolute;
+      bottom: 2px;
+      left: -2px;
+      right: -2px;
+      height: 6px;
+      background: rgba(245,80,0,0.18);
+      border-radius: 2px;
+      z-index: -1;
+    }
+    .ebook-popup-footer {
+      background: #fafaf9;
+      padding: 14px 28px;
+      border-top: 1px solid #e7e5e4;
+      text-align: center;
+    }
+    .ebook-popup-footer p {
+      font-size: 12px;
+      color: #a8a29e;
+      margin: 0;
+      line-height: 1.5;
+    }
     @keyframes searchHighlightPop {
       0%   { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,224,102,0.7); }
       50%  { transform: scale(1.05); box-shadow: 0 0 12px 4px rgba(255,224,102,0.5); }
@@ -228,6 +486,12 @@ const { title, description } = Astro.props;
       .search-fab { bottom: 20px; right: 20px; width: 48px; height: 48px; }
       .search-modal { width: 96%; border-radius: 12px; }
       #search-input { padding: 16px 18px; font-size: 1rem; }
+    }
+    @media (max-width: 440px) {
+      .ebook-popup-card { border-radius: 16px; }
+      .ebook-popup-body { padding: 28px 20px 20px; }
+      .ebook-popup-bigtitle { font-size: 1.35rem; }
+      .ebook-popup-qr img { width: 160px; height: 160px; }
     }
   </style>
 
@@ -454,6 +718,154 @@ const { title, description } = Astro.props;
       } else {
         highlightKeyword(getQueryParam('q'));
       }
+    })();
+  </script>
+
+  <!-- 代码块复制按钮 -->
+  <script is:inline>
+    (function() {
+      function initCopyButtons() {
+        document.querySelectorAll('.prose pre').forEach(function(pre) {
+          if (pre.querySelector('.copy-btn')) return;
+          var btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.textContent = '复制';
+          btn.setAttribute('aria-label', '复制代码');
+          btn.addEventListener('click', function() {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+              btn.textContent = '已复制';
+              btn.classList.add('copied');
+              setTimeout(function() {
+                btn.textContent = '复制';
+                btn.classList.remove('copied');
+              }, 2000);
+            }).catch(function() {
+              btn.textContent = '失败';
+              setTimeout(function() { btn.textContent = '复制'; }, 2000);
+            });
+          });
+          pre.style.position = 'relative';
+          pre.appendChild(btn);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCopyButtons);
+      } else {
+        initCopyButtons();
+      }
+    })();
+  </script>
+
+  <!-- 微信电子书弹窗（滚动触发 + 每天一次） -->
+  <script is:inline>
+    (function() {
+      // === 配置 ===
+      var STORAGE_DAY   = 'ebook_popup_day';    // 今天已弹过
+      var STORAGE_DISMISS = 'ebook_popup_dismiss_until'; // 用户点「暂时不要」的过期时间戳
+      var SCROLL_THRESHOLD = 0.40; // 滚动 40% 触发
+      var TIME_THRESHOLD   = 60000;  // 或停留 60 秒触发
+
+      // === 已有领取人数（可手动更新）===
+      var CLAIM_COUNT = 327;
+
+      // === 工具函数 ===
+      function todayStr() {
+        var d = new Date();
+        return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+      }
+      function getDismissUntil() {
+        try { return parseInt(localStorage.getItem(STORAGE_DISMISS), 10); } catch(e) { return 0; }
+      }
+
+      // === 判断是否应该弹出 ===
+      function shouldShow() {
+        // 用户点过「暂时不要」且未过期
+        var dismissUntil = getDismissUntil();
+        if (dismissUntil && Date.now() < dismissUntil) return false;
+        // 今天已弹过
+        try {
+          if (localStorage.getItem(STORAGE_DAY) === todayStr()) return false;
+        } catch(e) {}
+        return true;
+      }
+
+      // === 记录：今天已弹 ===
+      function markShown() {
+        try { localStorage.setItem(STORAGE_DAY, todayStr()); } catch(e) {}
+      }
+
+      // === 记录：暂时不要（7天后）===
+      function markDismissed() {
+        var t = Date.now() + 7 * 24 * 60 * 60 * 1000;
+        try { localStorage.setItem(STORAGE_DISMISS, String(t)); } catch(e) {}
+      }
+
+      // === 显示 / 关闭 ===
+      var overlay    = document.getElementById('ebook-popup-overlay');
+      var closeBtn   = document.getElementById('ebook-popup-close');
+      var dismissBtn = document.getElementById('ebook-popup-dismiss');
+      var shown      = false;
+      var timeTimer  = null;
+
+      function showPopup() {
+        if (shown || !overlay || !shouldShow()) return;
+        shown = true;
+        markShown();
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function dismissPopup() {
+        if (!overlay) return;
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        if (timeTimer) clearTimeout(timeTimer);
+      }
+
+      if (!overlay) return;
+
+      // === 触发条件 1：滚动超过 40% ===
+      var scrollFired = false;
+      window.addEventListener('scroll', function() {
+        if (scrollFired) return;
+        var h = document.body.scrollHeight - window.innerHeight;
+        if (h <= 0) return;
+        if (window.scrollY / h > SCROLL_THRESHOLD) {
+          scrollFired = true;
+          showPopup();
+        }
+      }, { passive: true });
+
+      // === 触发条件 2：停留超过 60 秒 ===
+      timeTimer = setTimeout(function() {
+        if (!scrollFired) showPopup();
+      }, TIME_THRESHOLD);
+
+      // === 关闭按钮 ===
+      if (closeBtn) closeBtn.addEventListener('click', dismissPopup);
+
+      // === 「暂时不要」按钮 ===
+      if (dismissBtn) {
+        dismissBtn.addEventListener('click', function() {
+          markDismissed();
+          dismissPopup();
+        });
+      }
+
+      // === 点击遮罩关闭 ===
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) dismissPopup();
+      });
+
+      // === ESC 关闭 ===
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+          dismissPopup();
+        }
+      });
     })();
   </script>
 
