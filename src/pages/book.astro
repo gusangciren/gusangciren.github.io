@@ -79,6 +79,30 @@ for (const book of books) {
     border-radius: 8px;
     box-shadow: 0 8px 28px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
   }
+  .chapters-nav {
+    margin-top: 20px;
+  }
+  .view-chapters-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 28px;
+    background: var(--color-accent, #f55000);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(245,80,0,0.25);
+  }
+  .view-chapters-btn:hover {
+    background: #d94500;
+    box-shadow: 0 4px 14px rgba(245,80,0,0.35);
+    transform: translateY(-1px);
+  }
   .book-details h1 {
     font-family: var(--font-serif, Georgia, serif);
     font-size: 1.6rem;
@@ -103,29 +127,6 @@ for (const book of books) {
     font-size: 15px;
     color: var(--color-text-secondary, #888);
     line-height: 1.8;
-  }
-  .chapters-nav {
-    margin-top: 20px;
-  }
-  .view-chapters-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 14px 24px;
-    background: var(--color-accent-light, #fff5f0);
-    border: 1px solid rgba(245,80,0,0.15);
-    border-radius: 10px;
-    color: var(--color-accent, #f55000);
-    text-decoration: none;
-    font-size: 0.92rem;
-    font-weight: 500;
-    transition: all 0.2s;
-  }
-  .view-chapters-btn:hover {
-    background: var(--color-accent, #f55000);
-    color: white;
-    border-color: var(--color-accent, #f55000);
   }
   .chapters {
     margin-top: 40px;

@@ -46,7 +46,7 @@ const isSeries = seriesPosts.length > 0;
                 href={`/blog/${p.data.slug}`}
                 class={`book-toc-item ${p.data.slug === post.data.slug ? 'active' : ''}`}
               >
-                <span class="book-toc-order">{(p.data.seriesOrder as number) + 1}</span>
+                <span class="book-toc-order">{(p.data.seriesOrder as number)}</span>
                 <span class="book-toc-title">{p.data.title.replace(new RegExp(`^${p.data.series}[：:·\\s]*`), '')}</span>
               </a>
             ))}
