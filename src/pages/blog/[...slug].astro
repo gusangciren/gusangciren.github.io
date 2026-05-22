@@ -38,7 +38,7 @@ const isSeries = seriesPosts.length > 0;
         <div class="book-toc-inner">
           <div class="book-toc-header">
             <span class="book-toc-series">{post.data.series}</span>
-            <span class="book-toc-count">{seriesPosts.length} 章</span>
+            <span class="book-toc-count">目录</span>
           </div>
           <nav class="book-toc-nav">
             {seriesPosts.map((p) => (
@@ -162,11 +162,13 @@ const isSeries = seriesPosts.length > 0;
     letter-spacing: 0.02em;
   }
   .book-toc-count {
-    font-size: 11px;
-    color: #a8a29e;
-    background: #f5f5f4;
-    padding: 2px 6px;
-    border-radius: 10px;
+    font-size: 12px;
+    color: #fff;
+    background: #f55000;
+    padding: 4px 10px;
+    border-radius: 5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
   }
 
   .book-toc-nav {
@@ -260,11 +262,12 @@ const isSeries = seriesPosts.length > 0;
       position: static;
       max-height: none;
       padding: 0;
-      border-bottom: 1px solid #e7e5e4;
+      border-bottom: none;
       margin-bottom: 0;
+      background: #fafaf9;
     }
     .book-toc-inner {
-      padding: 16px 16px 0;
+      padding: 0;
       border-right: none;
     }
     .book-toc-nav {
@@ -272,27 +275,55 @@ const isSeries = seriesPosts.length > 0;
     }
     .book-toc.expanded .book-toc-nav {
       display: flex;
-      padding-bottom: 12px;
+      padding: 0 16px 16px;
     }
     .book-toc-header {
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
       margin-bottom: 0;
-      padding-bottom: 16px;
-      border-bottom: none;
+      border-bottom: 1px solid #e7e5e4;
+      background: #f5f5f4;
+      -webkit-tap-highlight-color: transparent;
+      min-height: 48px;
     }
     .book-toc-header::after {
       content: '▾';
-      font-size: 12px;
-      color: #a8a29e;
+      font-size: 16px;
+      color: #78716c;
+      transition: transform 0.2s;
+      flex-shrink: 0;
+      margin-left: 8px;
     }
     .book-toc.expanded .book-toc-header {
-      margin-bottom: 8px;
-      border-bottom: 1px solid #f0eeec;
-      padding-bottom: 8px;
+      border-bottom: none;
+      padding: 16px;
+    }
+    .book-toc.expanded .book-toc-header::after {
+      transform: rotate(180deg);
+    }
+    .book-toc-item {
+      padding: 12px 10px;
+      font-size: 14px;
+      border-radius: 8px;
+      min-height: 44px;
+      align-items: center;
+    }
+    .book-toc-order {
+      width: 22px;
+      height: 22px;
+      font-size: 12px;
+      line-height: 22px;
     }
     .book-toc-back {
-      padding: 12px 0;
-      margin-top: 4px;
+      padding: 14px 16px;
+      margin-top: 0;
+      border-top: 1px solid #e7e5e4;
+      font-size: 13px;
+      min-height: 44px;
+      align-items: center;
     }
     .book-main {
       padding: 0 16px;

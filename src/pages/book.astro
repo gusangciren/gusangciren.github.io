@@ -1,61 +1,52 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
-import BookChapterItem from '../components/BookChapterItem.astro';
 
 const books = await getCollection('books');
 const posts = await getCollection('blog');
 
 books.sort((a, b) => a.data.order - b.data.order);
 
-// For each book, find its chapters from blog collection
-const booksWithChapters = books.map(book => {
+// 为每本书找到第一章的链接
+const firstChapterMap = new Map();
+for (const book of books) {
   const chapters = posts
-    .filter(p => p.data.series === book.data.seriesName && p.data.seriesOrder)
-    .sort((a, b) => a.data.seriesOrder! - b.data.seriesOrder!);
-  const slug = book.id.replace(/\.(md|mdx)$/i, '');
-  return { book, chapters, slug };
-});
+    .filter(p => p.data.series === book.data.seriesName && p.data.seriesOrder !== undefined)
+    .sort((a, b) => (a.data.seriesOrder as number) - (b.data.seriesOrder as number));
+  if (chapters.length > 0) {
+    firstChapterMap.set(book.id, chapters[0].data.slug);
+  }
+}
 ---
 
 <BaseLayout title="书籍 — 像企业家一样写作">
   <div class="book-page">
-    {booksWithChapters.map(({ book, chapters, slug }) => (
-      <div id={slug} class="book-section">
-        <div class="book-hero">
-          <div class="book-cover">
-            <img src={book.data.cover} alt={book.data.title} class="book-cover-img" />
-          </div>
-          <div class="book-details">
-            <h1>《{book.data.title}》</h1>
-            {book.data.subtitle && <p class="tagline">{book.data.subtitle}</p>}
-            {book.data.motto && <p class="motto">「{book.data.motto}」</p>}
-            <p>{book.data.description}</p>
+    {books.map((book) => {
+      const slug = book.id.replace(/\.(md|mdx)$/i, '');
+      return (
+        <div id={slug} class="book-section">
+          <div class="book-hero">
+            <div class="book-cover">
+              <img src={book.data.cover} alt={book.data.title} class="book-cover-img" />
+            </div>
+            <div class="book-details">
+              <h1>《{book.data.title}》</h1>
+              {book.data.subtitle && <p class="tagline">{book.data.subtitle}</p>}
+              {book.data.motto && <p class="motto">「{book.data.motto}」</p>}
+              <p>{book.data.description}</p>
 
-            {chapters.length > 0 && (
-              <div class="chapters-nav">
-                <a href={`/book/${slug}`} class="view-chapters-btn">
-                  {book.data.chapterSize
-                    ? `查看章节一览（${Math.ceil(chapters.length / book.data.chapterSize)}章 / ${chapters.length}篇） →`
-                    : `查看全部文章（${chapters.length}篇） →`}
-                </a>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* 普通书籍：直接在列表页展示文章（最多显示6篇预览） */}
-        {!book.data.chapterSize && chapters.length > 0 && (
-          <div class="chapters">
-            <div class="chapter-grid">
-              {chapters.slice(0, 6).map(chapter => (
-                <BookChapterItem post={chapter} />
-              ))}
+              {firstChapterMap.has(book.id) && (
+                <div class="chapters-nav">
+                  <a href={`/blog/${firstChapterMap.get(book.id)}`} class="view-chapters-btn">
+                    开始阅读 →
+                  </a>
+                </div>
+              )}
             </div>
           </div>
-        )}
-      </div>
-    ))}
+        </div>
+      );
+    })}
   </div>
 </BaseLayout>
 
