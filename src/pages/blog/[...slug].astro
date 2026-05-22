@@ -14,19 +14,6 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 
-// Find next post in series
-let nextPost = null;
-if (post.data.series && post.data.seriesOrder) {
-  const allPosts = await getCollection('blog');
-  const seriesPosts = allPosts.filter(
-    p => p.data.series === post.data.series && p.data.seriesOrder
-  );
-  seriesPosts.sort((a, b) => a.data.seriesOrder! - b.data.seriesOrder!);
-  const currentIndex = seriesPosts.findIndex(p => p.data.slug === post.data.slug);
-  if (currentIndex >= 0 && currentIndex < seriesPosts.length - 1) {
-    nextPost = seriesPosts[currentIndex + 1];
-  }
-}
 ---
 
 <BaseLayout title={`${post.data.title} — 像企业家一样写作`} description={post.data.description}>
@@ -46,16 +33,6 @@ if (post.data.series && post.data.seriesOrder) {
       </div>
     </header>
     <Content />
-
-    {nextPost && (
-      <div class="next-chapter">
-        <a href={`/blog/${nextPost.data.slug}`} class="next-chapter-link">
-          <span class="next-label">下一章</span>
-          <span class="next-title">{nextPost.data.title}</span>
-          <span class="next-arrow">→</span>
-        </a>
-      </div>
-    )}
 
     <CTASection />
   </article>
