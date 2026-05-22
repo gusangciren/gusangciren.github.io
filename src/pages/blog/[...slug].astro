@@ -14,31 +14,86 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 
+// 如果是书籍系列文章，获取同系列所有文章
+let seriesPosts: any[] = [];
+if (post.data.series && post.data.seriesOrder !== undefined) {
+  const allPosts = await getCollection('blog');
+  seriesPosts = allPosts
+    .filter(p => p.data.series === post.data.series && p.data.seriesOrder !== undefined)
+    .sort((a, b) => (a.data.seriesOrder as number) - (b.data.seriesOrder as number));
+}
+
+const isSeries = seriesPosts.length > 0;
 ---
 
 <BaseLayout title={`${post.data.title} — 像企业家一样写作`} description={post.data.description}>
   <!-- 阅读进度条 -->
   <div id="reading-progress" class="reading-progress"></div>
 
-  <article class="prose">
-    <header class="article-header">
-      <h1>{post.data.title}</h1>
-      <div class="article-meta">
-        {post.data.series && (
-          <span class="article-series">{post.data.series}</span>
-        )}
-        <time>
-          {new Date(post.data.date).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
-        </time>
-      </div>
-    </header>
-    <Content />
+  {isSeries ? (
+    <!-- 书籍系列：左侧目录 + 右侧正文 -->
+    <div class="book-layout">
+      <!-- 左侧目录 -->
+      <aside class="book-toc">
+        <div class="book-toc-inner">
+          <div class="book-toc-header">
+            <span class="book-toc-series">{post.data.series}</span>
+            <span class="book-toc-count">{seriesPosts.length} 章</span>
+          </div>
+          <nav class="book-toc-nav">
+            {seriesPosts.map((p) => (
+              <a
+                href={`/blog/${p.data.slug}`}
+                class={`book-toc-item ${p.data.slug === post.data.slug ? 'active' : ''}`}
+              >
+                <span class="book-toc-order">{(p.data.seriesOrder as number) + 1}</span>
+                <span class="book-toc-title">{p.data.title.replace(new RegExp(`^${p.data.series}[：:·\\s]*`), '')}</span>
+              </a>
+            ))}
+          </nav>
+          <a href="/books" class="book-toc-back">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+            返回书架
+          </a>
+        </div>
+      </aside>
 
-    <CTASection />
-  </article>
+      <!-- 右侧正文 -->
+      <main class="book-main">
+        <article class="prose">
+          <header class="article-header">
+            <h1>{post.data.title}</h1>
+            <div class="article-meta">
+              <span class="article-series">{post.data.series}</span>
+              <time>
+                {new Date(post.data.date).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </time>
+            </div>
+          </header>
+          <Content />
+          <CTASection />
+        </article>
+      </main>
+    </div>
+  ) : (
+    <!-- 普通文章：单栏布局 -->
+    <article class="prose">
+      <header class="article-header">
+        <h1>{post.data.title}</h1>
+        <div class="article-meta">
+          <time>
+            {new Date(post.data.date).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
+          </time>
+        </div>
+      </header>
+      <Content />
+      <CTASection />
+    </article>
+  )}
 </BaseLayout>
 
 <style is:global>
+  /* 阅读进度条 */
   .reading-progress {
     position: fixed;
     top: 0;
@@ -53,22 +108,224 @@ const { Content } = await render(post);
   .reading-progress.show {
     opacity: 1;
   }
+
+  /* ===== 书籍双栏布局 ===== */
+  .book-layout {
+    display: flex;
+    align-items: flex-start;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 16px;
+    gap: 0;
+  }
+
+  /* 左侧目录 */
+  .book-toc {
+    width: 260px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 72px;
+    max-height: calc(100vh - 88px);
+    overflow-y: auto;
+    padding: 24px 0;
+    scrollbar-width: thin;
+    scrollbar-color: #e7e5e4 transparent;
+  }
+  .book-toc::-webkit-scrollbar {
+    width: 4px;
+  }
+  .book-toc::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .book-toc::-webkit-scrollbar-thumb {
+    background: #e7e5e4;
+    border-radius: 4px;
+  }
+
+  .book-toc-inner {
+    padding: 0 20px 0 0;
+    border-right: 1px solid #e7e5e4;
+  }
+
+  .book-toc-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f0eeec;
+  }
+  .book-toc-series {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1c1917;
+    letter-spacing: 0.02em;
+  }
+  .book-toc-count {
+    font-size: 11px;
+    color: #a8a29e;
+    background: #f5f5f4;
+    padding: 2px 6px;
+    border-radius: 10px;
+  }
+
+  .book-toc-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .book-toc-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: none;
+    color: #57534e;
+    font-size: 13px;
+    line-height: 1.5;
+    transition: background 0.15s, color 0.15s;
+  }
+  .book-toc-item:hover {
+    background: #f5f5f4;
+    color: #1c1917;
+    border: none;
+  }
+  .book-toc-item.active {
+    background: rgba(245, 80, 0, 0.08);
+    color: #F55000;
+    font-weight: 600;
+  }
+  .book-toc-order {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    font-size: 11px;
+    line-height: 18px;
+    text-align: center;
+    border-radius: 4px;
+    background: #f0eeec;
+    color: #a8a29e;
+    margin-top: 1px;
+  }
+  .book-toc-item.active .book-toc-order {
+    background: rgba(245, 80, 0, 0.15);
+    color: #F55000;
+  }
+  .book-toc-title {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .book-toc-back {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 20px;
+    padding: 8px 10px;
+    font-size: 12px;
+    color: #a8a29e;
+    text-decoration: none;
+    border: none;
+    border-radius: 6px;
+    transition: color 0.15s, background 0.15s;
+  }
+  .book-toc-back:hover {
+    color: #57534e;
+    background: #f5f5f4;
+    border: none;
+  }
+
+  /* 右侧正文区 */
+  .book-main {
+    flex: 1;
+    min-width: 0;
+    padding-left: 40px;
+  }
+  .book-main .prose {
+    max-width: 680px;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* 移动端：折叠目录 */
+  @media (max-width: 768px) {
+    .book-layout {
+      flex-direction: column;
+      padding: 0;
+    }
+    .book-toc {
+      width: 100%;
+      position: static;
+      max-height: none;
+      padding: 0;
+      border-bottom: 1px solid #e7e5e4;
+      margin-bottom: 0;
+    }
+    .book-toc-inner {
+      padding: 16px 16px 0;
+      border-right: none;
+    }
+    .book-toc-nav {
+      display: none; /* 移动端默认折叠 */
+    }
+    .book-toc.expanded .book-toc-nav {
+      display: flex;
+      padding-bottom: 12px;
+    }
+    .book-toc-header {
+      cursor: pointer;
+      margin-bottom: 0;
+      padding-bottom: 16px;
+      border-bottom: none;
+    }
+    .book-toc-header::after {
+      content: '▾';
+      font-size: 12px;
+      color: #a8a29e;
+    }
+    .book-toc.expanded .book-toc-header {
+      margin-bottom: 8px;
+      border-bottom: 1px solid #f0eeec;
+      padding-bottom: 8px;
+    }
+    .book-toc-back {
+      padding: 12px 0;
+      margin-top: 4px;
+    }
+    .book-main {
+      padding: 0 16px;
+    }
+    .book-main .prose {
+      max-width: 100%;
+    }
+  }
 </style>
 
 <script>
   (function() {
+    // 阅读进度条
     const bar = document.getElementById('reading-progress');
-    if (!bar) return;
-
-    function updateProgress() {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-      const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-      bar.style.width = progress + '%';
-      bar.classList.toggle('show', scrollTop > 50);
+    if (bar) {
+      function updateProgress() {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        bar.style.width = progress + '%';
+        bar.classList.toggle('show', scrollTop > 50);
+      }
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      updateProgress();
     }
 
-    window.addEventListener('scroll', updateProgress, { passive: true });
-    updateProgress();
+    // 移动端：点击目录标题展开/折叠
+    const tocHeader = document.querySelector('.book-toc-header');
+    const toc = document.querySelector('.book-toc');
+    if (tocHeader && toc) {
+      tocHeader.addEventListener('click', function() {
+        toc.classList.toggle('expanded');
+      });
+    }
   })();
 </script>
