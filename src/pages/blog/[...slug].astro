@@ -42,13 +42,24 @@ const isSeries = seriesPosts.length > 0;
           </div>
           <nav class="book-toc-nav">
             {seriesPosts.map((p) => (
-              <a
-                href={`/blog/${p.data.slug}`}
-                class={`book-toc-item ${p.data.slug === post.data.slug ? 'active' : ''}`}
-              >
-                <span class="book-toc-order">{(p.data.seriesOrder as number)}</span>
-                <span class="book-toc-title">{p.data.title.replace(new RegExp(`^${p.data.series}[：:·\\s]*`), '')}</span>
-              </a>
+              <div class={`book-toc-section ${p.data.slug === post.data.slug ? 'active' : ''}`}>
+                <a
+                  href={`/blog/${p.data.slug}`}
+                  class="book-toc-item"
+                >
+                  <span class="book-toc-order">{(p.data.seriesOrder as number)}</span>
+                  <span class="book-toc-title">{p.data.title.replace(new RegExp(`^${p.data.series}[：:·\\s]*`), '')}</span>
+                </a>
+                {p.data.slug === post.data.slug && post.data.subChapters && (
+                  <div class="book-toc-sub">
+                    {post.data.subChapters.map((ch: string) => (
+                      <a href={`/blog/${post.data.slug}#${ch.replace(/[：:？?!！\s·]/g, '').toLowerCase()}`} class="book-toc-sub-item">
+                        {ch}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
             ))}
           </nav>
           <a href="/book" class="book-toc-back">
@@ -194,10 +205,11 @@ const isSeries = seriesPosts.length > 0;
     color: #1c1917;
     border: none;
   }
-  .book-toc-item.active {
+  .book-toc-section.active .book-toc-item {
     background: rgba(245, 80, 0, 0.08);
     color: #F55000;
     font-weight: 600;
+    border-radius: 8px 8px 0 0;
   }
   .book-toc-order {
     flex-shrink: 0;
@@ -214,6 +226,38 @@ const isSeries = seriesPosts.length > 0;
   .book-toc-item.active .book-toc-order {
     background: rgba(245, 80, 0, 0.15);
     color: #F55000;
+  }
+  .book-toc-section.active .book-toc-order {
+    background: rgba(245, 80, 0, 0.15);
+    color: #F55000;
+  }
+
+  /* 子标题目录 */
+  .book-toc-sub {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    padding: 4px 0 6px 36px;
+    border-radius: 0 0 8px 8px;
+    background: rgba(245, 80, 0, 0.04);
+  }
+  .book-toc-sub-item {
+    display: block;
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #78716c;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    transition: color 0.15s, background 0.15s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .book-toc-sub-item:hover {
+    color: #F55000;
+    background: rgba(245, 80, 0, 0.06);
   }
   .book-toc-title {
     flex: 1;
