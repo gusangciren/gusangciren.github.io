@@ -28,6 +28,11 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* 锚点偏移：避免被固定导航栏盖住 */
+h3[id] {
+  scroll-margin-top: 72px;
+}
+
 /* ========== Navbar ========== */
 .navbar {
   position: sticky;
