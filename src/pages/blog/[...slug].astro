@@ -24,6 +24,11 @@ if (post.data.series && post.data.seriesOrder !== undefined) {
 }
 
 const isSeries = seriesPosts.length > 0;
+
+// 计算上一篇/下一篇
+const currentIndex = isSeries ? seriesPosts.findIndex(p => p.data.slug === post.data.slug) : -1;
+const prevPost = currentIndex > 0 ? seriesPosts[currentIndex - 1] : null;
+const nextPost = currentIndex >= 0 && currentIndex < seriesPosts.length - 1 ? seriesPosts[currentIndex + 1] : null;
 ---
 
 <BaseLayout title={`${post.data.title} — 像企业家一样写作`} description={post.data.description}>
@@ -83,6 +88,28 @@ const isSeries = seriesPosts.length > 0;
           </header>
           <Content />
           <CTASection />
+          {(prevPost || nextPost) && (
+            <nav class="article-nav">
+              {prevPost ? (
+                <a href={`/blog/${prevPost.data.slug}`} class="article-nav-link article-nav-prev">
+                  <span class="article-nav-label">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+                    阅读上一篇
+                  </span>
+                  <span class="article-nav-title">{prevPost.data.title.replace(new RegExp(`^${prevPost.data.series}[：:·\\s]*`), '')}</span>
+                </a>
+              ) : <span />}
+              {nextPost ? (
+                <a href={`/blog/${nextPost.data.slug}`} class="article-nav-link article-nav-next">
+                  <span class="article-nav-label">
+                    阅读下一篇
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  </span>
+                  <span class="article-nav-title">{nextPost.data.title.replace(new RegExp(`^${nextPost.data.series}[：:·\\s]*`), '')}</span>
+                </a>
+              ) : <span />}
+            </nav>
+          )}
         </article>
       </main>
     </div>
@@ -281,6 +308,59 @@ const isSeries = seriesPosts.length > 0;
     color: #57534e;
     background: #f5f5f4;
     border: none;
+  }
+
+  /* 文章底部上一篇/下一篇导航 */
+  .article-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 16px;
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid #e7e5e4;
+  }
+  .article-nav-link {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    background: #fff;
+    border: 1px solid #e7e5e4;
+    text-decoration: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    flex: 1;
+    max-width: 280px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .article-nav-link:hover {
+    border-color: #f55000;
+    box-shadow: 0 4px 12px rgba(245,80,0,0.08);
+  }
+  .article-nav-prev {
+    align-items: flex-start;
+  }
+  .article-nav-next {
+    align-items: flex-end;
+    text-align: right;
+  }
+  .article-nav-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #a8a29e;
+    font-weight: 500;
+  }
+  .article-nav-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1c1917;
+    line-height: 1.4;
+  }
+  .article-nav-link:hover .article-nav-title {
+    color: #f55000;
   }
 
   /* 右侧正文区 */
