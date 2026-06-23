@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const formUrl = 'https://my.feishu.cn/share/base/form/shrcnTudAXRlNxPJPtft4IAdR9f';
+---
+
+<BaseLayout title="免费答疑" description="填写表单，我会为你答疑解惑。">
+  <section class="join-page">
+    <div class="join-page-inner">
+      <div class="join-page-header">
+        <h1>免费答疑</h1>
+      </div>
+      <div class="join-form-frame">
+        <iframe
+          src={formUrl}
+          title="答疑表单"
+          frameborder="0"
+          allowfullscreen
+          loading="lazy"
+        ></iframe>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .join-page {
+    min-height: calc(100vh - 56px);
+    background: #fafaf9;
+    padding: 48px 24px 64px;
+  }
+  .join-page-inner {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .join-page-header {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .join-page-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1c1917;
+    margin: 0;
+  }
+  .join-form-frame {
+    width: 100%;
+    height: 720px;
+    background: #fff;
+    border: 2px solid #F55000;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(245, 80, 0, 0.12);
+  }
+  .join-form-frame iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+</style>
