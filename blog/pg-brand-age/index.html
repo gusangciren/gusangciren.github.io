@@ -1,0 +1,468 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="积家（Jaeger-LeCoultre）的网站说，他们当前的一个系列&quot;从制表黄金时代的经典设计中汲取灵感&quot;。在这样说的时候，他们隐晦地说出了当今制表商都知道但很少直接说出来的话：无论我们现在处于什么时代，它都不是黄金时代。"><title>品牌时代 — 像企业家一样写作</title><link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml"><link rel="sitemap" type="application/xml" href="/sitemap-index.xml"><!-- Static CSS — no build hash, safe for incremental deploys --><link rel="stylesheet" href="/global.css"><!-- 自托管字体 --><link rel="preload" href="/fonts/NotoSerifSC-Regular.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/_astro/BaseLayout.BYj8Tvw5.css">
+<link rel="stylesheet" href="/_astro/_..CcR4Cqk3.css"></head> <body> <nav class="navbar"> <div class="nav-inner"> <a href="/" class="logo"> <img src="/images/logo-header.png" alt="Logo" class="logo-img"> <span>像企业家一样写作</span> </a> <div class="nav-links"> <a href="/blog">文章</a> <a href="/book">书籍</a> <a href="/community">社群</a> <a href="/join">答疑</a> </div> </div> </nav> <!-- 搜索浮窗 --> <div id="search-overlay" class="search-overlay"> <div class="search-modal"> <div class="search-header"> <input id="search-input" type="text" placeholder="搜索文章标题、描述..." autocomplete="off"> <button id="search-close" class="search-close-btn" aria-label="关闭搜索">✕</button> </div> <div id="search-results" class="search-results"></div> </div> </div> <!-- 浮动搜索按钮 --> <button id="search-toggle" class="search-fab" aria-label="搜索"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"> <circle cx="11" cy="11" r="7"></circle> <line x1="16.5" y1="16.5" x2="21" y2="21"></line> </svg> </button> <!-- ===== 微信电子书弹窗 ===== --> <div id="ebook-popup-overlay" class="ebook-popup-overlay" onclick="if(event.target===this){this.classList.remove('active');document.body.style.overflow='';}"> <div class="ebook-popup-card"> <div class="ebook-popup-topbar"></div> <button id="ebook-popup-close" class="ebook-popup-close" aria-label="关闭" onclick="event.stopPropagation();document.getElementById('ebook-popup-overlay').classList.remove('active');document.body.style.overflow='';">✕</button> <div class="ebook-popup-body"> <!-- 送你 --> <div class="ebook-popup-gift">送你一本我的电子书</div> <!-- 书名 --> <div class="ebook-popup-bigtitle">《闭环：在你睡觉时赚钱》</div> <div class="ebook-popup-bigsub">从0到1的自媒体方法论</div> <!-- 社会认同 --> <div class="ebook-popup-proof"> <span class="ebook-proof-avatars"> <span class="ebook-proof-avatar" style="background: #f5e0d0;"> <span style="font-size:12px;font-weight:700;color:#c45c2e;">M</span> </span> <span class="ebook-proof-avatar" style="background: #d0e8e0;"> <span style="font-size:12px;font-weight:700;color:#3a7a5e;">S</span> </span> <span class="ebook-proof-avatar" style="background: #d8dff0;"> <span style="font-size:12px;font-weight:700;color:#4a6aab;">L</span> </span> </span> <span><span class="ebook-proof-count">327</span> 人已领取</span> </div> <!-- 二维码 --> <div class="ebook-popup-qr"> <img src="/images/wechat-qr.png" alt="微信二维码"> </div> <!-- 下载按钮 — 仅手机展示 --> <a class="ebook-popup-download" href="/images/wechat-qr.png" download> <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path> <polyline points="7 10 12 15 17 10"></polyline> <line x1="12" y1="15" x2="12" y2="3"></line> </svg>
+下载二维码到手机
+</a> <!-- 流程提示 --> <p class="ebook-popup-steps"> <span class="step">扫二维码</span> → <span class="step">添加好友</span> → 回复<span class="keyword-value">闭环</span> → <span class="step">立马领取</span> </p> </div> <div class="ebook-popup-footer"> <p>免费领取 · 无需购买任何产品 · 24 小时内回复</p> </div> </div> </div> <main>   <div id="reading-progress" class="reading-progress"></div> <!-- 书籍系列：左侧目录 + 右侧正文 -->
+    <div class="book-layout"> <!-- 左侧目录 --> <aside class="book-toc"> <div class="book-toc-inner"> <div class="book-toc-header"> <span class="book-toc-series">Paul Graham 文集</span> <span class="book-toc-count">目录</span> </div> <nav class="book-toc-nav"> <div class="book-toc-section active"> <a href="/blog/pg-brand-age" class="book-toc-item"> <span class="book-toc-order">1</span> <span class="book-toc-title">品牌时代</span> </a>  </div><div class="book-toc-section "> <a href="/blog/pg-field" class="book-toc-item"> <span class="book-toc-order">2</span> <span class="book-toc-title">文章领域的形状</span> </a>  </div><div class="book-toc-section "> <a href="/blog/pg-good-writing" class="book-toc-item"> <span class="book-toc-order">3</span> <span class="book-toc-title">好文章</span> </a>  </div><div class="book-toc-section "> <a href="/blog/pg-do" class="book-toc-item"> <span class="book-toc-order">4</span> <span class="book-toc-title">应该做什么</span> </a>  </div><div class="book-toc-section "> <a href="/blog/pg-woke" class="book-toc-item"> <span class="book-toc-order">5</span> <span class="book-toc-title">觉醒主义的起源</span> </a>  </div><div class="book-toc-section "> <a href="/blog/pg-writes" class="book-toc-item"> <span class="book-toc-order">6</span> <span class="book-toc-title">会写和不会写的人</span> </a>  </div><div class="book-toc-section "> <a href="/blog/pg-when" class="book-toc-item"> <span class="book-toc-order">7</span> <span class="book-toc-title">何时做你热爱的事</span> </a>  </div><div class="book-toc-section "> <a href="/blog/pg-founder-mode" class="book-toc-item"> <span class="book-toc-order">8</span> <span class="book-toc-title">创始人模式</span> </a>  </div><div class="book-toc-section "> <a href="/blog/pg-persistence" class="book-toc-item"> <span class="book-toc-order">9</span> <span class="book-toc-title">正确的固执类型</span> </a>  </div><div class="book-toc-section "> <a href="/blog/pg-reddits" class="book-toc-item"> <span class="book-toc-order">10</span> <span class="book-toc-title">Reddit 们</span> </a>  </div> </nav> <a href="/book" class="book-toc-back"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+返回书架
+</a> </div> </aside> <!-- 右侧正文 --> <main class="book-main"> <article class="prose"> <header class="article-header"> <h1>品牌时代</h1> <div class="article-meta"> <span class="article-series">Paul Graham 文集</span> <time> 2026年3月1日 </time> </div> </header> <p>积家（Jaeger-LeCoultre）的网站说，他们当前的一个系列”从制表黄金时代的经典设计中汲取灵感”。在这样说的时候，他们隐晦地说出了当今制表商都知道但很少直接说出来的话：无论我们现在处于什么时代，它都不是黄金时代。</p>
+<p>黄金时代是从1945年到1970年——从制表业从战争混乱中崛起、瑞士人处于顶峰，到60年代末开始的三重灾难袭击它。在黄金时代，制表商最追求两件事：薄和精确。事实上这可以说是制表业的基本权衡。手表是你随身携带用来知道时间的。所以有两种基本方法改进它：让它更容易随身携带，让它更擅长告诉时间。</p>
+<p>显然精确度很有价值，但在黄金时代，薄度如果有什么的话更有价值。即使在怀表时代，最好的制表商也试图让他们的手表尽可能薄。便宜、厚的怀表被嘲笑为”芜菁”。但当男性的手表在第一次世界大战期间移到手腕上时，薄度变成了更紧迫的问题。由于薄度比精确度更难实现，所以正是这种品质倾向于区分黄金时代的更昂贵手表。</p>
+<p>在其他时代，制表商还追求一件事：以通常以外的方式告诉时间。例如，告诉你月相，或者用声音告诉时间。在行业内，这些东西的术语是”复杂功能”。它们在19世纪很流行，现在又流行起来，但除了一个实用的复杂功能（显示日期）之外，它们在黄金时代是配角。在黄金时代，正如在黄金时代总是如此，顶级制表商专注于基本的权衡。而且，正如在黄金时代总是如此，他们做得非常漂亮。黄金时代最好的手表有一种<a href="https://goldammer.me/products/vacheron-constantin-18k-white-gold">安静的完美</a>，此后从未被超越。出于我即将解释的原因，可能永远不会。</p>
+<p>黄金时代最负盛名的三大品牌是所谓的”神圣三位一体”：百达翡丽（Patek Philippe）、江诗丹顿（Vacheron Constantin）和爱彼（Audemars Piguet）。他们的声望大多是应得的；他们通过卓越的工作质量赢得了它。到20世纪60年代，他们站在两条腿上，声望和性能。在接下来的二十年里，他们学到的是，他们必须把所有重量放在第一条腿上，因为他们无法在历史制表商一直努力实现的这两件事上获胜。石英机芯不仅比任何机械机芯更精确，而且也更薄。</p>
+<p>神圣三位一体至少还有另一条腿可以站立。其他大多数知名的瑞士制表商只销售性能。这些公司都没有完整幸存下来。</p>
+<p>欧米茄（Omega）展示了不该做什么。欧米茄是瑞士制表商中的书呆子。他们制造了非常精确的手表，但他们对成为奢侈品牌的想法最多是矛盾的。当日本人制造准确机芯的能力和瑞士人一样好时，欧米茄以欧米茄的方式回应：制造更精确的机芯。他们在1968年推出了一款运行频率高45%的新机芯。理论上这应该使它更精确，但新机芯如此脆弱，以至于破坏了他们可靠性的声誉。他们甚至试图制造更好的石英机芯，但这条路上只有逐底竞争。到1981年，他们资不抵债，被债权人接管。</p>
+<p>百达翡丽采取了相反的方法。当欧米茄重新设计他们的机芯时，百达翡丽在重新设计他们的表壳。或者更确切地说，设计他们的表壳，因为直到那时他们还没有这样做。</p>
+<p>这可能是提到那个时代瑞士钟表业多么奇怪的合适点。它是一种今天难以想象的资本主义，甚至在当时也只能是在像瑞士这样的国家才能生效——一个由法规锁定到位的小型专业公司网络。我们为方便而一直称为制表商的公司只是这个网络的面向消费者的边缘。神圣三位一体没有设计自己的表壳，甚至大部分时间也没有设计自己的机芯。</p>
+<p>1968年（又是这一年），百达翡丽推出了一款新手表，改变了表壳设计的重心。这次他们把自己的设计带到表壳制造商那里，说”这就是你们要为我们制造的东西”。结果是一个引人注目的新型号，叫做<a href="https://collectability.com/learn/the-history-of-the-golden-ellipse/"> Golden Ellipse </a>。有点令人困惑的是，因为它不是椭圆形的。新表壳更像是UI设计师会称之为圆角矩形：带圆角的矩形。这个新系列的手表相当地成功。但它不止于此：它是未来的模式。[2]</p>
+<p>仅仅设计一个独特的表壳怎么会如此重要？因为它将整个手表变成了品牌的表达。</p>
+<p>从想用所戴手表的品牌给人留下深刻印象的人的角度来看，黄金时代最好的手表的问题是，没有人能告诉你戴的是什么品牌的手表。直到你走到离他们几英寸内，所有顶级制造商的手表看起来都一样。这就是极简主义的 thing：往往只有一个答案。加上黄金时代的手表按现在的标准很小。制表商花了几个世纪努力让它们变得更小，到1960年他们已经非常擅长了。所以区分一个顶级品牌和另一个的唯一东西是表盘上印刷的名称，而表盘如此之小，以至于这些名称非常微小。神圣三位一体黄金时代手表上的制造商名称在0.5到0.75毫米高之间。所以通过接管表壳，百达翡丽将品牌的尺寸从8平方毫米扩展到800。</p>
+<p>为什么他们在耳语了一个世纪之后，突然决定让他们的品牌大声喊出来？因为他们知道他们不会在性能上打败日本人。从现在开始，他们必须更多地依赖品牌。</p>
+<p>这样做是有代价的，我们甚至在这个早期的表壳即品牌例子中也可以看到。Golden Ellipses看起来不差。它们在20世纪70年代一定看起来更酷，当时设计师们把所有东西都变成圆角矩形。但Golden Ellipse不是表壳设计向前演进的一步。手表并没有都变成圆角矩形。制表商已经发现了旋转时描述圆形的东西的表壳的最佳形状。</p>
+<p>他们也发现了表冠（手表侧面用来上弦的旋钮）的最佳形状。但为了强调Ellipse的独特轮廓，百达翡丽把表冠做得太小，结果是它们令人分心地难以上弦。[3]</p>
+<p>所以即使在这个早期的例子中，我们也看到了关于品牌和设计之间关系的一个重要观点。品牌不仅仅与好设计正交，而是与设计对立。根据定义，品牌必须是独特的。但好设计，像数学或科学一样，寻求正确的答案，而正确的答案倾向于收敛。</p>
+<p>品牌是离心的；设计是向心的。</p>
+<p>当然这里有一些回旋余地。设计没有像数学那样明确的正确答案，尤其是为人工受众设计的时候。所以如果你有诚实的动机，做一些独特的事情不一定就是坏设计。但你无法回避品牌和设计之间的根本冲突，就像你无法回避重力一样。</p>
+<p>事实上，品牌和设计之间的冲突是如此根本，以至于它远远超出了我们称之为设计的东西。我们甚至在宗教中看到它。如果你想让一种宗教的追随者拥有将他们与所有人区分开来的习俗，你不能让他们做方便或合理的事情，否则其他人也会做这些事情。如果你想让你的追随者与众不同，你必须让他们做不方便和不合理的事情。</p>
+<p>如果你想让你的设计与众不同，情况也是如此。如果你选择好的选项，其他人也会选择它们。</p>
+<p>将品牌和好设计结合起来的方法只有两种。你可以在可能性空间巨大时使用，就像绘画中的情况。达·芬奇可以尽他所能地绘画，但仍然以独特的方式绘画。如果有一百万个像贝利尼和达·芬奇一样好的画家，这会更难做到，但既然大约只有十个，他们不会太多地相互碰撞。[4]</p>
+<p>品牌和好设计可以结合的另一种情况是，当可能性空间相对未被探索时。如果你是第一个到达某个新领域的人，你可以既找到正确答案，又将其宣称为 uniquely yours。至少一开始是这样；如果你真的找到了正确答案，其他人的设计将不可避免地收敛到你的设计上，你的品牌优势将随着时间的推移而削弱。</p>
+<p>由于手表设计空间既没有被探索，也不巨大，品牌只能以牺牲好设计为代价来实现。事实上，如果你想用一句话来描述当前制表的时代，那句话会做得相当好。</p>
+<p>百达翡丽不确定制造可见品牌的手表是否会奏效。这甚至不是他们当时的唯一策略。他们在摸索前进。但这是奏效的策略，至少从收入衡量来看是这样。</p>
+<p>为了让它奏效，客户必须 halfway 遇见他们。百达翡丽知道并非所有客户购买他们的手表都是为了它们提供的性能——为了它们的精确度和薄度。他们知道至少一些客户购买它们是因为它们昂贵。但有多少人不清楚，或者他们能被推多远也不清楚。</p>
+<p>为了鼓励他们，百达翡丽做了一件神圣三位一体之前都没有做过多少的事情：品牌广告。他们谈论的是他们的手表有多贵。1968年百达翡丽的一则广告解释了为什么”你很可能被明智地建议投资或许半个月的收入”在一个Ellipse上。“像每一个百达翡丽，“广告继续说，“这款薄型型号完全由手工完成。由于百达翡丽是制造成本最昂贵的手表，生产受到严重限制：每天只有43只手表被签署出库，交付给全世界的知名珠宝商。“[5]</p>
+<p>你可以看出这是一个早期的广告，因为他们仍然提到薄度。但没有提到精确度。据推测，百达翡丽觉得那场战斗已经输了。</p>
+<p>下一步是由爱彼采取的，他们在1970年委托著名设计师杰拉德·尊达（Gérald Genta）为他们设计自己的标志性手表，这款手表大胆地使用了钢。结果在1972年推出，是<a href="https://www.sothebys.com/en/buy/auction/2025/fine-watches-5/reference-5402st-jumbo-royal-oak-a-series-a">Royal Oak</a>。爱彼的广告（因为他们现在也开始做品牌广告了）更加强调其高成本。“介绍一款价格如黄金的钢表，“其中一则广告开始说。“你正在看的是世界上最昂贵的不锈钢手表——爱彼’Royal Oak’。让它比黄金更珍贵的是投入其中的时间，由正在消失的 master watchmakers 群体建造。“在广告底部，他们把传统公式颠倒过来，描述他们的手表”价格从35,000美元起向下。”</p>
+<p>Royal Oak在致力于品牌的表面积方面也是向前的一步。Golden Ellipse将表盘变成了品牌的表达，但它使用普通的表带和手镯。在Royal Oak中，表盘与金属手镯集成在一起，将其设计一直延续到手腕周围。当它说”你正在看世界上最昂贵的不锈钢手表”时，它用每一平方毫米的表面积说着这句话。</p>
+<p>客户会买这个新方法吗？初步结果令人鼓舞。神圣三位一体的销售没有起飞，但也没有降至零。至少有一些人对新信息做出了回应。也许如果他们坚持下去，数量会增长。</p>
+<p>所以他们做了。受到Royal Oak成功的鼓舞，百达翡丽在1974年委托杰拉德·尊达为他们设计一款类似的手表。Royal Oak的设计灵感来自船舶的舷窗，所以这款新手表的设计灵感来自……船舶的舷窗。它叫做<a href="https://www.sothebys.com/en/buy/auction/2025/important-watches-2/reference-3700-11-nautilus-jumbo-a-stainless-steel">Nautilus</a>，在1976年的巴塞尔钟表展上推出。</p>
+<p>在Nautilus中，我们真的看到了品牌和设计的不相容性。它巨大。黄金时代顶峰时期最昂贵的男表通常是32或33毫米直径。Nautilus是42毫米。除了巨大之外，它在表盘两侧还有无缘无故的旋钮，像一对耳朵。但你可以从房间的另一边认出它。</p>
+<p>在百达翡丽现在制造的所有手表中，Nautilus是最受追捧的。它与当今买家的需求完全吻合——基本上，尽可能响亮地表达品牌。但在1976年，它超前于它的时代。在1976年，它还有点太过份了。</p>
+<p>最终扭转百达翡丽命运的手表是另一个标志性设计，钉纹Calatrava。钉纹Calatrava之所以这样叫是因为它们装饰有小金字塔形状的尖刺。这足以让它们看起来独特。但除了钉纹，它们基本上是黄金时代的正装手表。</p>
+<p>钉纹Calatrava显然是百达翡丽广告公司负责人勒内·比特（René Bittel）的创意。这不是一个新设计。多年来，许多制表商都用钉纹装饰他们的表壳，自1968年以来就有一款百达翡丽型号带有它们。但在1984年，比特告诉百达翡丽总裁菲利普·斯特恩（Philippe Stern），实际上是：让这成为你的标准设计，我会创建一个广告活动，让人们在脑海中将它与你的品牌联系起来。[6]</p>
+<p>它非常有效地奏效了。由此产生的手表，<a href="https://www.sothebys.com/en/buy/auction/2019/watches-online-6/patek-philippe-ref-3919j-a-yellow-gold-wristwatch/">3919</a>，被称为”银行家的手表”，因为它在80年代和90年代的纽约投资银行家中变得如此受欢迎。到这一点，百达翡丽一直在对冲他们的赌注，也制造石英表，并在他们的广告中防卫性地争辩说，花哨表壳中的石英表几乎和机械表一样费工。但投资银行家们买了完整机械故事。他们甚至不需要自动上弦机械表；3919是手动机芯。就这样吧。百达翡丽不再谈论石英机芯。他们的销售在70年代初以来一直持平，到1987年，处于明确的上升轨迹，并持续至今。</p>
+<p>很难确定关键成分是比特的广告技巧还是受众的接受度，但作为认识这些投资银行家的人，我倾向于后者。这些人是”雅皮士”这个词被创造出来用来形容的人。昂贵地生活是他们最出名的事情之一。如果有人要采用一种新的展示财富的方式，那就是他们。而如果比特在十年前发送同样的信息，可能没有人会听到它。</p>
+<p>无论原因如何，20世纪80年代下半发生了一些事情，因为那是所有数字最终再次开始上升的时候。到大约1985年，机械表的命运仍不清楚。到1990年就清楚了。到1990年，使用昂贵的、高度品牌化的、明显机械的手表作为地位象征的习俗已经牢固确立。[7]</p>
+<p>过时的技术通常不会被采用作为展示财富的方式。为什么机械表会这样？因为手腕上的手表被证明是完美的载体。还有什么地方比就在你的手腕上更好，在那里每个人都能看到它？更直接地说，用什么做这件事更好？你可以戴钻戒或金链，但那些对投资银行家来说在社会上值得怀疑。他们可能是野蛮人，但他们不是黑手党。而没有什么比金表更合法的了。公司的董事长仍然戴着20年前他妻子给他的那块，甚至在石英表还是个东西之前。如果不断增加展示财富的压力要在任何地方出现，这就是地方。[8]</p>
+<p>不过，对于男性来说。女性从来没有真正接受佩戴机械手表的想法。大多数富有的女性乐于佩戴带有石英机芯的卡地亚坦克（Cartier Tank）。为什么有差异？部分原因和大多数蒸汽机买家是男性是同样的原因。但主要原因是，昂贵的机械表现在作为男性事实上的珠宝，而女性不需要事实上的珠宝，因为她们可以佩戴实际珠宝。</p>
+<p>然而，关键是机械表要足够精确。一只新的3919每天误差不超过5秒。这远不及石英表。即使是最便宜的大众市场石英表也精确到每天半秒，而最好的精确到每年3秒。但在实践中，你不需要那种精确度。如果机械表每天只有一分钟的精确度，它们就无法实现从计时到展示财富的飞跃。总是显示错误时间的手表看起来太明显不奢华了。但每天5秒足够接近了。[9]</p>
+<p>这是关于品牌和质量关系的一个重要观点。当产品转变为人们为其品牌而购买时，质量并不停止重要。但它重要的方式改变了形状。它变成了一个门槛。它不再必须是如此伟大以至于它销售产品；品牌销售产品；但它必须足够好以维持品牌的声誉。品牌不能破坏角色。</p>
+<p>对制表商来说，幸运的是雅皮士及时出现来拯救他们。或者也许不是那么幸运。因为雅皮士所代表的市场演变一直在继续，并且来势汹汹，制表商们被迫随之被拖着走。如果它们不为香港和迪拜的买家制造巨大的闪亮手表，其他人会。所以这就是他们现在发现自己正在做的事情。从品牌和设计之间冲突的几个相对微妙的例子开始的事情，现在是对设计的全面<a href="https://www.patek.com/en/collection/grand-complications/6300-400g-001">战争</a>。</p>
+<p>当前的机械制表时代还没有名字。但如果我们需要一个，应该是什么很明显。：品牌时代。黄金时代从1945年运行到1970年，接着是1970年到1985年的石英危机。自1985年以来，我们一直处于品牌时代。</p>
+<hr>
+<p>这不会是唯一的品牌时代。事实上，它甚至不是第一个；美术自20世纪30年代巴尔确立 canon 以来一直处于自己的品牌时代。既然我们可能会更多地看到这种事情，值得花些时间看看品牌时代是什么样子的。</p>
+<p>现在的事情与黄金时代的样子有什么不同？回答这个问题的最好方法也许是想象一下，如果我们把黄金时代的人用时间机器带到这里，他会注意到什么。</p>
+<p>他注意到的第一件事，如果他走过一个高档购物区，就是黄金时代所有知名的制表商似乎比以往任何时候都做得更好。他们不仅都还在周围，而且大多数现在都有自己的精品店，而不是像过去那样依赖珠宝商销售他们的产品。</p>
+<p>事实上这是一种幻觉。只有三家制表商在70年代和80年代的黑暗日子里作为独立公司幸存下来：百达翡丽、爱彼和劳力士。所有其他都被六家控股公司拥有，随着机械表作为男性奢侈配饰的第二次生命变得清晰，它们进行了重新通胀。它们不再是独立的公司，现在更像是被卷进美国三大汽车公司的品牌：它们是母公司瞄准市场不同细分的方式。所以，例如，浪琴（Longines）不再与欧米茄竞争，因为拥有它们的公司已经为它分配了市场的较低层。[10]</p>
+<p>有一个原因让江诗丹顿精品店看起来非常像IWC和积家精品店，并且就此而言，也像万宝龙（Montblanc）和卡地亚精品店。它们都由同一家公司拥有。巧合的是，服装品牌也是如此。当你走过一个城镇最花哨的购物区时，看起来是高档品牌商店的东西实际上由少数综合企业拥有。这就是这些区域看起来如此贫瘠的原因之一；像由单一开发商建造的郊区，它们有一种不自然的变化缺乏。</p>
+<p>当我们的时间旅行者窥视这些商店的窗户时，他注意到的第一件事是所有手表都多么大。这会让他吃惊，因为在黄金时代，确实在所有之前的世纪，大意味着便宜。一个昂贵的黄金时代男表可能是33毫米直径和8毫米厚。今天一块昂贵的手表更像是42毫米直径和10毫米厚——超过两倍的大小。看着明显非常花哨的商店橱窗，看到看起来像是便宜手表的东西，会让我们的访客感到惊讶。[11]</p>
+<p>我们知道这是怎么发生的。当手表从告诉时间切换到告诉品牌时，它们变得更大以更擅长它。不仅是大小，还有形状。这是我们的时间旅行者会注意到的另一件事：随着品牌化趋势上演，已经产生了各种奇怪表壳形状和笨拙突起的令人惊讶的多样性。他会想知道，那些沛纳海（Panerais）表冠上的巨大护桥是怎么回事？人们用这些手表做什么需要这样的表冠保护？为什么表冠护桥上刻有说它是注册商标的消息？这对我们来说很明显这里发生了什么，但想象一下对来自黄金时代的人来说会有多困惑，那时候形式跟随功能。[12]</p>
+<p>当他困惑地看着这奇怪的笨重手表 assortment 时，他会注意到一个进一步的模式。他会意识到，令人惊讶的大量手表看起来像他已经熟悉的特定品牌的笨重手表。</p>
+<p>我至今没有谈论劳力士，因为劳力士在适应新时代方面没有做太多。他们在黄金时代就已经一只脚踏入了品牌时代。在他们历史的早期，他们投入大量精力制造更好的手表，但他们在”20世纪50年代末停止参加日内瓦和纳沙泰尔的比赛，“并从大约1960年”基本放弃机械制表的研究。“[13]原因不是他们变得懒惰，而是他们发现他们可以通过营销他们的手表作为地位象征来让销售增长更快。所以在20世纪60年代这成为他们的焦点，到十年后石英危机袭来时，他们的客户已经自我选择为不那么在乎手表内部是什么的人，只要它能被认为是劳力士。</p>
+<p>他们在那个部门远远领先于其他制表商。他们在20世纪40年代就已经有了我们看到百达翡丽和爱彼在20世纪70年代和80年代努力创造的东西：一个立即宣告制造商品牌的表壳。劳力士的外观似乎是有机进化的，但一旦发生，他们意识到这有多重要。事实上，他们把它作为他们手表的一个特点来推销。1960年代的一则劳力士广告说”你可以从会议桌的另一端认出它的经典形状，由一整块实心黄金雕刻而成。”</p>
+<p>事实上，劳力士在两个方面都超前于它的时代：他们的表壳不仅可识别，而且按黄金时代标准也很大。但这不是聪明营销的结果。这是创始人汉斯·威尔斯多夫（Hans Wilsdorf）对制造防水手表的痴迷的副产品。</p>
+<p>正如其名称所示，这是劳力士Oyster存在的理由。像Oyster这样的手表被设计得坚固，像吉普车。在黄金时代，有两种制表设计极点。一端是工具表，它们厚、坚固，通常由钢制成。另一端是正装表，它们薄、优雅，通常由黄金制成。但劳力士模糊了它们之间的界限。当他们制造厚实、坚固的手表时，他们用黄金以及钢制造它们。结果是一种豪华吉普车。如果那个短语在你脑海中没响，停下来想想它，因为这正是现在每个人都在开的东西。那就是SUV，豪华吉普车。发生在手表上的事情与发生在汽车上的事情相同。事实上，如果你时间旅行者转身看到一辆保时捷Cayenne驶过，并意识到它是什么——一辆巨大的、伪越野车，意在唤起对保时捷911的回忆——他可能比看到他一直在看的手表更加震惊。[14]</p>
+<p>如果时间旅行者走进百达翡丽精品店并真正试图购买Nautilus，他会得到最大的震惊。他们不会卖给他一个。因为在百达翡丽，他会遇到最极端的品牌时代现象：人为稀缺。你不能只是买一个Nautilus。你必须先通过购买多个层级的其他型号来证明你的忠诚度，然后在等候名单上等几年。[15]</p>
+<p>显然这个策略销售更多手表。但它也通过让手表远离二级市场来支持零售价格。使用人为稀缺来推动销售的品牌不能允许太多稀缺型号泄漏到二级市场，否则它们停止稀缺。理想情况是手表的等价物 of 碳封存：购买他们手表的人将它们保留到他们死。</p>
+<p>为了将市场推向这个理想，百达翡丽从销售的两边挤压。他们通过让通往稀缺型号的道路在时间和金钱上都如此昂贵——如此不方便和不合理——来淘汰投机者，只有真正的粉丝才能忍受它。较低层级的手表在二级市场上的售价低于零售价，因为百达翡丽_不_限制它们的供应，所以一个潜在的投机者将不得不在他甚至能得到他可以获利翻转的东西之前，花几年时间进行亏损购买。显然有些人仍然设法击败这个系统，所以百达翡丽的Countermeasures不会在那里结束。他们对二级销售保持警惕，看谁在销售他们的手表。拍卖列表通常包括序列号，所以那些很容易追踪，但如果有必要，他们会从二级市场上回购自己的手表以获得序列号并追踪泄漏。他们每年购买数百只。当他们抓住有人销售他们不希望他们销售的手表时，他们不仅切断那个客户。如果零售商客户负责太多这样的泄漏，他们会切断整个零售商。这自然让零售商渴望帮助他们警察买家。</p>
+<p>当然总会有些泄漏到二级市场。即使是最忠诚的客户也会以一定的速率死亡。事实上，对于百达翡丽来说，二级市场继续存在是至关重要的，因为这是他们拥有关于他们面临的最重要问题的最有价值信息来源之一：多快增加顶层手表的供应。他们的稀缺性有助于推动所有其他手表的购买，所以那些确实进入二级市场的应该总是以高于零售的价格销售。我确信百达翡丽在增加供应时留下了很大的误差余地，因为如果这些手表的二级市场价格接近零售价格，你就接近价格崩溃——既然人们现在把这些手表作为投资购买，那将产生与资产泡沫破裂相同的灾难性连锁反应。它不会只是像资产泡沫破裂。它将_是_资产泡沫破裂。这是现在精英制表商从事的业务：小心管理持续的资产泡沫。[16]</p>
+<p>这是我认为梳过效果的一个实例：当一系列单独的小变化把你从有点不对劲的东西带到奇怪地错误的东西。我确信百达翡丽不是一下子就想出了整个方案；我确信它是逐渐演变的。但看看我们已经结束的这样一个奇怪的地方。回到黄金时代，你购买百达翡丽的方式是去珠宝商那里给他们钱。现在百达翡丽正在警察买家以维持资产泡沫。</p>
+<p>品牌时代对我来说最惊人的事情就是它的纯粹奇怪性。僵尸手表品牌看起来独立，甚至有自己的零售店，但却都被少数控股公司拥有。巨大的、形状笨拙的手表扭转了500年来让它们变得更小的进展。要求公司从二级市场回购自己的手表以抓住流氓客户的商业模式。流氓客户这个概念本身。这一切都如此奇怪。它之所以奇怪，是因为没有功能可供形式跟随。</p>
+<p>直到黄金时代结束，机械表都是必要的。你需要它们来知道时间。这种约束给了手表和制表业一种有意义形状。在黄金时代确实制造了一些看起来奇怪的手表。它们并不都美丽地极简。但当黄金时代制表商制造看起来奇怪的手表时，他们知道他们在做什么。事实上，他们给人的印象是，他们这样做是一种深思熟虑的练习，以避免陷入窠臼。</p>
+<p>这并不是品牌时代手表看起来奇怪的原因。品牌时代手表看起来奇怪是因为它们没有实用功能。它们的功能是表达品牌，虽然这当然是一种约束，但它不是产生好东西的干净种类的约束。品牌施加的约束最终取决于人类心理学的一些最糟糕的特征。所以当你有一个只由品牌定义的世界时，它将是一个奇怪的、糟糕的世界。</p>
+<hr>
+<p>好吧，那很黑暗。我们能否从残骸中抢救出一些有启发性的教训？</p>
+<p>一个显而易见的教训是远离品牌。事实上，不仅避免购买品牌可能是个好主意，避免销售它也是。当然，你可能会用这种方式赚钱——虽然我打赌它看起来比它更难——但推动人们的品牌按钮根本不是一个好问题，没有好问题就很难做好工作。</p>
+<p>更微妙的教训是，领域有超出个人能力抵抗的自然节奏。领域有黄金时代和不太黄金的时代，你更有可能在一个正在上升的领域中做好工作。</p>
+<p>当然，它们在发生时并不被称为黄金时代。“黄金时代”是人们在它们结束后使用的术语。这并不意味着黄金时代不真实，而是参与者在当时认为它们是理所当然的。他们不知道他们拥有多好。虽然把你的好运视为理所当然通常是一个错误，但在这种情况下不是。黄金时代的感受，在当时，只是聪明的人正在努力研究有趣的问题并得到结果。针对比那更多的东西进行优化会是过度拟合。</p>
+<p>事实上，有一个单一的原则既会让你免于从事像品牌这样的事情，也会自动为你找到黄金时代。跟随问题。</p>
+<p>找到黄金时代的方法不是去寻找它们。找到它们的方法——历史上几乎所有参与者找到它们的方法——是通过跟随有趣的问题。如果你聪明、有抱负、对自己诚实，没有比你的问题品味更好的指南。去有趣问题所在的地方，你可能会发现其他聪明有抱负的人也到了那里。后来他们会回顾你们一起做的事情，称之为黄金时代。</p>
+<hr>
+<h2 id="注释">注释</h2>
+<p>[1] 布雷顿森林协定没有直接固定货币之间的汇率。它固定每个相对于黄金。显然这也固定了它们相对于彼此。</p>
+<p>[2] Golden Ellipse不完全是圆角矩形，因为边不太平。它的形状类似于Piet Hein在20世纪60年代初推广的超椭圆（superellipses），事实上那可能就是他们名字的由来。但从数学上讲，它不是真正的超椭圆。我的猜测是百达翡丽的设计师只是用法国曲线实验，直到他得到他喜欢的东西。公平地说，它确实是一个好形状。</p>
+<p>[3] 具有讽刺意味的是，百达翡丽这家公司犯了这样的错误，因为Adrien Philippe是现代表冠的发明者。但他们一定意识到他们做了什么，因为后来的Ellipses如果有任何东西的话，有过度突出的表冠。</p>
+<p>[4] 美术中设计空间与从业者的高比率，加上归属的实际重要性，给人们留下了这样的印象：以独特的Leonardesque方式绘画使达·芬奇变得好。策展人、艺术史学家和艺术商人面临的最危险问题——如果得到错误答案会有最坏后果的问题——是归属。所以不可避免地，他们花大量时间思考和谈论区分一位艺术家作品和另一位的特征。但那些不是让艺术家变好的东西。使达·芬奇绘画中女性脸颊线条好的东西是它作为脸颊线条看起来有多好，而不是它看起来与其他艺术家制作的线条有多不同。</p>
+<p>因为绘画有如此高的声望，认为拥有独特风格（而不是画得好）是伟大艺术家的决定性品质的迷思，反过来为相邻领域的许多坏设计提供了掩护。一个品牌做一些可怕的事情来区分他们的产品可以说”像所有伟大的艺术作品一样，我们的有独特风格，“人们会买它。</p>
+<p>[5] 百达翡丽1970年在美国运行的一则广告将带有金手镯的百达翡丽3548描述为”1700美元信托基金”。它实际上是好的投资吗？在最好的情况下，经销商现在可能为一块带有原盒和文件的未佩戴条件的表支付你2万美元。那大约是4.5%的回报率，并不是绝对可怕。但显然，如果你在支付股息税后重新投资它们，这段时期S&#x26;P 500股票的平均回报率更像是10%。如果你只是买了一块没被制成手表的金块，平均回报率会超过9%。所以，不奇怪，这个广告不是非常好的投资建议。</p>
+<p>[6] 在20世纪90年代负责百达翡丽美国营销的塔尼娅·爱德华兹（Tania Edwards）说，比特在一张纸上 literally 勾勒了3919的设计。这对我来说听起来很奇怪，因为3919看起来和现有的3520完全一样，只是增加了小秒针（6点钟上方有一个小表盘）。当你只是指着现有手表说”那个，带小秒针”时，你为什么要勾勒一个与现有手表几乎相同的设计？不过，这个故事确实表明，百达翡丽内部的人觉得他们的广告公司负责3919的设计。</p>
+<p>[7] 如果我要精确确定机械表的转折点，我会说1986年。瑞士手表的销量在1985年反弹，但收入没有，这意味着我们看到的是廉价石英Swatches的繁荣。事实上，尽管销售了所有那些Swatches，机械表的销售一定下降了，因为尽管销售了所有这些Swatches，收入仍然持平。而在1986年，即使销量仅增加了一点，收入也急剧上升，这意味着昂贵机械表销售相应增加。</p>
+<p>[8] 当然有些人喜欢机械表还有另一个原因：因为他们对旧技术感兴趣。如果你真的对机械表感兴趣，有好消息。你不需要在手腕上佩戴广告牌或花很多钱来拥有一个。只需购买黄金时代的手表。它们仍然走时准确，它们美丽得多，而且成本只是新手表成本的一小部分。</p>
+<p>购买黄金时代手表的关键是找到一个好的经销商，认识到一个好的经销商的最好方法是他们告诉你关于手表的东西有多少。坏经销商只会有一大堆关于品牌声望和表壳流畅线条的废话。好经销商会告诉你手表的型号和机芯编号，有很多图片，包括一些表背打开的图片，给你尺寸，披露所有损坏和修复，并准确告诉你手表运行得有多准确。好经销商自己往往也是手表书呆子，所以他们喜欢这种事情。</p>
+<p>（有一些独立的制表商现在正真诚地试图制造好的机械表，但他们的努力表明，当潮流对你不利时，做好工作有多难。）</p>
+<p>[9] 足够奇怪的是，3919是手动机芯可能有所帮助。如果手表运行足够长的时间，每天5秒开始累积。三个月后，每天快5秒的手表会快7分钟。但用手上弦的手表你偶尔会忘记上弦，它就会停下来。当你再次上弦时，你会重新设置它——平均来说时间大约落后30秒。所以如果你大约每两周忘记上弦一次3919，它很少会显示错误时间。</p>
+<p>[10] 还有一个品牌仍在等待重新通胀：Universal Genève，它是黄金时代的大玩家之一，但自1977年以来，它不过是一个从收购者传到收购者的品牌名称。它们计划今年晚些时候复活，毫无疑问会带着关于他们悠久制表传统的故事。</p>
+<p>[11] 更精确地说，尺寸对精确度的比率高意味着便宜。让更大的机芯保持好时间更容易，但在两块同样精确的手表之间，更大的通常更便宜。</p>
+<p>[12] 他们的形式曾经跟随功能。它们最初是潜水表。但她们早就在这方面过时了。当今的潜水表（现在称为潜水电脑）是数字化的，告诉你的不仅仅是时间。</p>
+<p>[13] 劳力士在20世纪50年代平均每年获得16.6项专利，但在20世纪60年代仅每年1.7项。</p>
+<p>Pierre-Yves Donzé, <em>The Making of a Status Symbol: A Business History of Rolex</em>, Manchester University Press, 2025.</p>
+<p>[14] 劳力士也与SUV分享更具体的东西：有抱负的男子气概。劳力士广告公司J. Walter Thompson 1967年的一份内部报告解释了他们试图传达的想法：“因为劳力士是为任何情况设计的，无论多么粗暴、危险、英雄或崇高，它意味着佩戴它的人，潜在地，是一个英雄。”</p>
+<p>重印于Donzé, <em>op cit</em>.</p>
+<p>[15] 这种商业模式只有在购买决策主要由品牌驱动时才有效。在正常的市场中，如果一个制造商限制生产，客户只需从提供同样好东西的竞争制造商那里购买。只有当客户寻求某个品牌而不是某种水平的性能时，你才能通过限制其可用性来操纵他们。</p>
+<p>[16] 当然，注意到泡沫时要问的第一个问题是：它会破裂吗？普通泡沫最终会破裂的原因，是投机者变得过度乐观，但在这种情况下，百达翡丽的首席执行官控制着”货币供应”，因此可以采取 measures 来冷却过热的市场。所以可能只有两件事可能导致他们的特定泡沫破裂：如果他的继任者没有那么有能力，或者如果佩戴机械表的整个习俗消失了。后者似乎是最大的危险。人们不会在手腕上佩戴三样东西，所以所要做的就是让两样佩戴在手腕上的流行设备出现，机械表就会开始被下一批年轻富人视为老家伙的东西。很难想象奢侈手表品牌能在那次中幸存下来。</p>
+<hr>
+<p><strong>感谢</strong> Sam Altman, Bill Clerico, Daniel Gackle, Luis Garcia, Goldammer的人们, Jessica Livingston, Ben Miller, Robert Morris, John Reardon, D’Arcy Rice, Alex Tabarrok, 和 Garry Tan 阅读本文草稿。</p> <div class="cta-box"> <p>觉得有用？看看我的书和课程</p> <div class="cta-buttons"> <a href="/book" class="cta-btn cta-btn-primary">选择改变命运</a> <a href="/community" class="cta-btn cta-btn-secondary">写作课程</a> </div> </div> <nav class="article-nav"> <span></span> <a href="/blog/pg-field" class="article-nav-link article-nav-next"> <span class="article-nav-label">
+阅读下一篇
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg> </span> <span class="article-nav-title">文章领域的形状</span> </a> </nav> </article> </main> </div> </main> <footer> <div class="footer-inner"> <p>© 2026 像企业家一样写作</p> <div class="footer-links"> <a href="https://mp.weixin.qq.com/" target="_blank">公众号：种一个梦</a> </div> </div> </footer>  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    let _searchIndex = null;
+
+    async function loadSearchIndex() {
+      if (_searchIndex) return _searchIndex;
+      try {
+        const resp = await fetch('/search.json?t=' + Date.now());
+        _searchIndex = await resp.json();
+      } catch (e) {
+        console.warn('search.json load failed', e);
+        _searchIndex = { posts: [], books: [] };
+      }
+      return _searchIndex;
+    }
+
+    function openSearch() {
+      const overlay = document.getElementById('search-overlay');
+      const input = document.getElementById('search-input');
+      overlay.classList.add('active');
+      input.value = '';
+      input.focus();
+      renderResults('');
+    }
+
+    function closeSearch() {
+      document.getElementById('search-overlay').classList.remove('active');
+    }
+
+    function getSnippet(text, keyword, radius) {
+      radius = radius || 30;
+      if (!text) return '';
+      const idx = text.toLowerCase().indexOf(keyword.toLowerCase());
+      if (idx === -1) return text.substring(0, 80);
+      const start = Math.max(0, idx - radius);
+      const end = Math.min(text.length, idx + keyword.length + radius);
+      let s = text.substring(start, end);
+      if (start > 0) s = '…' + s;
+      if (end < text.length) s = s + '…';
+      return s;
+    }
+
+    function renderResults(query) {
+      const container = document.getElementById('search-results');
+      if (!query.trim()) {
+        container.innerHTML = '<div class="search-empty">输入关键词搜索文章和书籍…</div>';
+        return;
+      }
+      const q = query.toLowerCase();
+      const index = _searchIndex || { posts: [], books: [] };
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      if (matchedPosts.length === 0 && matchedBooks.length === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        return;
+      }
+      let html = '';
+      matchedPosts.forEach(p => {
+        const snippet = getSnippet(p.content || '', q, 35);
+        const displayDesc = (p.desc || '') || snippet;
+        html += '<a href="/blog/' + p.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">文章</span>' + p.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      matchedBooks.forEach(b => {
+        const snippet = getSnippet(b.content || '', q, 35);
+        const displayDesc = (b.desc || '') || snippet;
+        html += '<a href="/book/' + b.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">书籍</span>' + b.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      container.innerHTML = html;
+    }
+
+    // ===== 搜索 FAB 拖动逻辑 =====
+    (function() {
+      const fab = document.getElementById('search-toggle');
+      const FAB_SIZE = 56;
+      let isDragging = false;
+      let startX, startY, startLeft, startTop;
+      let dragMoved = false;
+
+      function onDown(clientX, clientY) {
+        isDragging = true;
+        dragMoved = false;
+        startX = clientX;
+        startY = clientY;
+        const rect = fab.getBoundingClientRect();
+        startLeft = rect.left;
+        startTop = rect.top;
+        fab.classList.add('dragging');
+      }
+
+      function onMove(clientX, clientY) {
+        if (!isDragging) return;
+        const dx = clientX - startX;
+        const dy = clientY - startY;
+        if (!dragMoved && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+          dragMoved = true;
+          // 切换到绝对 left/top 定位
+          fab.style.bottom = 'auto';
+          fab.style.right = 'auto';
+          fab.style.left = startLeft + 'px';
+          fab.style.top = startTop + 'px';
+        }
+        if (dragMoved) {
+          let newLeft = Math.max(4, Math.min(startLeft + dx, window.innerWidth - FAB_SIZE - 4));
+          let newTop  = Math.max(4, Math.min(startTop  + dy, window.innerHeight - FAB_SIZE - 4));
+          fab.style.left = newLeft + 'px';
+          fab.style.top  = newTop  + 'px';
+        }
+      }
+
+      function onUp() {
+        if (!isDragging) return;
+        isDragging = false;
+        fab.classList.remove('dragging');
+        if (!dragMoved) {
+          // 判定为点击，打开搜索
+          loadSearchIndex().then(() => openSearch());
+        }
+      }
+
+      fab.addEventListener('mousedown', e => { if (e.button === 0) { onDown(e.clientX, e.clientY); e.preventDefault(); } });
+      document.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+      document.addEventListener('mouseup', onUp);
+
+      fab.addEventListener('touchstart', e => { onDown(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); }, { passive: false });
+      document.addEventListener('touchmove', e => { if (isDragging) { onMove(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); } }, { passive: false });
+      document.addEventListener('touchend', onUp);
+    })();
+
+    document.getElementById('search-close').addEventListener('click', closeSearch);
+    document.getElementById('search-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeSearch();
+    });
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      renderResults(e.target.value);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        loadSearchIndex().then(() => openSearch());
+      }
+    });
+    });
+  </script> <!-- 页面关键词高亮（从搜索结果跳转过来时） --> <script>
+    (function() {
+      function getQueryParam(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name) || '';
+      }
+
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function highlightKeyword(keyword) {
+        if (!keyword.trim()) return;
+        const main = document.querySelector('main');
+        if (!main) return;
+
+        const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, null, false);
+        const nodesToReplace = [];
+        const regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
+
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node.parentElement && node.parentElement.tagName === 'MARK') continue;
+          if (regex.test(node.textContent)) {
+            nodesToReplace.push(node);
+          }
+        }
+
+        let firstMark = null;
+        nodesToReplace.forEach(textNode => {
+          const span = document.createElement('span');
+          span.innerHTML = textNode.textContent.replace(regex, '<mark class="search-highlight">$1</mark>');
+          const marks = span.querySelectorAll('mark');
+          if (marks.length > 0 && !firstMark) {
+            firstMark = marks[0];
+          }
+          const fragment = document.createDocumentFragment();
+          while (span.firstChild) {
+            fragment.appendChild(span.firstChild);
+          }
+          textNode.parentNode.replaceChild(fragment, textNode);
+        });
+
+        if (firstMark) {
+          firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(function() {
+            const marks = main.querySelectorAll('mark.search-highlight');
+            marks.forEach(function(m) {
+              const parent = m.parentNode;
+              parent.replaceChild(document.createTextNode(m.textContent), m);
+              parent.normalize();
+            });
+          }, 6000);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          highlightKeyword(getQueryParam('q'));
+        });
+      } else {
+        highlightKeyword(getQueryParam('q'));
+      }
+    })();
+  </script> <!-- 代码块复制按钮 --> <script>
+    (function() {
+      function initCopyButtons() {
+        document.querySelectorAll('.prose pre').forEach(function(pre) {
+          if (pre.querySelector('.copy-btn')) return;
+          var btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.textContent = '复制';
+          btn.setAttribute('aria-label', '复制代码');
+          btn.addEventListener('click', function() {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+              btn.textContent = '已复制';
+              btn.classList.add('copied');
+              setTimeout(function() {
+                btn.textContent = '复制';
+                btn.classList.remove('copied');
+              }, 2000);
+            }).catch(function() {
+              btn.textContent = '失败';
+              setTimeout(function() { btn.textContent = '复制'; }, 2000);
+            });
+          });
+          pre.style.position = 'relative';
+          pre.appendChild(btn);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCopyButtons);
+      } else {
+        initCopyButtons();
+      }
+    })();
+  </script> <!-- 微信电子书弹窗（滚动触发 + 每天一次） --> <script>
+    (function() {
+      // === 配置 ===
+      var STORAGE_DAY   = 'ebook_popup_day';    // 今天已弹过
+      var STORAGE_DISMISS = 'ebook_popup_dismiss_until'; // 用户点「暂时不要」的过期时间戳
+      var SCROLL_THRESHOLD = 0.40; // 滚动 40% 触发
+      var TIME_THRESHOLD   = 60000;  // 或停留 60 秒触发
+
+      // === 已有领取人数（可手动更新）===
+      var CLAIM_COUNT = 327;
+
+      // === 工具函数 ===
+      function todayStr() {
+        var d = new Date();
+        return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+      }
+      function getDismissUntil() {
+        try { return parseInt(localStorage.getItem(STORAGE_DISMISS), 10); } catch(e) { return 0; }
+      }
+
+      // === 判断是否应该弹出 ===
+      function shouldShow() {
+        // 用户点过「暂时不要」且未过期
+        var dismissUntil = getDismissUntil();
+        if (dismissUntil && Date.now() < dismissUntil) return false;
+        // 今天已弹过
+        try {
+          if (localStorage.getItem(STORAGE_DAY) === todayStr()) return false;
+        } catch(e) {}
+        return true;
+      }
+
+      // === 记录：今天已弹 ===
+      function markShown() {
+        try { localStorage.setItem(STORAGE_DAY, todayStr()); } catch(e) {}
+      }
+
+      // === 记录：暂时不要（7天后）===
+      function markDismissed() {
+        var t = Date.now() + 7 * 24 * 60 * 60 * 1000;
+        try { localStorage.setItem(STORAGE_DISMISS, String(t)); } catch(e) {}
+      }
+
+      // === 显示 / 关闭 ===
+      var overlay    = document.getElementById('ebook-popup-overlay');
+      var closeBtn   = document.getElementById('ebook-popup-close');
+      var dismissBtn = document.getElementById('ebook-popup-dismiss');
+      var shown      = false;
+      var timeTimer  = null;
+
+      function showPopup() {
+        if (shown || !overlay || !shouldShow()) return;
+        shown = true;
+        markShown();
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function dismissPopup() {
+        if (!overlay) return;
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        if (timeTimer) clearTimeout(timeTimer);
+      }
+
+      if (!overlay) return;
+
+      // === 触发条件 1：滚动超过 40% ===
+      var scrollFired = false;
+      window.addEventListener('scroll', function() {
+        if (scrollFired) return;
+        var h = document.body.scrollHeight - window.innerHeight;
+        if (h <= 0) return;
+        if (window.scrollY / h > SCROLL_THRESHOLD) {
+          scrollFired = true;
+          showPopup();
+        }
+      }, { passive: true });
+
+      // === 触发条件 2：停留超过 60 秒 ===
+      timeTimer = setTimeout(function() {
+        if (!scrollFired) showPopup();
+      }, TIME_THRESHOLD);
+
+      // === 关闭按钮 ===
+      if (closeBtn) closeBtn.addEventListener('click', dismissPopup);
+
+      // === 「暂时不要」按钮 ===
+      if (dismissBtn) {
+        dismissBtn.addEventListener('click', function() {
+          markDismissed();
+          dismissPopup();
+        });
+      }
+
+      // === 点击遮罩关闭 ===
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) dismissPopup();
+      });
+
+      // === ESC 关闭 ===
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+          dismissPopup();
+        }
+      });
+    })();
+  </script> </body></html>  <script type="module">(function(){const e=document.getElementById("reading-progress");if(e){let c=function(){const n=window.scrollY||document.documentElement.scrollTop,s=document.documentElement.scrollHeight-document.documentElement.clientHeight,d=s>0?n/s*100:0;e.style.width=d+"%",e.classList.toggle("show",n>50)};window.addEventListener("scroll",c,{passive:!0}),c()}const t=document.querySelector(".book-toc-header"),o=document.querySelector(".book-toc");t&&o&&t.addEventListener("click",function(){o.classList.toggle("expanded")})})();</script>

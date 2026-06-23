@@ -1,0 +1,400 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="**原文链接：** https://www.paulgraham.com/woke.html"><title>觉醒主义的起源 — 像企业家一样写作</title><link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml"><link rel="sitemap" type="application/xml" href="/sitemap-index.xml"><!-- Static CSS — no build hash, safe for incremental deploys --><link rel="stylesheet" href="/global.css"><!-- 自托管字体 --><link rel="preload" href="/fonts/NotoSerifSC-Regular.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/_astro/BaseLayout.BYj8Tvw5.css">
+<link rel="stylesheet" href="/_astro/_..CcR4Cqk3.css"></head> <body> <nav class="navbar"> <div class="nav-inner"> <a href="/" class="logo"> <img src="/images/logo-header.png" alt="Logo" class="logo-img"> <span>像企业家一样写作</span> </a> <div class="nav-links"> <a href="/blog">文章</a> <a href="/book">书籍</a> <a href="/community">社群</a> <a href="/join">答疑</a> </div> </div> </nav> <!-- 搜索浮窗 --> <div id="search-overlay" class="search-overlay"> <div class="search-modal"> <div class="search-header"> <input id="search-input" type="text" placeholder="搜索文章标题、描述..." autocomplete="off"> <button id="search-close" class="search-close-btn" aria-label="关闭搜索">✕</button> </div> <div id="search-results" class="search-results"></div> </div> </div> <!-- 浮动搜索按钮 --> <button id="search-toggle" class="search-fab" aria-label="搜索"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"> <circle cx="11" cy="11" r="7"></circle> <line x1="16.5" y1="16.5" x2="21" y2="21"></line> </svg> </button> <!-- ===== 微信电子书弹窗 ===== --> <div id="ebook-popup-overlay" class="ebook-popup-overlay" onclick="if(event.target===this){this.classList.remove('active');document.body.style.overflow='';}"> <div class="ebook-popup-card"> <div class="ebook-popup-topbar"></div> <button id="ebook-popup-close" class="ebook-popup-close" aria-label="关闭" onclick="event.stopPropagation();document.getElementById('ebook-popup-overlay').classList.remove('active');document.body.style.overflow='';">✕</button> <div class="ebook-popup-body"> <!-- 送你 --> <div class="ebook-popup-gift">送你一本我的电子书</div> <!-- 书名 --> <div class="ebook-popup-bigtitle">《闭环：在你睡觉时赚钱》</div> <div class="ebook-popup-bigsub">从0到1的自媒体方法论</div> <!-- 社会认同 --> <div class="ebook-popup-proof"> <span class="ebook-proof-avatars"> <span class="ebook-proof-avatar" style="background: #f5e0d0;"> <span style="font-size:12px;font-weight:700;color:#c45c2e;">M</span> </span> <span class="ebook-proof-avatar" style="background: #d0e8e0;"> <span style="font-size:12px;font-weight:700;color:#3a7a5e;">S</span> </span> <span class="ebook-proof-avatar" style="background: #d8dff0;"> <span style="font-size:12px;font-weight:700;color:#4a6aab;">L</span> </span> </span> <span><span class="ebook-proof-count">327</span> 人已领取</span> </div> <!-- 二维码 --> <div class="ebook-popup-qr"> <img src="/images/wechat-qr.png" alt="微信二维码"> </div> <!-- 下载按钮 — 仅手机展示 --> <a class="ebook-popup-download" href="/images/wechat-qr.png" download> <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path> <polyline points="7 10 12 15 17 10"></polyline> <line x1="12" y1="15" x2="12" y2="3"></line> </svg>
+下载二维码到手机
+</a> <!-- 流程提示 --> <p class="ebook-popup-steps"> <span class="step">扫二维码</span> → <span class="step">添加好友</span> → 回复<span class="keyword-value">闭环</span> → <span class="step">立马领取</span> </p> </div> <div class="ebook-popup-footer"> <p>免费领取 · 无需购买任何产品 · 24 小时内回复</p> </div> </div> </div> <main>   <div id="reading-progress" class="reading-progress"></div> <!-- 书籍系列：左侧目录 + 右侧正文 -->
+    <div class="book-layout"> <!-- 左侧目录 --> <aside class="book-toc"> <div class="book-toc-inner"> <div class="book-toc-header"> <span class="book-toc-series">Paul Graham 文集</span> <span class="book-toc-count">目录</span> </div> <nav class="book-toc-nav"> <div class="book-toc-section "> <a href="/blog/pg-brand-age" class="book-toc-item"> <span class="book-toc-order">1</span> <span class="book-toc-title">品牌时代</span> </a>  </div><div class="book-toc-section "> <a href="/blog/pg-field" class="book-toc-item"> <span class="book-toc-order">2</span> <span class="book-toc-title">文章领域的形状</span> </a>  </div><div class="book-toc-section "> <a href="/blog/pg-good-writing" class="book-toc-item"> <span class="book-toc-order">3</span> <span class="book-toc-title">好文章</span> </a>  </div><div class="book-toc-section "> <a href="/blog/pg-do" class="book-toc-item"> <span class="book-toc-order">4</span> <span class="book-toc-title">应该做什么</span> </a>  </div><div class="book-toc-section active"> <a href="/blog/pg-woke" class="book-toc-item"> <span class="book-toc-order">5</span> <span class="book-toc-title">觉醒主义的起源</span> </a>  </div><div class="book-toc-section "> <a href="/blog/pg-writes" class="book-toc-item"> <span class="book-toc-order">6</span> <span class="book-toc-title">会写和不会写的人</span> </a>  </div><div class="book-toc-section "> <a href="/blog/pg-when" class="book-toc-item"> <span class="book-toc-order">7</span> <span class="book-toc-title">何时做你热爱的事</span> </a>  </div><div class="book-toc-section "> <a href="/blog/pg-founder-mode" class="book-toc-item"> <span class="book-toc-order">8</span> <span class="book-toc-title">创始人模式</span> </a>  </div><div class="book-toc-section "> <a href="/blog/pg-persistence" class="book-toc-item"> <span class="book-toc-order">9</span> <span class="book-toc-title">正确的固执类型</span> </a>  </div><div class="book-toc-section "> <a href="/blog/pg-reddits" class="book-toc-item"> <span class="book-toc-order">10</span> <span class="book-toc-title">Reddit 们</span> </a>  </div> </nav> <a href="/book" class="book-toc-back"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+返回书架
+</a> </div> </aside> <!-- 右侧正文 --> <main class="book-main"> <article class="prose"> <header class="article-header"> <h1>觉醒主义的起源</h1> <div class="article-meta"> <span class="article-series">Paul Graham 文集</span> <time> 2025年1月1日 </time> </div> </header> <p><strong>原文链接：</strong> <a href="https://www.paulgraham.com/woke.html">https://www.paulgraham.com/woke.html</a></p>
+<p><strong>发布时间：</strong> 2025年1月</p>
+<hr>
+<p>“假圣人”（prig）这个词现在不太常用了，但如果你查一下定义，它会听起来很熟悉。谷歌的定义不算差：</p>
+<blockquote>
+<p>一种自以为是道德主义者，表现得好像比他人优越。</p>
+</blockquote>
+<p>这个词的这种意义起源于18世纪，它的年龄是一个重要线索：它表明，虽然觉醒主义（wokeness）是一个相对较新的现象，但它是更古老现象的一个实例。</p>
+<p>有某种人会被浅薄、苛求的那种道德纯洁性吸引，并通过攻击任何违反规则的人来展示他的纯洁性。每个社会都有这种人。变化的只是他们执行的规则。在维多利亚时代的英格兰，它是基督教美德。在斯大林的俄罗斯，它是正统的马克思列宁主义。对于觉醒主义者来说，它是社会正义。</p>
+<p>所以如果你想理解觉醒主义，要问的问题不是为什么人们以这种方式行事。每个社会都有假圣人。要问的问题是，为什么我们的假圣人对这些想法如此苛刻，在这个时刻。要回答这个问题，我们必须问觉醒主义是何时何地开始的。</p>
+<p>第一个问题的答案是20世纪80年代。觉醒主义是政治正确性的第二波、更具攻击性的浪潮，它始于20世纪80年代末，在90年代末平息，然后在2010年代初以复仇的方式回归，最终在2020年的骚乱后达到顶峰。</p>
+<p>政治正确性到底是什么？我经常被人们要求定义这个术语和觉醒主义，他们认为这些都是无意义的标签，所以我会定义。它们都有相同的定义：</p>
+<blockquote>
+<p>对社会正义的攻击性表演性聚焦。</p>
+</blockquote>
+<p>换句话说，就是人们作为社会正义的假圣人。而这是真正的问题——表演性，而不是社会正义。[0]</p>
+<p>例如，种族主义是一个真正的问题。不是觉醒主义者认为的规模那样大的问题，但是一个真正的问题。我认为任何理性的人都不会否认这一点。政治正确性的问题不在于它聚焦边缘化群体，而在于它这样做时的浅薄、攻击性方式。政治正确的支持者没有走到世界上静静地帮助边缘化群体的成员，而是聚焦让人们因使用错误的词语谈论他们而陷入麻烦。</p>
+<p>至于政治正确性始于何处，如果你想一想，你可能已经知道答案了。它是从大学外部开始并传播到大学的吗？显然不是；它在大学里一直是最极端的。那么它在大学里的何处开始的？它是在数学、硬科学或工程中开始的，并从那里传播到人文和社会科学的吗？那些是令人娱乐的图像，但不是，显然它是在人文和社会科学中开始的。</p>
+<p>为什么在那里？为什么在那时？20世纪80年代人文和社会科学发生了什么？</p>
+<p>政治正确性的成功起源理论必须能够解释为什么它没有更早发生。例如，为什么它没有在20世纪60年代的抗议运动期间发生？它们关注的问题差不多相同。[1]</p>
+<p>20世纪60年代的学生抗议没有导致政治正确性的原因是 precisely that——它们是学生运动。它们没有任何真正的权力。学生们可能谈论很多关于妇女解放和黑人权力的事情，但这不是他们在课堂上学到的东西。还没有。</p>
+<p>但在20世纪70年代初，20世纪60年代的学生抗议者开始完成他们的论文并获得教授职位。起初他们既不强大也不众多。但随着更多的同辈加入他们，前一代教授开始退休，他们逐渐变得两者都是。</p>
+<p>政治正确性始于人文和社会科学的原因是，这些领域为注入政治提供了更多空间。一个在20世纪60年代获得物理教授职位的人仍然可以参加抗议，但他的政治信仰不会影响他的工作。而社会学和现代文学的研究可以随心所欲地政治化。[2]</p>
+<p>我看到了政治正确性的兴起。当我1982年开始上大学时，它还不是一个东西。如果有人说了一些她们认为是性别歧视的话，女学生可能会反对，但没有人因此被<em>报告</em>。当我1986年开始研究所时，它也还不是一个东西。但在1988年它绝对是一个东西，到20世纪90年代初，它似乎弥漫了校园生活。</p>
+<p>发生了什么？抗议如何变成惩罚？为什么20世纪80年代后期是反对男性沙文主义（正如它过去被称呼的）的抗议演变成对大学当局关于性别歧视的正式投诉的点？基本上，20世纪60年代的激进分子获得了终身教职。他们成为了他们在二十年前抗议的当权派。现在他们不仅能够谈论他们的想法，而且能够执行它们。</p>
+<p>一套新的道德规则来执行，对某种学生来说是个令人兴奋的消息。让它特别令人兴奋的是，他们被允许攻击教授。我当时注意到政治正确性的那个方面。它不完全是一个草根学生运动。它是教职员工鼓励学生攻击其他教职员工。在那个方面，它就像文化大革命。那也不是草根运动；那是毛泽东向下一代发动对他的政治对手的战争。事实上，当罗德里克·麦克法夸尔（Roderick MacFarquhar）在20世纪80年代末在哈佛开始教授关于文化大革命的课程时，许多人认为它是对时事的评论。我不知道它实际上是否是，但人们认为它是，这意味着相似之处是明显的。[3]</p>
+<p>大学生在假装。这是他们的本性。它通常是无害的。但假装道德被证明是一种有毒的组合。结果是一种道德礼仪，表面但非常复杂。想象一下，向一个来自另一个星球的善意的访客解释，为什么使用短语”有色人种”（people of color）被认为是特别开明的，但说”有色人”让你被</p> <div class="cta-box"> <p>觉得有用？看看我的书和课程</p> <div class="cta-buttons"> <a href="/book" class="cta-btn cta-btn-primary">选择改变命运</a> <a href="/community" class="cta-btn cta-btn-secondary">写作课程</a> </div> </div> <nav class="article-nav"> <a href="/blog/pg-do" class="article-nav-link article-nav-prev"> <span class="article-nav-label"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+阅读上一篇
+</span> <span class="article-nav-title">应该做什么</span> </a> <a href="/blog/pg-writes" class="article-nav-link article-nav-next"> <span class="article-nav-label">
+阅读下一篇
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg> </span> <span class="article-nav-title">会写和不会写的人</span> </a> </nav> </article> </main> </div> </main> <footer> <div class="footer-inner"> <p>© 2026 像企业家一样写作</p> <div class="footer-links"> <a href="https://mp.weixin.qq.com/" target="_blank">公众号：种一个梦</a> </div> </div> </footer>  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    let _searchIndex = null;
+
+    async function loadSearchIndex() {
+      if (_searchIndex) return _searchIndex;
+      try {
+        const resp = await fetch('/search.json?t=' + Date.now());
+        _searchIndex = await resp.json();
+      } catch (e) {
+        console.warn('search.json load failed', e);
+        _searchIndex = { posts: [], books: [] };
+      }
+      return _searchIndex;
+    }
+
+    function openSearch() {
+      const overlay = document.getElementById('search-overlay');
+      const input = document.getElementById('search-input');
+      overlay.classList.add('active');
+      input.value = '';
+      input.focus();
+      renderResults('');
+    }
+
+    function closeSearch() {
+      document.getElementById('search-overlay').classList.remove('active');
+    }
+
+    function getSnippet(text, keyword, radius) {
+      radius = radius || 30;
+      if (!text) return '';
+      const idx = text.toLowerCase().indexOf(keyword.toLowerCase());
+      if (idx === -1) return text.substring(0, 80);
+      const start = Math.max(0, idx - radius);
+      const end = Math.min(text.length, idx + keyword.length + radius);
+      let s = text.substring(start, end);
+      if (start > 0) s = '…' + s;
+      if (end < text.length) s = s + '…';
+      return s;
+    }
+
+    function renderResults(query) {
+      const container = document.getElementById('search-results');
+      if (!query.trim()) {
+        container.innerHTML = '<div class="search-empty">输入关键词搜索文章和书籍…</div>';
+        return;
+      }
+      const q = query.toLowerCase();
+      const index = _searchIndex || { posts: [], books: [] };
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      if (matchedPosts.length === 0 && matchedBooks.length === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        return;
+      }
+      let html = '';
+      matchedPosts.forEach(p => {
+        const snippet = getSnippet(p.content || '', q, 35);
+        const displayDesc = (p.desc || '') || snippet;
+        html += '<a href="/blog/' + p.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">文章</span>' + p.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      matchedBooks.forEach(b => {
+        const snippet = getSnippet(b.content || '', q, 35);
+        const displayDesc = (b.desc || '') || snippet;
+        html += '<a href="/book/' + b.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">书籍</span>' + b.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      container.innerHTML = html;
+    }
+
+    // ===== 搜索 FAB 拖动逻辑 =====
+    (function() {
+      const fab = document.getElementById('search-toggle');
+      const FAB_SIZE = 56;
+      let isDragging = false;
+      let startX, startY, startLeft, startTop;
+      let dragMoved = false;
+
+      function onDown(clientX, clientY) {
+        isDragging = true;
+        dragMoved = false;
+        startX = clientX;
+        startY = clientY;
+        const rect = fab.getBoundingClientRect();
+        startLeft = rect.left;
+        startTop = rect.top;
+        fab.classList.add('dragging');
+      }
+
+      function onMove(clientX, clientY) {
+        if (!isDragging) return;
+        const dx = clientX - startX;
+        const dy = clientY - startY;
+        if (!dragMoved && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+          dragMoved = true;
+          // 切换到绝对 left/top 定位
+          fab.style.bottom = 'auto';
+          fab.style.right = 'auto';
+          fab.style.left = startLeft + 'px';
+          fab.style.top = startTop + 'px';
+        }
+        if (dragMoved) {
+          let newLeft = Math.max(4, Math.min(startLeft + dx, window.innerWidth - FAB_SIZE - 4));
+          let newTop  = Math.max(4, Math.min(startTop  + dy, window.innerHeight - FAB_SIZE - 4));
+          fab.style.left = newLeft + 'px';
+          fab.style.top  = newTop  + 'px';
+        }
+      }
+
+      function onUp() {
+        if (!isDragging) return;
+        isDragging = false;
+        fab.classList.remove('dragging');
+        if (!dragMoved) {
+          // 判定为点击，打开搜索
+          loadSearchIndex().then(() => openSearch());
+        }
+      }
+
+      fab.addEventListener('mousedown', e => { if (e.button === 0) { onDown(e.clientX, e.clientY); e.preventDefault(); } });
+      document.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+      document.addEventListener('mouseup', onUp);
+
+      fab.addEventListener('touchstart', e => { onDown(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); }, { passive: false });
+      document.addEventListener('touchmove', e => { if (isDragging) { onMove(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); } }, { passive: false });
+      document.addEventListener('touchend', onUp);
+    })();
+
+    document.getElementById('search-close').addEventListener('click', closeSearch);
+    document.getElementById('search-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeSearch();
+    });
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      renderResults(e.target.value);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        loadSearchIndex().then(() => openSearch());
+      }
+    });
+    });
+  </script> <!-- 页面关键词高亮（从搜索结果跳转过来时） --> <script>
+    (function() {
+      function getQueryParam(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name) || '';
+      }
+
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function highlightKeyword(keyword) {
+        if (!keyword.trim()) return;
+        const main = document.querySelector('main');
+        if (!main) return;
+
+        const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, null, false);
+        const nodesToReplace = [];
+        const regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
+
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node.parentElement && node.parentElement.tagName === 'MARK') continue;
+          if (regex.test(node.textContent)) {
+            nodesToReplace.push(node);
+          }
+        }
+
+        let firstMark = null;
+        nodesToReplace.forEach(textNode => {
+          const span = document.createElement('span');
+          span.innerHTML = textNode.textContent.replace(regex, '<mark class="search-highlight">$1</mark>');
+          const marks = span.querySelectorAll('mark');
+          if (marks.length > 0 && !firstMark) {
+            firstMark = marks[0];
+          }
+          const fragment = document.createDocumentFragment();
+          while (span.firstChild) {
+            fragment.appendChild(span.firstChild);
+          }
+          textNode.parentNode.replaceChild(fragment, textNode);
+        });
+
+        if (firstMark) {
+          firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(function() {
+            const marks = main.querySelectorAll('mark.search-highlight');
+            marks.forEach(function(m) {
+              const parent = m.parentNode;
+              parent.replaceChild(document.createTextNode(m.textContent), m);
+              parent.normalize();
+            });
+          }, 6000);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          highlightKeyword(getQueryParam('q'));
+        });
+      } else {
+        highlightKeyword(getQueryParam('q'));
+      }
+    })();
+  </script> <!-- 代码块复制按钮 --> <script>
+    (function() {
+      function initCopyButtons() {
+        document.querySelectorAll('.prose pre').forEach(function(pre) {
+          if (pre.querySelector('.copy-btn')) return;
+          var btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.textContent = '复制';
+          btn.setAttribute('aria-label', '复制代码');
+          btn.addEventListener('click', function() {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+              btn.textContent = '已复制';
+              btn.classList.add('copied');
+              setTimeout(function() {
+                btn.textContent = '复制';
+                btn.classList.remove('copied');
+              }, 2000);
+            }).catch(function() {
+              btn.textContent = '失败';
+              setTimeout(function() { btn.textContent = '复制'; }, 2000);
+            });
+          });
+          pre.style.position = 'relative';
+          pre.appendChild(btn);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCopyButtons);
+      } else {
+        initCopyButtons();
+      }
+    })();
+  </script> <!-- 微信电子书弹窗（滚动触发 + 每天一次） --> <script>
+    (function() {
+      // === 配置 ===
+      var STORAGE_DAY   = 'ebook_popup_day';    // 今天已弹过
+      var STORAGE_DISMISS = 'ebook_popup_dismiss_until'; // 用户点「暂时不要」的过期时间戳
+      var SCROLL_THRESHOLD = 0.40; // 滚动 40% 触发
+      var TIME_THRESHOLD   = 60000;  // 或停留 60 秒触发
+
+      // === 已有领取人数（可手动更新）===
+      var CLAIM_COUNT = 327;
+
+      // === 工具函数 ===
+      function todayStr() {
+        var d = new Date();
+        return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+      }
+      function getDismissUntil() {
+        try { return parseInt(localStorage.getItem(STORAGE_DISMISS), 10); } catch(e) { return 0; }
+      }
+
+      // === 判断是否应该弹出 ===
+      function shouldShow() {
+        // 用户点过「暂时不要」且未过期
+        var dismissUntil = getDismissUntil();
+        if (dismissUntil && Date.now() < dismissUntil) return false;
+        // 今天已弹过
+        try {
+          if (localStorage.getItem(STORAGE_DAY) === todayStr()) return false;
+        } catch(e) {}
+        return true;
+      }
+
+      // === 记录：今天已弹 ===
+      function markShown() {
+        try { localStorage.setItem(STORAGE_DAY, todayStr()); } catch(e) {}
+      }
+
+      // === 记录：暂时不要（7天后）===
+      function markDismissed() {
+        var t = Date.now() + 7 * 24 * 60 * 60 * 1000;
+        try { localStorage.setItem(STORAGE_DISMISS, String(t)); } catch(e) {}
+      }
+
+      // === 显示 / 关闭 ===
+      var overlay    = document.getElementById('ebook-popup-overlay');
+      var closeBtn   = document.getElementById('ebook-popup-close');
+      var dismissBtn = document.getElementById('ebook-popup-dismiss');
+      var shown      = false;
+      var timeTimer  = null;
+
+      function showPopup() {
+        if (shown || !overlay || !shouldShow()) return;
+        shown = true;
+        markShown();
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function dismissPopup() {
+        if (!overlay) return;
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        if (timeTimer) clearTimeout(timeTimer);
+      }
+
+      if (!overlay) return;
+
+      // === 触发条件 1：滚动超过 40% ===
+      var scrollFired = false;
+      window.addEventListener('scroll', function() {
+        if (scrollFired) return;
+        var h = document.body.scrollHeight - window.innerHeight;
+        if (h <= 0) return;
+        if (window.scrollY / h > SCROLL_THRESHOLD) {
+          scrollFired = true;
+          showPopup();
+        }
+      }, { passive: true });
+
+      // === 触发条件 2：停留超过 60 秒 ===
+      timeTimer = setTimeout(function() {
+        if (!scrollFired) showPopup();
+      }, TIME_THRESHOLD);
+
+      // === 关闭按钮 ===
+      if (closeBtn) closeBtn.addEventListener('click', dismissPopup);
+
+      // === 「暂时不要」按钮 ===
+      if (dismissBtn) {
+        dismissBtn.addEventListener('click', function() {
+          markDismissed();
+          dismissPopup();
+        });
+      }
+
+      // === 点击遮罩关闭 ===
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) dismissPopup();
+      });
+
+      // === ESC 关闭 ===
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+          dismissPopup();
+        }
+      });
+    })();
+  </script> </body></html>  <script type="module">(function(){const e=document.getElementById("reading-progress");if(e){let c=function(){const n=window.scrollY||document.documentElement.scrollTop,s=document.documentElement.scrollHeight-document.documentElement.clientHeight,d=s>0?n/s*100:0;e.style.width=d+"%",e.classList.toggle("show",n>50)};window.addEventListener("scroll",c,{passive:!0}),c()}const t=document.querySelector(".book-toc-header"),o=document.querySelector(".book-toc");t&&o&&t.addEventListener("click",function(){o.classList.toggle("expanded")})})();</script>
