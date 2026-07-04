@@ -6,7 +6,7 @@ import PostCard from '../components/PostCard.astro';
 import { getCollection } from 'astro:content';
 
 const posts = await getCollection('blog');
-const filteredPosts = posts.filter(p => p.data.series !== '第一个100块' && p.data.series !== '选择改变命运');
+const filteredPosts = posts.filter(p => p.data.series !== '第一个100块' && p.data.series !== '选择改变命运' && p.data.series !== 'YC 创业课');
 const sortedPosts = filteredPosts.sort((a, b) => new Date(b.data.date) - new Date(a.data.date));
 
 const { featured = posts.slice(0, 6) } = Astro.props;
@@ -47,44 +47,13 @@ const { featured = posts.slice(0, 6) } = Astro.props;
             <p>从0到1的内容变现闭环</p>
           </div>
         </a>
-        <a href="/book#paul-graham-essays" class="book-preview-card">
-          <img src="/images/pg-cover.png" alt="Paul Graham 文集" class="book-preview-cover" />
+        <a href="/book#yc-startup" class="book-preview-card">
+          <img src="/images/yc-cover.png" alt="YC 创业课" class="book-preview-cover" />
           <div>
-            <h3>Paul Graham 文集</h3>
-            <p>185篇深度思考全译本</p>
+            <h3>YC 创业课</h3>
+            <p>如何创办初创公司 · 18讲全译本</p>
           </div>
         </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Community Preview -->
-  <section class="section section-community">
-    <div class="section-inner">
-      <div class="community-preview">
-        <div class="community-cards">
-          <div class="community-card">
-            <div class="community-icon-wrap"><span class="community-icon">✉</span></div>
-            <h4>UAC 周刊</h4>
-            <p>每周四推送，不被算法过滤的深度文章，直达邮箱</p>
-          </div>
-          <div class="community-card">
-            <div class="community-icon-wrap"><span class="community-icon">✎</span></div>
-            <h4>写作课程</h4>
-            <p>系统学习企业家式写作，让我们写作并变现</p>
-          </div>
-          <div class="community-card">
-            <div class="community-icon-wrap"><span class="community-icon">✦</span></div>
-            <h4>社群圈子</h4>
-            <p>与 84+ 位同学一起交流写作与成长</p>
-          </div>
-        </div>
-        <div class="community-cta">
-          <div class="community-stat">
-            已有 <strong>84+</strong> 位同学加入
-          </div>
-          <a href="/community" class="btn-primary">立即加入 →</a>
-        </div>
       </div>
     </div>
   </section>
@@ -117,3 +86,92 @@ const { featured = posts.slice(0, 6) } = Astro.props;
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  /* Q&A CTA — 内联样式，避免依赖 global.css 加载问题 */
+  .section-qa-cta {
+    background: linear-gradient(135deg, #1c1917 0%, #292524 60%, #3a1a00 100%);
+    padding: 72px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .section-qa-cta::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(245,80,0,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .qa-cta-inner {
+    position: relative;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  .qa-cta-badge {
+    display: inline-block;
+    padding: 4px 14px;
+    background: rgba(245,80,0,0.2);
+    color: #ff6b2b;
+    border: 1px solid rgba(245,80,0,0.4);
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .qa-cta-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 16px;
+    line-height: 1.2;
+  }
+  .qa-cta-desc {
+    font-size: 15px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.8;
+    margin: 0 0 32px;
+  }
+  .qa-cta-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 36px;
+  }
+  .qa-topic {
+    padding: 7px 16px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 100px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.8);
+    cursor: default;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .qa-topic:hover {
+    background: rgba(245,80,0,0.15);
+    border-color: rgba(245,80,0,0.4);
+    color: #ff6b2b;
+  }
+  .qa-cta-btn {
+    display: inline-block;
+    padding: 14px 40px;
+    background: #F55000;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 24px rgba(245,80,0,0.4);
+  }
+  .qa-cta-btn:hover {
+    background: #d94700;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(245,80,0,0.5);
+  }
+</style>
