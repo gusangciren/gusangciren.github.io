@@ -334,19 +334,19 @@ footer {
   min-width: 140px;
   justify-content: center;
 }
-.cta-btn-primary {
+.prose .cta-btn-primary {
   background: var(--color-accent);
   color: white;
 }
-.cta-btn-primary:hover {
+.prose .cta-btn-primary:hover {
   opacity: 0.9;
   transform: translateY(-1px);
 }
-.cta-btn-secondary {
+.prose .cta-btn-secondary {
   background: #1c1917;
   color: white;
 }
-.cta-btn-secondary:hover {
+.prose .cta-btn-secondary:hover {
   background: #2d2a26;
   transform: translateY(-1px);
 }
