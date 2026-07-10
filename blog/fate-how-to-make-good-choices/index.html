@@ -1,0 +1,436 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="选项、题目与方法"><title>如何做出优质的选择 — 像企业家一样写作</title><link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml"><link rel="sitemap" type="application/xml" href="/sitemap-index.xml"><!-- Static CSS — no build hash, safe for incremental deploys --><link rel="stylesheet" href="/global.css"><!-- 自托管字体 --><link rel="preload" href="/fonts/NotoSerifSC-Regular.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/_astro/BaseLayout.BYj8Tvw5.css">
+<link rel="stylesheet" href="/_astro/_..CcR4Cqk3.css"></head> <body> <nav class="navbar"> <div class="nav-inner"> <a href="/" class="logo"> <img src="/images/logo-header.png" alt="Logo" class="logo-img"> <span>像企业家一样写作</span> </a> <div class="nav-links"> <a href="/blog">文章</a> <a href="/book">书籍</a> <a href="/community">社群</a> <a href="/join">答疑</a> </div> </div> </nav> <!-- 搜索浮窗 --> <div id="search-overlay" class="search-overlay"> <div class="search-modal"> <div class="search-header"> <input id="search-input" type="text" placeholder="搜索文章标题、描述..." autocomplete="off"> <button id="search-close" class="search-close-btn" aria-label="关闭搜索">✕</button> </div> <div id="search-results" class="search-results"></div> </div> </div> <!-- 浮动搜索按钮 --> <button id="search-toggle" class="search-fab" aria-label="搜索"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"> <circle cx="11" cy="11" r="7"></circle> <line x1="16.5" y1="16.5" x2="21" y2="21"></line> </svg> </button> <!-- ===== 微信电子书弹窗 ===== --> <div id="ebook-popup-overlay" class="ebook-popup-overlay" onclick="if(event.target===this){this.classList.remove('active');document.body.style.overflow='';}"> <div class="ebook-popup-card"> <div class="ebook-popup-topbar"></div> <button id="ebook-popup-close" class="ebook-popup-close" aria-label="关闭" onclick="event.stopPropagation();document.getElementById('ebook-popup-overlay').classList.remove('active');document.body.style.overflow='';">✕</button> <div class="ebook-popup-body"> <!-- 送你 --> <div class="ebook-popup-gift">送你一本我的电子书</div> <!-- 书名 --> <div class="ebook-popup-bigtitle">《闭环：在你睡觉时赚钱》</div> <div class="ebook-popup-bigsub">从0到1的自媒体方法论</div> <!-- 社会认同 --> <div class="ebook-popup-proof"> <span class="ebook-proof-avatars"> <span class="ebook-proof-avatar" style="background: #f5e0d0;"> <span style="font-size:12px;font-weight:700;color:#c45c2e;">M</span> </span> <span class="ebook-proof-avatar" style="background: #d0e8e0;"> <span style="font-size:12px;font-weight:700;color:#3a7a5e;">S</span> </span> <span class="ebook-proof-avatar" style="background: #d8dff0;"> <span style="font-size:12px;font-weight:700;color:#4a6aab;">L</span> </span> </span> <span><span class="ebook-proof-count">327</span> 人已领取</span> </div> <!-- 二维码 --> <div class="ebook-popup-qr"> <img src="/images/wechat-qr.png" alt="微信二维码"> </div> <!-- 下载按钮 — 仅手机展示 --> <a class="ebook-popup-download" href="/images/wechat-qr.png" download> <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path> <polyline points="7 10 12 15 17 10"></polyline> <line x1="12" y1="15" x2="12" y2="3"></line> </svg>
+下载二维码到手机
+</a> <!-- 流程提示 --> <p class="ebook-popup-steps"> <span class="step">扫二维码</span> → <span class="step">添加好友</span> → 回复<span class="keyword-value">闭环</span> → <span class="step">立马领取</span> </p> </div> <div class="ebook-popup-footer"> <p>免费领取 · 无需购买任何产品 · 24 小时内回复</p> </div> </div> </div> <main>   <div id="reading-progress" class="reading-progress"></div> <!-- 书籍系列：左侧目录 + 右侧正文 -->
+    <div class="book-layout"> <!-- 左侧目录 --> <aside class="book-toc"> <div class="book-toc-inner"> <div class="book-toc-header"> <span class="book-toc-series">选择改变命运</span> <span class="book-toc-count">目录</span> </div> <nav class="book-toc-nav"> <div class="book-toc-section "> <a href="/blog/fate-why-choice-matters" class="book-toc-item"> <span class="book-toc-order">1</span> <span class="book-toc-title">为什么选择如此重要</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-how-brain-works" class="book-toc-item"> <span class="book-toc-order">2</span> <span class="book-toc-title">大脑「机器」是怎么运行的</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-acceptance-first-law" class="book-toc-item"> <span class="book-toc-order">3</span> <span class="book-toc-title">接受是改变的第一法则</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-habit-of-investing" class="book-toc-item"> <span class="book-toc-order">4</span> <span class="book-toc-title">投资的习惯</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-habit-of-slack" class="book-toc-item"> <span class="book-toc-order">5</span> <span class="book-toc-title">留出余闲的习惯</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-habit-of-open-mind" class="book-toc-item"> <span class="book-toc-order">6</span> <span class="book-toc-title">开放头脑的习惯</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-habit-of-self-comparison" class="book-toc-item"> <span class="book-toc-order">7</span> <span class="book-toc-title">和自己比较的习惯</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-habit-of-lifelong-learning" class="book-toc-item"> <span class="book-toc-order">8</span> <span class="book-toc-title">终身学习的习惯</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-think-second-order" class="book-toc-item"> <span class="book-toc-order">9</span> <span class="book-toc-title">思考后续的后续结果</span> </a>  </div><div class="book-toc-section active"> <a href="/blog/fate-how-to-make-good-choices" class="book-toc-item"> <span class="book-toc-order">10</span> <span class="book-toc-title">如何做出优质的选择</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-economics-of-choice" class="book-toc-item"> <span class="book-toc-order">11</span> <span class="book-toc-title">经济学：关于选择的科学</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-trends-and-opportunities" class="book-toc-item"> <span class="book-toc-order">12</span> <span class="book-toc-title">趋势、机会与红利风口</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-centenarian-life-city-industry" class="book-toc-item"> <span class="book-toc-order">13</span> <span class="book-toc-title">百岁人生、城市与行业</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-human-nature-in-choices" class="book-toc-item"> <span class="book-toc-order">14</span> <span class="book-toc-title">影响选择的三种人性</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-effort-and-luck" class="book-toc-item"> <span class="book-toc-order">15</span> <span class="book-toc-title">再谈努力与制造好运</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-rapid-learning-method" class="book-toc-item"> <span class="book-toc-order">16</span> <span class="book-toc-title">快速入门的方法</span> </a>  </div> </nav> <a href="/book" class="book-toc-back"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+返回书架
+</a> </div> </aside> <!-- 右侧正文 --> <main class="book-main"> <article class="prose"> <header class="article-header"> <h1>如何做出优质的选择</h1> <div class="article-meta"> <span class="article-series">选择改变命运</span> <time> 2026年4月21日 </time> </div> </header> <h2 id="第十章选择题选项题目">第十章：选择题：选项、题目</h2>
+<blockquote>
+<p>卡尔·福斯曼说：应当经常问自己的一个问题：“你做的哪些选择使你成为现在的你？”</p>
+</blockquote>
+<p>18岁上学时候的选择题跟18岁成年后做的选择题难度完全不在一个层次上。</p>
+<p>成年后的选择题，从题目（问题）到选项（答案）都是极具迷惑性的。你的题目（问题）是本质的问题还是掩盖式的表面问题，学会定义问题本身就是很难的事情。你的选项（答案）全了吗？看清了吗？过去现在未来选项是否变化？等等。</p>
+<p>选择能力是一种比努力难的多的事情。</p>
+<p>如若你的选择力提高，你所存在的世界也会跟着变好，因为你的世界是主观的。</p>
+<p>面对人生各种选择，就像《安娜·卡列尼娜》所写的那样：“幸福的家庭都是相似的，不幸的家庭各有各的不幸。”</p>
+<p>选对的人都是相似的，而选错的人各有各的错误。</p>
+<p>有的人，渴望自由，但面对自由又是叶公好龙，自由意味着对自己承担百分之百的责任。因此，很多人从来都没有真正“选”过。</p>
+<p>他们就像提线木偶，什么样的选择都是得别人来决定，听长辈的、听领导的、听朋友的，总之从来不是自己独立思考进行决定。</p>
+<p>因为你是行动后果的第一负责人，最终你要做决定的。</p>
+<p>从狩猎文明到现在的科技文明，选择一直是我们改变命运的一个方法。但多数人放弃了主动选择的机会，这是一件很可怕的事情。</p>
+<p>有的人，想要成为少数人，但有一个机会摆在你眼前，让他选择时，又害怕成为少数人。</p>
+<p>这是潜意识自我保护机制。从众是人类的本性。</p>
+<p>当一个人心中没有自己的主见时候，更容易出现从众的行为。</p>
+<p>希望获得群体的认同是一种非常强大的力量，想要成为少数人，要勇于做出不同的选择，并坚定执行。</p>
+<p>有的人，就是假选择。在选择这件事情上花费的精力太少，一开始就不想着做正确的事，后来辛辛苦苦把事情做对。还有的人，就是用各种身份标签来限制自己，我是销售、我是房地产、我是女士、我是年轻人、中年人等。不要让自己的工作、所在的领域、行业、城市限制自己的选项。</p>
+<p>并没有把选择这件事情当成资源，引起足够的重视。</p>
+<p>有的是常识不足，尤其是经济学的常识不足，我一直认为学习的目的是为了修正人固有的直觉。我们很多的选择是依靠直觉完成的，喜欢容易的、喜欢人多的等等，都是不符合经济学常识的。基本的常识都不够，你以为做出了最好的选择，但真正不一定是真的“好”。</p>
+<p>拥有基本的常识，按照客观规律做事情的才是真的长期主义，而不是固执，一成不变。</p>
+<p>有的是见识不够。多数情况下，误以为自己完全没有选择，于是只能走进死胡同。很多时候，真的不是我们不努力，不是我们不勤奋，也不是我们不聪明，甚至不是我们不动脑，更不是我们没有脑子……只不过是我们“没看到”而已。</p>
+<p>如果你连猪跑都没见过，你的人生一定不会想到尝一下猪肉，自然不会有“做到”。你只有看到了，你才能去挣扎去做到。没有看到，就没有做，这也是一种自证预言吧。</p>
+<p>很多穷人周围缺乏富人，没有见过真正的富人的生活状况，因此，以自己经验为想象的基础，认为有钱人就是存款多，但事实并非如此，有钱人更有财富增值的能力且有通胀的存在，他们是真切能感受到银行存款的机会成本，就会拿来购买资产来保值和增值，因此，银行存款可能只会是很小一部分。更可能的是，富人债务比穷人多。</p>
+<p>这让我想起了一个段子。贾平凹在他的散文《老西安》里讲过：许多年前，两个西安南郊的年轻人站在“大芳”照相馆橱窗前，看着蒋介石的巨照聊天。其中一个说：蒋委员长不知道一天吃的什么饭，肯定是顿顿捞一碗干面，油泼的辣子调的红红的。另一个说：我要当了蒋委员长，全村的粪都要是我的，谁也不能拾。</p>
+<p>那些工薪族，是很难真正通过自己想象了解到那些非工薪族是怎么生活的、怎么赚钱的。人最怕眼睛穷。</p>
+<p>想象力并不是无中生有，想象力更多是你看过足够多的东西，思考过足够多，然后产生的意外连接。</p>
+<p>想象力是建立在见识和经验之上的。</p>
+<p>你看到的，又会影响你想到的，想到的会影响你的行为。举个例子：如果我不知道有飞机这个交通工具，那么我要去一个地方的时候，飞机就自然不在我的选项里 。</p>
+<p>如若我没见过别人怎么做“知识付费”，我自然不会想到，写作的就是思考、写作就是流量、写作就是积攒影响力，写作就是迭代。</p>
+<p>如若只有一、两个选择，那不叫选择，那叫被选择，提高眼界很重要。如果你的选项太少，肯定是你的视野不够、见识不够。</p>
+<p>打开视野和见识，是一步一步积累的过程。</p>
+<p>有的人是认知不完整。</p>
+<p>面对选择，最大的认知不足的表现是分不清权重。</p>
+<p>当初我选择大学的时候。对学校所在的城市、兴趣、以后的就业的权重都是几乎就是零。现在如果让我们重新考虑，我一定不会给学校排名给予太多的权重，可时间是不能倒流的，你只能活在这一秒、下一秒。还有很多人选择工作的时候，也是对城市、行业、成长空间等给予的权重很小，更大的权重放在一个月能拿多少上面。</p>
+<p>权重，也就是重要性。和每个人自身的情况，认知不同而不同。</p>
+<p>面对重大的选择，我们因此梳理好影响因素，然后反复问自己：“哪个更重要”。</p>
+<p>对一些重要的事情重新考虑要素，并重新分配权重。</p>
+<p>比如配偶，是不是要加一个情绪稳定的要素，并给出一定的权重。
+比如读书，是不是把买书的价格的要素完全剔除掉。
+比如工作，是不是给是否能够带来积累和成长给出更高的权重。
+比如写作，是不是真诚当做一个重要的要素。</p>
+<p>多数时候，我们面对选择之所以纠结是因为对权重的不清楚。</p>
+<p>为什么学习英语？能看原版英文书，这一理由的权重足以让我学习英语。</p>
+<p>总之，选择需要信息完备、见识宽广、认知完整。</p>
+<p>改变命运就是养成一些好习惯，然后让这些好习惯做出最优的重大决策。</p>
+<p>如何做出更好决策。</p>
+<p>1.0 了解真实的情况，保持开放。不要随便相信任何人的意见，始终提醒自己，至少听一下某种相反的观点，永远都没有坏处。有些人接受的就是单一的视角、单一的信息，这会导致你看不到真相。</p>
+<p>向多个人询问观点，但这是他们的视角下的观点，而不是真相。永远听一些相反的观点，这会刺激你独立思考。保持开放的思维习惯。如若可以，养成以事实和数据作为决策的依据。</p>
+<p>2.0。综合权衡直接结果后续结果和在后续结果，而且做决定时不能只看到短期结果，还要看到长远结果。考虑后续后续的结果。</p>
+<p>3.0。有权重，不要过度在意细节和不重要的因素。记住二八原则。深入了解那些重要的因素、那些决定性的因素。</p>
+<p>4.0。认识到我们大多数人大多数情况下是基于潜意识的和情绪做决策。科学家发现大多数人在多数时间里受到较低，较低层次大脑的控制。如卡尔荣格所说，除非你意识到你的潜意识，否则将潜意识将主导你的人生，而你将其称为命运。</p>
+<p>5.0。最后，认识你自己。只有一句话，但相当重要。</p>
+<ul>
+<li>如果你能够接受最坏的情况，那就请坚定选择。</li>
+<li>放下一部分的安全感，拥抱不确定性，保持勇敢，保持成长。</li>
+</ul>
+<p>做错误的选择不可怕，真正可怕的是错选留下的后遗症——沉默成本。沉默成本是我们常常错上加错的重要心理因素。
+没前途的工作不愿意换，不幸福的婚姻还是在坚持着…这就是错误选择最怕的结果，他们被曾经的付出捆绑住了。</p>
+<p>我们宁可在未来继续痛苦，也不想承认过去的痛苦完全没有意义。错选是已经犯下的沉默成本，要敢于及时调整方向，而不是为错误的决定擦屁股。</p>
+<p>不可能一开始就选对，都需要我们不断地去寻找、试错、纠偏。</p>
+<p>选择能力是在人的生理素质的基础上，经过后天教育和培养，在实践活动中逐步形成和增强的，是人的智慧、经验和知识的综合体现。决策能力靠的是一个人底层的认知，包括知识、经验，以及他通过长期思考总结出来的行事原则。</p> <div class="cta-box"> <p>觉得有用？看看我的书和课程</p> <div class="cta-buttons"> <a href="/book" class="cta-btn cta-btn-primary">选择改变命运</a> <a href="/community" class="cta-btn cta-btn-secondary">写作课程</a> </div> </div> <nav class="article-nav"> <a href="/blog/fate-think-second-order" class="article-nav-link article-nav-prev"> <span class="article-nav-label"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+阅读上一篇
+</span> <span class="article-nav-title">思考后续的后续结果</span> </a> <a href="/blog/fate-economics-of-choice" class="article-nav-link article-nav-next"> <span class="article-nav-label">
+阅读下一篇
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg> </span> <span class="article-nav-title">经济学：关于选择的科学</span> </a> </nav> </article> </main> </div> </main> <footer> <div class="footer-inner"> <p>© 2026 像企业家一样写作</p> <div class="footer-links"> <a href="https://mp.weixin.qq.com/" target="_blank">公众号：种一个梦</a> </div> </div> </footer>  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    let _searchIndex = null;
+
+    async function loadSearchIndex() {
+      if (_searchIndex) return _searchIndex;
+      try {
+        const resp = await fetch('/search.json?t=' + Date.now());
+        _searchIndex = await resp.json();
+      } catch (e) {
+        console.warn('search.json load failed', e);
+        _searchIndex = { posts: [], books: [] };
+      }
+      return _searchIndex;
+    }
+
+    function openSearch() {
+      const overlay = document.getElementById('search-overlay');
+      const input = document.getElementById('search-input');
+      overlay.classList.add('active');
+      input.value = '';
+      input.focus();
+      renderResults('');
+    }
+
+    function closeSearch() {
+      document.getElementById('search-overlay').classList.remove('active');
+    }
+
+    function getSnippet(text, keyword, radius) {
+      radius = radius || 30;
+      if (!text) return '';
+      const idx = text.toLowerCase().indexOf(keyword.toLowerCase());
+      if (idx === -1) return text.substring(0, 80);
+      const start = Math.max(0, idx - radius);
+      const end = Math.min(text.length, idx + keyword.length + radius);
+      let s = text.substring(start, end);
+      if (start > 0) s = '…' + s;
+      if (end < text.length) s = s + '…';
+      return s;
+    }
+
+    function renderResults(query) {
+      const container = document.getElementById('search-results');
+      if (!query.trim()) {
+        container.innerHTML = '<div class="search-empty">输入关键词搜索文章和书籍…</div>';
+        return;
+      }
+      const q = query.toLowerCase();
+      const index = _searchIndex || { posts: [], books: [] };
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      if (matchedPosts.length === 0 && matchedBooks.length === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        return;
+      }
+      let html = '';
+      matchedPosts.forEach(p => {
+        const snippet = getSnippet(p.content || '', q, 35);
+        const displayDesc = (p.desc || '') || snippet;
+        html += '<a href="/blog/' + p.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">文章</span>' + p.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      matchedBooks.forEach(b => {
+        const snippet = getSnippet(b.content || '', q, 35);
+        const displayDesc = (b.desc || '') || snippet;
+        html += '<a href="/book/' + b.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">书籍</span>' + b.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      container.innerHTML = html;
+    }
+
+    // ===== 搜索 FAB 拖动逻辑 =====
+    (function() {
+      const fab = document.getElementById('search-toggle');
+      const FAB_SIZE = 56;
+      let isDragging = false;
+      let startX, startY, startLeft, startTop;
+      let dragMoved = false;
+
+      function onDown(clientX, clientY) {
+        isDragging = true;
+        dragMoved = false;
+        startX = clientX;
+        startY = clientY;
+        const rect = fab.getBoundingClientRect();
+        startLeft = rect.left;
+        startTop = rect.top;
+        fab.classList.add('dragging');
+      }
+
+      function onMove(clientX, clientY) {
+        if (!isDragging) return;
+        const dx = clientX - startX;
+        const dy = clientY - startY;
+        if (!dragMoved && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+          dragMoved = true;
+          // 切换到绝对 left/top 定位
+          fab.style.bottom = 'auto';
+          fab.style.right = 'auto';
+          fab.style.left = startLeft + 'px';
+          fab.style.top = startTop + 'px';
+        }
+        if (dragMoved) {
+          let newLeft = Math.max(4, Math.min(startLeft + dx, window.innerWidth - FAB_SIZE - 4));
+          let newTop  = Math.max(4, Math.min(startTop  + dy, window.innerHeight - FAB_SIZE - 4));
+          fab.style.left = newLeft + 'px';
+          fab.style.top  = newTop  + 'px';
+        }
+      }
+
+      function onUp() {
+        if (!isDragging) return;
+        isDragging = false;
+        fab.classList.remove('dragging');
+        if (!dragMoved) {
+          // 判定为点击，打开搜索
+          loadSearchIndex().then(() => openSearch());
+        }
+      }
+
+      fab.addEventListener('mousedown', e => { if (e.button === 0) { onDown(e.clientX, e.clientY); e.preventDefault(); } });
+      document.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+      document.addEventListener('mouseup', onUp);
+
+      fab.addEventListener('touchstart', e => { onDown(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); }, { passive: false });
+      document.addEventListener('touchmove', e => { if (isDragging) { onMove(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); } }, { passive: false });
+      document.addEventListener('touchend', onUp);
+    })();
+
+    document.getElementById('search-close').addEventListener('click', closeSearch);
+    document.getElementById('search-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeSearch();
+    });
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      renderResults(e.target.value);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        loadSearchIndex().then(() => openSearch());
+      }
+    });
+    });
+  </script> <!-- 页面关键词高亮（从搜索结果跳转过来时） --> <script>
+    (function() {
+      function getQueryParam(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name) || '';
+      }
+
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function highlightKeyword(keyword) {
+        if (!keyword.trim()) return;
+        const main = document.querySelector('main');
+        if (!main) return;
+
+        const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, null, false);
+        const nodesToReplace = [];
+        const regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
+
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node.parentElement && node.parentElement.tagName === 'MARK') continue;
+          if (regex.test(node.textContent)) {
+            nodesToReplace.push(node);
+          }
+        }
+
+        let firstMark = null;
+        nodesToReplace.forEach(textNode => {
+          const span = document.createElement('span');
+          span.innerHTML = textNode.textContent.replace(regex, '<mark class="search-highlight">$1</mark>');
+          const marks = span.querySelectorAll('mark');
+          if (marks.length > 0 && !firstMark) {
+            firstMark = marks[0];
+          }
+          const fragment = document.createDocumentFragment();
+          while (span.firstChild) {
+            fragment.appendChild(span.firstChild);
+          }
+          textNode.parentNode.replaceChild(fragment, textNode);
+        });
+
+        if (firstMark) {
+          firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(function() {
+            const marks = main.querySelectorAll('mark.search-highlight');
+            marks.forEach(function(m) {
+              const parent = m.parentNode;
+              parent.replaceChild(document.createTextNode(m.textContent), m);
+              parent.normalize();
+            });
+          }, 6000);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          highlightKeyword(getQueryParam('q'));
+        });
+      } else {
+        highlightKeyword(getQueryParam('q'));
+      }
+    })();
+  </script> <!-- 代码块复制按钮 --> <script>
+    (function() {
+      function initCopyButtons() {
+        document.querySelectorAll('.prose pre').forEach(function(pre) {
+          if (pre.querySelector('.copy-btn')) return;
+          var btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.textContent = '复制';
+          btn.setAttribute('aria-label', '复制代码');
+          btn.addEventListener('click', function() {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+              btn.textContent = '已复制';
+              btn.classList.add('copied');
+              setTimeout(function() {
+                btn.textContent = '复制';
+                btn.classList.remove('copied');
+              }, 2000);
+            }).catch(function() {
+              btn.textContent = '失败';
+              setTimeout(function() { btn.textContent = '复制'; }, 2000);
+            });
+          });
+          pre.style.position = 'relative';
+          pre.appendChild(btn);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCopyButtons);
+      } else {
+        initCopyButtons();
+      }
+    })();
+  </script> <!-- 微信电子书弹窗（滚动触发 + 每天一次） --> <script>
+    (function() {
+      // === 配置 ===
+      var STORAGE_DAY   = 'ebook_popup_day';    // 今天已弹过
+      var STORAGE_DISMISS = 'ebook_popup_dismiss_until'; // 用户点「暂时不要」的过期时间戳
+      var SCROLL_THRESHOLD = 0.40; // 滚动 40% 触发
+      var TIME_THRESHOLD   = 60000;  // 或停留 60 秒触发
+
+      // === 已有领取人数（可手动更新）===
+      var CLAIM_COUNT = 327;
+
+      // === 工具函数 ===
+      function todayStr() {
+        var d = new Date();
+        return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+      }
+      function getDismissUntil() {
+        try { return parseInt(localStorage.getItem(STORAGE_DISMISS), 10); } catch(e) { return 0; }
+      }
+
+      // === 判断是否应该弹出 ===
+      function shouldShow() {
+        // 用户点过「暂时不要」且未过期
+        var dismissUntil = getDismissUntil();
+        if (dismissUntil && Date.now() < dismissUntil) return false;
+        // 今天已弹过
+        try {
+          if (localStorage.getItem(STORAGE_DAY) === todayStr()) return false;
+        } catch(e) {}
+        return true;
+      }
+
+      // === 记录：今天已弹 ===
+      function markShown() {
+        try { localStorage.setItem(STORAGE_DAY, todayStr()); } catch(e) {}
+      }
+
+      // === 记录：暂时不要（7天后）===
+      function markDismissed() {
+        var t = Date.now() + 7 * 24 * 60 * 60 * 1000;
+        try { localStorage.setItem(STORAGE_DISMISS, String(t)); } catch(e) {}
+      }
+
+      // === 显示 / 关闭 ===
+      var overlay    = document.getElementById('ebook-popup-overlay');
+      var closeBtn   = document.getElementById('ebook-popup-close');
+      var dismissBtn = document.getElementById('ebook-popup-dismiss');
+      var shown      = false;
+      var timeTimer  = null;
+
+      function showPopup() {
+        if (shown || !overlay || !shouldShow()) return;
+        shown = true;
+        markShown();
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function dismissPopup() {
+        if (!overlay) return;
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        if (timeTimer) clearTimeout(timeTimer);
+      }
+
+      if (!overlay) return;
+
+      // === 触发条件 1：滚动超过 40% ===
+      var scrollFired = false;
+      window.addEventListener('scroll', function() {
+        if (scrollFired) return;
+        var h = document.body.scrollHeight - window.innerHeight;
+        if (h <= 0) return;
+        if (window.scrollY / h > SCROLL_THRESHOLD) {
+          scrollFired = true;
+          showPopup();
+        }
+      }, { passive: true });
+
+      // === 触发条件 2：停留超过 60 秒 ===
+      timeTimer = setTimeout(function() {
+        if (!scrollFired) showPopup();
+      }, TIME_THRESHOLD);
+
+      // === 关闭按钮 ===
+      if (closeBtn) closeBtn.addEventListener('click', dismissPopup);
+
+      // === 「暂时不要」按钮 ===
+      if (dismissBtn) {
+        dismissBtn.addEventListener('click', function() {
+          markDismissed();
+          dismissPopup();
+        });
+      }
+
+      // === 点击遮罩关闭 ===
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) dismissPopup();
+      });
+
+      // === ESC 关闭 ===
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+          dismissPopup();
+        }
+      });
+    })();
+  </script> </body></html>  <script type="module">(function(){const e=document.getElementById("reading-progress");if(e){let c=function(){const n=window.scrollY||document.documentElement.scrollTop,s=document.documentElement.scrollHeight-document.documentElement.clientHeight,d=s>0?n/s*100:0;e.style.width=d+"%",e.classList.toggle("show",n>50)};window.addEventListener("scroll",c,{passive:!0}),c()}const t=document.querySelector(".book-toc-header"),o=document.querySelector(".book-toc");t&&o&&t.addEventListener("click",function(){o.classList.toggle("expanded")})})();</script>

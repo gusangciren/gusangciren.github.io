@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>书籍详情页两种模式预览</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #fafafa; color: #1a1a1a; line-height: 1.6; }
+  .container { max-width: 960px; margin: 0 auto; padding: 20px 24px 80px; }
+
+  /* 切换按钮 */
+  .mode-switch { display: flex; gap: 8px; margin-bottom: 32px; position: sticky; top: 0; background: #fafafa; padding: 16px 0; z-index: 10; border-bottom: 1px solid #e5e5e5; }
+  .mode-btn { padding: 8px 20px; border: 1px solid #e5e5e5; border-radius: 8px; background: #fff; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; }
+  .mode-btn:hover { border-color: #f55000; }
+  .mode-btn.active { background: #f55000; color: #fff; border-color: #f55000; }
+
+  /* 书籍 Hero */
+  .book-hero { display: flex; gap: 40px; align-items: flex-start; margin-bottom: 48px; }
+  .book-cover-img { width: 180px; height: auto; border-radius: 10px; box-shadow: 0 12px 40px rgba(0,0,0,0.13), 0 2px 10px rgba(0,0,0,0.06); }
+  .book-tag { font-size: 0.8rem; font-weight: 500; color: #f55000; margin-bottom: 8px; }
+  .book-details h1 { font-family: Georgia, serif; font-size: 1.8rem; font-weight: 700; margin-bottom: 10px; line-height: 1.3; }
+  .tagline { font-size: 1rem; color: #f55000; font-weight: 500; margin-bottom: 8px; }
+  .motto { font-size: 0.95rem; color: #888; font-style: italic; margin-bottom: 16px; padding-left: 14px; border-left: 3px solid #f55000; }
+  .desc { font-size: 0.92rem; color: #888; line-height: 1.8; }
+  .book-stats { display: flex; gap: 32px; margin-top: 24px; padding-top: 20px; border-top: 1px solid #e5e5e5; }
+  .stat { text-align: center; }
+  .stat-num { font-family: Georgia, serif; font-size: 1.5rem; font-weight: 700; }
+  .stat-label { font-size: 0.75rem; color: #888; margin-top: 2px; }
+
+  /* 章节模式 */
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 14px; border-bottom: 2px solid #f55000; }
+  .section-header h2 { font-family: Georgia, serif; font-size: 1.3rem; font-weight: 600; }
+  .section-header .count { font-size: 0.85rem; color: #888; }
+  .chapter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .chapter-card { display: flex; align-items: center; gap: 14px; padding: 18px 20px; background: #fff; border: 1px solid #e5e5e5; border-radius: 10px; text-decoration: none; color: #1a1a1a; transition: all 0.2s ease; }
+  .chapter-card:hover { border-color: #f55000; box-shadow: 0 4px 20px rgba(245,80,0,0.08); transform: translateY(-2px); }
+  .chapter-num { flex-shrink: 0; width: 44px; height: 44px; border-radius: 10px; background: #fff5f0; color: #f55000; display: flex; align-items: center; justify-content: center; font-family: Georgia, serif; font-size: 1.05rem; font-weight: 700; }
+  .chapter-info { flex: 1; min-width: 0; }
+  .chapter-name { font-size: 0.92rem; font-weight: 600; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .chapter-desc { font-size: 0.75rem; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .chapter-count { flex-shrink: 0; font-size: 0.78rem; font-weight: 600; color: #f55000; background: #fff5f0; padding: 2px 8px; border-radius: 20px; }
+  .chapter-arrow { flex-shrink: 0; color: #888; font-size: 1.1rem; transition: transform 0.2s, color 0.2s; }
+  .chapter-card:hover .chapter-arrow { transform: translateX(3px); color: #f55000; }
+
+  /* 平铺模式 */
+  .article-list { display: flex; flex-direction: column; gap: 6px; }
+  .article-item { display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: #fff; border: 1px solid transparent; border-radius: 8px; text-decoration: none; color: #1a1a1a; transition: all 0.15s; }
+  .article-item:hover { background: #fff5f0; border-color: rgba(245,80,0,0.12); }
+  .article-num { flex-shrink: 0; width: 36px; height: 32px; border-radius: 8px; background: #fafafa; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; color: #888; }
+  .article-item:hover .article-num { background: rgba(245,80,0,0.1); color: #f55000; }
+  .article-title { flex: 1; font-size: 0.92rem; font-weight: 500; }
+  .article-item:hover .article-title { color: #f55000; }
+  .article-date { font-size: 0.75rem; color: #888; flex-shrink: 0; }
+
+  /* 标注说明 */
+  .note { background: #fffbe6; border: 1px solid #ffe58f; border-radius: 8px; padding: 12px 16px; margin-bottom: 24px; font-size: 0.85rem; color: #d48806; }
+  .hidden { display: none !important; }
+
+  @media (max-width: 640px) {
+    .book-hero { flex-direction: column; align-items: center; text-align: center; }
+    .book-cover-img { width: 140px; }
+    .motto { border-left: none; padding-left: 0; }
+    .book-stats { justify-content: center; }
+    .chapter-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="mode-switch">
+    <button class="mode-btn active" onclick="showMode('pg')">Paul Graham 文集（章节分组）</button>
+    <button class="mode-btn" onclick="showMode('normal')">普通书籍（平铺展示）</button>
+  </div>
+
+  <!-- PG 文集模式 -->
+  <div id="pg-mode">
+    <div class="note">此模式仅适用于《Paul Graham 文集》：按每10篇分组为章节卡片，点击章节进入文章列表。</div>
+    <div class="book-hero">
+      <div class="book-cover">
+        <img src="/images/pg-cover.png" alt="Paul Graham 文集" class="book-cover-img" onerror="this.src='https://via.placeholder.com/180x260/f55000/fff?text=PG+文集'">
+      </div>
+      <div class="book-details">
+        <div class="book-tag">Paul Graham 文集</div>
+        <h1>《Paul Graham 文集》</h1>
+        <p class="tagline">Essays · 185篇全译本</p>
+        <p class="motto">「写作是把网状的思想，变成线性文字的过程」</p>
+        <p class="desc">185篇Paul Graham经典文章中文全译本。Paul Graham是程序员、作家、风险投资家，创办了Y Combinator，被公认为硅谷最重要的思想者之一。</p>
+        <div class="book-stats">
+          <div class="stat"><div class="stat-num">185</div><div class="stat-label">篇文章</div></div>
+          <div class="stat"><div class="stat-num">18</div><div class="stat-label">个章节</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chapters-section">
+      <div class="section-header">
+        <h2>章节一览</h2>
+        <span class="count">共 18 章 · 185 篇文章</span>
+      </div>
+      <div class="chapter-grid">
+        <div class="chapter-card"><div class="chapter-num">01</div><div class="chapter-info"><div class="chapter-name">第1章：1-10篇</div><div class="chapter-desc">尚未上传</div></div><div class="chapter-count">0篇</div><div class="chapter-arrow">→</div></div>
+        <div class="chapter-card"><div class="chapter-num">02</div><div class="chapter-info"><div class="chapter-name">第2章：11-20篇</div><div class="chapter-desc">尚未上传</div></div><div class="chapter-count">0篇</div><div class="chapter-arrow">→</div></div>
+        <div class="chapter-card"><div class="chapter-num">03</div><div class="chapter-info"><div class="chapter-name">第3章：21-30篇</div><div class="chapter-desc">尚未上传</div></div><div class="chapter-count">0篇</div><div class="chapter-arrow">→</div></div>
+        <div class="chapter-card"><div class="chapter-num">04</div><div class="chapter-info"><div class="chapter-name">第4章：31-40篇</div><div class="chapter-desc">尚未上传</div></div><div class="chapter-count">0篇</div><div class="chapter-arrow">→</div></div>
+        <div class="chapter-card"><div class="chapter-num">05</div><div class="chapter-info"><div class="chapter-name">第5章：41-50篇</div><div class="chapter-desc">尚未上传</div></div><div class="chapter-count">0篇</div><div class="chapter-arrow">→</div></div>
+        <div class="chapter-card"><div class="chapter-num">06</div><div class="chapter-info"><div class="chapter-name">第6章：51-60篇</div><div class="chapter-desc">尚未上传</div></div><div class="chapter-count">0篇</div><div class="chapter-arrow">→</div></div>
+        <div class="chapter-card"><div class="chapter-num">07</div><div class="chapter-info"><div class="chapter-name">第7章：61-70篇</div><div class="chapter-desc">尚未上传</div></div><div class="chapter-count">0篇</div><div class="chapter-arrow">→</div></div>
+        <div class="chapter-card"><div class="chapter-num">08</div><div class="chapter-info"><div class="chapter-name">第8章：71-80篇</div><div class="chapter-desc">尚未上传</div></div><div class="chapter-count">0篇</div><div class="chapter-arrow">→</div></div>
+        <div class="chapter-card"><div class="chapter-num">09</div><div class="chapter-info"><div class="chapter-name">第9章：81-90篇</div><div class="chapter-desc">尚未上传</div></div><div class="chapter-count">0篇</div><div class="chapter-arrow">→</div></div>
+        <div class="chapter-card"><div class="chapter-num">10</div><div class="chapter-info"><div class="chapter-name">第10章：91-100篇</div><div class="chapter-desc">尚未上传</div></div><div class="chapter-count">0篇</div><div class="chapter-arrow">→</div></div>
+        <div class="chapter-card"><div class="chapter-num">11</div><div class="chapter-info"><div class="chapter-name">第11章：101-110篇</div><div class="chapter-desc">尚未上传</div></div><div class="chapter-count">0篇</div><div class="chapter-arrow">→</div></div>
+        <div class="chapter-card"><div class="chapter-num">12</div><div class="chapter-info"><div class="chapter-name">第12章：111-120篇</div><div class="chapter-desc">尚未上传</div></div><div class="chapter-count">0篇</div><div class="chapter-arrow">→</div></div>
+        <div class="chapter-card"><div class="chapter-num">13</div><div class="chapter-info"><div class="chapter-name">第13章：121-130篇</div><div class="chapter-desc">尚未上传</div></div><div class="chapter-count">0篇</div><div class="chapter-arrow">→</div></div>
+        <div class="chapter-card"><div class="chapter-num">14</div><div class="chapter-info"><div class="chapter-name">第14章：131-140篇</div><div class="chapter-desc">尚未上传</div></div><div class="chapter-count">0篇</div><div class="chapter-arrow">→</div></div>
+        <div class="chapter-card"><div class="chapter-num">15</div><div class="chapter-info"><div class="chapter-name">第15章：141-150篇</div><div class="chapter-desc">尚未上传</div></div><div class="chapter-count">0篇</div><div class="chapter-arrow">→</div></div>
+        <div class="chapter-card"><div class="chapter-num">16</div><div class="chapter-info"><div class="chapter-name">第16章：151-160篇</div><div class="chapter-desc">尚未上传</div></div><div class="chapter-count">0篇</div><div class="chapter-arrow">→</div></div>
+        <div class="chapter-card"><div class="chapter-num">17</div><div class="chapter-info"><div class="chapter-name">第17章：161-170篇</div><div class="chapter-desc">尚未上传</div></div><div class="chapter-count">0篇</div><div class="chapter-arrow">→</div></div>
+        <div class="chapter-card"><div class="chapter-num">18</div><div class="chapter-info"><div class="chapter-name">第18章：171-180篇</div><div class="chapter-desc">尚未上传</div></div><div class="chapter-count">0篇</div><div class="chapter-arrow">→</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 普通书籍模式 -->
+  <div id="normal-mode" class="hidden">
+    <div class="note">此模式适用于《选择改变命运》等其他普通书籍：不折叠章节，文章直接平铺展示，每篇独立链接到 /blog/xxx。</div>
+    <div class="book-hero">
+      <div class="book-cover">
+        <img src="/images/book1-cover.png" alt="选择改变命运" class="book-cover-img" onerror="this.src='https://via.placeholder.com/180x260/333/fff?text=选择改变命运'">
+      </div>
+      <div class="book-details">
+        <div class="book-tag">选择改变命运</div>
+        <h1>《选择改变命运》</h1>
+        <p class="tagline">靠学识赢得未来</p>
+        <p class="motto">「善战之人，先胜，而后战」</p>
+        <p class="desc">人生由十几个重大选择和无数微小选择构成。在重大选择面前做出最优选择，在微小选择面前养成好习惯——这就是改变命运的方法。</p>
+        <div class="book-stats">
+          <div class="stat"><div class="stat-num">16</div><div class="stat-label">篇文章</div></div>
+          <div class="stat"><div class="stat-num">16</div><div class="stat-label">个章节</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <h2>文章列表</h2>
+      <span class="count">共 16 篇文章</span>
+    </div>
+    <div class="article-list">
+      <a href="#" class="article-item"><span class="article-num">01</span><span class="article-title">脑科学：选择背后的生物学机制</span><span class="article-date">2024年3月15日</span></a>
+      <a href="#" class="article-item"><span class="article-num">02</span><span class="article-title">经济学思维：如何用成本收益分析做决策</span><span class="article-date">2024年3月18日</span></a>
+      <a href="#" class="article-item"><span class="article-num">03</span><span class="article-title">心理学陷阱：认知偏差如何影响你的选择</span><span class="article-date">2024年3月22日</span></a>
+      <a href="#" class="article-item"><span class="article-num">04</span><span class="article-title">习惯的力量：微小选择的复利效应</span><span class="article-date">2024年3月25日</span></a>
+      <a href="#" class="article-item"><span class="article-num">05</span><span class="article-title">城市选择：你在哪里，决定了你是谁</span><span class="article-date">2024年3月29日</span></a>
+      <a href="#" class="article-item"><span class="article-num">06</span><span class="article-title">行业选择：找到你的「技能-兴趣-市场」交集</span><span class="article-date">2024年4月2日</span></a>
+      <a href="#" class="article-item"><span class="article-num">07</span><span class="article-title">伴侣选择：长期关系中的决策框架</span><span class="article-date">2024年4月5日</span></a>
+      <a href="#" class="article-item"><span class="article-num">08</span><span class="article-title">投资选择：时间是你的终极资产</span><span class="article-date">2024年4月8日</span></a>
+      <a href="#" class="article-item"><span class="article-num">09</span><span class="article-title">学习选择：建立你的终身学习系统</span><span class="article-date">2024年4月12日</span></a>
+      <a href="#" class="article-item"><span class="article-num">10</span><span class="article-title">时间选择：如何管理你的注意力</span><span class="article-date">2024年4月15日</span></a>
+      <a href="#" class="article-item"><span class="article-num">11</span><span class="article-title">社交选择：构建高质量的人际关系网</span><span class="article-date">2024年4月18日</span></a>
+      <a href="#" class="article-item"><span class="article-num">12</span><span class="article-title">健康选择：身体是革命的本钱</span><span class="article-date">2024年4月22日</span></a>
+      <a href="#" class="article-item"><span class="article-num">13</span><span class="article-title">职业选择：从打工到创业的跃迁</span><span class="article-date">2024年4月25日</span></a>
+      <a href="#" class="article-item"><span class="article-num">14</span><span class="article-title">财富选择：积累你的第一桶金</span><span class="article-date">2024年4月29日</span></a>
+      <a href="#" class="article-item"><span class="article-num">15</span><span class="article-title">思维选择：建立多元思维模型</span><span class="article-date">2024年5月3日</span></a>
+      <a href="#" class="article-item"><span class="article-num">16</span><span class="article-title">人生选择：如何过上有意义的生活</span><span class="article-date">2024年5月6日</span></a>
+    </div>
+  </div>
+</div>
+
+<script>
+function showMode(mode) {
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('pg-mode').classList.toggle('hidden', mode !== 'pg');
+  document.getElementById('normal-mode').classList.toggle('hidden', mode !== 'normal');
+}
+</script>
+</body>
+</html>

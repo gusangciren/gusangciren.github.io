@@ -1,0 +1,521 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="YC 创业课第17讲｜Kirsty Nathoo、Carolynn Levy"><title>创业公司的法律、财务与 HR 机制 — 像企业家一样写作</title><link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml"><link rel="sitemap" type="application/xml" href="/sitemap-index.xml"><!-- Static CSS — no build hash, safe for incremental deploys --><link rel="stylesheet" href="/global.css"><!-- 自托管字体 --><link rel="preload" href="/fonts/NotoSerifSC-Regular.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/_astro/BaseLayout.BYj8Tvw5.css">
+<link rel="stylesheet" href="/_astro/_..CcR4Cqk3.css"></head> <body> <nav class="navbar"> <div class="nav-inner"> <a href="/" class="logo"> <img src="/images/logo-header.png" alt="Logo" class="logo-img"> <span>像企业家一样写作</span> </a> <div class="nav-links"> <a href="/blog">文章</a> <a href="/book">书籍</a> <a href="/community">社群</a> <a href="/join">答疑</a> </div> </div> </nav> <!-- 搜索浮窗 --> <div id="search-overlay" class="search-overlay"> <div class="search-modal"> <div class="search-header"> <input id="search-input" type="text" placeholder="搜索文章标题、描述..." autocomplete="off"> <button id="search-close" class="search-close-btn" aria-label="关闭搜索">✕</button> </div> <div id="search-results" class="search-results"></div> </div> </div> <!-- 浮动搜索按钮 --> <button id="search-toggle" class="search-fab" aria-label="搜索"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"> <circle cx="11" cy="11" r="7"></circle> <line x1="16.5" y1="16.5" x2="21" y2="21"></line> </svg> </button> <!-- ===== 微信电子书弹窗 ===== --> <div id="ebook-popup-overlay" class="ebook-popup-overlay" onclick="if(event.target===this){this.classList.remove('active');document.body.style.overflow='';}"> <div class="ebook-popup-card"> <div class="ebook-popup-topbar"></div> <button id="ebook-popup-close" class="ebook-popup-close" aria-label="关闭" onclick="event.stopPropagation();document.getElementById('ebook-popup-overlay').classList.remove('active');document.body.style.overflow='';">✕</button> <div class="ebook-popup-body"> <!-- 送你 --> <div class="ebook-popup-gift">送你一本我的电子书</div> <!-- 书名 --> <div class="ebook-popup-bigtitle">《闭环：在你睡觉时赚钱》</div> <div class="ebook-popup-bigsub">从0到1的自媒体方法论</div> <!-- 社会认同 --> <div class="ebook-popup-proof"> <span class="ebook-proof-avatars"> <span class="ebook-proof-avatar" style="background: #f5e0d0;"> <span style="font-size:12px;font-weight:700;color:#c45c2e;">M</span> </span> <span class="ebook-proof-avatar" style="background: #d0e8e0;"> <span style="font-size:12px;font-weight:700;color:#3a7a5e;">S</span> </span> <span class="ebook-proof-avatar" style="background: #d8dff0;"> <span style="font-size:12px;font-weight:700;color:#4a6aab;">L</span> </span> </span> <span><span class="ebook-proof-count">327</span> 人已领取</span> </div> <!-- 二维码 --> <div class="ebook-popup-qr"> <img src="/images/wechat-qr.png" alt="微信二维码"> </div> <!-- 下载按钮 — 仅手机展示 --> <a class="ebook-popup-download" href="/images/wechat-qr.png" download> <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path> <polyline points="7 10 12 15 17 10"></polyline> <line x1="12" y1="15" x2="12" y2="3"></line> </svg>
+下载二维码到手机
+</a> <!-- 流程提示 --> <p class="ebook-popup-steps"> <span class="step">扫二维码</span> → <span class="step">添加好友</span> → 回复<span class="keyword-value">闭环</span> → <span class="step">立马领取</span> </p> </div> <div class="ebook-popup-footer"> <p>免费领取 · 无需购买任何产品 · 24 小时内回复</p> </div> </div> </div> <main>   <div id="reading-progress" class="reading-progress"></div> <!-- 书籍系列：左侧目录 + 右侧正文 -->
+    <div class="book-layout"> <!-- 左侧目录 --> <aside class="book-toc"> <div class="book-toc-inner"> <div class="book-toc-header"> <span class="book-toc-series">YC 创业课</span> <span class="book-toc-count">目录</span> </div> <nav class="book-toc-nav"> <div class="book-toc-section "> <a href="/blog/yc-lecture-01-how-to-start-a-startup" class="book-toc-item"> <span class="book-toc-order">1</span> <span class="book-toc-title">如何创办初创公司</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-02-ideas-products-teams-execution-part2" class="book-toc-item"> <span class="book-toc-order">2</span> <span class="book-toc-title">创意、产品、团队与执行（第二部分）</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-03-counterintuitive-parts-and-how-to-have-ideas" class="book-toc-item"> <span class="book-toc-order">3</span> <span class="book-toc-title">创业中反直觉的部分，以及如何产生创意</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-04-how-to-build-products-users-love" class="book-toc-item"> <span class="book-toc-order">4</span> <span class="book-toc-title">如何打造用户热爱的产品</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-05-how-to-build-products-users-love-part2" class="book-toc-item"> <span class="book-toc-order">5</span> <span class="book-toc-title">如何打造用户喜爱的产品（第二部分）</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-06-doing-things-that-dont-scale-pr" class="book-toc-item"> <span class="book-toc-order">6</span> <span class="book-toc-title">做无法规模化的事、公关，以及如何起步</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-07-how-to-raise-money" class="book-toc-item"> <span class="book-toc-order">7</span> <span class="book-toc-title">如何融资</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-08-building-product-talking-to-users-and-growing" class="book-toc-item"> <span class="book-toc-order">8</span> <span class="book-toc-title">打造产品、与用户对话与实现增长</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-09-how-to-be-a-great-founder" class="book-toc-item"> <span class="book-toc-order">9</span> <span class="book-toc-title">如何成为一位伟大的创始人</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-10-how-to-manage" class="book-toc-item"> <span class="book-toc-order">10</span> <span class="book-toc-title">如何管理</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-11-how-to-operate" class="book-toc-item"> <span class="book-toc-order">11</span> <span class="book-toc-title">如何运营</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-12-how-to-run-a-user-interview" class="book-toc-item"> <span class="book-toc-order">12</span> <span class="book-toc-title">如何进行用户访谈</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-13-growth" class="book-toc-item"> <span class="book-toc-order">13</span> <span class="book-toc-title">增长</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-14-business-strategy-and-monopoly-theory" class="book-toc-item"> <span class="book-toc-order">14</span> <span class="book-toc-title">商业战略与垄断理论</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-15-sales-and-marketing" class="book-toc-item"> <span class="book-toc-order">15</span> <span class="book-toc-title">销售与营销</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-16-sales-marketing-pitch-investor-roleplaying" class="book-toc-item"> <span class="book-toc-order">16</span> <span class="book-toc-title">销售、营销与融资路演</span> </a>  </div><div class="book-toc-section active"> <a href="/blog/yc-lecture-17-legal-finance-hr" class="book-toc-item"> <span class="book-toc-order">17</span> <span class="book-toc-title">创业公司的法律、财务与 HR 机制</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-18-company-culture-and-building-a-team" class="book-toc-item"> <span class="book-toc-order">18</span> <span class="book-toc-title">企业文化与团队建设（第一部分）</span> </a>  </div> </nav> <a href="/book" class="book-toc-back"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+返回书架
+</a> </div> </aside> <!-- 右侧正文 --> <main class="book-main"> <article class="prose"> <header class="article-header"> <h1>创业公司的法律、财务与 HR 机制</h1> <div class="article-meta"> <span class="article-series">YC 创业课</span> <time> 2026年6月27日 </time> </div> </header> <blockquote>
+<p>YC 创业课程第十八讲<br>
+主讲人：Kirsty Nathoo（Y Combinator CFO）、Carolynn Levy（Y Combinator 总法律顾问）<br>
+整理自现场字幕，信息保留率 ≥99%</p>
+</blockquote>
+<hr>
+<h2 id="一开场最不性感却最能让你少受苦的一课">一、开场：最不性感，却最能让你少受苦的一课</h2>
+<p><strong>Sam Altman</strong>：Kirsty 和 Carolynn 将分享创业公司的财务与法律机制。这当然不是最激动人心的课程，但如果你把这件事做对了，这很可能是能帮你避免最多痛苦的一课。非常感谢两位的到来。</p>
+<p><strong>Carolynn</strong>：正如 Sam 所说，这次讲座是关于创业公司的机制。Kirsty 和我将要分享创业公司在最初期可能面临的基本法律和会计问题。</p>
+<p>我之前在看 Paul Graham 的视频，他说过一句话：「创始人不需要知道创业启动的机制。」我当时想：「糟了！这正是 Sam 给这堂课起的名字。」</p>
+<p>但 PG 实际说的是：创始人不需要<strong>详细了解</strong>这些机制。创始人陷入细节是非常危险的。这完全正确。Kirsty 和我也无法在四十五分钟内给你们讲完所有细节。</p>
+<p>我们今天的目标是确保你们至少不会把创业公司注册成<strong>佛罗里达州的有限责任公司（LLC）</strong>。</p>
+<p><strong>Kirsty</strong>：正如 Sam 提到的，我们也在担心，让你们听一位会计师和一位律师讲话会很无聊。之前给你们讲课的都是非常出色的创始人，讲的都是很有意思的东西。但就像 Sam 说的，如果你了解基础知识，你就能以正确的方式把公司设立起来，避免痛苦，不再为此担心，然后专注于你真正想做的事情——让你的公司成功。</p>
+<p>我们一直在说「创业公司」这个词。在你们脑海的背面，你们可能知道「创业公司」必须是一个独立的法律实体。我们将更多地谈论如何实际设立它，以及这意味着什么。</p>
+<p>你们可能也知道，创业公司会有资产、知识产权、发明和其他东西，公司需要保护这些东西。所以我们也会谈一谈这个，以及融资、雇佣员工和签订合同。</p>
+<p>在设立公司时，还有几件事需要讨论，它们会暴露创始人之间的一些问题：谁将负责？每个人将拥有多少股权？</p>
+<hr>
+<h2 id="二公司注册别在起跑线上摔跤">二、公司注册：别在起跑线上摔跤</h2>
+<h3 id="21-为什么要设立独立法律实体">2.1 为什么要设立独立法律实体？</h3>
+<p><strong>Carolynn</strong>：我们要谈的第一件事是注册设立。你的创业公司将是一个独立的法律实体。你可能已经知道这一点，但**设立独立法律实体的主要目的是保护你们免受个人责任。**如果你们的公司被起诉，对方不能拿走你银行账户里的钱，只能拿走公司的钱。</p>
+<p>那么问题来了：在哪里注册？理论上你有五十个选择，但<strong>最简单的选择是特拉华州（Delaware）</strong>。我相信你们都知道这一点。特拉华州就是做公司注册生意的。那里的法律非常清晰，也非常成熟。这是标准。另一件事是，投资者对特拉华州非常熟悉。他们已经投资了很多特拉华州注册的公司。他们的大部分投资 probably 都是特拉华州公司。所以如果你也是特拉华州公司，一切都会简单得多。投资者需要做的前期调查更少。你不需要和投资者讨论是否要把你的华盛顿州公司重新注册到特拉华州。</p>
+<h3 id="22-一个价值五十万美元的教训">2.2 一个价值五十万美元的教训</h3>
+<p>大约两年前，Y Combinator 有一家公司，最初是在康涅狄格州注册的一家 LLC。创始人在那里有律师朋友，说这是正确的做法。当他们来到 YC 时，我们说，你们需要转换成特拉华州公司。康涅狄格州的律师做了转换文件，不幸的是他们没有做对。他们犯了一个非常简单的错误，但那是一个非常关键的错误。公司最近在融一大笔钱时，这个错误被发现了。公司以为自己是特拉华州公司已经好几年了，但实际上它仍然是康涅狄格州的 LLC。</p>
+<p>我只说这一点：需要四家不同的律师事务所来搞清楚这件事——两家在特拉华州，一家在康涅狄格州，一家在硅谷。目前这笔转换错误的账单是<strong>五十万美元</strong>。</p>
+<p>**结论很简单：让自己保持简单和熟悉。**我们在 Y Combinator 以相同方式注册所有公司的原因，是因为这样容易。<strong>不要搞花哨的。节省你的时间和金钱。</strong></p>
+<h3 id="23-注册的具体步骤">2.3 注册的具体步骤</h3>
+<p><strong>Kirsty</strong>：一旦你决定要做特拉华州公司，你如何实际设立它？这需要几个不同的步骤。第一步真的很简单。你literally只需要把两张纸传真到特拉华州，说我们要设立一家公司。但这只是创建了一个公司壳。它在公司内部实际上什么都不做。在那之后，你需要完成一组文件，批准公司的章程。它创建一个董事会，创建公司的高级管理人员。特拉华州要求有人担任 CEO、总裁和秘书的职位。</p>
+<p>在这一点上，你还需要完成将你作为个人创建的任何发明或代码分配给公司的文件，这样公司才能 actual 拥有这些东西。记住，在这一点上，很好地思考「我是以个人身份做这件事，还是代表公司做这件事——公司是一个独立的实体」是一件好事。你必须在脑海中保持这种区分。</p>
+<p>有一些服务可以帮助你注册设立。你可以用律师事务所，但也有其他在线服务可以帮忙。我们常和 YC 公司一起使用的是 <strong>Clerky</strong>。它们的设置使得所有标准的基文档都被使用，它们让你以非常标准的方式设立起来，这样你就可以继续前进，持续专注于你需要做的事情。</p>
+<h3 id="24-文件管理最无聊却最重要的事">2.4 文件管理：最无聊却最重要的事</h3>
+<p>关于文件的一点注意。你在创建文件。这些是非常重要的文件，将决定公司做什么和公司是什么。**非常重要的一点是，你 actually 把这些签署的文件保存在安全的地方。**这听起来很基本，但我们遇到太多创始人说：「哦，这些只是一些文件。」他们完全不知道它们是什么，也不知道它们在哪。所以，真的，真的确保你把它们保存在安全的地方。老实说，归档文件不是运营创业公司里光鲜的部分。这些时刻至关重要的场合，将是创业公司生活中高压力的 times。很可能是在公司进行大规模 A 轮融资或公司被收购时。公司将不得不进行尽职调查，会有律师要求所有这一切东西。如果你没有，或者你不知道它们在哪，你正在让一个有压力的情况变得更加有压力。</p>
+<p><strong>关键是：把这些文件保存在安全的地方。保持它们有条理。这会让你的生活容易得多。</strong></p>
+<hr>
+<h2 id="三股权分配切蛋糕的艺术">三、股权分配：切蛋糕的艺术</h2>
+<p><strong>Carolynn</strong>：现在我们来谈股权。我们将在这一节触及几个不同的东西。我们要谈的第一件事是<strong>股权分配</strong>。如果你公司的股票很高，如何切蛋糕。你必须和你的联合创始人讨论这个。为什么这很重要？如果你是单人创始人，这不重要。如果你是一个两人或更多的团队，那么这个问题绝对关键。</p>
+<h3 id="31-执行比想法更有价值">3.1 执行比想法更有价值</h3>
+<p><strong>你需要知道的第一件事是：执行比想法更有价值。<strong>我这么说是什么意思？很多创始人团队给了提出公司想法的人过多的信任，因此也给了公司过多的股权。想法显然非常重要，但它们</strong>价值为零</strong>。有谁听说过仅仅因为一个想法就支付十亿美元的？当整个创始人团队共同努力执行一个想法时，价值才被创造出来。</p>
+<p><strong>你需要抵制给被归功于提出公司想法的创始人 disproportionate 数量的股票的冲动。</strong></p>
+<h3 id="32-应该平均分配吗">3.2 应该平均分配吗？</h3>
+<p>接下来你想思考的是，股票是否应该在创始人之间平均分配。从我们的角度来看，简单的答案可能是<strong>是的</strong>。股权分配不必完全相等，但如果非常不成比例，那对我们来说是一个巨大的红旗。</p>
+<p>我们想知道，当所有权不相等时，创始人团队中没有发生什么对话。例如，是否有一位创始人暗中认为整个创业公司的事情是暂时的？是否有一位创始人夸大了他或她已经在公司做的工作？或者夸大了他或她的教育或先前经验？创始人真的互相信任吗？他们对创业公司的期望和未来是否对彼此诚实？</p>
+<p>当所有权不成比例时，我们担心创始人之间没有同步。</p>
+<h3 id="33-顶尖-yc-公司的数据">3.3 顶尖 YC 公司的数据</h3>
+<p><strong>这一点的重要结论：在顶尖的 YC 公司中——我们称之为那些估值最高的公司——零实例中创始人有显著不成比例股权分配。</strong></p>
+<p><strong>Kirsty</strong>：你们已经谈过了如何分割股权，但然后呢？我们和很多创始人聊过，他们 actually 很惊讶他们必须做些什么才能真正拥有这些股票。他们认为谈论它就 actual 足够了。这是另一种情况，你必须思考你作为个人 vs 你作为公司代表。如果你把它和一家大公司对比，如果你在 Google 工作，被告知作为你薪酬包的一部分，你将收到股票，你会期望签署一些东西来获得那些股票。如果你没有，你会想：「这里发生了什么？」小公司也是一样。</p>
+<p>在这种情况下，你要签署的文件是<strong>股票购买协议</strong>。你作为个人从公司购买股票。在任何情况下，如果你在购买东西，这是一笔双向交易。在这种情况下，你以现金支付，或以贡献 IP、发明或代码给公司来换取股票，这样公司才能 actual 拥有你过去做的一切。</p>
+<p>我们也把那些股票称为<strong>受限股票</strong>，因为它们随时间归属（vest）。我们接下来会更详细地讲这个。由于股票受限并归属，有一份非常关键的文件，我们说到脸色发青，因为实际上没有办法回头修复这个。**这是过去搞砸交易的事情之一。**我们见过没有提交所谓的 **83(b) 选举（83(b) Election）**的公司，交易搞砸了。</p>
+<p>我不会详细介绍 83(b) 选举，但它影响你的个人税收，也影响公司的税收。它可能产生很大影响。这里的主要事情是：签署文件，签署股票购买协议，签署 83(b) 选举，并确保你 actual 有证明你寄出了那个东西。如果你没有证明，它 just 进入 IRS 的一个黑洞。如果你不能证明，投资者和收购方会放弃交易。</p>
+<hr>
+<h2 id="四归属机制vesting把所有人都绑在船上">四、归属机制（Vesting）：把所有人都绑在船上</h2>
+<p><strong>Carolynn</strong>：我们要谈的下一件事是<strong>归属（vesting）</strong>。我想你们很多人熟悉归属，但以防万一，归属意味着你在一定时间内获得股票的完全所有权。我们说的是 Kirsty 刚才说的股票。你买了你公司的股票，你拥有它，你可以投票，但如果你在归属期结束前离开，公司可以拿回那些未归属的股票。</p>
+<p>当你听到「受限股票」时，它意味着股票受归属约束。IRS 的说法是：「可被没收的股份。」</p>
+<h3 id="41-标准归属期">4.1 标准归属期</h3>
+<p>典型的归属期应该是什么？在硅谷，所谓的<strong>标准归属期是四年，附带一年 cliff（悬崖期）</strong>。这意味着一年后，创始人归属或完全拥有百分之二十五的股份。然后剩余股份在接下来三年按月归属。</p>
+<p>举个例子：创始人在圣诞节那天购买股票，假设，然后在接下来的感恩节辞职。所以是在一年过去之前。在这种情况下，创始人带着零股份离开，因为 cliff 期还没有满足。如果创始人在下一个圣诞节第二天辞职，所以一年零一天后，他或她归属了百分之二十五的股份。在这种情况下，一年 cliff 已经满足了。</p>
+<p>当创始人停止在公司工作时，股份会怎样？公司可以回购那些股份。在我刚才举的例子中，创始人在购买股份一年零一天后辞职，百分之七十五的股份仍然未归属，公司将从创始人那里回购那整整百分之七十五的股份。<strong>如何回购？他们 just 给创始人写一张支票。那就是创始人购买它的方式。这是创始人支付的每股相同价格，所以 just 是把创始人的钱还给他或她。</strong></p>
+<h3 id="42-为什么要归属">4.2 为什么要归属？</h3>
+<p>为什么要有归属？创始人为什么要对自己做这件事？他们对自己的股票做这件事。**归属重要的头号原因与创始人离开公司有关。**如果你没有归属，一个创始人离开了，一大块股权所有权就随他或她离开了。显然这对留下的创始人是不公平的。</p>
+<p>我们 actually 在讲到「创始人雇佣」幻灯片时会更多地谈这一点。我会更详细地讲那个。</p>
+<p>另一个要有归属的原因是 **skin in the game（利益绑定）**的概念，即创始人需要被激励继续在他们的创业公司工作上。如果创始人可以在任何时间点带着他或她的完全所有权离开，那为什么要留下来拼命工作？创业公司很难。</p>
+<p>**单人创始人需要归属吗？**他们需要，原因是 skin in the game 概念也适用于单人创始人。投资者希望看到所有创始人，甚至单人创始人，被激励长期留在公司。单人创始人应该在他们的股份上设置归属的另一个原因是为员工树立榜样。你可以想象，创始人告诉员工他或她必须在他或她的股份上有四年归属，但创始人不认为他或她需要在自己的股份上有任何归属，这是不合适的。这是一个文化点。一位在自己股份上有归属的创始人，然后通过说「我们都在这个 for the long haul。我们都在我们的股份上归属。我们一起做这件事」来为公司定下基调。</p>
+<p>归属在创始人之间对齐激励，如果他们都必须坚持下去并发展公司，才能从公司获得任何东西。投资者不想把钱投进一个创始人可以随时辞职但仍拥有大量股权的公司。</p>
+<hr>
+<h2 id="五融资钱来了然后呢">五、融资：钱来了，然后呢？</h2>
+<p><strong>Kirsty</strong>：继续。我们现在在特拉华州有一家漂亮设立的公司。每个人都有他们的股票。一切都是标准 plain vanilla 文件。然后呢？公司生活的下一个阶段是融资。我们知道你们已经在这组课程中从很多投资者和创始人那里听到了很多。他们一直在谈论如何融资的战术，但文件呢？当有人 actual 同意投资时呢？</p>
+<h3 id="51-两种融资方式">5.1 两种融资方式</h3>
+<p>在物流方面，用非常简单的术语来说，有两种方式融资。**要么为进来的钱设定价格，要么不设定价格。**我们所说的价格是指公司的估值。融资轮实际上可以叫任何名字。人们可以随意命名它们，但通常当你听到「种子轮（seed round）」这个词时，它意味着价格还没有设定。任何「A 轮」或「B 轮」的东西，都是价格已经设定的东西。</p>
+<p>不设定价格是最直接、最快速的获得资金的方式。这样做的方式是通过**可转换票据（convertible notes）**或 <strong>SAFE</strong>。再一次，这是一笔双向交易。这是一张纸，说，例如，投资者现在支付十万美元，作为回报，有权在未来价格由定价轮的投资者设定的日期接收股票。</p>
+<p>重要的是要注意，在文件设定的时候，那个投资者<strong>不是股东</strong>，因此对公司没有任何投票权。他们将拥有 Carolynn 将要单独谈到的其他权利。</p>
+<h3 id="52-估值上限valuation-cap">5.2 估值上限（Valuation Cap）</h3>
+<p>当然，投资者在公司生命周期的最早、最危险阶段投入资金，希望得到回报。<strong>这就是估值上限（valuation cap）概念的由来</strong>，我相信你们很多人以前听说过。无定价轮的文件中设定了一个上限，用于转换为股份，这不是公司目前的估值。它是未来用于计算该投资者将获得多少股份的估值的上限。</p>
+<p>例如，取一个投资者，用五百万美元上限的 SAFE 投资十万美元。如果一年后公司以两千万美元的估值进行定价轮融资，那么早期投资者的每股价格会低得多。大约四分之一。因此，他们的十万美元将购买大约四倍于在那个 A 轮定价轮中投入十万美元的投资者会购买的股份。<strong>那就是他们早期进入获得回报的地方。</strong></p>
+<h3 id="53-警惕未来稀释">5.3 警惕未来稀释</h3>
+<p>当你融资时，还有几件事要考虑。希望你们有一个真的很热的公司，做得很好，融资真的很容容易。但你应该意识到，所有向你扔钱的人确实有一些缺点。</p>
+<p>所以第一件事是<strong>理解你未来的稀释</strong>。所以，如果你用六百万美元估值上限的 SAFE 融，比如说，二百万美元，那么当那些 SAFE 转换为股权时，那些早期投资者将拥有公司约百分之二十五。这将是除了在定价轮进来的投资者之外的额外部分，他们可能想拥有公司百分之二十。所以你在那个点已经给出了公司百分之四十五。所以这真的是你想要的吗？你知道答案可能是 yes。记住，低估值上限上的一些钱，比根本没钱无限好。如果那些你能得到的条款，那就拿那个钱。<strong>但这只是需要注意的事情，并贯穿整个过程，这样你可以看到这将引导你在路上去哪里。</strong></p>
+<h3 id="54-投资者应该是老练的">5.4 投资者应该是老练的</h3>
+<p>**另一件要记住的事情是，投资者应该是老练的（sophisticated）。**他们有足够的钱能够投资。他们理解投资创业公司是一项有风险的事业。我们看到太多公司说：「哦 yeah。我叔叔投了钱，或者我邻居投了钱。」他们每人投了五千或一万美元。往往那些是未来造成最多问题的投资者，因为他们不理解这是长期收益。他们到了那个点，坐在那里想：「嗯。我 actually 可以用那笔钱，因为我需要一个新厨房。」或者，「这个创业投资 actual 不像所有电视节目和电影描绘的那么令人兴奋。」这给公司造成问题。他们在要求退还钱。<strong>要注意，你应该从老练的、知道他们在做什么的人那里融资。<strong>你会听到的指代这些人的术语是他们是</strong> accredited investors（合格投资者）</strong>。</p>
+<p>这里的要点是<strong>保持简单</strong>。用标准文件融资。确保你有理解他们进入什么以及理解你在未来稀释方面进入什么的人。</p>
+<hr>
+<h2 id="六投资者常提的四个要求">六、投资者常提的四个要求</h2>
+<p><strong>Carolynn</strong>：好了。你在融资。你理解你在卖什么。你搞清楚了价格。你搞定了 Kirsty 刚才描述的物流。你可能发现的是，你不理解你的投资者正在使用的一些条款和术语。这没问题，但你有负担去搞清楚。不要以为仅仅因为你已经商定了估值或价格，所有其他东西都不重要。<strong>它确实重要。你需要知道这些条款将如何影响你的公司长远。</strong></p>
+<p>在 Y Combinator，Kirsty 和我一直听到创始人说：「我不知道那是什么。我不知道我在签署什么。<strong>我不知道我同意了那个！</strong>」搞清楚这些东西的负担在你身上。</p>
+<p>我们要讲四个常见的投资者要求。</p>
+<h3 id="61-董事会席位">6.1 董事会席位</h3>
+<p>第一个是<strong>董事会席位</strong>。一些投资者会要求在你们公司的董事会中占一个席位。投资者通常想成为董事，要么是因为他或她想盯着他们的钱，要么是因为他或她真的认为他们能帮你经营业务。你必须小心在董事会中加入投资者。**在大多数情况下，你想说不。**否则确保这个人是真的会增值的人。有钱很有价值，但能帮助战略和方向的人是无价的。所以明智地选择。</p>
+<h3 id="62-顾问角色">6.2 顾问角色</h3>
+<p>另一件事是<strong>顾问</strong>。有太多人想给创业公司建议。**很少有人 actual 给出好建议。**一旦投资者给了你的公司钱，那个人应该是事实上的顾问，但没有任何正式头衔，更重要的是，公司不必为建议付出任何额外的东西。</p>
+<p>在 Y Combinator，我们注意到，每当一家创业公司设法获得一个名人投资者，名人 almost 总是要求成为一个顾问。我们有一家提供按需保镖服务的公司。一位 NBA 篮球运动员投资并要求成为顾问，然后要求以获得普通股股份作为交换，作为顾问服务的回报。这个人心里想的服务是把这家公司介绍给其他可能想使用按需保镖的职业篮球运动员。这位名人刚刚做了一个大投资，难道他不应该想帮助公司成功吗？为什么他需要额外的东西？所有能帮忙的投资者都应该这样做。要求额外股份只是一个投资者在寻找免费东西。</p>
+<h3 id="63-按比例权利pro-rata-rights">6.3 按比例权利（Pro-rata Rights）</h3>
+<p>接下来我们要谈<strong>按比例权利（pro-rata rights）</strong>。很简单，按比例权利是通过在未来购买公司更多股份来维持你在公司中百分比所有权的权利。按比例权利是避免稀释的一种方式。这种情况下的稀释意味着每次公司向其他投资者出售更多股票时，拥有的公司份额越来越少。</p>
+<p>这是一个非常基本的例子，但假设一个早期投资者购买优先股，最终在融资结束后拥有公司的百分之三。公司进行另一轮融资。公司将去找这位协商了按比例权利的投资者，说：「嘿。我们在融更多钱。欢迎你在新一轮中购买这么多股份，以保持你的所有权在 approximately 百分之三。」</p>
+<p>按比例权利是投资者非常常见的要求。它们不一定是坏事，但作为创始人，你 absolutely 需要知道按比例权利如何运作。<strong>特别是因为投资者拥有按比例权利以避免稀释的推论是，创始人通常遭受更大的稀释。</strong></p>
+<h3 id="64-信息权">6.4 信息权</h3>
+<p>最后一件事是<strong>信息权</strong>。投资者几乎总是想要合同信息权，以获取有关公司的某些信息。提供定期信息和状态更新不是坏事。在 YC，我们鼓励公司向投资者提供月度更新，因为这是一个很好的机会，可以要求帮助介绍或帮助招聘。那种事情。你必须非常小心过度。任何投资者说他们想要月度预算或每周更新，那不行。</p>
+<p><strong>这里的结论是，仅仅因为融资类型和估值已经商定，并不意味着其他一切都不重要。你需要知道关于你融资的一切。</strong></p>
+<hr>
+<h2 id="七公司支出别拿投资者的钱去拉斯维加斯">七、公司支出：别拿投资者的钱去拉斯维加斯</h2>
+<p><strong>Kirsty</strong>：继续到融资之后。公司银行账户里的零可能比你一生中见过的还多。然后呢？这是你 actual 开始产生业务支出的时候。业务支出是执行业务的成本。支付员工、支付办公室租金、托管成本、获取客户的成本，那种事情。业务支出很重要，因为它们在公司的税务申报中被扣除，以抵消任何收入，降低公司支付的税款。另一方面，如果公司产生非业务支出，不能在税务申报中扣除，那可以增加公司必须纳税的利润。</p>
+<p>再一次，这是一个分离问题。公司将有自己的银行账户，公司的支出应该从中支付。<strong>再一次从这个角度思考，从一家大公司的角度，如果你在 Google 工作，你不会用 Google 信用卡买牙刷和牙膏。</strong></p>
+<p>记住，投资者给了你这笔钱。他们信任你，给了你一大笔钱。他们想让你用那笔钱让公司成功。**这不是你的钱，让你随意花。相信我，我们有一些创始人采取这种方法的恐怖故事。**我们有一个创始人拿了投资者的钱去了拉斯维加斯。从他的 Facebook 照片来看，boy 他玩得很开心。不用说，他 no longer 和公司在一起了。<strong>这是盗窃投资者的钱。</strong></p>
+<p>业务支出的概念可能有点模糊，特别是在早期，当你一天二十四小时在你的公寓里工作时。思考它的方式是：「如果一个投资者问我钱花在了什么上，我不得不给他们逐行细分，我会对其中的任何一行感到尴尬吗？」如果你会，它可能不是业务支出。</p>
+<p>另一件要记住的事情是，你正以九十英里的速度经营你的公司，所以你不必在那一点上 necessarily 思考簿记和会计。然而，<strong>保存收据是至关重要的</strong>，这样当你聘请簿记员或 CPA 准备你的税务申报时，他们可以搞清楚什么是业务支出，什么不是业务支出。他们将需要你作为创始人的帮助来做到这一点。让让你的参与尽可能小的方式是把那些文件保存在安全的地方，这样你可以容易地参考它们。</p>
+<p><strong>如果你什么都不记得，别拿投资者的钱去拉斯维加斯。明智地花那笔钱。</strong></p>
+<hr>
+<h2 id="八创始人雇佣与分手">八、创始人雇佣与分手</h2>
+<p><strong>Carolynn</strong>：在这一节中，我们将触及这一节中的几个主题。第一个是**「创始人雇佣」**。我们为什么要谈创始人雇佣？正如我们已经说过的，公司是独立的法律实体。它完全独立于你作为创始人存在。不管我们认为「创始人」这个头衔多么有威望，你 just 是公司员工，创始人必须被支付。<strong>免费工作是违法的，创始人不应该让他们的公司承担这种责任。<strong>你不会在任何其他地方免费工作，为什么你的创业公司是个例外？公司必须支付工资税。我们有一个 YC 公司完全忽略了他们的工资税三年。这是一个巨大昂贵的灾难，在极端情况下，人们 actual 可以因此入狱。幸运的是不是在这个案例中，但这很糟糕。这个故事的寓意是</strong>设立工资服务。这是值得花你的钱的事情。不要在奢侈的工资上过分。最低工资。这仍然是一个创业公司，你必须精益运营。</strong></p>
+<p>现在我要提到<strong>创始人分手</strong>。首先，什么是创始人分手？在这个语境中，我说的是一个团队中的一位创始人被要求离开公司。创始人是员工，所以这意味着你的联合创始人正在解雇你。我们为什么要谈分手和创始人薪酬？在 YC，我们见过大量的创始人分手，我们知道当创始人没有给自己发工资时，分手会变得格外丑陋。为什么？未付工资成为被解雇的创始人与公司谈判获得他或她想要的东西的杠杆。通常那是归属加速。被解雇的创始人说：「嘿。我的律师说你们不付我工资是违法的。如果你付钱给我，并且给我一些我 actual 不太有资格获得的股份，我会签署一份免责声明，让所有这些丑陋的事情消失。」</p>
+<p>如果你是的留下的联合创始人，你可能 like：「听起来是个好交易。」现在你有了一个心怀不满的人，拥有你公司的一块，甚至更糟的是，剩下的人在为那个前创始人工作。他们正在为公司建立所有价值，而被解雇的前创始人坐在那里，拿着他们所有的股份说：「没错。让它变得有价值。」</p>
+<p><strong>这里的结论是：通过给自己发工资来避免问题。支付你的工资税，把考虑你的联合创始人工资像婚姻婚前协议一样。</strong></p>
+<hr>
+<h2 id="九雇佣员工员工-vs-承包商">九、雇佣员工：员工 vs 承包商</h2>
+<p><strong>Kirsty</strong>：作为创始人，你将需要雇佣员工。以前的课程已经讲了很多关于如何找到那些人、什么是一个好的匹配、以及如何让他们成为真正高效的员工。当你 actual 找到某人时，你如何雇佣他们？涉及什么？雇佣受一大堆法律管辖。因此，把它做对很重要。这又是那些琐碎的东西，只要你知道基础知识，你可能就能让自己远离大多数情况。一旦事情变得复杂，你需要让自己和专家打交道。</p>
+<p>你要做的第一件事是搞清楚这个人是员工还是<strong>承包商（contractor）</strong>。这个分类有微妙的区别。这很重要，要搞对，因为 IRS 对此非常感兴趣。如果他们认为你搞错了，他们会带着罚款来找你。</p>
+<p>员工和承包商都需要将他们创建的任何 IP 分配给公司的文件。这显然非常重要。文件的格式对每种类型的人来说都非常不同，支付方式也非常不同。通常承包商将能够设定他们自己的工作时间和地点，他们将被给予一个有最终结果的项目。他们如何 actual 到达那个将不被设定。他们将使用他们自己的设备，他们不会真的在公司的日常运营或未来的战略中有任何发言权。承包商将签署咨询协议。当公司支付他们时，公司不为他们预扣任何税款。那个责任在个人身上。在年底，公司将向个人和 IRS 提供所谓的 <strong>1099 表</strong>，他们用它来准备他们的个人税务申报。</p>
+<p>这一点的另一面是<strong>员工</strong>。员工也将签署某种形式的 IP 分配协议，但当公司支付他们时，公司将从他们的工资中预扣税款。公司有责任向相关的州或联邦当局支付那些税款。在年底，员工收到 <strong>W2 表</strong>，然后将被用于准备他们的个人税务申报。</p>
+<p>**创始人需要被支付。员工也是。**仅仅说「嗯，我用股票支付他们。那可以是他们的薪酬」是不够的。**他们至少需要被支付最低工资。**在旧金山，最低工资比整个加利福尼亚州略高，算下来大约是每月二千美元。这不是一个巨大的数额，但它可以加起来。</p>
+<p>你还需要确保如果你有员工，你有其他东西。第一件事是你被要求有<strong>工伤补偿保险（workers compensation insurance）</strong>，特别是如果你在纽约。纽约负责这个的当局会发送真的很威胁的信，说：「你欠五万美元的罚款，因为你那一个被支付最低工资的员工没有支付每月二十美元的工伤补偿费用。」**设立那个真的很重要。**另一件重要的事情是，你需要看到员工被授权在美国工作的证明。</p>
+<p>创始人不是工资专家，没有人期望你是。这都是关于基础知识。你 absolutely 必须使用工资服务提供商，他们会为你照看这个。**像 Zen Payroll 这样的服务专注于创业公司。它们帮助你以尽可能容易的方式设立这个，这样你可以回去专注于你最擅长的事情。**在 Carolynn 几分钟前举的例子中，如果那家公司 actual 为自己设立了工资服务提供商，所有那些心痛都会消失，因为它会被替他们照看。他们试图通过不做它来省钱，看看那把他们带到了哪里。</p>
+<p><strong>那是关键的事情。使用工资服务提供商，确保你理解雇佣的基础知识。</strong></p>
+<hr>
+<h2 id="十解雇员工真正的创始人标志">十、解雇员工：真正的创始人标志</h2>
+<p><strong>Carolynn</strong>：YC 的某人曾经说过：「<strong>在你必须解雇某人之前，你不是一个真正的创始人。</strong>」为什么？因为解雇人真的很难。它很难，有很多原因，包括创始人倾向于雇佣他们的朋友。他们倾向于雇佣前同事，或者他们与员工变得亲密，因为在创业公司工作真的很紧张。但在每个公司里，都会有一个员工不行，解雇这个员工让创始人成为一个真正的专业人士，因为他或她必须做对公司正确的事情，而不是容易的事情。</p>
+<p><strong>解雇某人的最佳实践：</strong></p>
+<p>**第一，快速解雇。**不要让坏员工徘徊。推迟困难对话很容易，但拖延只有 downside。如果一个有毒的员工待太久，好员工可能会辞职。如果员工 actual 把工作搞砸了，你可能失去业务或用户。</p>
+<p>**第二，有效沟通。**不要合理化。不要找借口。不要为解雇员工的原因含糊其辞。做出清晰直接的陈述。<strong>不要道歉。</strong>「我们要让你离开」，而不是「我很抱歉你这季度的销售没有起飞，blah blah blah」。<strong>面对面解雇员工，理想情况下有第三方在场。</strong></p>
+<p>**第三，立即支付所有工资和应计假期。**这是法律要求，我们不辩论或谈判。</p>
+<p>**第四，切断对数字系统的访问。**一旦员工出门，切断物理和数字访问。控制云中的信息。更改密码。我们在 YC 遇到过一种情况，一位创始人有权访问公司的 GitHub 账户，当他的联合创始人试图解雇他时，他扣留了密码作为人质。</p>
+<p><strong>第五，如果被解雇的员工有任何已归属股份，公司应该立即回购它们。</strong></p>
+<p><strong>这里的结论是，尽管这可能听起来令人惊讶，一个真正有效的创始人的标志之一，是他或她处理员工termination的能力有多好。</strong></p>
+<hr>
+<h2 id="十一总结把基础打好">十一、总结：把基础打好</h2>
+<p><strong>Kirsty</strong>：所有这些的基本原则是<strong>保持简单</strong>。做所有标准的东西，保持有条理。确保你知道你在做什么。**股权所有权真的很重要，所以确保你在思考未来，而不是公司三个月的历史。**股票不会自己买，所以确保你做了文件工作。</p>
+<p>确保你 actual 知道你正在签署的融资文件。仅仅说「我拿你的十万」是不够的。你和员工需要被支付。每个人都需要把 IP 分配给公司。如果公司不拥有那个 IP，公司就没有价值。如果必须解雇员工，快速且专业地做。</p>
+<p>我们没有提到知道你的关键指标。在任何时候，你应该知道现金状况，你应该知道你的消耗率（burn rate），你应该知道那些现金何时会耗尽，这样你可以和你的投资者谈。很多运营创业公司就是遵循规则并认真对待它。这不是我们在电影和电视节目中看到的所有光鲜 bits。你确实必须认真对待那个。</p>
+<hr>
+<h2 id="十二问答环节">十二、问答环节</h2>
+<p><strong>观众 1</strong>：你会如何建议寻找会计师，以及在过程中的什么时候你需要一个？</p>
+<p><strong>Kirsty</strong>：有两件不同的事情。有一个簿记员（book keeper），有一个 CPA、会计师。通常簿记员会分类你所有的支出，CPA 会准备你的税务申报。在最早期，创始人能够看到银行对账单和看到那些支出出来，probably 没问题。税务申报必须每年准备，所以在公司生活的第一年的某个点，需要聘请某种服务来做那个。不值得创始人的时间来做它。有像 <strong>inDinero</strong> 这样的服务，试图从创始人的角度让事情尽可能不费力。你确实需要在某个点找一个 CPA，因为你需要为家公司提交年度税务申报。</p>
+<p><strong>观众 1</strong>：你如何找到一个？</p>
+<p><strong>Kirsty</strong>：找到一个很难。最好是通过推荐。对于任何专家，CPA 或会计师或律师，最好使用习惯于处理创业公司的人。不是你住在明尼苏达州的阿姨，她 actual 不知道创业公司如何运作。</p>
+<p><strong>观众 2</strong>：考虑到所有因素，我的预算应该是多少用于注册设立、律师、为我的努力种子轮获取交易？然后为雇佣第一个员工。我应该拨出多少钱用于那个？</p>
+<p><strong>Carolynn</strong>：在注册设立方面，不要花一分钱在那个上。你可以在网上做那个。嗯，actual 它确实花一点钱。</p>
+<p>用像 Clerky 这样的服务在线注册设立是便宜的。在数百，不是数千。你不需要律师在那个部分。当你 actual 需要雇佣律师取决于你正在启动什么业务，以及它有多复杂。你有很多隐私政策吗，涉及 HIPAA 吗？你提到了融你的种子轮，你在融多少钱？投资者是谁？条款清单中有什么样的条款？有时那决定了你是否需要获得法律顾问。</p>
+<p><strong>Kirsty</strong>：如果你正在为融资使用非常标准的文件，像 Clerky 这样的服务可以帮忙。有非常基本的融资文件，你可以使用，成本不到一百美元，这可以节省你一些法律费用。</p>
+<p><strong>观众 3</strong>：你有没有任何建议或评论关于与加密货币或加密股权一起工作带来的复杂性？</p>
+<p><strong>Kirsty</strong>：哦 wow。那是很难结束的问题。是的，有一些问题。通常银行努力处理与加密货币一起工作的公司，因为它们还没有完全搞清楚如何处理那种事情。通常很多它是非常产品特定的。</p>
+<p><strong>Sam Altman</strong>：非常感谢！</p>
+<p><strong>Carolynn</strong>：不客气。</p> <div class="cta-box"> <p>觉得有用？看看我的书和课程</p> <div class="cta-buttons"> <a href="/book" class="cta-btn cta-btn-primary">选择改变命运</a> <a href="/community" class="cta-btn cta-btn-secondary">写作课程</a> </div> </div> <nav class="article-nav"> <a href="/blog/yc-lecture-16-sales-marketing-pitch-investor-roleplaying" class="article-nav-link article-nav-prev"> <span class="article-nav-label"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+阅读上一篇
+</span> <span class="article-nav-title">销售、营销与融资路演</span> </a> <a href="/blog/yc-lecture-18-company-culture-and-building-a-team" class="article-nav-link article-nav-next"> <span class="article-nav-label">
+阅读下一篇
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg> </span> <span class="article-nav-title">企业文化与团队建设（第一部分）</span> </a> </nav> </article> </main> </div> </main> <footer> <div class="footer-inner"> <p>© 2026 像企业家一样写作</p> <div class="footer-links"> <a href="https://mp.weixin.qq.com/" target="_blank">公众号：种一个梦</a> </div> </div> </footer>  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    let _searchIndex = null;
+
+    async function loadSearchIndex() {
+      if (_searchIndex) return _searchIndex;
+      try {
+        const resp = await fetch('/search.json?t=' + Date.now());
+        _searchIndex = await resp.json();
+      } catch (e) {
+        console.warn('search.json load failed', e);
+        _searchIndex = { posts: [], books: [] };
+      }
+      return _searchIndex;
+    }
+
+    function openSearch() {
+      const overlay = document.getElementById('search-overlay');
+      const input = document.getElementById('search-input');
+      overlay.classList.add('active');
+      input.value = '';
+      input.focus();
+      renderResults('');
+    }
+
+    function closeSearch() {
+      document.getElementById('search-overlay').classList.remove('active');
+    }
+
+    function getSnippet(text, keyword, radius) {
+      radius = radius || 30;
+      if (!text) return '';
+      const idx = text.toLowerCase().indexOf(keyword.toLowerCase());
+      if (idx === -1) return text.substring(0, 80);
+      const start = Math.max(0, idx - radius);
+      const end = Math.min(text.length, idx + keyword.length + radius);
+      let s = text.substring(start, end);
+      if (start > 0) s = '…' + s;
+      if (end < text.length) s = s + '…';
+      return s;
+    }
+
+    function renderResults(query) {
+      const container = document.getElementById('search-results');
+      if (!query.trim()) {
+        container.innerHTML = '<div class="search-empty">输入关键词搜索文章和书籍…</div>';
+        return;
+      }
+      const q = query.toLowerCase();
+      const index = _searchIndex || { posts: [], books: [] };
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      if (matchedPosts.length === 0 && matchedBooks.length === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        return;
+      }
+      let html = '';
+      matchedPosts.forEach(p => {
+        const snippet = getSnippet(p.content || '', q, 35);
+        const displayDesc = (p.desc || '') || snippet;
+        html += '<a href="/blog/' + p.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">文章</span>' + p.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      matchedBooks.forEach(b => {
+        const snippet = getSnippet(b.content || '', q, 35);
+        const displayDesc = (b.desc || '') || snippet;
+        html += '<a href="/book/' + b.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">书籍</span>' + b.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      container.innerHTML = html;
+    }
+
+    // ===== 搜索 FAB 拖动逻辑 =====
+    (function() {
+      const fab = document.getElementById('search-toggle');
+      const FAB_SIZE = 56;
+      let isDragging = false;
+      let startX, startY, startLeft, startTop;
+      let dragMoved = false;
+
+      function onDown(clientX, clientY) {
+        isDragging = true;
+        dragMoved = false;
+        startX = clientX;
+        startY = clientY;
+        const rect = fab.getBoundingClientRect();
+        startLeft = rect.left;
+        startTop = rect.top;
+        fab.classList.add('dragging');
+      }
+
+      function onMove(clientX, clientY) {
+        if (!isDragging) return;
+        const dx = clientX - startX;
+        const dy = clientY - startY;
+        if (!dragMoved && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+          dragMoved = true;
+          // 切换到绝对 left/top 定位
+          fab.style.bottom = 'auto';
+          fab.style.right = 'auto';
+          fab.style.left = startLeft + 'px';
+          fab.style.top = startTop + 'px';
+        }
+        if (dragMoved) {
+          let newLeft = Math.max(4, Math.min(startLeft + dx, window.innerWidth - FAB_SIZE - 4));
+          let newTop  = Math.max(4, Math.min(startTop  + dy, window.innerHeight - FAB_SIZE - 4));
+          fab.style.left = newLeft + 'px';
+          fab.style.top  = newTop  + 'px';
+        }
+      }
+
+      function onUp() {
+        if (!isDragging) return;
+        isDragging = false;
+        fab.classList.remove('dragging');
+        if (!dragMoved) {
+          // 判定为点击，打开搜索
+          loadSearchIndex().then(() => openSearch());
+        }
+      }
+
+      fab.addEventListener('mousedown', e => { if (e.button === 0) { onDown(e.clientX, e.clientY); e.preventDefault(); } });
+      document.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+      document.addEventListener('mouseup', onUp);
+
+      fab.addEventListener('touchstart', e => { onDown(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); }, { passive: false });
+      document.addEventListener('touchmove', e => { if (isDragging) { onMove(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); } }, { passive: false });
+      document.addEventListener('touchend', onUp);
+    })();
+
+    document.getElementById('search-close').addEventListener('click', closeSearch);
+    document.getElementById('search-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeSearch();
+    });
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      renderResults(e.target.value);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        loadSearchIndex().then(() => openSearch());
+      }
+    });
+    });
+  </script> <!-- 页面关键词高亮（从搜索结果跳转过来时） --> <script>
+    (function() {
+      function getQueryParam(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name) || '';
+      }
+
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function highlightKeyword(keyword) {
+        if (!keyword.trim()) return;
+        const main = document.querySelector('main');
+        if (!main) return;
+
+        const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, null, false);
+        const nodesToReplace = [];
+        const regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
+
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node.parentElement && node.parentElement.tagName === 'MARK') continue;
+          if (regex.test(node.textContent)) {
+            nodesToReplace.push(node);
+          }
+        }
+
+        let firstMark = null;
+        nodesToReplace.forEach(textNode => {
+          const span = document.createElement('span');
+          span.innerHTML = textNode.textContent.replace(regex, '<mark class="search-highlight">$1</mark>');
+          const marks = span.querySelectorAll('mark');
+          if (marks.length > 0 && !firstMark) {
+            firstMark = marks[0];
+          }
+          const fragment = document.createDocumentFragment();
+          while (span.firstChild) {
+            fragment.appendChild(span.firstChild);
+          }
+          textNode.parentNode.replaceChild(fragment, textNode);
+        });
+
+        if (firstMark) {
+          firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(function() {
+            const marks = main.querySelectorAll('mark.search-highlight');
+            marks.forEach(function(m) {
+              const parent = m.parentNode;
+              parent.replaceChild(document.createTextNode(m.textContent), m);
+              parent.normalize();
+            });
+          }, 6000);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          highlightKeyword(getQueryParam('q'));
+        });
+      } else {
+        highlightKeyword(getQueryParam('q'));
+      }
+    })();
+  </script> <!-- 代码块复制按钮 --> <script>
+    (function() {
+      function initCopyButtons() {
+        document.querySelectorAll('.prose pre').forEach(function(pre) {
+          if (pre.querySelector('.copy-btn')) return;
+          var btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.textContent = '复制';
+          btn.setAttribute('aria-label', '复制代码');
+          btn.addEventListener('click', function() {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+              btn.textContent = '已复制';
+              btn.classList.add('copied');
+              setTimeout(function() {
+                btn.textContent = '复制';
+                btn.classList.remove('copied');
+              }, 2000);
+            }).catch(function() {
+              btn.textContent = '失败';
+              setTimeout(function() { btn.textContent = '复制'; }, 2000);
+            });
+          });
+          pre.style.position = 'relative';
+          pre.appendChild(btn);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCopyButtons);
+      } else {
+        initCopyButtons();
+      }
+    })();
+  </script> <!-- 微信电子书弹窗（滚动触发 + 每天一次） --> <script>
+    (function() {
+      // === 配置 ===
+      var STORAGE_DAY   = 'ebook_popup_day';    // 今天已弹过
+      var STORAGE_DISMISS = 'ebook_popup_dismiss_until'; // 用户点「暂时不要」的过期时间戳
+      var SCROLL_THRESHOLD = 0.40; // 滚动 40% 触发
+      var TIME_THRESHOLD   = 60000;  // 或停留 60 秒触发
+
+      // === 已有领取人数（可手动更新）===
+      var CLAIM_COUNT = 327;
+
+      // === 工具函数 ===
+      function todayStr() {
+        var d = new Date();
+        return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+      }
+      function getDismissUntil() {
+        try { return parseInt(localStorage.getItem(STORAGE_DISMISS), 10); } catch(e) { return 0; }
+      }
+
+      // === 判断是否应该弹出 ===
+      function shouldShow() {
+        // 用户点过「暂时不要」且未过期
+        var dismissUntil = getDismissUntil();
+        if (dismissUntil && Date.now() < dismissUntil) return false;
+        // 今天已弹过
+        try {
+          if (localStorage.getItem(STORAGE_DAY) === todayStr()) return false;
+        } catch(e) {}
+        return true;
+      }
+
+      // === 记录：今天已弹 ===
+      function markShown() {
+        try { localStorage.setItem(STORAGE_DAY, todayStr()); } catch(e) {}
+      }
+
+      // === 记录：暂时不要（7天后）===
+      function markDismissed() {
+        var t = Date.now() + 7 * 24 * 60 * 60 * 1000;
+        try { localStorage.setItem(STORAGE_DISMISS, String(t)); } catch(e) {}
+      }
+
+      // === 显示 / 关闭 ===
+      var overlay    = document.getElementById('ebook-popup-overlay');
+      var closeBtn   = document.getElementById('ebook-popup-close');
+      var dismissBtn = document.getElementById('ebook-popup-dismiss');
+      var shown      = false;
+      var timeTimer  = null;
+
+      function showPopup() {
+        if (shown || !overlay || !shouldShow()) return;
+        shown = true;
+        markShown();
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function dismissPopup() {
+        if (!overlay) return;
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        if (timeTimer) clearTimeout(timeTimer);
+      }
+
+      if (!overlay) return;
+
+      // === 触发条件 1：滚动超过 40% ===
+      var scrollFired = false;
+      window.addEventListener('scroll', function() {
+        if (scrollFired) return;
+        var h = document.body.scrollHeight - window.innerHeight;
+        if (h <= 0) return;
+        if (window.scrollY / h > SCROLL_THRESHOLD) {
+          scrollFired = true;
+          showPopup();
+        }
+      }, { passive: true });
+
+      // === 触发条件 2：停留超过 60 秒 ===
+      timeTimer = setTimeout(function() {
+        if (!scrollFired) showPopup();
+      }, TIME_THRESHOLD);
+
+      // === 关闭按钮 ===
+      if (closeBtn) closeBtn.addEventListener('click', dismissPopup);
+
+      // === 「暂时不要」按钮 ===
+      if (dismissBtn) {
+        dismissBtn.addEventListener('click', function() {
+          markDismissed();
+          dismissPopup();
+        });
+      }
+
+      // === 点击遮罩关闭 ===
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) dismissPopup();
+      });
+
+      // === ESC 关闭 ===
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+          dismissPopup();
+        }
+      });
+    })();
+  </script> </body></html>  <script type="module">(function(){const e=document.getElementById("reading-progress");if(e){let c=function(){const n=window.scrollY||document.documentElement.scrollTop,s=document.documentElement.scrollHeight-document.documentElement.clientHeight,d=s>0?n/s*100:0;e.style.width=d+"%",e.classList.toggle("show",n>50)};window.addEventListener("scroll",c,{passive:!0}),c()}const t=document.querySelector(".book-toc-header"),o=document.querySelector(".book-toc");t&&o&&t.addEventListener("click",function(){o.classList.toggle("expanded")})})();</script>

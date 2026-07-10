@@ -1,0 +1,520 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="YC 创业课第10讲｜Ben Horowitz"><title>如何管理 — 像企业家一样写作</title><link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml"><link rel="sitemap" type="application/xml" href="/sitemap-index.xml"><!-- Static CSS — no build hash, safe for incremental deploys --><link rel="stylesheet" href="/global.css"><!-- 自托管字体 --><link rel="preload" href="/fonts/NotoSerifSC-Regular.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/_astro/BaseLayout.BYj8Tvw5.css">
+<link rel="stylesheet" href="/_astro/_..CcR4Cqk3.css"></head> <body> <nav class="navbar"> <div class="nav-inner"> <a href="/" class="logo"> <img src="/images/logo-header.png" alt="Logo" class="logo-img"> <span>像企业家一样写作</span> </a> <div class="nav-links"> <a href="/blog">文章</a> <a href="/book">书籍</a> <a href="/community">社群</a> <a href="/join">答疑</a> </div> </div> </nav> <!-- 搜索浮窗 --> <div id="search-overlay" class="search-overlay"> <div class="search-modal"> <div class="search-header"> <input id="search-input" type="text" placeholder="搜索文章标题、描述..." autocomplete="off"> <button id="search-close" class="search-close-btn" aria-label="关闭搜索">✕</button> </div> <div id="search-results" class="search-results"></div> </div> </div> <!-- 浮动搜索按钮 --> <button id="search-toggle" class="search-fab" aria-label="搜索"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"> <circle cx="11" cy="11" r="7"></circle> <line x1="16.5" y1="16.5" x2="21" y2="21"></line> </svg> </button> <!-- ===== 微信电子书弹窗 ===== --> <div id="ebook-popup-overlay" class="ebook-popup-overlay" onclick="if(event.target===this){this.classList.remove('active');document.body.style.overflow='';}"> <div class="ebook-popup-card"> <div class="ebook-popup-topbar"></div> <button id="ebook-popup-close" class="ebook-popup-close" aria-label="关闭" onclick="event.stopPropagation();document.getElementById('ebook-popup-overlay').classList.remove('active');document.body.style.overflow='';">✕</button> <div class="ebook-popup-body"> <!-- 送你 --> <div class="ebook-popup-gift">送你一本我的电子书</div> <!-- 书名 --> <div class="ebook-popup-bigtitle">《闭环：在你睡觉时赚钱》</div> <div class="ebook-popup-bigsub">从0到1的自媒体方法论</div> <!-- 社会认同 --> <div class="ebook-popup-proof"> <span class="ebook-proof-avatars"> <span class="ebook-proof-avatar" style="background: #f5e0d0;"> <span style="font-size:12px;font-weight:700;color:#c45c2e;">M</span> </span> <span class="ebook-proof-avatar" style="background: #d0e8e0;"> <span style="font-size:12px;font-weight:700;color:#3a7a5e;">S</span> </span> <span class="ebook-proof-avatar" style="background: #d8dff0;"> <span style="font-size:12px;font-weight:700;color:#4a6aab;">L</span> </span> </span> <span><span class="ebook-proof-count">327</span> 人已领取</span> </div> <!-- 二维码 --> <div class="ebook-popup-qr"> <img src="/images/wechat-qr.png" alt="微信二维码"> </div> <!-- 下载按钮 — 仅手机展示 --> <a class="ebook-popup-download" href="/images/wechat-qr.png" download> <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path> <polyline points="7 10 12 15 17 10"></polyline> <line x1="12" y1="15" x2="12" y2="3"></line> </svg>
+下载二维码到手机
+</a> <!-- 流程提示 --> <p class="ebook-popup-steps"> <span class="step">扫二维码</span> → <span class="step">添加好友</span> → 回复<span class="keyword-value">闭环</span> → <span class="step">立马领取</span> </p> </div> <div class="ebook-popup-footer"> <p>免费领取 · 无需购买任何产品 · 24 小时内回复</p> </div> </div> </div> <main>   <div id="reading-progress" class="reading-progress"></div> <!-- 书籍系列：左侧目录 + 右侧正文 -->
+    <div class="book-layout"> <!-- 左侧目录 --> <aside class="book-toc"> <div class="book-toc-inner"> <div class="book-toc-header"> <span class="book-toc-series">YC 创业课</span> <span class="book-toc-count">目录</span> </div> <nav class="book-toc-nav"> <div class="book-toc-section "> <a href="/blog/yc-lecture-01-how-to-start-a-startup" class="book-toc-item"> <span class="book-toc-order">1</span> <span class="book-toc-title">如何创办初创公司</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-02-ideas-products-teams-execution-part2" class="book-toc-item"> <span class="book-toc-order">2</span> <span class="book-toc-title">创意、产品、团队与执行（第二部分）</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-03-counterintuitive-parts-and-how-to-have-ideas" class="book-toc-item"> <span class="book-toc-order">3</span> <span class="book-toc-title">创业中反直觉的部分，以及如何产生创意</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-04-how-to-build-products-users-love" class="book-toc-item"> <span class="book-toc-order">4</span> <span class="book-toc-title">如何打造用户热爱的产品</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-05-how-to-build-products-users-love-part2" class="book-toc-item"> <span class="book-toc-order">5</span> <span class="book-toc-title">如何打造用户喜爱的产品（第二部分）</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-06-doing-things-that-dont-scale-pr" class="book-toc-item"> <span class="book-toc-order">6</span> <span class="book-toc-title">做无法规模化的事、公关，以及如何起步</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-07-how-to-raise-money" class="book-toc-item"> <span class="book-toc-order">7</span> <span class="book-toc-title">如何融资</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-08-building-product-talking-to-users-and-growing" class="book-toc-item"> <span class="book-toc-order">8</span> <span class="book-toc-title">打造产品、与用户对话与实现增长</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-09-how-to-be-a-great-founder" class="book-toc-item"> <span class="book-toc-order">9</span> <span class="book-toc-title">如何成为一位伟大的创始人</span> </a>  </div><div class="book-toc-section active"> <a href="/blog/yc-lecture-10-how-to-manage" class="book-toc-item"> <span class="book-toc-order">10</span> <span class="book-toc-title">如何管理</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-11-how-to-operate" class="book-toc-item"> <span class="book-toc-order">11</span> <span class="book-toc-title">如何运营</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-12-how-to-run-a-user-interview" class="book-toc-item"> <span class="book-toc-order">12</span> <span class="book-toc-title">如何进行用户访谈</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-13-growth" class="book-toc-item"> <span class="book-toc-order">13</span> <span class="book-toc-title">增长</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-14-business-strategy-and-monopoly-theory" class="book-toc-item"> <span class="book-toc-order">14</span> <span class="book-toc-title">商业战略与垄断理论</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-15-sales-and-marketing" class="book-toc-item"> <span class="book-toc-order">15</span> <span class="book-toc-title">销售与营销</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-16-sales-marketing-pitch-investor-roleplaying" class="book-toc-item"> <span class="book-toc-order">16</span> <span class="book-toc-title">销售、营销与融资路演</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-17-legal-finance-hr" class="book-toc-item"> <span class="book-toc-order">17</span> <span class="book-toc-title">创业公司的法律、财务与 HR 机制</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-18-company-culture-and-building-a-team" class="book-toc-item"> <span class="book-toc-order">18</span> <span class="book-toc-title">企业文化与团队建设（第一部分）</span> </a>  </div> </nav> <a href="/book" class="book-toc-back"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+返回书架
+</a> </div> </aside> <!-- 右侧正文 --> <main class="book-main"> <article class="prose"> <header class="article-header"> <h1>如何管理</h1> <div class="article-meta"> <span class="article-series">YC 创业课</span> <time> 2026年6月27日 </time> </div> </header> <p><strong>YC 创业课程第十五讲</strong>
+<strong>主讲：Ben Horowitz（Andreessen Horowitz 联合创始人）</strong></p>
+<hr>
+<h2 id="开场一个核心管理概念">开场：一个核心管理概念</h2>
+<p>当山姆最初发邮件让我来教这门课时他说”Ben 你能教一门五十分钟的管理课吗？” 我立刻就想：<strong>哇，我刚写了一本三百页的管理学著作。那本书实在太长了。</strong></p>
+<p>我实际上没时间把三百页压缩成五十分钟。就像马克·吐温说的——我没时间写一封好的短信所以我要写一封长信。但在这次课里我只会教<strong>一个</strong>管理概念。</p>
+<p>我看到 CEO 们在这个管理概念上犯的错误比任何其他事情都更持续一致。从公司非常早期到非常大的时候都是如此。这是最容易说出口的却是最难掌握的。这个概念的音乐版来自 <strong>Sly &#x26; The Family Stone</strong>：</p>
+<blockquote>
+<p>“有时我是对的，我也可能是错的。我的信念在我的歌里。无论我在哪个群体都没有区别。”</p>
+</blockquote>
+<p>这就是今天这堂课的音乐版。懂音乐的人现在可以走了。</p>
+<h3 id="核心原则">核心原则</h3>
+<p>当你做一个关键决策时你必须理解它将如何从所有角度被解读——不只是你的角度也不只是你对话的人的角度而是那些不在房间里的人、所有其他人的角度。换句话说当你在做关键决策时你<strong>必须能够通过整个公司的眼睛来看这个决策。你必须把每个员工的视角加总起来然后把它融入你自己的视角中。</strong> 否则你的管理决策将会产生奇怪的副作用和潜在危险的后果。</p>
+<p>这是一件很难做的事因为当你做决定的那一刻你经常处于巨大的压力之下。</p>
+<hr>
+<h2 id="今天要讲的四个案例">今天要讲的四个案例</h2>
+<p>我要讲四个案例。第一是降职——非常情绪化。第二是加薪——也情绪化。第三我们要评估<strong>山姆的一篇博客文章</strong>——这对山姆来说是新闻。我想逗逗他毕竟他邀请我在写完一本三百页的书之后教一堂五十分钟的管理课。第四我要讲<strong>历史上最擅长这件事的人</strong>——我穿着印有他头像的衬衫——以及他如何用它做了一件<strong>人类历史上从未有人做过、此后也无人做到过的事情</strong>。基本上是对我将要讲的技术完全精通。</p>
+<hr>
+<h2 id="案例一高管降职-vs-解雇">案例一：高管降职 vs 解雇</h2>
+<h3 id="问题描述">问题描述</h3>
+<p>第一个商业案例：你有一位高管你是降他还是解雇他？这来自一次真实的对话、一个我和一位 CEO 一起处理的真实生活情境。基本情况是这样的：</p>
+<p>他有一位他雇佣的优秀高管。这个人比公司里任何人都更努力在做他应该做的每一件事。每个人都喜欢他因为他工作这么努力而且总体上是个聪明人，但他在知识层面力不从心。他没有公司需要他去做或真正与竞争对抗所需的知识和技能。所以你不能真的让他继续留在这个职位上了但他是个很好的人。问题是：我应该开除这个人还是我可以把他调到一个低级职位然后在他上面招一个人？那样会很酷。让我们来看看如何做出那个决定。</p>
+<h3 id="ceo-的视角">CEO 的视角</h3>
+<p>在这种情况下你就是 CEO。如果某人每天早上六点上班工作到晚上十点比公司里任何人工作都努力真的很难开口说：“好吧抱歉努力不错但你努力不能得 A。你得 F 因为我开除了你。”</p>
+<p>没人想要进行那样的对话。降职从某种意义上说挺 neat 的因为从 CEO 的角度来看他可以把人留在公司。他工作这么努力。他是付出巨大努力的绝佳榜样。他在公司有很多朋友所以从文化角度看这是双赢——他可以留下。然后我可以招进来一个能解决我问题的人但我不用创造另一个问题。</p>
+<h3 id="高管自身的视角">高管自身的视角</h3>
+<p>如果你从高管的立场来看就是”我不想被降职但我真的不想被开除”——因为如果我被开除了对下一个雇主来说那是比被降职难解释得多复杂得多的事。被降职嘛——嗯我没有真正被降职。我得到了一份新工作、一个小一点的 title。</p>
+<h3 id="理论上的好处">理论上的好处</h3>
+<p>最后一件事它在理论上能实现的是：公司重视我们所有的员工。我们招了你。我们对你作为员工做出了<strong>承诺</strong>它将使你能够随公司一起继续成长。</p>
+<p>这就是我当时和那位 CEO 进行的对话。我说”等一下让我问你一个问题。这位高管的股权包是什么？”</p>
+<p>他问”你什么意思？”</p>
+<p>我说”我想看看直接的薪酬水平。他是副总裁级别的薪酬吗？他有 1.5% 吗？他有 0.4% 吗？”</p>
+<p>这让 CEO 停顿了一下。“嗯他的确拥有公司完全稀释后股权的 1.5%。”</p>
+<p>我说”好。那么你是你们公司的工程师。你感觉一个以前是销售负责人带着 1.5% 入职的人怎么样？你们的工程师得到什么？他们有公司的 0.1% 吗？0.2%？他们在这个阶段得到什么？他们对一个不是销售负责人但持有公司百分之一点五的人会怎么想？”</p>
+<p>CEO 说”噢哦。”</p>
+<p>我说”对！噢哦。因为这公平吗？你要把股权拿走吗？你有胆量那样做吗？你有胆量回去拿回他的薪酬吗？如果你拿走他的薪酬你觉得他会多高效？其次人们会给他同样的尊重吗？因为他们认识的他以前是<strong>这样</strong>而现在是<strong>那样</strong>。”</p>
+<p>“我认识你时你还是销售负责人现在你是区域经理你在告诉我该死的该做什么？你在告诉我需要打那个电话？在我看来是你被降职了。你算老几来跟我说话？我才是冉冉升起的新星。我会是公司的下一任销售副总裁。“</p>
+<h3 id="关键教训这不只是一个人的事">关键教训：这不只是一个人的事</h3>
+<p>所有这些因素都在起作用。当你看最终结果时你可能以为你只面对一个人。你可能认为这是一次降职或开除一个人。根据那个人来说意味着什么？但你真正在说的是：<strong>在岗位上失败意味着什么？特别是从股权角度来说公司薪酬最高的职位。然后保持你的股权需要什么？付出努力就够了吗还是必须出结果？</strong> 在不同情况下不同层次答案会不同。</p>
+<p>如果这不是一个从外部引进的高管而是你自己提拔的人——提拔超过了他们应有的位置而且从未获得过那种股权——也许你会做出不同的决定。但你需要理解这对每个人意味着什么不只是你正在对话的那个人。</p>
+<hr>
+<h2 id="案例二优秀员工要求加薪">案例二：优秀员工要求加薪</h2>
+<h3 id="问题描述-1">问题描述</h3>
+<p>第二个例子：一名优秀员工要求加薪。一个好员工——不像上一个员工。首先你想的是他们真的很棒他们找我要加薪他们不会无缘无故找我。他们找我是因为他们觉得他们应得。我想留住他们。我想公平！他们做得很好。我知道如果我给他们加薪爱意就会朝我涌来。如果我给你加薪我们就好了。你加了薪！太棒了。</p>
+<h3 id="从员工角度看">从员工角度看</h3>
+<p>你知道当有人找你要加薪时你想怎么做。但从他们的角度看呢？如果给他们加薪他们会怎么接受？</p>
+<p>你要记住对他们来说走到找你要加薪这一步他们不是某天早上醒来说”我要进去找他要加薪。” 这是他们思考了很多的事情。他们比较了他们的其他选择。他们可能有另一家公司的 offer。这可能是他们配偶一直在和他们谈论的事情。是一件严肃的事。如果你给了他们极有可能他们感觉非常好。他们可能会偏执”为什么你给我加薪？” 但可能性不大。更多时候他们会感觉……</p>
+<p>（此处播放了 Bobby Shmurda 的 Shmoney Dance 视频那就是你得到的反应）</p>
+<p>所以有很大的势头去说”是的你看。他们读了<strong>谢丽尔的书</strong>。他们<strong>向前一步（Lean In）</strong> 了我要奖励他们做了所有那些事。”</p>
+<p>顺便说一句那本书有很好的建议我不是在<strong>吐槽谢丽尔</strong>我不希望你们误解我。然而——你知道会有个然而——你必须从没有要求加薪的那个员工的角度来思考。</p>
+<h3 id="没加薪的员工怎么看">没加薪的员工怎么看</h3>
+<p><strong>他们可能比那个要求了加薪的员工做得更好而且在他们的心里他们会想：“好所以我没要求加薪我也没得到加薪。他们要求了加薪他们得到了加薪。这意味着什么？”</strong></p>
+<p>第一你并没有真正在评估人们的绩效。你只是在做谁要谁就得。这意味着我要么必须是那个要求加薪的人虽然那不是我想要的感觉。我做我的工作我不一定想要求加薪。或者我就需要辞职去一家实际上评估绩效的公司。</p>
+<p>你真的可以让没得到加薪的人感到相当愤怒。不要以为当有人在你的公司跳着 Shmoney Dance 时其他人不会注意到。</p>
+<p><strong>他们会为那个加薪激动不已。</strong> 你可以说这是高度保密的我给你这个加薪。它不保密。</p>
+<p>文化结论是你公司的每个人都会觉得他们现在对家庭负有信托责任要一直要求加薪因为如果不要求他们可能会错过本来可以得到的加薪。跟任何经验丰富的 CEO 聊他们都会告诉你这是事实。如果人们在只是问你的时候就给加薪你会有很多人来问你加薪。这就叫鼓励行为。</p>
+<h3 id="正确的做法建立正式流程">正确的做法：建立正式流程</h3>
+<p>你应该做什么？正确的答案是你必须正式化以保护你自己的文化。我知道这总是让经营初创公司的人抓狂因为就像”我不想要很多正式流程。我不想要很多流程。我希望它是自然的。我们想做瑜伽。我们只想抽有机大麻。” 抱歉那是彼得·蒂尔式的说法。<strong>彼得前段时间非常关注谁在抽大麻。</strong></p>
+<p>但<strong>流程实际上保护了文化</strong> 因为它做的事情是说看我们将审视所有输入。我们将有一个正式的方式来处理任何想要加薪的人来跟我谈。我不会给你加薪但我很高兴听你的故事。我会和你工作的所有人交谈以便我获得理解。我会评估你做的所有工作所以我知道我实际把你评在什么等级以及我的实际意见是什么。我会定期做这件事我不会每天做。如果我动作快我会每六个月甚至每季度做一次。在那个过程结束时我会告诉你你的加薪是多少我会告诉你有没有加薪但我不会在周期外做事。我不会在被问到的时候做事。只有一个流程就这样。</p>
+<h3 id="流程的好处">流程的好处</h3>
+<p>当我以前是 CEO 有高管的时候你变得越大这事越难因为你手下的人越激进。事实证明要做高管你经常得相当激进。在大多数公司那是你达到那个层次的方式。我会说”看流程结束后你可以随意游说我给你加了薪水但你知道什么吗？我不会听的。我已经走过了我的流程。我在开始时就拿到了你的输入。我拿到了其他所有人的输入。我有这么多人和这么多钱而你得到了我认为正确的结果。”</p>
+<p>有一个流程让人们更舒服因为他们不必总是处于紧张状态——“我在争取我应该得到的吗？还是因为我是什么人、我长什么样而被排挤掉了？我不和你称兄道弟。我没跟你打高尔夫或做你喜欢做的任何事？我不必担心任何这些因为我知道你的流程。你会评估每个人然后你会给他们公平的。” 那是一种好得多的处理方式而且意味着你实际上理解每个人的想法不只是此刻你正在对话的那些人。</p>
+<hr>
+<h2 id="案例三股票期权行权期限政策">案例三：股票期权行权期限政策</h2>
+<p>现在我们要进入一些有趣的内容。我们来评估山姆的博客文章。里面有一些非常好的东西也有一些我要讨论的地方。</p>
+<p>以下是摘录：</p>
+<blockquote>
+<p>“大多数员工只有在离开工作后有 90 天时间来行使其期权。不幸的是这需要钱来支付行权价和税单……对于行权这一年来说。这通常是比员工拥有的现金更多的现金。” 这是个关键点。员工经常不得不在离开工作和放弃已归属的期权也就是她的钱之间做选择——因为她付不起行权费——或者因为所有错误的原因被锁定留在公司。所以当员工被终止合同时这是一个特别糟糕的情况。</p>
+<p>“这似乎不公平。我听说过的最佳解决方案来自 <strong>Adam D’Angelo——Quora 一个非常非常聪明的人。</strong> 想法是授予自授予日起十年内可行权的期权这在几乎所有情况下都应该适用。有一些棘手的问题……但它仍然远比直接失去资产要好。我认为这是所有初创公司应该采用的政策。”</p>
+</blockquote>
+<p>山姆说得对吗？这是所有初创公司应该采用的政策吗？</p>
+<h3 id="政策背景解释">政策背景解释</h3>
+<p>让我先再解释一下这个政策是什么。目前几乎初创世界每份股票期权包的方式是这样的：你获得的股票在一定时间内归属（vest）。当你离开时有取决于公司的 90 天时间。如果你在那段时间内不买你的股票它就没了！它不再属于你了。根据你什么时候进入公司这可能是一个大问题。今天很多估值很高的公司比如 <strong>Airbnb 或 Uber</strong> 当他们招你进来时会说”哇你看你的 409A 价格相比优先股价格我们现在给你的期权已经值一千万美元了。” 你会想”哇！一千万美元。我发财了。”</p>
+<p>他们不一定告诉你的是为了拿到那笔钱——<strong>因为优先股值一千万美元你的期权大概要花你两百五十万美元</strong>在你离开的时候。<strong>如果你没有那两百五十万美元</strong> 在 90 天内它就没了！你刚刚失去了你所有的钱。所以山姆就像 wow！太糟了他写了篇博客文章说所有人都应该改变它。</p>
+<h3 id="为什么-90-天规则存在了-30-年">为什么 90 天规则存在了 30 年</h3>
+<p>你必须问自己的第一个问题是”这种做法从八十年代就有了为什么这样的规则存在了 30 年？”</p>
+<p>结果是山姆我不知道他是想通了这一点还是凭直觉但他是对的。有些事情<strong>确实发生了变化。</strong> 直到 2004 年有一部法律叫 <strong>APB Opinion Number 25。</strong> 那部法律是旧的处理股票期权的方式。也是所有人因此入狱的法律。我认识很多因 APB 25 而惹上官司的人所以我很高兴它没了。那是一部非常令人困惑的法律。很多人不理解它而且他们真的进了监狱。</p>
+<p>当那是一部法律时如果你给某人十年时间来行使其期权<strong>你永远无法上市你也永远无法被收购</strong> 因为你在记录一笔与你的股价挂钩的费用。你的股价越高你要记录的补偿费用就越糟。最糟糕的是你不知道它会是什么。完全不可预测所以你永远无法预测收入。永远！因为你的收入会是你的股价的函数。你的股价涨得越多你就会亏越多。那时候人们不看透股票期权费用。那根本不可行。这就是为什么所有人的协议都写在 90 天。这就是它存在的原因。所以绝对正确的是质疑它的存在。</p>
+<p><strong>大家跟得上吗？你们明白了吗？</strong> 这比前两个例子更复杂但这是一个非常重要的问题。</p>
+<h3 id="从雇主角度看">从雇主角度看</h3>
+<p>你对这个的看法是如果你有员工你想公平。没有人想对一个新 hires 说”嘿你在四年内拿到了所有这些股票……骗你的！” 特别是当你开除某人时。“嘿你被开除了！我感觉很糟但是猜怎么着？你知道我还要拿走你所有的钱！”</p>
+<p>这是个问题。这是你必须记住的事情你必须考虑那些留下来的人而且你想奖励留下来的人。</p>
+<p>离开的员工的视角而这真的很关键因为这是你的声誉——我工作了一年我的年薪在哪里？你现在告诉我这个 90 天行权期？我知道它<strong>写在我股票期权协议的小字里</strong>但我的招聘经理从来没<strong>告诉过我这件事。</strong> 他们从来没告诉我我需要两百万美元来拿我的股票。而我没有。所以如果我就有钱我能拿到我的股票？那不公平。所以现在我被开了然后我搞砸了。猜怎么着？<strong>我要告诉每一个人你是如何搞我的。</strong> 这是一个真正的声誉问题。这是你在制定政策时必须考虑的事情。</p>
+<h3 id="从留下来的员工角度看">从留下来的员工角度看</h3>
+<p>你还必须考虑留下的员工。他们会问自己的一件事是看他们离开了每次任何人离开都像是——那样做聪明吗？你的员工彼此之间比他们了解你更了解对方。在任何公司不管你是什么公司通常他们真正共事的人是他们更了解的人。如果那个人离开他们会想”好吧我也该走吗？他们得到了什么这与我的待遇相比如何？“</p>
+<h3 id="全面分析">全面分析</h3>
+<p>如果我们来看这种情况并分析它有很多组成部分。</p>
+<p><strong>第一</strong> 公司在这里的人员流动率很高平均大约是 <strong>10% 左右。</strong> 可能还在升高特别是在旧金山仅仅因为那里的文化。硅谷公司每年为员工期权 <strong>稀释 6-8% 甚至 10%。</strong> 你必须记住虽然这很刻薄但如果那个员工离开且不能行使其期权那些期权回到池子里你有可能把它们给已经在那里的人。你实际上承受的稀释更少。那是你必须思考的一件事。我不是说你必须在上面采取行动但这是你必须思考的事情。</p>
+<p><strong>第二</strong> 失去所有股票是一个非常强烈的留任激励。这可能是个好消息也可能是坏消息。好消息是你得以留住一个你可能失去的人。坏消息是你以完全错误的理由留住他们：<strong>他们戴着手铐。</strong> 你可能得到的是一个比没有员工更糟的员工。另一方面对于上过那门课的人来说在高波动性证券上的十年期权是有价值的。<strong>十年期权、波动性和长度——那就是期权的价值。</strong></p>
+<p>初创公司股票的十年期权那是有价值的东西。记得留下来的员工得不到那个。留下来的员工只得到一份股票。他们没有得到新的工作和新的股票。他们只得到一件事但他们得不到两件。你必须权衡进去。这很难。每家公司都应该重新评估。我不会像山姆走得那么远说每家公司都采用它。你必须思考你想要什么。</p>
+<p><strong>我会提供两种替代的文化声明。</strong> 一是”我们直率地对待员工。我们会公平因此你获得十年来行权你的股票。我们说给你的东西不管你穷还是富你都得到。” 就这么定了。</p>
+<p>第二种处理方式——没有公司这么做这也是为什么我真的很喜欢他写的这篇帖子——是<strong>你可以提前说：</strong> “看你的工资是有保证的但为了让你的股票有意义这些事情必须发生。一你已经归属了。二你必须待到我们达到退出。直到公司做成。你还有别的钱。” 最后公司实际上必须值点什么。因为零的百分之十还是零。我们之所以这样设定政策是因为<strong>我们真的看重留下来的人。</strong> 所以如果你打算 18 个月后加入另一家公司就不要加入这家公司因为你会被搞砸。我们的政策保证你会被搞砸。</p>
+<p>这两种处理方式真的取决于你和你想如何运营你的文化。对所有这些事情来说从每个人的前景彻底思考至关重要因为当关键时刻到来时那才是重要的。那会改变你公司的结局。</p>
+<hr>
+<h2 id="山姆的修正">山姆的修正</h2>
+<p><strong>山姆：</strong> 实际上我在稍微修改我的建议。</p>
+<p><strong>本·霍洛维茨：</strong> 让我们听听。</p>
+<p><strong>山姆：</strong> 不我的意思是我认为需要有更多的留任激励。如果某人被开除我觉得他们在很多时候仍然被搞砸了。</p>
+<p><strong>本·霍洛维茨：</strong> 另一件非常重要的事是山姆指出的是你有多少钱。如果你有钱你就不会被搞砸你可以买你的股票。你承担一些风险但你可以买你的股票。<strong>如果你没钱你就没钱。</strong></p>
+<hr>
+<h2 id="案例四图森特卢维杜尔历史上最擅长此道的人">案例四：图森特·卢维杜尔——历史上最擅长此道的人</h2>
+<p>现在我来讲讲我衬衫上的那个人：<strong>图森特（Toussaint）。</strong> 他是最擅长此事的人我想带你们看一些例子因为它们非常有力量。</p>
+<p><strong>图森特出生为奴隶。</strong> 他不只是生为奴隶他生为奴隶的地方是做奴隶最残酷的地方——圣多明各殖民地即现在的海地。这是一种更加严重的奴隶制形式正如所有甘蔗种植区一样当时比美国历史上的奴隶制残酷得多。给你一些数字在整个奴隶制期间大约四百年里大约一百万奴隶被带到美国。在奴隶制结束时美国有四百万奴隶。在同一时期在加勒比海的甘蔗种植国家两百万奴隶被运过去而在奴隶制结束时只剩下七十万人。仅从定量角度看几乎残酷十倍。</p>
+<p>我来读给你们听一段关于图森特地区奴隶制的描述：</p>
+<blockquote>
+<p>“鞭打被打断以便将一块热木头放在受害者的臀部上。盐、胡椒、柑橘、灰烬、芦荟和热灰被倒进流血的伤口中。不是为了治愈它们而是为了让情况更糟。截肢很常见。肢体、耳朵有时还有私处以剥夺他们可以免费放纵的快乐。他们的主人在他们的手臂、手和肩膀上浇注燃烧的蜡。将沸腾的甘蔗汁倒在他们的头上。把他们活活烧死。在慢火上烤他们。用火药填满他们然后用火柴引爆。把他们埋到脖子并在头上涂抹糖分让苍蝇吞噬他们。把他们拴在蚂蚁窝或马蜂窝旁。并强迫他们吃粪便喝尿舔其他奴隶的唾液。一个殖民者在愤怒时刻会扑到一个奴隶身上用牙齿咬进他们的肉里。”</p>
+</blockquote>
+<p>这就是他成长于其中的奴隶制。理解这一点非常重要因为要从那种视角走出来并不容易。但他有一个三重愿景：一他想结束奴隶制。二他想实际控制国家并治理国家。三他想让它成为一个世界级的国家。不是一个他仅仅解放了奴隶的国家而是一个能在全球基础上竞争的国家。那就是他进入时的思维方式。我读到的是他所处的环境。</p>
+<h3 id="管理案例征服敌人">管理案例：征服敌人</h3>
+<p>发生在海地的战役序列是他首先必须击败当地人。一旦击败了当地人有几个国家对控制海地非常非常感兴趣。主要是西班牙、英国和法国。他也必须击败那些军队。当他征服他们时他必须决定如何处置被征服的士兵和对面的领导人。他从三个不同的角度来考量。一他士兵的角度。二他敌人的角度。三最终形成的文化角度。他在建设什么样的国家？军队将是整个国家文化的种子。</p>
+<h4 id="从士兵的角度">从士兵的角度</h4>
+<p>我们能抢掠吗？士兵喜欢抢掠。那是他们的劳动所得的第二件事是他们试图杀死所以我们该杀掉他们。这是为他而战的人的基本视角对图森特来说最重要的人我把抢掠列在那里有几件事要知道一是我没有把强奸列在那里。非常有趣的是他不允许他的军队强奸他甚至不允许他的军官出轨。如果那样做他会开除他们因为他如此关心最终形成的文化。它会是什么样？它会是高产的吗？会是世界上最好的吗？还是会是不如那样的东西？那就是他进入时的思维模式。他的军队实际上以不抢掠而出名。他们其实已经习惯了这对被征服的人来说是最令人惊讶的事情之一以至于即使白人也印象深刻——因为他进入他们的城市而不抢掠尽管他会赢。再次这是因为他对文化采取了长远视角。</p>
+<p>这是一个重要而微妙的观点。他认为海地的文化因为它是一个奴隶制文化、甘蔗种植园文化与他接触欧洲人时所经历的相比是相当低档次的。他认为奴隶文化甚至比海地文化更破碎因为它是那种”噢你不照我说的做？我要打死你。我要用火药炸飞你”的文化。如果你想想由此产生的行为那就是他知道他需要替换的文化。他知道他需要升级。</p>
+<h4 id="整合敌人">整合敌人</h4>
+<p>当他征服英国人或西班牙人或法国人时他的解决方案是从对面那边挑选最优秀的人然后让他们成为他军队中的将军。你可能没想到这一点。这些人是试图杀他的人。他在领导一场奴隶革命而当他征服敌人时他实际上把他们整合进他的军队并让他们成为其中的一部分。他想要专业知识他也想让文化在一个更高的层次上。</p>
+<h4 id="如何对待奴隶主">如何对待奴隶主</h4>
+<p>第二个问题甚至更复杂——你怎么对待奴隶主？你在领导奴隶革命你控制了国家你怎么对待奴隶主？又是三个角度。</p>
+<p>对于奴隶来说你想杀死奴隶主毫无疑问。那是你的土地了。你赢了。去他们的。</p>
+<p>从图森特的角度来说更复杂因为他想让海地成为一个一流国家而甘蔗真的非常重要。整个奴隶经济就是甘蔗经济。另一方面他是个奴隶而且他肯定相当愤怒。特别是考虑到那种奴隶制的类型。但他不知道如何经营甘蔗种植园他也没有任何贸易糖的商业关系。所以怎么办？</p>
+<p>如果你看奴隶主的角度这挺有趣的因为他们是这样想的——而这是他实际上有纪律去理解的视角——他们来自一种以奴隶劳动力为前提的成本结构。他们的生意没有奴隶劳动就无法运作。如果必须给人付钱现金流就不通。他们预先花了一大笔钱买奴隶也花了一大笔钱买地。在他们心中生意就是这么运作的。你不能只是改变经济学让它仍然运作。他们知道自己有一些权力因为所处的位置。</p>
+<p>那么对奴隶主的答案是什么？解决方案是一结束奴隶制。二让奴隶主保留土地。三让他们支付工人工资。不再有奴隶劳动。为了资助那个降低他们的税。你们应该对此有点印象深刻。</p>
+<p><strong>打败奴隶主后结束奴隶制还降低奴隶主的税收。</strong> 但更大的目标是他想要更强的文化。他对待那些奴隶主的方式维持经济的需要很重要。</p>
+<h3 id="结果">结果</h3>
+<p>来看看结果。首先图森特的革命是人类历史上唯一成功的奴隶革命。从来没有过另一个而且希望我们不会再大规模有奴隶制也不会再有另一个。他就是唯一。二种植园主保留了土地。三他击败了<strong>拿破仑。</strong> 他有一个蓬勃的经济和世界级的文化。在图森特治下海地的出口收入超过美国。他在革命中就是那么成功。<strong>这就是不只从你的角度而是从所有组成成分的角度包括你讨厌的人的角度来看待一种情况的力量。</strong> 当你做 CEO 时很难做当你领导革命时更难。</p>
+<hr>
+<h2 id="结论">结论</h2>
+<p>你能学到的最重要的一件事也是最难做到的事情是你必须自律<strong>通过员工的眼光通过合伙人的眼光通过你没有在对话的、不在房间里的人的眼光来看你的公司。</strong></p>
+<p>谢谢。现在我开始接受提问。</p>
+<hr>
+<h2 id="问答环节">问答环节</h2>
+<h3 id="问如果你必须解雇或降职一名高管你如何进行那次对话然后你如何向其他所有人解释">问：如果你必须解雇或降职一名高管你如何进行那次对话然后你如何向其他所有人解释？</h3>
+<p><strong>答：</strong> 对这显然是某种程度的失败。你招聘失败了。你融合失败了。他们工作失败了。开除这个人时首先要真正尝试诚实。你在感觉自己失败了。常见的反应是你很烂所以我开除了你。滚蛋。那不好因为那不是真的。你可能感觉那样。另一个常见错误是太软了。不是你是我的问题。这感觉像和一个你真不喜欢的男朋友奇怪分手。</p>
+<p>一般来说当你招聘人时你试图招最好的。你招了有资格做这份工作的人。他们在工作上失败的原因是你在招聘过程中犯了一些错误你没有足够准确地把他们匹配到你公司的需求上。这是失败的第一大原因所以那通常是一个很好的起点来说看这是我们是怎么样的我在做决定时没有认出来的关于我们和关于你的事。就是这样。我们必须继续前进。</p>
+<p>当你和员工谈论这件事时不一样。你可以拿走某人的工作你必须拿走他们的工作但你不必拿走他们的尊严。这是 <strong>Bill Campbell</strong> 教我的。没有必要站到公司面前说”我把那个混蛋踢出去了我干掉他了。”</p>
+<p>事实上那样不好。没有人对此感觉良好。你可能对自己感觉很骄傲但没有其他人对此感觉良好。正确的事情是感谢他们的工作。让人们知道他们要继续前进了。你不必解释他们所有的个人细节更重要的是保留他们的尊严让他们继续活下去过另一天。你在那个会议上说的就是他们的声誉因为你公司的每个人在他们试图找下一份工作时都会联系那个人。如果你开始说一堆关于他们的 BS 那不好而且不会被解读为我们搞砸了而是会被解读为他搞砸了。你必须对他们非常诚实但当你对公司讲话时你必须确保保留他们的尊严。</p>
+<h3 id="问我昨天在读你的书你是如何应对所有压力的是冥想吗嘻哈音乐">问：我昨天在读你的书。你是如何应对所有压力的？是冥想吗？嘻哈音乐？</h3>
+<p><strong>答：</strong> 答案是我曾经六英尺四寸长得好看所以显然不太对付得过去。我被问到这个问题很多我有一个很好的答案。我有一位很棒的妻子她就坐在这里。（此处似乎引用了图森特的技术）</p>
+<h3 id="问你如何融入图森特的意识形态并把以前反对你的人拉到自己这边">问：你如何融入图森特的意识形态并把以前反对你的人拉到自己这边？</h3>
+<p><strong>答：</strong> 他所做的总体上是正确的事。<strong>作为领导者你必须向他们展示一条更好的道路如果某人是你的敌人而你需要转化他们。</strong> 这在商业中也发生。某人是竞争对手而你想把他拉过来但你不想从伦理上说接纳从一个竞争对手跳到另一个人那里的人。你的文化必须提升你的使命必须提升。你做事的方式必须就是更好。那就是对其余军队如此有吸引力的原因。</p>
+<h3 id="问我很好奇你是如何围绕人以及与你合作的创业者之间建立一种文化的这种文化让你在市场上区别于所有其他风险投资公司的">问：我很好奇你是如何围绕人以及与你合作的创业者之间建立一种文化的这种文化让你在市场上区别于所有其他风险投资公司的。</h3>
+<p><strong>答：</strong> 可能对我来说不是最好的问题。我可以问山姆那个。问题是我们如何在 Andreessen Horowitz 建立一种区别于所有其他 VC 的文化。我感觉那当然是目标。我们已经存在五年了。我们所做的尝试是否成功由世界其余部分来判断是：在 VC 的旧时代当我是一名企业家时基本的想法是你有一个创业者或发明者他们把公司带到某个阶段在那时要么他们准备好做 CEO 或者你去找一个 CEO 来替换他们然后构建”公司”。<strong>我们的文化哲学是创始人和发明者是特殊的。我们将设计公司和公司文化来帮助创始人发展成 CEO。</strong> 我们在很多系统性的方面做得不同。最大的两点是我们的所有合伙人都是创始人或 CEO。这是一个原始模型其中需要某种经验是先决条件。这是个玩笑。</p>
+<p>如果你是 CEO 的顾问你必须曾经做过 CEO。想象一下。这就是我喜欢山姆的原因他曾经是 CEO。他不怎么谈论那件事但他曾是 CEO 而且做得很好。第二部分是在旧时代专业 CEO 会带来一个他认识的熟人网络——那些在大公司里把技术带给重要合作伙伴的人、媒体圈子里的人。我们尝试在公司层面上代表你建立那个网络。我认为我们在那方面做得比其他任何人都好。那些就是我们试图<strong>与众不同</strong>的方式。</p>
+<h3 id="问站在别人的立场上非常重要你能给我们一些建议吗">问：站在别人的立场上非常重要。你能给我们一些建议吗？</h3>
+<p><strong>答：</strong> 在管理中站在别人的鞋子里很难。在生活中也很难。在管理中更难因为有当下的压力。如果一个优秀的员工找你要加薪很难不回应因为你不想失去他们而且他们不是随机找你来要加薪他们是有原因来找你的。如果你没有一个流程来停下来退回去你必须让自己暂停一下。如果有人带着你知道很重要的事情来找你你想觉得自己掌握了所有答案。就在此刻你们问我问题而我如果不知道答案我会编造一个因为我想让你们觉得我很聪明。</p>
+<p><strong>最重要的事情是暂停。</strong> 如果你知道某件事真的很重要而你还没有想清楚就说”我非常认真地对待这件事但我必须暂停因为我必须从所有角度想清楚。我会回来的。” 我最终经常这样做只是因为你会遇到很多你从未见过的大多数 CEO 包括我自己都是通过艰难的方式学会这一点的。你会想好我要偷偷搞定这件事。没人看见我给他们加薪。我要做了而且全部暗箱操作。保密宝贝。然后三周后它在你脸上炸开了你会想”天哪我做了什么？” 或者三个月后甚至一年后。然后一旦是一年后那就是个大问题了。</p>
+<p>你把一个原本小小的情绪问题变成了一场森林大火。我们称之为<strong>泡菜问题（Kimchi Problem）。埋得越深它变得越热。</strong> 这是一个韩国笑话。这需要练习。非常难以做到。我的朋友 Bill Campbell 这是他的大技能。人们总是试图向我描述他而我就像那根本不是他。那不是他擅长的。<strong>他擅长通过员工的眼来看公司。如果你擅长于此你很可能是一位精英领导者。</strong></p>
+<p>谢谢。</p> <div class="cta-box"> <p>觉得有用？看看我的书和课程</p> <div class="cta-buttons"> <a href="/book" class="cta-btn cta-btn-primary">选择改变命运</a> <a href="/community" class="cta-btn cta-btn-secondary">写作课程</a> </div> </div> <nav class="article-nav"> <a href="/blog/yc-lecture-09-how-to-be-a-great-founder" class="article-nav-link article-nav-prev"> <span class="article-nav-label"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+阅读上一篇
+</span> <span class="article-nav-title">如何成为一位伟大的创始人</span> </a> <a href="/blog/yc-lecture-11-how-to-operate" class="article-nav-link article-nav-next"> <span class="article-nav-label">
+阅读下一篇
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg> </span> <span class="article-nav-title">如何运营</span> </a> </nav> </article> </main> </div> </main> <footer> <div class="footer-inner"> <p>© 2026 像企业家一样写作</p> <div class="footer-links"> <a href="https://mp.weixin.qq.com/" target="_blank">公众号：种一个梦</a> </div> </div> </footer>  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    let _searchIndex = null;
+
+    async function loadSearchIndex() {
+      if (_searchIndex) return _searchIndex;
+      try {
+        const resp = await fetch('/search.json?t=' + Date.now());
+        _searchIndex = await resp.json();
+      } catch (e) {
+        console.warn('search.json load failed', e);
+        _searchIndex = { posts: [], books: [] };
+      }
+      return _searchIndex;
+    }
+
+    function openSearch() {
+      const overlay = document.getElementById('search-overlay');
+      const input = document.getElementById('search-input');
+      overlay.classList.add('active');
+      input.value = '';
+      input.focus();
+      renderResults('');
+    }
+
+    function closeSearch() {
+      document.getElementById('search-overlay').classList.remove('active');
+    }
+
+    function getSnippet(text, keyword, radius) {
+      radius = radius || 30;
+      if (!text) return '';
+      const idx = text.toLowerCase().indexOf(keyword.toLowerCase());
+      if (idx === -1) return text.substring(0, 80);
+      const start = Math.max(0, idx - radius);
+      const end = Math.min(text.length, idx + keyword.length + radius);
+      let s = text.substring(start, end);
+      if (start > 0) s = '…' + s;
+      if (end < text.length) s = s + '…';
+      return s;
+    }
+
+    function renderResults(query) {
+      const container = document.getElementById('search-results');
+      if (!query.trim()) {
+        container.innerHTML = '<div class="search-empty">输入关键词搜索文章和书籍…</div>';
+        return;
+      }
+      const q = query.toLowerCase();
+      const index = _searchIndex || { posts: [], books: [] };
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      if (matchedPosts.length === 0 && matchedBooks.length === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        return;
+      }
+      let html = '';
+      matchedPosts.forEach(p => {
+        const snippet = getSnippet(p.content || '', q, 35);
+        const displayDesc = (p.desc || '') || snippet;
+        html += '<a href="/blog/' + p.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">文章</span>' + p.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      matchedBooks.forEach(b => {
+        const snippet = getSnippet(b.content || '', q, 35);
+        const displayDesc = (b.desc || '') || snippet;
+        html += '<a href="/book/' + b.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">书籍</span>' + b.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      container.innerHTML = html;
+    }
+
+    // ===== 搜索 FAB 拖动逻辑 =====
+    (function() {
+      const fab = document.getElementById('search-toggle');
+      const FAB_SIZE = 56;
+      let isDragging = false;
+      let startX, startY, startLeft, startTop;
+      let dragMoved = false;
+
+      function onDown(clientX, clientY) {
+        isDragging = true;
+        dragMoved = false;
+        startX = clientX;
+        startY = clientY;
+        const rect = fab.getBoundingClientRect();
+        startLeft = rect.left;
+        startTop = rect.top;
+        fab.classList.add('dragging');
+      }
+
+      function onMove(clientX, clientY) {
+        if (!isDragging) return;
+        const dx = clientX - startX;
+        const dy = clientY - startY;
+        if (!dragMoved && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+          dragMoved = true;
+          // 切换到绝对 left/top 定位
+          fab.style.bottom = 'auto';
+          fab.style.right = 'auto';
+          fab.style.left = startLeft + 'px';
+          fab.style.top = startTop + 'px';
+        }
+        if (dragMoved) {
+          let newLeft = Math.max(4, Math.min(startLeft + dx, window.innerWidth - FAB_SIZE - 4));
+          let newTop  = Math.max(4, Math.min(startTop  + dy, window.innerHeight - FAB_SIZE - 4));
+          fab.style.left = newLeft + 'px';
+          fab.style.top  = newTop  + 'px';
+        }
+      }
+
+      function onUp() {
+        if (!isDragging) return;
+        isDragging = false;
+        fab.classList.remove('dragging');
+        if (!dragMoved) {
+          // 判定为点击，打开搜索
+          loadSearchIndex().then(() => openSearch());
+        }
+      }
+
+      fab.addEventListener('mousedown', e => { if (e.button === 0) { onDown(e.clientX, e.clientY); e.preventDefault(); } });
+      document.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+      document.addEventListener('mouseup', onUp);
+
+      fab.addEventListener('touchstart', e => { onDown(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); }, { passive: false });
+      document.addEventListener('touchmove', e => { if (isDragging) { onMove(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); } }, { passive: false });
+      document.addEventListener('touchend', onUp);
+    })();
+
+    document.getElementById('search-close').addEventListener('click', closeSearch);
+    document.getElementById('search-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeSearch();
+    });
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      renderResults(e.target.value);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        loadSearchIndex().then(() => openSearch());
+      }
+    });
+    });
+  </script> <!-- 页面关键词高亮（从搜索结果跳转过来时） --> <script>
+    (function() {
+      function getQueryParam(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name) || '';
+      }
+
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function highlightKeyword(keyword) {
+        if (!keyword.trim()) return;
+        const main = document.querySelector('main');
+        if (!main) return;
+
+        const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, null, false);
+        const nodesToReplace = [];
+        const regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
+
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node.parentElement && node.parentElement.tagName === 'MARK') continue;
+          if (regex.test(node.textContent)) {
+            nodesToReplace.push(node);
+          }
+        }
+
+        let firstMark = null;
+        nodesToReplace.forEach(textNode => {
+          const span = document.createElement('span');
+          span.innerHTML = textNode.textContent.replace(regex, '<mark class="search-highlight">$1</mark>');
+          const marks = span.querySelectorAll('mark');
+          if (marks.length > 0 && !firstMark) {
+            firstMark = marks[0];
+          }
+          const fragment = document.createDocumentFragment();
+          while (span.firstChild) {
+            fragment.appendChild(span.firstChild);
+          }
+          textNode.parentNode.replaceChild(fragment, textNode);
+        });
+
+        if (firstMark) {
+          firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(function() {
+            const marks = main.querySelectorAll('mark.search-highlight');
+            marks.forEach(function(m) {
+              const parent = m.parentNode;
+              parent.replaceChild(document.createTextNode(m.textContent), m);
+              parent.normalize();
+            });
+          }, 6000);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          highlightKeyword(getQueryParam('q'));
+        });
+      } else {
+        highlightKeyword(getQueryParam('q'));
+      }
+    })();
+  </script> <!-- 代码块复制按钮 --> <script>
+    (function() {
+      function initCopyButtons() {
+        document.querySelectorAll('.prose pre').forEach(function(pre) {
+          if (pre.querySelector('.copy-btn')) return;
+          var btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.textContent = '复制';
+          btn.setAttribute('aria-label', '复制代码');
+          btn.addEventListener('click', function() {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+              btn.textContent = '已复制';
+              btn.classList.add('copied');
+              setTimeout(function() {
+                btn.textContent = '复制';
+                btn.classList.remove('copied');
+              }, 2000);
+            }).catch(function() {
+              btn.textContent = '失败';
+              setTimeout(function() { btn.textContent = '复制'; }, 2000);
+            });
+          });
+          pre.style.position = 'relative';
+          pre.appendChild(btn);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCopyButtons);
+      } else {
+        initCopyButtons();
+      }
+    })();
+  </script> <!-- 微信电子书弹窗（滚动触发 + 每天一次） --> <script>
+    (function() {
+      // === 配置 ===
+      var STORAGE_DAY   = 'ebook_popup_day';    // 今天已弹过
+      var STORAGE_DISMISS = 'ebook_popup_dismiss_until'; // 用户点「暂时不要」的过期时间戳
+      var SCROLL_THRESHOLD = 0.40; // 滚动 40% 触发
+      var TIME_THRESHOLD   = 60000;  // 或停留 60 秒触发
+
+      // === 已有领取人数（可手动更新）===
+      var CLAIM_COUNT = 327;
+
+      // === 工具函数 ===
+      function todayStr() {
+        var d = new Date();
+        return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+      }
+      function getDismissUntil() {
+        try { return parseInt(localStorage.getItem(STORAGE_DISMISS), 10); } catch(e) { return 0; }
+      }
+
+      // === 判断是否应该弹出 ===
+      function shouldShow() {
+        // 用户点过「暂时不要」且未过期
+        var dismissUntil = getDismissUntil();
+        if (dismissUntil && Date.now() < dismissUntil) return false;
+        // 今天已弹过
+        try {
+          if (localStorage.getItem(STORAGE_DAY) === todayStr()) return false;
+        } catch(e) {}
+        return true;
+      }
+
+      // === 记录：今天已弹 ===
+      function markShown() {
+        try { localStorage.setItem(STORAGE_DAY, todayStr()); } catch(e) {}
+      }
+
+      // === 记录：暂时不要（7天后）===
+      function markDismissed() {
+        var t = Date.now() + 7 * 24 * 60 * 60 * 1000;
+        try { localStorage.setItem(STORAGE_DISMISS, String(t)); } catch(e) {}
+      }
+
+      // === 显示 / 关闭 ===
+      var overlay    = document.getElementById('ebook-popup-overlay');
+      var closeBtn   = document.getElementById('ebook-popup-close');
+      var dismissBtn = document.getElementById('ebook-popup-dismiss');
+      var shown      = false;
+      var timeTimer  = null;
+
+      function showPopup() {
+        if (shown || !overlay || !shouldShow()) return;
+        shown = true;
+        markShown();
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function dismissPopup() {
+        if (!overlay) return;
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        if (timeTimer) clearTimeout(timeTimer);
+      }
+
+      if (!overlay) return;
+
+      // === 触发条件 1：滚动超过 40% ===
+      var scrollFired = false;
+      window.addEventListener('scroll', function() {
+        if (scrollFired) return;
+        var h = document.body.scrollHeight - window.innerHeight;
+        if (h <= 0) return;
+        if (window.scrollY / h > SCROLL_THRESHOLD) {
+          scrollFired = true;
+          showPopup();
+        }
+      }, { passive: true });
+
+      // === 触发条件 2：停留超过 60 秒 ===
+      timeTimer = setTimeout(function() {
+        if (!scrollFired) showPopup();
+      }, TIME_THRESHOLD);
+
+      // === 关闭按钮 ===
+      if (closeBtn) closeBtn.addEventListener('click', dismissPopup);
+
+      // === 「暂时不要」按钮 ===
+      if (dismissBtn) {
+        dismissBtn.addEventListener('click', function() {
+          markDismissed();
+          dismissPopup();
+        });
+      }
+
+      // === 点击遮罩关闭 ===
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) dismissPopup();
+      });
+
+      // === ESC 关闭 ===
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+          dismissPopup();
+        }
+      });
+    })();
+  </script> </body></html>  <script type="module">(function(){const e=document.getElementById("reading-progress");if(e){let c=function(){const n=window.scrollY||document.documentElement.scrollTop,s=document.documentElement.scrollHeight-document.documentElement.clientHeight,d=s>0?n/s*100:0;e.style.width=d+"%",e.classList.toggle("show",n>50)};window.addEventListener("scroll",c,{passive:!0}),c()}const t=document.querySelector(".book-toc-header"),o=document.querySelector(".book-toc");t&&o&&t.addEventListener("click",function(){o.classList.toggle("expanded")})})();</script>

@@ -1,0 +1,529 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="YC 创业课第2讲｜Sam Altman"><title>创意、产品、团队与执行（第二部分） — 像企业家一样写作</title><link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml"><link rel="sitemap" type="application/xml" href="/sitemap-index.xml"><!-- Static CSS — no build hash, safe for incremental deploys --><link rel="stylesheet" href="/global.css"><!-- 自托管字体 --><link rel="preload" href="/fonts/NotoSerifSC-Regular.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/_astro/BaseLayout.BYj8Tvw5.css">
+<link rel="stylesheet" href="/_astro/_..CcR4Cqk3.css"></head> <body> <nav class="navbar"> <div class="nav-inner"> <a href="/" class="logo"> <img src="/images/logo-header.png" alt="Logo" class="logo-img"> <span>像企业家一样写作</span> </a> <div class="nav-links"> <a href="/blog">文章</a> <a href="/book">书籍</a> <a href="/community">社群</a> <a href="/join">答疑</a> </div> </div> </nav> <!-- 搜索浮窗 --> <div id="search-overlay" class="search-overlay"> <div class="search-modal"> <div class="search-header"> <input id="search-input" type="text" placeholder="搜索文章标题、描述..." autocomplete="off"> <button id="search-close" class="search-close-btn" aria-label="关闭搜索">✕</button> </div> <div id="search-results" class="search-results"></div> </div> </div> <!-- 浮动搜索按钮 --> <button id="search-toggle" class="search-fab" aria-label="搜索"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"> <circle cx="11" cy="11" r="7"></circle> <line x1="16.5" y1="16.5" x2="21" y2="21"></line> </svg> </button> <!-- ===== 微信电子书弹窗 ===== --> <div id="ebook-popup-overlay" class="ebook-popup-overlay" onclick="if(event.target===this){this.classList.remove('active');document.body.style.overflow='';}"> <div class="ebook-popup-card"> <div class="ebook-popup-topbar"></div> <button id="ebook-popup-close" class="ebook-popup-close" aria-label="关闭" onclick="event.stopPropagation();document.getElementById('ebook-popup-overlay').classList.remove('active');document.body.style.overflow='';">✕</button> <div class="ebook-popup-body"> <!-- 送你 --> <div class="ebook-popup-gift">送你一本我的电子书</div> <!-- 书名 --> <div class="ebook-popup-bigtitle">《闭环：在你睡觉时赚钱》</div> <div class="ebook-popup-bigsub">从0到1的自媒体方法论</div> <!-- 社会认同 --> <div class="ebook-popup-proof"> <span class="ebook-proof-avatars"> <span class="ebook-proof-avatar" style="background: #f5e0d0;"> <span style="font-size:12px;font-weight:700;color:#c45c2e;">M</span> </span> <span class="ebook-proof-avatar" style="background: #d0e8e0;"> <span style="font-size:12px;font-weight:700;color:#3a7a5e;">S</span> </span> <span class="ebook-proof-avatar" style="background: #d8dff0;"> <span style="font-size:12px;font-weight:700;color:#4a6aab;">L</span> </span> </span> <span><span class="ebook-proof-count">327</span> 人已领取</span> </div> <!-- 二维码 --> <div class="ebook-popup-qr"> <img src="/images/wechat-qr.png" alt="微信二维码"> </div> <!-- 下载按钮 — 仅手机展示 --> <a class="ebook-popup-download" href="/images/wechat-qr.png" download> <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path> <polyline points="7 10 12 15 17 10"></polyline> <line x1="12" y1="15" x2="12" y2="3"></line> </svg>
+下载二维码到手机
+</a> <!-- 流程提示 --> <p class="ebook-popup-steps"> <span class="step">扫二维码</span> → <span class="step">添加好友</span> → 回复<span class="keyword-value">闭环</span> → <span class="step">立马领取</span> </p> </div> <div class="ebook-popup-footer"> <p>免费领取 · 无需购买任何产品 · 24 小时内回复</p> </div> </div> </div> <main>   <div id="reading-progress" class="reading-progress"></div> <!-- 书籍系列：左侧目录 + 右侧正文 -->
+    <div class="book-layout"> <!-- 左侧目录 --> <aside class="book-toc"> <div class="book-toc-inner"> <div class="book-toc-header"> <span class="book-toc-series">YC 创业课</span> <span class="book-toc-count">目录</span> </div> <nav class="book-toc-nav"> <div class="book-toc-section "> <a href="/blog/yc-lecture-01-how-to-start-a-startup" class="book-toc-item"> <span class="book-toc-order">1</span> <span class="book-toc-title">如何创办初创公司</span> </a>  </div><div class="book-toc-section active"> <a href="/blog/yc-lecture-02-ideas-products-teams-execution-part2" class="book-toc-item"> <span class="book-toc-order">2</span> <span class="book-toc-title">创意、产品、团队与执行（第二部分）</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-03-counterintuitive-parts-and-how-to-have-ideas" class="book-toc-item"> <span class="book-toc-order">3</span> <span class="book-toc-title">创业中反直觉的部分，以及如何产生创意</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-04-how-to-build-products-users-love" class="book-toc-item"> <span class="book-toc-order">4</span> <span class="book-toc-title">如何打造用户热爱的产品</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-05-how-to-build-products-users-love-part2" class="book-toc-item"> <span class="book-toc-order">5</span> <span class="book-toc-title">如何打造用户喜爱的产品（第二部分）</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-06-doing-things-that-dont-scale-pr" class="book-toc-item"> <span class="book-toc-order">6</span> <span class="book-toc-title">做无法规模化的事、公关，以及如何起步</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-07-how-to-raise-money" class="book-toc-item"> <span class="book-toc-order">7</span> <span class="book-toc-title">如何融资</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-08-building-product-talking-to-users-and-growing" class="book-toc-item"> <span class="book-toc-order">8</span> <span class="book-toc-title">打造产品、与用户对话与实现增长</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-09-how-to-be-a-great-founder" class="book-toc-item"> <span class="book-toc-order">9</span> <span class="book-toc-title">如何成为一位伟大的创始人</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-10-how-to-manage" class="book-toc-item"> <span class="book-toc-order">10</span> <span class="book-toc-title">如何管理</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-11-how-to-operate" class="book-toc-item"> <span class="book-toc-order">11</span> <span class="book-toc-title">如何运营</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-12-how-to-run-a-user-interview" class="book-toc-item"> <span class="book-toc-order">12</span> <span class="book-toc-title">如何进行用户访谈</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-13-growth" class="book-toc-item"> <span class="book-toc-order">13</span> <span class="book-toc-title">增长</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-14-business-strategy-and-monopoly-theory" class="book-toc-item"> <span class="book-toc-order">14</span> <span class="book-toc-title">商业战略与垄断理论</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-15-sales-and-marketing" class="book-toc-item"> <span class="book-toc-order">15</span> <span class="book-toc-title">销售与营销</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-16-sales-marketing-pitch-investor-roleplaying" class="book-toc-item"> <span class="book-toc-order">16</span> <span class="book-toc-title">销售、营销与融资路演</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-17-legal-finance-hr" class="book-toc-item"> <span class="book-toc-order">17</span> <span class="book-toc-title">创业公司的法律、财务与 HR 机制</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-18-company-culture-and-building-a-team" class="book-toc-item"> <span class="book-toc-order">18</span> <span class="book-toc-title">企业文化与团队建设（第一部分）</span> </a>  </div> </nav> <a href="/book" class="book-toc-back"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+返回书架
+</a> </div> </aside> <!-- 右侧正文 --> <main class="book-main"> <article class="prose"> <header class="article-header"> <h1>创意、产品、团队与执行（第二部分）</h1> <div class="article-meta"> <span class="article-series">YC 创业课</span> <time> 2026年6月27日 </time> </div> </header> <blockquote>
+<p>根据 YC《如何创办初创公司》系列课程第二讲整理
+讲者：Sam Altman（Y Combinator 总裁）</p>
+</blockquote>
+<hr>
+<h2 id="一上节课问答回顾">一、上节课问答回顾</h2>
+<h3 id="问如何判断一个市场现在是否有快速增长而且未来十年也会保持增长">问：如何判断一个市场现在是否有快速增长，而且未来十年也会保持增长？</h3>
+<p><strong>答：</strong> 好消息是，这是学生最大的优势之一。你应该相信自己的直觉。年长的人基本上只能猜测年轻人在使用什么技术，但你可以观察自己和朋友在做什么，你的直觉几乎肯定比任何比你年长的人都要好。所以答案就是：相信你的直觉，多思考你在做什么，多思考你在使用什么，看看和你同龄的人在使用什么——那几乎一定会成为未来。</p>
+<h3 id="问如何在保持高效的同时应对倦怠">问：如何在保持高效的同时应对倦怠？</h3>
+<p><strong>答：</strong> 答案是：这很糟糕，但你只能继续前行。和学生不同，你不能甩手说”我真的倦怠了，这学期我就拿差成绩算了”。<strong>经营初创公司最困难的事情之一是：这是真实的人生，你只能挺过去</strong>。标准的建议是去度假，但这对创始人从来不管用。 它是一种全方位吞噬你的东西，很难向别人解释清楚。</p>
+<p>所以你能做的就是继续前行。你要依靠他人，这非常重要。创始人抑郁是一个严重的问题，你需要一个支持网络。<strong>但走出倦怠的方式，就是直面挑战，直面那些出错的事情，你最终会感觉好起来。</strong></p>
+<hr>
+<h2 id="二联合创始人">二、联合创始人</h2>
+<p><img src="/images/yc-lecture-02/sam-p0004.jpg" alt=""></p>
+<p>上次课我们讲了创意和产品。我想强调：如果你把这两件事做错了，其他一切都无法拯救你。今天我们要谈如何招聘，以及如何执行。希望你们不会把招来的人”执行”掉。有时候确实会。</p>
+<p>首先谈联合创始人。<strong>联合创始人关系是整个公司中最重要的关系之一。</strong> 大家都说你必须留意联合创始人之间酝酿的紧张关系，必须立即处理。这都是对的。在 YC 的经验里，<strong>初创公司早期死亡的第一大原因，就是联合创始人决裂。</strong> 但出于某种原因，很多人在选择联合创始人时，重视程度甚至还不如招聘。</p>
+<p>不要这样做！<strong>这是你在初创公司生涯中做出的最重要的决定之一，你必须这样对待它。</strong></p>
+<p>出于某种原因，学生在这方面特别糟糕。他们随便选一个人，<strong>就像”我想创业，你也想创业，我们一起创办一家初创公司吧”</strong>。还有那些”联合创始人约会”网站，你在上面说”嘿，我在找联合创始人，我们不太了解彼此，一起开家公司吧”。这简直是疯了。<strong>你永远不会以这种方式招聘，但人们却愿意以这种方式选择商业伙伴。</strong> 这真的非常糟糕。</p>
+<p><strong>选择一个随机的联合创始人，或者选择一个你没有长期历史的人，选择一个你不是朋友的人——这样当事情真的出错时，你没有过去的历史把你们绑在一起——通常以灾难告终。</strong></p>
+<p>我们有一期 YC 批次，大约 75 家公司里，有 9 家在我们面试公司和它们正式开始之间，新增了一名联合创始人。这 9 个团队，在接下来一年内全部解体了。联合创始人互不认识的公司的跟踪记录真的非常糟糕。</p>
+<p><strong>认识联合创始人的一个好方式，是在大学里认识。</strong> 如果你不在大学里，也不认识联合创始人，我认为次好的选择是去一家有趣的公司工作。如果你在 Facebook 或 Google 之类的地方工作，那里几乎和斯坦福一样”联合创始人资源丰富”。<strong>没有联合创始人，比有一个糟糕的联合创始人要好；但做单人创始人仍然是不好的。</strong></p>
+<p>我刚才在这里看了一下数据。排名前 20 的 YC 最有价值的公司，几乎全部至少有两名创始人。我们资助单人团队的比例，大约是十分之一。</p>
+<p>所以总结一下优先级：<strong>最好的，是认识已久的联合创始人；次好的，但仍然可以的，是单人创始人；最差的，是遇到一个随机创始人就一起干——而学生出于某种原因经常这样做，真的非常糟糕。</strong></p>
+<p><img src="/images/yc-lecture-02/sam-p0005.jpg" alt=""></p>
+<p>当你在考虑联合创始人和可能的好人选时，有一个关于你在找什么的问题。在 YC，我们有一句公开的话：<strong>” relentless resourceful”（坚韧且足智多谋）</strong>，大家都听过。你需要坚韧且足智多谋的联合创始人，但在 YC 启动仪式上，我们会分享一个更生动的模型。Paul Graham 开始用这个，我一直在延续它。</p>
+<p><strong>你要找的联合创始人，必须是不惊慌、强韧、在任何情况下都知道该做什么的人。他们行动迅速、果断、有创造力、为任何情况做好准备。</strong> 事实证明，流行文化里有一个这种人的模型。听起来很傻，但至少非常令人难忘，我们告诉每一期 YC 已经很久了，我认为这对他们有帮助。</p>
+<p><img src="/images/yc-lecture-02/f01.png" alt="">
+<strong>那个模型就是：詹姆斯·邦德（James Bond）。</strong> 再次说明，这听起来疯狂，但它至少会留在你的记忆里，而且<strong>你需要一个行为像詹姆斯·邦德的人，胜过你需要一个某个特定领域的专家。</strong></p>
+<p>正如我之前提到的，你真的想认识你的联合创始人很长时间，理想情况下是几年。<strong>这一点对于早期招聘同样适用，但顺便说一句，更多人在早期招聘上做对了，而在联合创始人选择上做错了。</strong></p>
+<p>所以，利用好学校。除了坚韧且足智多谋，你还想要一个强韧且冷静的联合创始人。有些显而易见的东西，比如聪明，但每个人都知道你想要一个聪明的联合创始人，他们没有足够重视”强韧”和”冷静”这样的品质——尤其是如果你觉得自己不具备这些，你就需要一个具备这些品质的联合创始人。</p>
+<p>如果你不是技术背景——即使这房间里的大多数人觉得自己是——你想要一个技术联合创始人。现在初创公司里有一种奇怪的现象，流行说：你知道吗，我们不需要技术联合创始人，我们要招人，我们只要成为伟大的管理者就好了”。</p>
+<p>根据我们的经验，这不太管用。<strong>做软件的人真的应该去创办软件公司。做媒体的人应该去创办媒体公司。</strong> 在 YC 的经验里，两名或三名联合创始人似乎是最理想的。一名，显然不太好；五名，真的很糟糕。四名有时候可以，但我认为两名或三名是目标。</p>
+<hr>
+<h2 id="三招聘">三、招聘</h2>
+<p><strong>招聘的第二部分：尽量不要招人。</strong> 当你开始创办公司时，你会注意到一件奇怪的事情：每个人都会问你有多少名员工。这是人们用来判断你的初创公司有多真实、你有多酷的指标。如果你说员工数量很多，他们会印象深刻。如果你说员工数量很少，你就听起来像个小笑话。但实际上，拥有很多员工是很糟糕的，你应该为员工数量少而感到自豪。</p>
+<p><img src="/images/yc-lecture-02/sam-p0008.jpg" alt=""></p>
+<p>很多员工会导致：<strong>高燃尽率（burn rate）</strong>，意味着你每个月损失很多钱；复杂性；决策缓慢——名单还在继续，没有一件是好事。</p>
+<p><strong>所以你应该为用少量员工能完成多少事而感到自豪。</strong> 许多最好的 YC 公司，在第一年里员工数量少得惊人，有时候除了创始人之外没有任何人。他们真的尽量尽可能长时间地保持小规模。</p>
+<p>一开始，你只应该在迫切需要时招聘。后来，你需要学会快速招聘并扩大公司规模，但在早期，目标应该是不招聘。这之所以如此糟糕的一个原因是：<strong>早期招聘出错的代价非常高。</strong> 事实上，很多我深度参与过的公司，如果在前三个左右员工里招了一个非常糟糕的人，就再也无法恢复，这直接把公司搞死了。</p>
+<p><strong>Airbnb 花了五个月面试他们的第一名员工。</strong> 在第一年里，他们只招了两个人。在招任何人之前，他们写下了一张清单，<strong>列出他们希望任何 Airbnb 员工具备的文化价值观</strong>。其中一条是：你必须”为 Airbnb 流血”（bleed Airbnb）。如果你不同意这一点，他们就不会招你。</p>
+<p>作为 Brian Chesky（Airbnb CEO）有多严格的一个例子：他过去会问人们，如果他们收到医疗诊断说只剩一年可活，他们还会不会接受这份工作。后来他觉得这有点太疯狂了，我想他放宽到了十年，但据我了解，他至今仍在问这个问题。</p>
+<p>这些招聘真的很重要，这些人将继续定义你的公司。所以<strong>你需要那些几乎和你一样相信这件事的人。</strong> 这听起来是一个疯狂的要求，但他得到了这种极其专注的人的文化，当公司面临危机时，他们会团结在一起。当公司早期面临一个重大危机时，<strong>所有人都住在办公室里</strong>，每天发布产品，直到危机结束。</p>
+<p>关于 Airbnb 的一个引人注目的观察是：如果你和前 40 名左右的任何员工交谈，他们都觉得自己<strong>参与了公司的创立</strong>。</p>
+<p>通过设定极高的标准，通过缓慢招聘来确保每个人都相信使命，你可以做到这一点。所以，假设你听了”除非绝对必要否则不招聘”的警告。当你处于招聘模式时，获得最优秀的人应该是你的头等大事。就像当你处于产品模式时那应该是你的头等大事一样。当你处于融资模式时，融资是你的头等大事。</p>
+<p>创始人总是低估的一件事是：<strong>招聘有多难。</strong> 你以为你有一个很棒的创意，每个人都会加入。但这不是它的运作方式。要获得最优秀的人，他们有很多很棒的选择，所以很容易花一年时间来招聘某个人。这是一个漫长的过程，所以你必须说服他们，<strong>你的使命比他们正在考虑的任何其他事情都更重要。</strong></p>
+<p>这也是为什么在产品做对之前先看其他任何事情，真的很重要的另一个案例。最优秀的人知道他们应该<strong>加入一艘火箭船（rocketship）</strong>。</p>
+<p>顺便说一句，<strong>如果我要给那些将要加入初创公司的人一个建议，那就是：选一艘火箭船。</strong> 选一家已经在运转的公司，而且不是每个人都已经意识到这一点，但你因为留意着，所以知道它会变得巨大。再次说明，你通常可以识别这些公司。但优秀的人知道这一点，所以优秀的人会等待，看到你处于这条轨迹上，才会加入。</p>
+<p>今天早上网上有人问的一个问题是：你应该花多少时间在招聘上。答案是：<strong>零，或者 25%。</strong> 你要么完全不招聘，要么这可能是你最大的一块时间。实际上，所有那些关于管理的书都说你应该花 50% 的时间招聘，但给出这个建议的人，自己甚至很少花 10% 的时间。25% 仍然是一个巨大的时间量，但一旦你处于招聘模式，你真的应该花这么多时间。</p>
+<p><strong>如果你妥协并招了一个平庸的人，你永远会后悔。</strong> 我们喜欢警告创始人这一点，但没有人在第一次犯错之前真正感受到它。它会毒害文化。大公司的平庸工程师会造成一些问题，但不会搞死公司。<strong>在前五名之内的一次平庸招聘，往往会搞死一家初创公司。</strong></p>
+<p>我的一个朋友在面试用的会议室里贴了一个牌子，牌子朝向候选人，这样候选人在面试时就能看到。牌子上写着：<strong>“平庸的工程师不能建立伟大的公司。”</strong> 是的，这是真的，真的真的真的真的真的真的。</p>
+<p>在大公司里你可以侥幸逃脱，因为人们就这样混过去，但在初创公司里，<strong>每一个人都设定了基调。</strong> 所以如果你在前五名、前十名招聘时妥协，可能会搞死公司。你可以对每一个你招的人想：我愿意拿公司的未来赌在这个单一的招聘上吗？这是一个很高的标准。在公司发展到某个阶段时，你会妥协一次招聘。会有一些紧迫的截止日期之类的事情，你仍然会后悔。但这是理论和实践之间的区别，我们稍后会请讲者谈谈当这种情况发生时该怎么做。但在早期，你就是不能搞砸。</p>
+<p><strong>候选人来源。</strong> 这是学生经常搞错的另一件事。<strong>迄今为止最好的招聘来源，是你已经认识的人，以及公司其他员工已经认识的人。</strong> 大多数伟大的公司，在前 100 名员工都是通过个人推荐建立的，而且通常远不止于此。大多数创始人觉得尴尬，不愿意给每一个他们见过的优秀的人打电话，也不愿意让员工做同样的事。但如果你去 Facebook 或 Google 工作，你会注意到他们在你入职的头几周里做的一件事是：HR 人员会坐下，从你嘴里榨出每一个你见过的聪明人，以便能够招聘他们。</p>
+<p><strong>这些个人推荐真的是招聘的诀窍。</strong> 另一个建议是：看看硅谷以外的地方。<strong>在这里招聘工程师的竞争是残酷的，但你可能在世界其他地方认识一些愿意和你一起工作的人。</strong></p>
+<p>创始人经常问我们的另一个问题是：经验有多重要。这里的简短版本是：<strong>经验对某些角色重要，对另一些则不重要。</strong> 当你招聘一个将要运营你组织很大一部分的人时，经验可能很重要。对于大多数你在初创公司的早期招聘，经验可能没那么重要，你应该看重天赋和对你所做的事情的信念。我这一生中做过的最好的几次招聘，对方之前从未做过那件事。<strong>所以真的值得思考：这是一个我在乎经验的角色，还是不是。你会经常发现你不关心，尤其是在早期。</strong></p>
+<p>我在招聘中看三件事：<strong>他们聪明吗？他们能把事情搞定吗？我愿意花很多时间和他们在一起吗？</strong> 如果这三个问题我都能回答”是”，我从来不会后悔，这几乎总是奏效。你可以在面试中了解到这三件事的很多信息，但最好的方式<strong>是一起工作</strong>——所以理想情况下是你过去一起工作过的人，那样你甚至可能不需要面试。如果没有，那么我认为<strong>在招聘之前一起做一个一天或两天的项目，比面试好得多。</strong> 你们都会学到很多，他们也会，而且大多数第一次创始人是非常糟糕的面试官，但在一起工作之后评估某人则非常擅长。</p>
+<p><img src="/images/yc-lecture-02/sam-p0011.jpg" alt=""></p>
+<p>所以我们在 YC 给出的建议之一是：<strong>试着一起做一个项目，而不是面试。</strong> 如果你要面试（你可能会），你应该具体地问某人过去做过的项目。你会了解到比脑筋急转弯多得多的东西。出于某种原因，年轻的技术联合创始人喜欢问脑筋急转弯，而不是问某人做过什么。<strong>真正深入挖掘人们做过的项目。</strong> 还有，<strong>打推荐电话。</strong> 这是第一次创始人喜欢跳过的事情。你想给这些人过去一起工作过的一些人打电话。当你这样做时，你不能只是问”某某怎么样”，你必须深入挖掘。<strong>这个人是你曾经共事过的人中排名前 5% 的吗？他们具体做了什么？你会再雇用他们吗？你为什么不试图再雇用他们？</strong> 你真的必须在这些推荐电话上施压。</p>
+<p>我从和 YC 公司交谈中注意到的另一件事是：<strong>良好的沟通技巧往往与招聘结果正相关。</strong> 我过去不注意这一点。我们稍后会更多地谈论为什么沟通在早期初创公司中如此重要。如果某人难以交谈，如果某人无法清晰地沟通，这关于他们是否适合，是一个真正的问题。</p>
+<p><strong>还有，对于早期员工，你想要一个有一定冒险态度的人。</strong> 你通常能得到这一点，否则他们不会对初创公司感兴趣，但现在初创公司有点更流行了，你想要那些实际上有点喜欢冒险的人。如果某人在麦肯锡和你的初创公司之间做选择，他们很可能在初创公司里干不下去。</p>
+<p>你还想要那些疯狂地坚定的人——这和拥有风险容忍态度略有不同。所以你真的应该同时寻找这两者。顺便说一句，人们欢迎随时打断我提问。</p>
+<p><strong>Paul Graham 有一个著名的测试，叫做”动物测试”（animal test）。</strong> 这里的想法是：你应该能够将任何员工描述为在他们所做的事情上是一只”动物”。我认为这翻译成英文以外的语言不太好，但你需要不可阻挡的人。你想要那些会把事情搞定的人。通常最终对自己的早期招聘非常满意的创始人，通常最终把这些人的，描述为世界上在他们所做的事情上最优秀的人。</p>
+<p><img src="/images/yc-lecture-02/f02.png" alt="">
+<strong>Mark Zuckerberg 曾经说过，他试图招聘的人是：A. 他愿意在社交场合一起混的；B. 如果角色互换，他愿意向其汇报的。</strong> 在我看来，这是一个非常好的框架。你不必和每个人成为朋友，但你至少应该享受和他们一起工作。如果你没有这一点，你至少应该深深地尊重他们。但再次说明，<strong>如果你不想花很多时间和人们在一起，你应该相信你关于这一点的直觉。</strong></p>
+<p>在我谈招聘这个话题时，我想谈谈员工股权。创始人一直搞砸这件事。我认为作为一个粗略的估计，你应该目标是给前 10 名员工大约 <strong>10% 的公司</strong>。</p>
+<p>他们无论如何都要在四年内赚取它，而且如果成功了，他们的贡献会远远超过那个数字。他们会把公司的价值提升得远远超过那个数字，而如果他们没有，那他们反正也不会留在那里。</p>
+<p><strong>出于某种原因，创始人通常对员工非常吝啬股权，而对投资者非常慷慨</strong>。我认为这完全搞反了。我认为这是创始人搞得最频繁的事情之一。 员工只会随着时间增加更多价值。投资者通常会写下支票，然后，尽管有很多承诺，通常不会做那么多。有时候他们会，但你的员工才是多年来真正建立公司的人。</p>
+<p>所以我相信要和投资者斗争，减少他们获得的股权比例，然后尽可能地对员工慷慨。那些在这方面做得好的 YC 公司，那些对早期员工非常慷慨地给予股权的 YC 公司，一般来说，是我们资助过的最成功的公司。</p>
+<p>创始人忘记的一件事是：在他们招聘员工之后，他们必须留住他们。我不会在这里详细说明，因为我们稍后会有一讲专门讲这个，但我确实想谈一点，因为创始人经常搞错这件事。<strong>你必须确保你的员工快乐并感到被重视。</strong> 这是股权授予如此重要的原因之一。人们在加入初创公司的兴奋中不太考虑这一点，但随着他们日复一日、年复一年地进来，如果他们觉得受到了不公平的对待，那真的会开始侵蚀他们，怨恨会积累。</p>
+<p>但更重要的是，学习一点点管理技巧——第一次 CEO 通常很糟糕——会有很大帮助。今年夏天在 YC 的一位讲者，现在非常成功，在早期挣扎过，他的团队几次变化。有人问他最大的挣扎是什么，他说：<strong>“事实证明，你不应该每天告诉你的员工他们搞砸了，除非你想让他们全都离开，因为他们会的。”</strong></p>
+<p>但作为创始人，这是一种非常自然的本能。你认为你能把每件事做得最好，告诉人们他们做得不好是容易的。所以在这里学习一点点，将防止这种大规模的团队流失。对大多数创始人来说，<strong>真正赞美他们的团队</strong>也不会自然而然地发生。我也花了一点时间才学会这一点。你必须<strong>让你的团队为所有发生的好事获得荣誉，而你为坏事承担责任。</strong></p>
+<p>你不能微观管理。你必须不断地给人们小的责任区域。这些不是创始人思考的事情。我认为<strong>作为第一次创始人，你能做的最好的事情，就是意识到你会是一个非常糟糕的管理者，并试图过度补偿这一点。</strong> Dan Pink 谈到驱动人们做伟大工作的三件事：<strong>自主权、精通感和目标感。</strong> 我经营我的公司时从来没想过这个，但我后来想过，我认为这实际上是对的。我认为值得试着思考这一点。我也花了一点时间才学会做一对一沟通，以及给予清晰的反馈。</p>
+<p>所有这些事情，都是第一次 CEO 通常不做的，也许我可以帮你避免不做这些。</p>
+<p>团队部分的最后一部分，是关于当它不工作时解雇人们。无论我在这里说什么，都无法阻止任何人做错，我这样说的原因是：<strong>解雇人是经营公司最糟糕的部分之一。</strong> 实际上根据我自己的经验，我会说这是最糟糕的部分。每一个第一次创始人等待太久，每个人都希望员工会扭转局面。但<strong>正确的答案是：当它不没成效时，快速解雇。</strong></p>
+<p><img src="/images/yc-lecture-02/sam-p0014.jpg" alt=""></p>
+<p>这对公司更好，对员工也更好。但这如此痛苦、如此糟糕，以至于每个人在头几次都搞错了。</p>
+<p>除了解雇那些工作做得不好的人，你还想解雇那些：a) 制造办公室政治的人；b) <strong>持续消极的人。</strong> 公司的其他人总是意识到员工在做这样的事情，这是一个巨大的阻力——它对公司是彻头彻尾的有毒。再次说明，这是在大型公司里可能还行得通（尽管我仍然持怀疑态度）、但会搞死初创公司的例子。所以你需要注意那样的人。</p>
+<p>那么，问题来了：你如何平衡快速解雇员工和让早期员工感到安全？答案是：当员工不工作时，不是他们搞砸一次或两次。任何人都会搞砸一次或两次，或者更多次，你应该非常关爱，不把它发泄在他们身上，像，成为一个团队，一起工作。</p>
+<p>如果某人每一个决定都做错了，那就是你需要采取行动的时候，到那个时候，每个人都会痛苦地意识到。这不是搞砸一两次的情况，而是某人每次做某件事时，你自己都会做相反决定的情况。你不能做他们的决定，但你可以选择做决定的人。如果某人把所有事情都做错了，就像一个持续的事情，持续很多周或一个月，你会意识到这一点。</p>
+<p>这是那种情况之一：在理论上，听起来很复杂，要确定你在说什么，但在实践中，几乎从来没有任何疑问。这和某人犯一两个错误，和只是不断地把所有事情搞砸，或者造成问题，或者让每个人不开心之间的区别，在你第一次看到它时，是痛苦地明显的。</p>
+<hr>
+<h2 id="四问答环节穿插在全讲座中">四、问答环节（穿插在全讲座中）</h2>
+<h3 id="问联合创始人应该在什么时候决定股权分配">问：联合创始人应该在什么时候决定股权分配？</h3>
+<p><strong>答：</strong> 出于某种原因——我从来不太确定为什么——很多创始人、很多联合创始人喜欢把这件事拖非常久。你知道吗，他们甚至会以某种疯狂的方式签署注册文件，以便他们可以等待进行这次讨论。</p>
+<p>这次讨论不会随着时间变得更容易，你希望理想情况下在你们开始一起工作后很快就设定好。而且应该是<strong>接近均等的</strong>。如果你不愿意给某人——你的联合创始人——比如，均等的一份股权，我认为那应该让你认真思考你是否想要他们作为联合创始人。但无论如何，你应该试图在公司走得太远之前让这件事敲定。比如，肯定是在头几周内。</p>
+<h3 id="问如果和联合创始人的关系破裂了怎么办">问：如果和联合创始人的关系破裂了怎么办？</h3>
+<p><strong>答：</strong> 我们稍后会在课程中讲机制，但这里是最重要的、创始人搞砸的事情：<strong>每一个联合创始人，你自己当然也是，必须有归属期（vesting）。</strong> 基本上，你在联合创始人归属期上做的事情是：你们预先协商如果你们中有一人离开会发生什么。所以硅谷的正常立场是：它需要四年，假设你们平分股权，五十对五十，需要四年才能赚取所有这些。而且时钟在第一年之前不会开始。所以如果你一年后离开，你保留 25% 的股权；如果你两年后离开，50%；以此类推。</p>
+<p>如果你不这样做，如果你们发生了巨大的决裂，一名创始人早期带着一半公司离开，你的股权表上就有这个死重，很难让投资者资助你或做其他任何事情。所以防止这一点的第一建议，就是在股权上设定归属期。我们现在基本上不会资助创始人没有归属股权的公司，因为这太糟糕了。</p>
+<p>联合创始人之间关系中出现的另一件事——这在每个公司都在某种程度上发生——是尽早谈论它，不要让它坐在那里恶化。</p>
+<h3 id="问如果在招聘一个次优员工和把客户输给竞争对手之间做选择你怎么办">问：如果在招聘一个次优员工和把客户输给竞争对手之间做选择，你怎么办？</h3>
+<p><strong>答：</strong> 如果这将是一家公司的前五个员工之一，我会输掉那些客户。<strong>这对公司造成的损害——输掉一些客户比搞死公司要好。</strong> 后来，我可能有稍微不同的意见，但在一般情况下真的很难说。</p>
+<h3 id="问不同地点的联合创始人怎么样">问：不同地点的联合创始人怎么样？</h3>
+<p><strong>答：</strong> 答案是：不要这样做。<strong>我对远程团队总体上持怀疑态度，但在初创公司的早期，当沟通和速度压倒一切时，出于某种原因，视频会议电话就是不太管用。</strong> 这方面的数据是：看看历史上 30 家成功的软件公司，试着指出一个联合 founder 在不同地点的例子。这真的真的很难。</p>
+<hr>
+<h2 id="五执行">五、执行</h2>
+<p><img src="/images/yc-lecture-02/sam-p0015.jpg" alt=""></p>
+<p>执行对大多数创始人来说不是经营公司最有趣的部分，但它是最关键的。许多联合创始人以为他们只是注册了这个美丽的创意，然后他们就要上杂志封面、去参加派对。</p>
+<p><strong>但实际上，这比任何其他事情都更重要的是，成为联合创始人真正意味着什么——就是注册了这种多年的执行磨炼，而你无法外包这件事。</strong></p>
+<p>让一家公司执行良好的方式，是<strong>你必须自己执行良好</strong>。初创公司的每一件事都以创始人为榜样。无论创始人做什么，都成为文化。所以如果你想拥有一种人们努力工作、关注细节、管理客户、节俭的文化，你必须自己做到。没有其他方式。你不能雇一个 COO 来做这件事，而你自己去参加会议。公司只需要看到你是一个疯狂的执行机器。正如我在第一讲中所说，有伟大创意的人的数量，至少是愿意投入精力把它们执行好的人的 100 倍。<strong>创意本身毫无价值，只有执行良好才能增加和创造价值。</strong></p>
+<p>执行的大部分只是投入精力，但关于如何擅长它，有很多你可以学习的东西。所以我们会有三节课专门谈论这个。</p>
+<p><img src="/images/yc-lecture-02/f03.png" alt="">
+人们一直问我 CEO 的工作是什么。可能有五个以上，这里是早期经常出现的五个。前四个大家都认为是 CEO 的工作：<strong>设定愿景、融资、向你要招聘的人、高管、合作伙伴、媒体、每个人传播使命、招聘和管理团队。</strong> 但第五个是<strong>设定执行标准</strong>——这不是大多数创始人感到兴奋或想象自己会做的事情，但我认为这实际上是关键的 CEO 角色之一，<strong>而且除了 CEO 之外，没有人能做这件事。</strong></p>
+<p>执行分为两个关键问题：<strong>一，你能弄清楚该做什么吗？二，你能把它搞定吗？</strong> 所以我想谈谈搞定它的两个部分，假设你已经弄清楚了该做什么。这两个部分是：<strong>专注和强度。</strong></p>
+<hr>
+<h3 id="专注">专注</h3>
+<p><strong>专注至关重要。</strong> <strong>我最喜欢问创始人的一个问题，是关于他们在时间和金钱上花在什么地方。这几乎揭示了创始人认为什么重要的一切</strong>。</p>
+<p><strong>作为创始人，最困难的部分之一是：每天有 100 件重要的事情在争夺你的注意力。</strong> 你必须识别出正确的两三件，做那些，然后忽略、委托或推迟其余的。很多创始人认为重要的事情——面试很多不同的律师事务所、去参加会议、招聘顾问， whatever——它们根本不重要。什么真的重要，随着时间的推移而变化，但这是一个重要的建议。你需要弄清楚那一两件最重要的事情是什么，然后就做那些。</p>
+<p>而且你每天只能有两三件事，因为其他一切都会找上你。每天都会有火要救，如果你不擅长设定那两三件事是什么，你永远不擅长搞定事情。这对创始人来说真的很难。<strong>创始人对于开始新事物感到兴奋。</strong></p>
+<p>不幸的是，<strong>伟大执行的诀窍是：经常说”不”。</strong> 你在 100 次中说 97 次”不”，大多数创始人发现他们必须非常自觉地努力去做这件事。大多数初创公司离足够的专注差得远。<strong>他们工作很努力——也许——但他们没有在正确的事情上非常努力工作，所以他们仍然会失败。创办初创公司最伟大和最糟糕的事情之一是：你不会因为努力而得到任何分数。你只在你做出了市场想要的东西时得到分数。</strong> 所以如果你在错误的事情上非常努力工作，没人在乎的。</p>
+<p>那么问题来了：你如何弄清楚每天专注于什么。每天拥有目标非常重要。我认识的大多数好创始人，都为公司设有一组小的总体目标，公司里的每个人都知道。可能是诸如：在这个日期前发布产品、获得某个增长率、获得这个参与度、招聘这些关键角色——这些是其中一些，但公司里的每个人每周都能告诉你：我们的关键目标是什么。然后每个人都基于这一点执行。</p>
+<p>创始人真的设定了专注点。无论创始人关心什么、无论创始人专注于什么，那都会为整个公司设定目标。<strong>最好的创始人一遍又一遍地重复这些目标，远超过他们认为需要的次数。</strong> 他们把它们贴在墙上，在一对一沟通和每周的全员会议上谈论它们。这保持了公司的专注。</p>
+<p>专注的关键之一——以及我为什么说不是朋友的联合创始人真的挣扎的原因——是：<strong>没有良好的沟通，你无法专注。</strong> 即使一家公司只有四五个人，一次小小的沟通破裂，就足以让人们工作在稍微不同的事情上。然后你失去了专注，公司就乱了。</p>
+<p>我稍后会谈这一点，但<strong>增长和动量是你永远不能失去专注的东西。</strong> 增长和动量是初创公司赖以生存的东西，你必须始终专注于维持这些。你应该始终知道你的指标表现如何，你应该每周开一次评审会议，如果你曾经谈论”我们现在不专注于增长，我们现在增长得不太好，但我们在做这个其他事情，我们没有时间表什么时候发布，因为我们专注于这个其他事情，我们在做品牌重塑”——whatever——你几乎总是处于灾难之中。</p>
+<p>所以你想要有正确的指标，你想要专注于增长那些指标并保持动量。不要让公司被其他事情分散注意力或感到兴奋。<strong>一个常见的错误是：公司对自己的公关感到兴奋。</strong> 在没有结果的情况下获得公关真的很容易，而且它实际上感觉你真的很酷。但一年后你什么都没有，到那个时候你不再酷了，你只是谈论一年前的这些文章，哦你知道吗这些斯坦福学生创办了一家新初创公司，它将是下一个大事，而现在你什么都没有，那就糟了。</p>
+<p>正如我已经提到的，<strong>在同一空间里。</strong> 我认为这几乎是一个不可启动的事情。远程混淆团队真的真的很难。它减慢的周期时间比任何人认为的都要多。</p>
+<hr>
+<h3 id="强度">强度</h3>
+<p>执行之外的另一部分是<strong>强度</strong>。初创公司只在一定强度的水平上运作。<strong>我的一个朋友说，初创公司成功的秘密是：极端的专注和极端的投入。</strong> 你可以拥有一家初创公司和一个其他事情，你可以拥有一个家庭，但你可能无法拥有很多其他事情。初创公司不是工作生活平衡的最佳选择，这有点令人难过，但是现实。初创公司有很多很棒的事情，但这不是其中之一。初创公司的全方位吞噬，在某种程度上通常很难解释。你基本上需要愿意比你的竞争对手更努力地工作。</p>
+<p><img src="/images/yc-lecture-02/f04.png" alt="">
+这里的好消息是：<strong>在正确的事情上多付出一点努力，会产生巨大的差异。</strong> 我喜欢举的一个例子是：思考消费者网络产品的<strong>病毒系数（viral coefficient）</strong>——每个现有用户带来多少新用户。如果是 0.99，公司将最终趋于平稳并死亡。如果是 1.01，你将处于这种指数增长的快乐地方，永远。</p>
+<p>所以这是一个具体的例子：在那里，一点点额外的工作就是成功和失败之间的区别。当我们与成功的创始人交谈时，他们一直讲这样的故事。<strong>只是比竞争对手多努力一点点，就是让他们成功的原因。</strong></p>
+<p>所以你必须真的非常强度。这只来自 CEO，这只来自创始人。初创公司拥有的一大优势是<strong>执行速度</strong>，你必须拥有这种无情的运营节奏。<strong>Facebook 有一张著名的海报，上面写着”快速行动，打破常规”（Move fast and break things）。</strong></p>
+<p>但同时他们设法对质量痴迷。这就是为什么它很难。<strong>容易快速行动或对质量痴迷，但诀窍是在一家初创公司同时做到这两件事。你需要拥有一种文化，公司对每个人做的所有事情都有非常高的标准，但你仍然快速行动。</strong></p>
+<p><strong>Apple、Google 和 Facebook 每家都极其出色地做到了这一点。这不是关于产品，而是关于他们做的一切。他们快速行动，打破常规，他们在正确的地方节俭，但在任何地方都关心质量。</strong> 如果你不想让人们写垃圾代码，就不要给他们买垃圾电脑。你必须在整个公司设定一个质量标杆。</p>
+<p><img src="/images/yc-lecture-02/f05.png" alt="">
+与此相关的是：你必须<strong>果断</strong>。<strong>不果断是初创公司的杀手。</strong> 平庸的创始人花很多时间谈论宏伟计划，但他们从不做出决定。他们在谈论”你知道吗我可以做这件事，或者我可以做那个其他事情”，他们来回反复，他们从不行动。<strong>而你真正需要的是这种对行动的偏向。</strong></p>
+<p>最好的创始人做的工作看起来很小，但他们移动得非常快。但他们把事情搞定的速度非常快。每次你和最好的创始人交谈，他们都搞定了新事情。<strong>事实上，这是我们在 YC 学到的最能预测创始人成功的事情。</strong> 如果每次我们和一个团队交谈时，他们都搞定了新事情，这是我们能有的、一家公司将会成功的最好预测器。</p>
+<p>这部分的原因是：<strong>你可以用增量块做巨大的事情。如果你一直一次敲掉小块，一年后你回头看，你做了这个惊人的事情。另一方面，如果你消失一年，期望一次带回某种惊人的东西，它通常不会发生。</strong></p>
+<p>所以<strong>你必须挑选这些正确大小的项目。即使你在建立这个疯狂的合成生物学公司，你说”好吧，我必须离开一年，没有办法增量地做这件事”，你通常仍然可以把它分解成更小的项目。</strong></p>
+<p>所以<strong>速度是一个巨大的溢价。</strong> 最好的创始人通常回复邮件最快、做决定最快，他们在所有这些方面通常都很快。而且他们有这种”无论需要什么”的态度。</p>
+<p>他们也经常<strong>出现</strong>。</p>
+<p>他们来开会，他们来，他们亲自见我们。我有一个一直对我有效的建议：<strong>在边际情况下登上飞机。</strong> 我在这里讲一个小故事。</p>
+<p>当我经营自己的公司时，我们发现我们即将失去一笔交易。这是从这个空间里第一个大客户来的关键交易。它将去这家在我们之前一年就存在的公司。他们基本上已经把所有东西都锁定了。我们打电话说”我们有这个更好的产品，你必须和我们见面”，他们说”好吧，我们明天签署这笔交易。抱歉。” 我们开车到机场，我们登上飞机，我们第二天早上 6 点到了他们的办公室。我们只是坐在那里，他们告诉我们走开，我们只是继续坐在那里。最后，一个初级家伙决定和我们见面，在那之后，终于一个高级家伙决定和我们见面。他们最终撕毁了和那家其他公司的合同，我们在大约一周后和他们关闭了交易。而且我确信，如果我们没有登上飞机，如果我们没有亲自出现，那不会奏效。</p>
+<p><img src="/images/yc-lecture-02/f06.png" alt="">
+所以，你只是出现并做这些事情，当人们说”在边际情况下登上飞机”时，他们实际上是认真的，但他们不是字面意思。但我实际上认为这是一个好的、字面的建议。</p>
+<hr>
+<h2 id="六增长与动量">六、增长与动量</h2>
+<p>我之前提到了动量和增长。<strong>一旦再来：动量和增长是初创公司的命脉。</strong> 这可能是执行良好的三大秘密之一。你想要一家公司一直在赢。如果你曾经把脚从油门踏板上移开，事情将螺旋失控，向下雪球。</p>
+<p><strong>一个获胜的团队感觉良好，并继续获胜。一支有一阵子没赢的团队会变得失去动力，并继续失败。</strong> 所以始终保持动量，这是管理初创公司的首要指令。如果我只能告诉创始人一件关于如何经营公司的事，那就是这个。</p>
+<p>对于大多数软件初创公司，这转化为：<strong>保持增长。</strong> 对于硬件初创公司，这转化为：<strong>不要让你的发货日期拖延。</strong> 这是我们在 YC 期间告诉人们的，他们通常听进去，一切都好。在 YC 结束时发生的事情是：他们被其他事情分散了注意力，然后增长放缓了。然后，在那之后，人们开始变得不开心，辞职，一切分崩离析。很难弄清楚一个增长引擎，因为大多数公司以新的方式增长，但有一件事：<strong>如果你建立一个好的产品，它就会增长。</strong> 所以在一开始把产品做对，是不后来失去动量的最好方式。</p>
+<p>如果你确实失去了动量，大多数创始人试图以错误的方式把它找回来。他们发表这些关于公司愿景的长篇演讲，并试图用演讲激励团队。但在动量已经下滑的公司里的员工，不想听到那个。<strong>你必须把愿景演讲留给公司正在获胜的时候。当你没有获胜时，你只需通过小胜利找回动量。</strong> 我的一个董事会成员过去说：<strong>“销售修复初创公司的一切。” 这是真的。</strong></p>
+<p>所以你弄清楚在哪里可以获得这些小胜利，然后你把它搞定。然后你会惊讶于初创公司里所有其他问题如何消失。</p>
+<p>你会注意到的另一件事是：如果你有动量下滑，每个人开始不同意该做什么。<strong>当公司失去动量时，争吵会出现。</strong> 所以一个对此有效的框架是：<strong>当团队之间对要做什么有分歧时，那么你问你的用户，你做任何你的用户告诉你的事情。</strong></p>
+<p>而且你必须提醒人们：“嘿，东西现在不工作，我们实际上不恨彼此，我们只需回到正轨，一切都会工作。” 如果你只是把它说出来，如果你只是承认这一点，你会发现事情变得好得多。</p>
+<p>再以 Facebook 为例，当 Facebook 的增长在 2008 年放缓时，Mark 建立了一个”增长小组”（growth group）。他们做非常小的事情让 Facebook 增长得更快。所有这些本身似乎真的很小，但他们让 Facebook 的曲线重新上升。它很快成为那里最负盛名的集团。</p>
+<p>Mark 说过，这是 Facebook 最好的创新之一。根据当时在 Facebook 工作的我的朋友们说，它真的扭转了公司的动态。它从这种每个人都感觉糟糕、动量消失的事情，回到了一个正在获胜的地方。</p>
+<p><img src="/images/yc-lecture-02/f07.png" alt="">
+所以保持动量的一个好方法是在公司早期建立一个运营节奏。在那里你定期发布产品和推出新功能。在那里你每周和整个公司一起审查指标。<strong>这实际上你的董事会能为你做的最好的事情之一。董事会只在很少情况下为商业策略增加价值。但非常频繁地，你可以用它们作为强制函数，让公司关心指标和里程碑。</strong></p>
+<p>一件经常破坏动量、而且真的不应该的事情是：<strong>竞争对手。</strong> 竞争对手在媒体上制造噪音，我认为可能比任何其他外部因素更频繁地压垮一家公司的动量。</p>
+<p>所以这里有一个很好的经验法则：<strong>根本不要担心竞争对手，直到他们实际上用真正的、已发布的产品在打败你。</strong> 新闻稿比代码更容易写，而那仍然比做一个伟大的产品更容易。所以提醒你的公司这一点，这有点是创始人的角色，不因媒体上的竞争对手而让公司沮丧。</p>
+<p><strong>Henry Ford 有一句我很喜欢的名言：</strong></p>
+<blockquote>
+<p>“要害怕的竞争对手，是那个从来不麻烦你，而是一直让自己的业务变得更好的人。”</p>
+</blockquote>
+<p>这些几乎从来不是那些发布很多新闻稿的公司。它们让人沮丧。</p>
+<hr>
+<p><em>讲座结束。</em></p> <div class="cta-box"> <p>觉得有用？看看我的书和课程</p> <div class="cta-buttons"> <a href="/book" class="cta-btn cta-btn-primary">选择改变命运</a> <a href="/community" class="cta-btn cta-btn-secondary">写作课程</a> </div> </div> <nav class="article-nav"> <a href="/blog/yc-lecture-01-how-to-start-a-startup" class="article-nav-link article-nav-prev"> <span class="article-nav-label"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+阅读上一篇
+</span> <span class="article-nav-title">如何创办初创公司</span> </a> <a href="/blog/yc-lecture-03-counterintuitive-parts-and-how-to-have-ideas" class="article-nav-link article-nav-next"> <span class="article-nav-label">
+阅读下一篇
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg> </span> <span class="article-nav-title">创业中反直觉的部分，以及如何产生创意</span> </a> </nav> </article> </main> </div> </main> <footer> <div class="footer-inner"> <p>© 2026 像企业家一样写作</p> <div class="footer-links"> <a href="https://mp.weixin.qq.com/" target="_blank">公众号：种一个梦</a> </div> </div> </footer>  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    let _searchIndex = null;
+
+    async function loadSearchIndex() {
+      if (_searchIndex) return _searchIndex;
+      try {
+        const resp = await fetch('/search.json?t=' + Date.now());
+        _searchIndex = await resp.json();
+      } catch (e) {
+        console.warn('search.json load failed', e);
+        _searchIndex = { posts: [], books: [] };
+      }
+      return _searchIndex;
+    }
+
+    function openSearch() {
+      const overlay = document.getElementById('search-overlay');
+      const input = document.getElementById('search-input');
+      overlay.classList.add('active');
+      input.value = '';
+      input.focus();
+      renderResults('');
+    }
+
+    function closeSearch() {
+      document.getElementById('search-overlay').classList.remove('active');
+    }
+
+    function getSnippet(text, keyword, radius) {
+      radius = radius || 30;
+      if (!text) return '';
+      const idx = text.toLowerCase().indexOf(keyword.toLowerCase());
+      if (idx === -1) return text.substring(0, 80);
+      const start = Math.max(0, idx - radius);
+      const end = Math.min(text.length, idx + keyword.length + radius);
+      let s = text.substring(start, end);
+      if (start > 0) s = '…' + s;
+      if (end < text.length) s = s + '…';
+      return s;
+    }
+
+    function renderResults(query) {
+      const container = document.getElementById('search-results');
+      if (!query.trim()) {
+        container.innerHTML = '<div class="search-empty">输入关键词搜索文章和书籍…</div>';
+        return;
+      }
+      const q = query.toLowerCase();
+      const index = _searchIndex || { posts: [], books: [] };
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      if (matchedPosts.length === 0 && matchedBooks.length === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        return;
+      }
+      let html = '';
+      matchedPosts.forEach(p => {
+        const snippet = getSnippet(p.content || '', q, 35);
+        const displayDesc = (p.desc || '') || snippet;
+        html += '<a href="/blog/' + p.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">文章</span>' + p.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      matchedBooks.forEach(b => {
+        const snippet = getSnippet(b.content || '', q, 35);
+        const displayDesc = (b.desc || '') || snippet;
+        html += '<a href="/book/' + b.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">书籍</span>' + b.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      container.innerHTML = html;
+    }
+
+    // ===== 搜索 FAB 拖动逻辑 =====
+    (function() {
+      const fab = document.getElementById('search-toggle');
+      const FAB_SIZE = 56;
+      let isDragging = false;
+      let startX, startY, startLeft, startTop;
+      let dragMoved = false;
+
+      function onDown(clientX, clientY) {
+        isDragging = true;
+        dragMoved = false;
+        startX = clientX;
+        startY = clientY;
+        const rect = fab.getBoundingClientRect();
+        startLeft = rect.left;
+        startTop = rect.top;
+        fab.classList.add('dragging');
+      }
+
+      function onMove(clientX, clientY) {
+        if (!isDragging) return;
+        const dx = clientX - startX;
+        const dy = clientY - startY;
+        if (!dragMoved && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+          dragMoved = true;
+          // 切换到绝对 left/top 定位
+          fab.style.bottom = 'auto';
+          fab.style.right = 'auto';
+          fab.style.left = startLeft + 'px';
+          fab.style.top = startTop + 'px';
+        }
+        if (dragMoved) {
+          let newLeft = Math.max(4, Math.min(startLeft + dx, window.innerWidth - FAB_SIZE - 4));
+          let newTop  = Math.max(4, Math.min(startTop  + dy, window.innerHeight - FAB_SIZE - 4));
+          fab.style.left = newLeft + 'px';
+          fab.style.top  = newTop  + 'px';
+        }
+      }
+
+      function onUp() {
+        if (!isDragging) return;
+        isDragging = false;
+        fab.classList.remove('dragging');
+        if (!dragMoved) {
+          // 判定为点击，打开搜索
+          loadSearchIndex().then(() => openSearch());
+        }
+      }
+
+      fab.addEventListener('mousedown', e => { if (e.button === 0) { onDown(e.clientX, e.clientY); e.preventDefault(); } });
+      document.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+      document.addEventListener('mouseup', onUp);
+
+      fab.addEventListener('touchstart', e => { onDown(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); }, { passive: false });
+      document.addEventListener('touchmove', e => { if (isDragging) { onMove(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); } }, { passive: false });
+      document.addEventListener('touchend', onUp);
+    })();
+
+    document.getElementById('search-close').addEventListener('click', closeSearch);
+    document.getElementById('search-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeSearch();
+    });
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      renderResults(e.target.value);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        loadSearchIndex().then(() => openSearch());
+      }
+    });
+    });
+  </script> <!-- 页面关键词高亮（从搜索结果跳转过来时） --> <script>
+    (function() {
+      function getQueryParam(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name) || '';
+      }
+
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function highlightKeyword(keyword) {
+        if (!keyword.trim()) return;
+        const main = document.querySelector('main');
+        if (!main) return;
+
+        const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, null, false);
+        const nodesToReplace = [];
+        const regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
+
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node.parentElement && node.parentElement.tagName === 'MARK') continue;
+          if (regex.test(node.textContent)) {
+            nodesToReplace.push(node);
+          }
+        }
+
+        let firstMark = null;
+        nodesToReplace.forEach(textNode => {
+          const span = document.createElement('span');
+          span.innerHTML = textNode.textContent.replace(regex, '<mark class="search-highlight">$1</mark>');
+          const marks = span.querySelectorAll('mark');
+          if (marks.length > 0 && !firstMark) {
+            firstMark = marks[0];
+          }
+          const fragment = document.createDocumentFragment();
+          while (span.firstChild) {
+            fragment.appendChild(span.firstChild);
+          }
+          textNode.parentNode.replaceChild(fragment, textNode);
+        });
+
+        if (firstMark) {
+          firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(function() {
+            const marks = main.querySelectorAll('mark.search-highlight');
+            marks.forEach(function(m) {
+              const parent = m.parentNode;
+              parent.replaceChild(document.createTextNode(m.textContent), m);
+              parent.normalize();
+            });
+          }, 6000);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          highlightKeyword(getQueryParam('q'));
+        });
+      } else {
+        highlightKeyword(getQueryParam('q'));
+      }
+    })();
+  </script> <!-- 代码块复制按钮 --> <script>
+    (function() {
+      function initCopyButtons() {
+        document.querySelectorAll('.prose pre').forEach(function(pre) {
+          if (pre.querySelector('.copy-btn')) return;
+          var btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.textContent = '复制';
+          btn.setAttribute('aria-label', '复制代码');
+          btn.addEventListener('click', function() {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+              btn.textContent = '已复制';
+              btn.classList.add('copied');
+              setTimeout(function() {
+                btn.textContent = '复制';
+                btn.classList.remove('copied');
+              }, 2000);
+            }).catch(function() {
+              btn.textContent = '失败';
+              setTimeout(function() { btn.textContent = '复制'; }, 2000);
+            });
+          });
+          pre.style.position = 'relative';
+          pre.appendChild(btn);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCopyButtons);
+      } else {
+        initCopyButtons();
+      }
+    })();
+  </script> <!-- 微信电子书弹窗（滚动触发 + 每天一次） --> <script>
+    (function() {
+      // === 配置 ===
+      var STORAGE_DAY   = 'ebook_popup_day';    // 今天已弹过
+      var STORAGE_DISMISS = 'ebook_popup_dismiss_until'; // 用户点「暂时不要」的过期时间戳
+      var SCROLL_THRESHOLD = 0.40; // 滚动 40% 触发
+      var TIME_THRESHOLD   = 60000;  // 或停留 60 秒触发
+
+      // === 已有领取人数（可手动更新）===
+      var CLAIM_COUNT = 327;
+
+      // === 工具函数 ===
+      function todayStr() {
+        var d = new Date();
+        return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+      }
+      function getDismissUntil() {
+        try { return parseInt(localStorage.getItem(STORAGE_DISMISS), 10); } catch(e) { return 0; }
+      }
+
+      // === 判断是否应该弹出 ===
+      function shouldShow() {
+        // 用户点过「暂时不要」且未过期
+        var dismissUntil = getDismissUntil();
+        if (dismissUntil && Date.now() < dismissUntil) return false;
+        // 今天已弹过
+        try {
+          if (localStorage.getItem(STORAGE_DAY) === todayStr()) return false;
+        } catch(e) {}
+        return true;
+      }
+
+      // === 记录：今天已弹 ===
+      function markShown() {
+        try { localStorage.setItem(STORAGE_DAY, todayStr()); } catch(e) {}
+      }
+
+      // === 记录：暂时不要（7天后）===
+      function markDismissed() {
+        var t = Date.now() + 7 * 24 * 60 * 60 * 1000;
+        try { localStorage.setItem(STORAGE_DISMISS, String(t)); } catch(e) {}
+      }
+
+      // === 显示 / 关闭 ===
+      var overlay    = document.getElementById('ebook-popup-overlay');
+      var closeBtn   = document.getElementById('ebook-popup-close');
+      var dismissBtn = document.getElementById('ebook-popup-dismiss');
+      var shown      = false;
+      var timeTimer  = null;
+
+      function showPopup() {
+        if (shown || !overlay || !shouldShow()) return;
+        shown = true;
+        markShown();
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function dismissPopup() {
+        if (!overlay) return;
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        if (timeTimer) clearTimeout(timeTimer);
+      }
+
+      if (!overlay) return;
+
+      // === 触发条件 1：滚动超过 40% ===
+      var scrollFired = false;
+      window.addEventListener('scroll', function() {
+        if (scrollFired) return;
+        var h = document.body.scrollHeight - window.innerHeight;
+        if (h <= 0) return;
+        if (window.scrollY / h > SCROLL_THRESHOLD) {
+          scrollFired = true;
+          showPopup();
+        }
+      }, { passive: true });
+
+      // === 触发条件 2：停留超过 60 秒 ===
+      timeTimer = setTimeout(function() {
+        if (!scrollFired) showPopup();
+      }, TIME_THRESHOLD);
+
+      // === 关闭按钮 ===
+      if (closeBtn) closeBtn.addEventListener('click', dismissPopup);
+
+      // === 「暂时不要」按钮 ===
+      if (dismissBtn) {
+        dismissBtn.addEventListener('click', function() {
+          markDismissed();
+          dismissPopup();
+        });
+      }
+
+      // === 点击遮罩关闭 ===
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) dismissPopup();
+      });
+
+      // === ESC 关闭 ===
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+          dismissPopup();
+        }
+      });
+    })();
+  </script> </body></html>  <script type="module">(function(){const e=document.getElementById("reading-progress");if(e){let c=function(){const n=window.scrollY||document.documentElement.scrollTop,s=document.documentElement.scrollHeight-document.documentElement.clientHeight,d=s>0?n/s*100:0;e.style.width=d+"%",e.classList.toggle("show",n>50)};window.addEventListener("scroll",c,{passive:!0}),c()}const t=document.querySelector(".book-toc-header"),o=document.querySelector(".book-toc");t&&o&&t.addEventListener("click",function(){o.classList.toggle("expanded")})})();</script>

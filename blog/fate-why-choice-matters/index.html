@@ -1,0 +1,403 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="选择的滞后效应"><title>为什么选择如此重要 — 像企业家一样写作</title><link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml"><link rel="sitemap" type="application/xml" href="/sitemap-index.xml"><!-- Static CSS — no build hash, safe for incremental deploys --><link rel="stylesheet" href="/global.css"><!-- 自托管字体 --><link rel="preload" href="/fonts/NotoSerifSC-Regular.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/_astro/BaseLayout.BYj8Tvw5.css">
+<link rel="stylesheet" href="/_astro/_..CcR4Cqk3.css"></head> <body> <nav class="navbar"> <div class="nav-inner"> <a href="/" class="logo"> <img src="/images/logo-header.png" alt="Logo" class="logo-img"> <span>像企业家一样写作</span> </a> <div class="nav-links"> <a href="/blog">文章</a> <a href="/book">书籍</a> <a href="/community">社群</a> <a href="/join">答疑</a> </div> </div> </nav> <!-- 搜索浮窗 --> <div id="search-overlay" class="search-overlay"> <div class="search-modal"> <div class="search-header"> <input id="search-input" type="text" placeholder="搜索文章标题、描述..." autocomplete="off"> <button id="search-close" class="search-close-btn" aria-label="关闭搜索">✕</button> </div> <div id="search-results" class="search-results"></div> </div> </div> <!-- 浮动搜索按钮 --> <button id="search-toggle" class="search-fab" aria-label="搜索"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"> <circle cx="11" cy="11" r="7"></circle> <line x1="16.5" y1="16.5" x2="21" y2="21"></line> </svg> </button> <!-- ===== 微信电子书弹窗 ===== --> <div id="ebook-popup-overlay" class="ebook-popup-overlay" onclick="if(event.target===this){this.classList.remove('active');document.body.style.overflow='';}"> <div class="ebook-popup-card"> <div class="ebook-popup-topbar"></div> <button id="ebook-popup-close" class="ebook-popup-close" aria-label="关闭" onclick="event.stopPropagation();document.getElementById('ebook-popup-overlay').classList.remove('active');document.body.style.overflow='';">✕</button> <div class="ebook-popup-body"> <!-- 送你 --> <div class="ebook-popup-gift">送你一本我的电子书</div> <!-- 书名 --> <div class="ebook-popup-bigtitle">《闭环：在你睡觉时赚钱》</div> <div class="ebook-popup-bigsub">从0到1的自媒体方法论</div> <!-- 社会认同 --> <div class="ebook-popup-proof"> <span class="ebook-proof-avatars"> <span class="ebook-proof-avatar" style="background: #f5e0d0;"> <span style="font-size:12px;font-weight:700;color:#c45c2e;">M</span> </span> <span class="ebook-proof-avatar" style="background: #d0e8e0;"> <span style="font-size:12px;font-weight:700;color:#3a7a5e;">S</span> </span> <span class="ebook-proof-avatar" style="background: #d8dff0;"> <span style="font-size:12px;font-weight:700;color:#4a6aab;">L</span> </span> </span> <span><span class="ebook-proof-count">327</span> 人已领取</span> </div> <!-- 二维码 --> <div class="ebook-popup-qr"> <img src="/images/wechat-qr.png" alt="微信二维码"> </div> <!-- 下载按钮 — 仅手机展示 --> <a class="ebook-popup-download" href="/images/wechat-qr.png" download> <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path> <polyline points="7 10 12 15 17 10"></polyline> <line x1="12" y1="15" x2="12" y2="3"></line> </svg>
+下载二维码到手机
+</a> <!-- 流程提示 --> <p class="ebook-popup-steps"> <span class="step">扫二维码</span> → <span class="step">添加好友</span> → 回复<span class="keyword-value">闭环</span> → <span class="step">立马领取</span> </p> </div> <div class="ebook-popup-footer"> <p>免费领取 · 无需购买任何产品 · 24 小时内回复</p> </div> </div> </div> <main>   <div id="reading-progress" class="reading-progress"></div> <!-- 书籍系列：左侧目录 + 右侧正文 -->
+    <div class="book-layout"> <!-- 左侧目录 --> <aside class="book-toc"> <div class="book-toc-inner"> <div class="book-toc-header"> <span class="book-toc-series">选择改变命运</span> <span class="book-toc-count">目录</span> </div> <nav class="book-toc-nav"> <div class="book-toc-section active"> <a href="/blog/fate-why-choice-matters" class="book-toc-item"> <span class="book-toc-order">1</span> <span class="book-toc-title">为什么选择如此重要</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-how-brain-works" class="book-toc-item"> <span class="book-toc-order">2</span> <span class="book-toc-title">大脑「机器」是怎么运行的</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-acceptance-first-law" class="book-toc-item"> <span class="book-toc-order">3</span> <span class="book-toc-title">接受是改变的第一法则</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-habit-of-investing" class="book-toc-item"> <span class="book-toc-order">4</span> <span class="book-toc-title">投资的习惯</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-habit-of-slack" class="book-toc-item"> <span class="book-toc-order">5</span> <span class="book-toc-title">留出余闲的习惯</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-habit-of-open-mind" class="book-toc-item"> <span class="book-toc-order">6</span> <span class="book-toc-title">开放头脑的习惯</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-habit-of-self-comparison" class="book-toc-item"> <span class="book-toc-order">7</span> <span class="book-toc-title">和自己比较的习惯</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-habit-of-lifelong-learning" class="book-toc-item"> <span class="book-toc-order">8</span> <span class="book-toc-title">终身学习的习惯</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-think-second-order" class="book-toc-item"> <span class="book-toc-order">9</span> <span class="book-toc-title">思考后续的后续结果</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-how-to-make-good-choices" class="book-toc-item"> <span class="book-toc-order">10</span> <span class="book-toc-title">如何做出优质的选择</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-economics-of-choice" class="book-toc-item"> <span class="book-toc-order">11</span> <span class="book-toc-title">经济学：关于选择的科学</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-trends-and-opportunities" class="book-toc-item"> <span class="book-toc-order">12</span> <span class="book-toc-title">趋势、机会与红利风口</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-centenarian-life-city-industry" class="book-toc-item"> <span class="book-toc-order">13</span> <span class="book-toc-title">百岁人生、城市与行业</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-human-nature-in-choices" class="book-toc-item"> <span class="book-toc-order">14</span> <span class="book-toc-title">影响选择的三种人性</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-effort-and-luck" class="book-toc-item"> <span class="book-toc-order">15</span> <span class="book-toc-title">再谈努力与制造好运</span> </a>  </div><div class="book-toc-section "> <a href="/blog/fate-rapid-learning-method" class="book-toc-item"> <span class="book-toc-order">16</span> <span class="book-toc-title">快速入门的方法</span> </a>  </div> </nav> <a href="/book" class="book-toc-back"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+返回书架
+</a> </div> </aside> <!-- 右侧正文 --> <main class="book-main"> <article class="prose"> <header class="article-header"> <h1>为什么选择如此重要</h1> <div class="article-meta"> <span class="article-series">选择改变命运</span> <time> 2026年4月21日 </time> </div> </header> <p><img src="/images/fate/17_Image_1.jpg" alt="封面"></p>
+<h2 id="第一章为什么选择如此重要">第一章：为什么选择如此重要？</h2>
+<blockquote>
+<p><strong>让子弹飞一会儿</strong></p>
+</blockquote>
+<p>高考志愿选错了，到毕业的时候该拿多少已经框架性决定了（工资由劳动市场的供需关系决定，不由努力，也就是成本决定。专业一定程度上决定行业。）；行业选错了，地铁上背单词、洗澡时候听书、早上六点起来工作，都是小数点后的微调；老板选错，再怎么学习升职加薪的话术、怎么处理职场人情世故都是细节，无伤大雅；伴侣选错了，再买书、再报班、甚至把《非暴力沟通》背下来，都是细节性努力，都是结果的微调；读书读的再勤奋，选书步骤出错，读《货币战争》之类的书籍，反而喂坏了脑子。</p>
+<p>为什么选择这么重要，却好像没人在意呢？</p>
+<p>因为，<strong>选择的影响是具有滞后效应的，你刚参加工作、和对象领证、养成一些好习惯（小选择），结果并不是立马看到的。而是随着时间的推移，结果才慢慢出现且越来越明显、越来越体现选择的重要性的。</strong>   如若我们不自知是因为选择错了，我们就会怀疑努力，开始抱怨命运的不公。</p>
+<p>选择的反馈恰恰和努力相反，努力是很容易检测的。</p>
+<p>高三那一年的努力结果，在高考后一目了然，但高考后专业选择是否正确，只有四年后大学毕业才清楚的，甚至毕业了也不清楚，误以为是自己不够努力造成的。选择是潜移默化地长期影响人生。在选择的一刹那就注定了结果，只是需要很长的时间才显现。</p>
+<p>选择（大的、小的）大于努力。读什么书比这个读这个动作更重要，交什么样的朋友比交这个动作更重要，做什么样的工作比做这个动作更重要，学什么比学这个动作更重要。<strong>养成什么样的习惯比养成习惯这个动作更重要</strong>。</p>
+<p>虽然高考存在诸多的问题，但仍然是对普通人最公平的事情，因为你只要努力就行了，考试内容规定了、考试都是基本的知识，只要没有很大的智力缺陷都可以掌握。然而真正的差距出现在高考后的选择专业，选择城市、选择大学，然后带来蝴蝶效应 ———— 一只蝴蝶在巴西的丛林中振动了一下翅膀，在数周后，在大西洋上引起一场飓风。</p>
+<p>普通人最重要就是选择，你大学选择的专业决定你大学四年的模式，一定程度上决定你的行业，甚至一生；你选择的房子，可能是你半辈子的积蓄；你选择伴侣需要余生和他/她度过；你的工作，上学后的人生的三分之二都是在工作。一个重大决策可能会影响未来十几年，甚至几十年的人生轨迹。时间才是一切的一切成本，在选择上偷懒，等于在战略上偷懒，如此，战术上的勤奋，都是微调罢了。</p>
+<p>男怕入错行、女怕嫁错郎。一类是“入错行”，上什么大学？学什么专业？去哪座城市？毕业以后做什么？一类是“嫁错郎”，和谁结婚？和哪家公司“结婚”？和哪个行业“结婚”？三百六十五行，行行出状元，是，是没错，但各行的状元又分三六九等，古代的文状元就是比武状元器重一点，许仙的儿子一定要考取文状元，武状元好像并没有什么卵用。</p>
+<p>每一个选择都是有其框架范围的，选择定了，再多的努力都是细微的调整。选择是带有框架的，这是一开始可以看到的，如果认真思考。你以后的样子差不多就是你的上司的样子。你什么时候可以做领导，看你领导的年龄。你的天花板等于你的老板。在行业里干多少年可以功成名就，看行业年龄结构。选择是自带框架的，天花板是可以看到的，比如，靠简单的出卖时间，财富自由是极度困难。</p>
+<p>当初选择的时候根本不注意领导选拔标准，又或者自己也是拍马屁上位的。下一次别人拍马屁挤占位置，你应该是毫无怨言才对。选择是有滞后效应的。你选择那一刻结局已经注定，只是很久以后才结局显现罢了。</p>
+<p>以上都是一些大的选择，那么小的选择又是如何影响命运的呢。</p>
+<p>卡尔·荣格说：</p>
+<blockquote>
+<p>你的潜意识正在操控你的人生，而你却称其为命运。</p>
+</blockquote>
+<p>我们生活中无数个小选择都是基于潜意识的习惯反应。什么叫潜意识？如果你是坐着的，请站起来，如果你是走路过程，请停止走路。现在，重新迈步走路，并去注意一下，是先迈左脚还是先迈右脚，如果发现是右脚，那么请重新站立好，换成先迈左脚走路，然后你会发现稍微的不适感。比如我，每次都是先迈右脚，这就是一种习惯。习惯是不容易察觉的、不费力的、重复次数足够多的，因此，习惯的力量是强大的，以至于人们称“习惯决定命运”。</p>
+<p>像走路时先迈右脚一样，你和什么样的人交朋友，和他们讨论什么？你早上起床还是睡懒觉？吃健康的食物和吃危害健康的食物？你对新事物的态度是欢迎还是反驳？你对待人的行为？都是自动化反应，不加思考的反馈。命运是一种捉摸不透的力量，潜意识也是如此，本能地运行着，隐蔽，我们注意不到它。潜意识埋藏在我们的显意识的下面，我们通常很难“看到”潜意识的存在。</p>
+<p>早晨起床还是继续睡觉？如果起床了，我们叫早起的习惯。下班后读书还是刷短视频？如果读书了，我们叫读书的习惯。当听到一个不同的观点，继续倾听还是反驳，如果听了，我们叫开放倾听的习惯。此类众多的微小的选择，就是我所说的习惯。</p>
+<p>那么，你真的就觉得习惯不重要吗？</p>
+<p>习惯可以是朋友也可以是敌人。好的习惯让我们以指数级地成长，坏的习惯，同样有如此威力把我们拖向深渊。</p>
+<p>举一个大家感同身受的例子，驾驶习惯。下车时候看看同方向有没有车辆和电动车经过、在各种岔路口降低速度、喝酒不开车、开车带好安全带。这些都是一些好习惯。</p>
+<p>科目一和科目四都是一些“活生生”的，如果没有养成一些好习惯，甚至养成一些坏习惯带来的不好结果甚至致命的结果的例子。</p>
+<p><strong>重大的选择和习惯</strong>都是潜移默化的，是需要很长时间后才显现出来。</p>
+<p>比如读书这件事情，读了一本、两本是看不到作用的，人们所说的读书改变命运，其真正含义是读书的习惯改变命运。选择读书的那一刻，没有什么变化，但读多了，随着时间的流逝，结果才会出现。</p>
+<p>为什么大的选择重要，至少它可能会彻底改变你的习惯。为什么要尽量上好的大学、好的公司？因为周围人的做事习惯、思考习惯都会潜移默化地影响你。有研究发现，你的水平在最亲密的五个人的平均水平附近。</p>
+<p>我始终相信，人和人的差别，无非就是几个优秀的习惯带来的蝴蝶效应。</p> <div class="cta-box"> <p>觉得有用？看看我的书和课程</p> <div class="cta-buttons"> <a href="/book" class="cta-btn cta-btn-primary">选择改变命运</a> <a href="/community" class="cta-btn cta-btn-secondary">写作课程</a> </div> </div> <nav class="article-nav"> <span></span> <a href="/blog/fate-how-brain-works" class="article-nav-link article-nav-next"> <span class="article-nav-label">
+阅读下一篇
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg> </span> <span class="article-nav-title">大脑「机器」是怎么运行的</span> </a> </nav> </article> </main> </div> </main> <footer> <div class="footer-inner"> <p>© 2026 像企业家一样写作</p> <div class="footer-links"> <a href="https://mp.weixin.qq.com/" target="_blank">公众号：种一个梦</a> </div> </div> </footer>  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    let _searchIndex = null;
+
+    async function loadSearchIndex() {
+      if (_searchIndex) return _searchIndex;
+      try {
+        const resp = await fetch('/search.json?t=' + Date.now());
+        _searchIndex = await resp.json();
+      } catch (e) {
+        console.warn('search.json load failed', e);
+        _searchIndex = { posts: [], books: [] };
+      }
+      return _searchIndex;
+    }
+
+    function openSearch() {
+      const overlay = document.getElementById('search-overlay');
+      const input = document.getElementById('search-input');
+      overlay.classList.add('active');
+      input.value = '';
+      input.focus();
+      renderResults('');
+    }
+
+    function closeSearch() {
+      document.getElementById('search-overlay').classList.remove('active');
+    }
+
+    function getSnippet(text, keyword, radius) {
+      radius = radius || 30;
+      if (!text) return '';
+      const idx = text.toLowerCase().indexOf(keyword.toLowerCase());
+      if (idx === -1) return text.substring(0, 80);
+      const start = Math.max(0, idx - radius);
+      const end = Math.min(text.length, idx + keyword.length + radius);
+      let s = text.substring(start, end);
+      if (start > 0) s = '…' + s;
+      if (end < text.length) s = s + '…';
+      return s;
+    }
+
+    function renderResults(query) {
+      const container = document.getElementById('search-results');
+      if (!query.trim()) {
+        container.innerHTML = '<div class="search-empty">输入关键词搜索文章和书籍…</div>';
+        return;
+      }
+      const q = query.toLowerCase();
+      const index = _searchIndex || { posts: [], books: [] };
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      if (matchedPosts.length === 0 && matchedBooks.length === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        return;
+      }
+      let html = '';
+      matchedPosts.forEach(p => {
+        const snippet = getSnippet(p.content || '', q, 35);
+        const displayDesc = (p.desc || '') || snippet;
+        html += '<a href="/blog/' + p.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">文章</span>' + p.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      matchedBooks.forEach(b => {
+        const snippet = getSnippet(b.content || '', q, 35);
+        const displayDesc = (b.desc || '') || snippet;
+        html += '<a href="/book/' + b.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">书籍</span>' + b.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      container.innerHTML = html;
+    }
+
+    // ===== 搜索 FAB 拖动逻辑 =====
+    (function() {
+      const fab = document.getElementById('search-toggle');
+      const FAB_SIZE = 56;
+      let isDragging = false;
+      let startX, startY, startLeft, startTop;
+      let dragMoved = false;
+
+      function onDown(clientX, clientY) {
+        isDragging = true;
+        dragMoved = false;
+        startX = clientX;
+        startY = clientY;
+        const rect = fab.getBoundingClientRect();
+        startLeft = rect.left;
+        startTop = rect.top;
+        fab.classList.add('dragging');
+      }
+
+      function onMove(clientX, clientY) {
+        if (!isDragging) return;
+        const dx = clientX - startX;
+        const dy = clientY - startY;
+        if (!dragMoved && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+          dragMoved = true;
+          // 切换到绝对 left/top 定位
+          fab.style.bottom = 'auto';
+          fab.style.right = 'auto';
+          fab.style.left = startLeft + 'px';
+          fab.style.top = startTop + 'px';
+        }
+        if (dragMoved) {
+          let newLeft = Math.max(4, Math.min(startLeft + dx, window.innerWidth - FAB_SIZE - 4));
+          let newTop  = Math.max(4, Math.min(startTop  + dy, window.innerHeight - FAB_SIZE - 4));
+          fab.style.left = newLeft + 'px';
+          fab.style.top  = newTop  + 'px';
+        }
+      }
+
+      function onUp() {
+        if (!isDragging) return;
+        isDragging = false;
+        fab.classList.remove('dragging');
+        if (!dragMoved) {
+          // 判定为点击，打开搜索
+          loadSearchIndex().then(() => openSearch());
+        }
+      }
+
+      fab.addEventListener('mousedown', e => { if (e.button === 0) { onDown(e.clientX, e.clientY); e.preventDefault(); } });
+      document.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+      document.addEventListener('mouseup', onUp);
+
+      fab.addEventListener('touchstart', e => { onDown(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); }, { passive: false });
+      document.addEventListener('touchmove', e => { if (isDragging) { onMove(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); } }, { passive: false });
+      document.addEventListener('touchend', onUp);
+    })();
+
+    document.getElementById('search-close').addEventListener('click', closeSearch);
+    document.getElementById('search-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeSearch();
+    });
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      renderResults(e.target.value);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        loadSearchIndex().then(() => openSearch());
+      }
+    });
+    });
+  </script> <!-- 页面关键词高亮（从搜索结果跳转过来时） --> <script>
+    (function() {
+      function getQueryParam(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name) || '';
+      }
+
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function highlightKeyword(keyword) {
+        if (!keyword.trim()) return;
+        const main = document.querySelector('main');
+        if (!main) return;
+
+        const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, null, false);
+        const nodesToReplace = [];
+        const regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
+
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node.parentElement && node.parentElement.tagName === 'MARK') continue;
+          if (regex.test(node.textContent)) {
+            nodesToReplace.push(node);
+          }
+        }
+
+        let firstMark = null;
+        nodesToReplace.forEach(textNode => {
+          const span = document.createElement('span');
+          span.innerHTML = textNode.textContent.replace(regex, '<mark class="search-highlight">$1</mark>');
+          const marks = span.querySelectorAll('mark');
+          if (marks.length > 0 && !firstMark) {
+            firstMark = marks[0];
+          }
+          const fragment = document.createDocumentFragment();
+          while (span.firstChild) {
+            fragment.appendChild(span.firstChild);
+          }
+          textNode.parentNode.replaceChild(fragment, textNode);
+        });
+
+        if (firstMark) {
+          firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(function() {
+            const marks = main.querySelectorAll('mark.search-highlight');
+            marks.forEach(function(m) {
+              const parent = m.parentNode;
+              parent.replaceChild(document.createTextNode(m.textContent), m);
+              parent.normalize();
+            });
+          }, 6000);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          highlightKeyword(getQueryParam('q'));
+        });
+      } else {
+        highlightKeyword(getQueryParam('q'));
+      }
+    })();
+  </script> <!-- 代码块复制按钮 --> <script>
+    (function() {
+      function initCopyButtons() {
+        document.querySelectorAll('.prose pre').forEach(function(pre) {
+          if (pre.querySelector('.copy-btn')) return;
+          var btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.textContent = '复制';
+          btn.setAttribute('aria-label', '复制代码');
+          btn.addEventListener('click', function() {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+              btn.textContent = '已复制';
+              btn.classList.add('copied');
+              setTimeout(function() {
+                btn.textContent = '复制';
+                btn.classList.remove('copied');
+              }, 2000);
+            }).catch(function() {
+              btn.textContent = '失败';
+              setTimeout(function() { btn.textContent = '复制'; }, 2000);
+            });
+          });
+          pre.style.position = 'relative';
+          pre.appendChild(btn);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCopyButtons);
+      } else {
+        initCopyButtons();
+      }
+    })();
+  </script> <!-- 微信电子书弹窗（滚动触发 + 每天一次） --> <script>
+    (function() {
+      // === 配置 ===
+      var STORAGE_DAY   = 'ebook_popup_day';    // 今天已弹过
+      var STORAGE_DISMISS = 'ebook_popup_dismiss_until'; // 用户点「暂时不要」的过期时间戳
+      var SCROLL_THRESHOLD = 0.40; // 滚动 40% 触发
+      var TIME_THRESHOLD   = 60000;  // 或停留 60 秒触发
+
+      // === 已有领取人数（可手动更新）===
+      var CLAIM_COUNT = 327;
+
+      // === 工具函数 ===
+      function todayStr() {
+        var d = new Date();
+        return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+      }
+      function getDismissUntil() {
+        try { return parseInt(localStorage.getItem(STORAGE_DISMISS), 10); } catch(e) { return 0; }
+      }
+
+      // === 判断是否应该弹出 ===
+      function shouldShow() {
+        // 用户点过「暂时不要」且未过期
+        var dismissUntil = getDismissUntil();
+        if (dismissUntil && Date.now() < dismissUntil) return false;
+        // 今天已弹过
+        try {
+          if (localStorage.getItem(STORAGE_DAY) === todayStr()) return false;
+        } catch(e) {}
+        return true;
+      }
+
+      // === 记录：今天已弹 ===
+      function markShown() {
+        try { localStorage.setItem(STORAGE_DAY, todayStr()); } catch(e) {}
+      }
+
+      // === 记录：暂时不要（7天后）===
+      function markDismissed() {
+        var t = Date.now() + 7 * 24 * 60 * 60 * 1000;
+        try { localStorage.setItem(STORAGE_DISMISS, String(t)); } catch(e) {}
+      }
+
+      // === 显示 / 关闭 ===
+      var overlay    = document.getElementById('ebook-popup-overlay');
+      var closeBtn   = document.getElementById('ebook-popup-close');
+      var dismissBtn = document.getElementById('ebook-popup-dismiss');
+      var shown      = false;
+      var timeTimer  = null;
+
+      function showPopup() {
+        if (shown || !overlay || !shouldShow()) return;
+        shown = true;
+        markShown();
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function dismissPopup() {
+        if (!overlay) return;
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        if (timeTimer) clearTimeout(timeTimer);
+      }
+
+      if (!overlay) return;
+
+      // === 触发条件 1：滚动超过 40% ===
+      var scrollFired = false;
+      window.addEventListener('scroll', function() {
+        if (scrollFired) return;
+        var h = document.body.scrollHeight - window.innerHeight;
+        if (h <= 0) return;
+        if (window.scrollY / h > SCROLL_THRESHOLD) {
+          scrollFired = true;
+          showPopup();
+        }
+      }, { passive: true });
+
+      // === 触发条件 2：停留超过 60 秒 ===
+      timeTimer = setTimeout(function() {
+        if (!scrollFired) showPopup();
+      }, TIME_THRESHOLD);
+
+      // === 关闭按钮 ===
+      if (closeBtn) closeBtn.addEventListener('click', dismissPopup);
+
+      // === 「暂时不要」按钮 ===
+      if (dismissBtn) {
+        dismissBtn.addEventListener('click', function() {
+          markDismissed();
+          dismissPopup();
+        });
+      }
+
+      // === 点击遮罩关闭 ===
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) dismissPopup();
+      });
+
+      // === ESC 关闭 ===
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+          dismissPopup();
+        }
+      });
+    })();
+  </script> </body></html>  <script type="module">(function(){const e=document.getElementById("reading-progress");if(e){let c=function(){const n=window.scrollY||document.documentElement.scrollTop,s=document.documentElement.scrollHeight-document.documentElement.clientHeight,d=s>0?n/s*100:0;e.style.width=d+"%",e.classList.toggle("show",n>50)};window.addEventListener("scroll",c,{passive:!0}),c()}const t=document.querySelector(".book-toc-header"),o=document.querySelector(".book-toc");t&&o&&t.addEventListener("click",function(){o.classList.toggle("expanded")})})();</script>

@@ -1,0 +1,552 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="YC 创业课第9讲｜创始人的核心素质"><title>如何成为一位伟大的创始人 — 像企业家一样写作</title><link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml"><link rel="sitemap" type="application/xml" href="/sitemap-index.xml"><!-- Static CSS — no build hash, safe for incremental deploys --><link rel="stylesheet" href="/global.css"><!-- 自托管字体 --><link rel="preload" href="/fonts/NotoSerifSC-Regular.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/_astro/BaseLayout.BYj8Tvw5.css">
+<link rel="stylesheet" href="/_astro/_..CcR4Cqk3.css"></head> <body> <nav class="navbar"> <div class="nav-inner"> <a href="/" class="logo"> <img src="/images/logo-header.png" alt="Logo" class="logo-img"> <span>像企业家一样写作</span> </a> <div class="nav-links"> <a href="/blog">文章</a> <a href="/book">书籍</a> <a href="/community">社群</a> <a href="/join">答疑</a> </div> </div> </nav> <!-- 搜索浮窗 --> <div id="search-overlay" class="search-overlay"> <div class="search-modal"> <div class="search-header"> <input id="search-input" type="text" placeholder="搜索文章标题、描述..." autocomplete="off"> <button id="search-close" class="search-close-btn" aria-label="关闭搜索">✕</button> </div> <div id="search-results" class="search-results"></div> </div> </div> <!-- 浮动搜索按钮 --> <button id="search-toggle" class="search-fab" aria-label="搜索"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"> <circle cx="11" cy="11" r="7"></circle> <line x1="16.5" y1="16.5" x2="21" y2="21"></line> </svg> </button> <!-- ===== 微信电子书弹窗 ===== --> <div id="ebook-popup-overlay" class="ebook-popup-overlay" onclick="if(event.target===this){this.classList.remove('active');document.body.style.overflow='';}"> <div class="ebook-popup-card"> <div class="ebook-popup-topbar"></div> <button id="ebook-popup-close" class="ebook-popup-close" aria-label="关闭" onclick="event.stopPropagation();document.getElementById('ebook-popup-overlay').classList.remove('active');document.body.style.overflow='';">✕</button> <div class="ebook-popup-body"> <!-- 送你 --> <div class="ebook-popup-gift">送你一本我的电子书</div> <!-- 书名 --> <div class="ebook-popup-bigtitle">《闭环：在你睡觉时赚钱》</div> <div class="ebook-popup-bigsub">从0到1的自媒体方法论</div> <!-- 社会认同 --> <div class="ebook-popup-proof"> <span class="ebook-proof-avatars"> <span class="ebook-proof-avatar" style="background: #f5e0d0;"> <span style="font-size:12px;font-weight:700;color:#c45c2e;">M</span> </span> <span class="ebook-proof-avatar" style="background: #d0e8e0;"> <span style="font-size:12px;font-weight:700;color:#3a7a5e;">S</span> </span> <span class="ebook-proof-avatar" style="background: #d8dff0;"> <span style="font-size:12px;font-weight:700;color:#4a6aab;">L</span> </span> </span> <span><span class="ebook-proof-count">327</span> 人已领取</span> </div> <!-- 二维码 --> <div class="ebook-popup-qr"> <img src="/images/wechat-qr.png" alt="微信二维码"> </div> <!-- 下载按钮 — 仅手机展示 --> <a class="ebook-popup-download" href="/images/wechat-qr.png" download> <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path> <polyline points="7 10 12 15 17 10"></polyline> <line x1="12" y1="15" x2="12" y2="3"></line> </svg>
+下载二维码到手机
+</a> <!-- 流程提示 --> <p class="ebook-popup-steps"> <span class="step">扫二维码</span> → <span class="step">添加好友</span> → 回复<span class="keyword-value">闭环</span> → <span class="step">立马领取</span> </p> </div> <div class="ebook-popup-footer"> <p>免费领取 · 无需购买任何产品 · 24 小时内回复</p> </div> </div> </div> <main>   <div id="reading-progress" class="reading-progress"></div> <!-- 书籍系列：左侧目录 + 右侧正文 -->
+    <div class="book-layout"> <!-- 左侧目录 --> <aside class="book-toc"> <div class="book-toc-inner"> <div class="book-toc-header"> <span class="book-toc-series">YC 创业课</span> <span class="book-toc-count">目录</span> </div> <nav class="book-toc-nav"> <div class="book-toc-section "> <a href="/blog/yc-lecture-01-how-to-start-a-startup" class="book-toc-item"> <span class="book-toc-order">1</span> <span class="book-toc-title">如何创办初创公司</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-02-ideas-products-teams-execution-part2" class="book-toc-item"> <span class="book-toc-order">2</span> <span class="book-toc-title">创意、产品、团队与执行（第二部分）</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-03-counterintuitive-parts-and-how-to-have-ideas" class="book-toc-item"> <span class="book-toc-order">3</span> <span class="book-toc-title">创业中反直觉的部分，以及如何产生创意</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-04-how-to-build-products-users-love" class="book-toc-item"> <span class="book-toc-order">4</span> <span class="book-toc-title">如何打造用户热爱的产品</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-05-how-to-build-products-users-love-part2" class="book-toc-item"> <span class="book-toc-order">5</span> <span class="book-toc-title">如何打造用户喜爱的产品（第二部分）</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-06-doing-things-that-dont-scale-pr" class="book-toc-item"> <span class="book-toc-order">6</span> <span class="book-toc-title">做无法规模化的事、公关，以及如何起步</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-07-how-to-raise-money" class="book-toc-item"> <span class="book-toc-order">7</span> <span class="book-toc-title">如何融资</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-08-building-product-talking-to-users-and-growing" class="book-toc-item"> <span class="book-toc-order">8</span> <span class="book-toc-title">打造产品、与用户对话与实现增长</span> </a>  </div><div class="book-toc-section active"> <a href="/blog/yc-lecture-09-how-to-be-a-great-founder" class="book-toc-item"> <span class="book-toc-order">9</span> <span class="book-toc-title">如何成为一位伟大的创始人</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-10-how-to-manage" class="book-toc-item"> <span class="book-toc-order">10</span> <span class="book-toc-title">如何管理</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-11-how-to-operate" class="book-toc-item"> <span class="book-toc-order">11</span> <span class="book-toc-title">如何运营</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-12-how-to-run-a-user-interview" class="book-toc-item"> <span class="book-toc-order">12</span> <span class="book-toc-title">如何进行用户访谈</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-13-growth" class="book-toc-item"> <span class="book-toc-order">13</span> <span class="book-toc-title">增长</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-14-business-strategy-and-monopoly-theory" class="book-toc-item"> <span class="book-toc-order">14</span> <span class="book-toc-title">商业战略与垄断理论</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-15-sales-and-marketing" class="book-toc-item"> <span class="book-toc-order">15</span> <span class="book-toc-title">销售与营销</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-16-sales-marketing-pitch-investor-roleplaying" class="book-toc-item"> <span class="book-toc-order">16</span> <span class="book-toc-title">销售、营销与融资路演</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-17-legal-finance-hr" class="book-toc-item"> <span class="book-toc-order">17</span> <span class="book-toc-title">创业公司的法律、财务与 HR 机制</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-18-company-culture-and-building-a-team" class="book-toc-item"> <span class="book-toc-order">18</span> <span class="book-toc-title">企业文化与团队建设（第一部分）</span> </a>  </div> </nav> <a href="/book" class="book-toc-back"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+返回书架
+</a> </div> </aside> <!-- 右侧正文 --> <main class="book-main"> <article class="prose"> <header class="article-header"> <h1>如何成为一位伟大的创始人</h1> <div class="article-meta"> <span class="article-series">YC 创业课</span> <time> 2026年6月27日 </time> </div> </header> <p><strong>YC 创业课程第十三讲</strong>
+<strong>主讲：Reid Hoffman（LinkedIn 联合创始人、Greylock 合伙人）</strong></p>
+<hr>
+<h2 id="开场重新定义伟大的创始人">开场：重新定义”伟大的创始人”</h2>
+<p>我浏览了这门课的教学大纲，思考什么技能是有用的。我一直在想的是：你如何审视自己作为创始人的身份？你认为技能组合是什么？你应该在哪些方面思考——我准备好了吗？我如何做好准备？这件事对我来说是正确的选择吗？诸如此类的问题。</p>
+<p>那么，让我们从人们对”伟大创始人”的印象开始说起。</p>
+<p>经典形象通常是这样的：史蒂夫·乔布斯、比尔·盖茨、埃隆·马斯克、马克·扎克伯格、杰夫·贝佐斯。这是一种创始人作为超级女性或超级男性的形象——<strong>拥有全景式技能的人</strong>。我可以用”全景”（panopticon）这个词，因为我现在就在斯坦福。</p>
+<p>意思是这样的：我能搞定产品市场匹配（Product-Market Fit）。我擅长产品，我擅长战略，我擅长管理。我能融资。我能做好所有这些事情。而在”创始人即超人”这个概念里，你要寻找的伟大创始人，是一个在所有这些方面都出色的人。他们全面发展，能力多样，所有技能都能打。</p>
+<p>我在自己创业旅程之初就深刻感受到了这种压力。我记得读过一篇文章，说比尔·盖茨比爱因斯坦更聪明。你会想，比尔·盖茨确实非常聪明，成就卓著，但我不确定”比爱因斯坦更聪明”这句话是否连比尔·盖本人都愿意被拿来比较。部分原因就是这种”创始人是超人”的形象——一个伟大的创始人无所不能，一跃而过高楼大厦，诸如此类。</p>
+<p><strong>但现实是，创始人是一个处理各种头疼问题的人，没有谁是全能的。</strong></p>
+<p>一般来说，你希望拥有几项超能力——一些对你而言独特的优势，一些对你试图解决的问题独特的东西，一些能帮你获得竞争优势的东西。因为竞争差异化和竞争优势极其重要。但这实际上不是天才的功能。</p>
+<p>而且疯狂和天才之间的界限往往很难区分，因为通常是结果来定论的。在不确定的环境中，你可能当时是天才，后来却被认为是疯子。或者你可能是个疯子，只是运气好，结果成了天才。这实际上是一套很有挑战性的思维框架。当我们这些凡人进入这场博弈时，正确的思维方式是什么？</p>
+<p>当我思考这个问题——“如何成为一位伟大的创始人”时，我认为这些都是极其重要的技能。你会说，好吧，这件事真的非常重要，你必须把它做好。于是它开始看起来像一项超人的任务。</p>
+<p>我所做的是决定取这些技能的超集，聚焦于那些值得深入思考的事情。究竟是什么让一个人成为伟大的创始人？实际上并不是你在所有方面都打十分，然后变成创业界的奥运全能冠军——你在每件事上都是最优秀的。</p>
+<hr>
+<h2 id="团队打破超级创始人神话">团队：打破”超级创始人”神话</h2>
+<h3 id="联合创始人优于单打独斗">联合创始人优于单打独斗</h3>
+<p><strong>我认为打破”超级创始人”神话的一个方式是：团队最好有两三个人，而不是单打独斗。</strong></p>
+<p>并不是说 solo 创始人不能成功——他们可以，也确实能成功。但大多数情况下，两三个人要好得多。当我以投资者的身份审视这些问题时——什么样的项目构成和创始人组合可能成功——答案通常是两到三个。</p>
+<p>原因在于：我们之前已经讨论过，创业需要一套非常广泛的技能。关于如何调整你的公司或取得成功，有一系列问题要回答。如果你有两到三个创始人，你们就有不同的技能可以互补。因为每个人都有弱点，你们可以互相弥补弱点。在创始人遇到的多样化问题中，你们可以真正地去攻克它们。</p>
+<h3 id="信任至关重要">信任至关重要</h3>
+<p>当你在审视创始团队时，我强烈建议你对联合创始人有真正的偏好和高度的信任。创业失败的另一个原因是：你和联合创始人合作了一年，然后经历一场混乱的分家。这不一定是致命的，但经常是。</p>
+<p>此外还要考虑任务的多样性。</p>
+<h3 id="地理位置的选择">地理位置的选择</h3>
+<p>经常有人告诉我：“哦，硅谷聚集了所有的超级人才。“确实如此。硅谷初创公司之所以如此成功，就是因为这些优秀的人才——移民对人才和来到这里创业的人来说极为重要。</p>
+<p>但从基本数学角度思考：即使拿硅谷非常强的领域——过去二十年的软件技能来说——也不是所有优秀的软件公司都在这里。不是所有公司都能搬到这里。世界上其他地方也有很多优秀的软件公司。</p>
+<p><strong>那我为什么把地理位置的选择放在这里呢？</strong></p>
+<p>因为这是判断你是否是一位伟大创始人的测试之一。</p>
+<p>原因在于：<strong>伟大的创始人所做的事情，是寻求对其任务至关重要的网络。</strong> 他们意识到这不是”我是超人，我可以在任何地方做到这一点”的问题——不是在南极也能做成。为了成功，我必须去到针对我正在做的事情的最强大的网络所在的地方。</p>
+<p>顺便说一下，硅谷在某些类型的任务上超级强，某些类型的问题在这里解决效果很好。但它并非在所有领域都强。</p>
+<p>举两个例子：</p>
+<h4 id="groupon-的案例">Groupon 的案例</h4>
+<p>一个是 Groupon。<strong>我不认为 Groupon 可以在硅谷创立。</strong> 即使它是一个软件产品，甚至产生了网络效应。显然很多强大的网络在这里，使用互联网技术作为移动产品等等。硅谷在这些方面有很多优秀技能，网络也确实很好。</p>
+<p>但对 Groupon 早期来说核心的一件事是：拥有庞大的销售团队。庞大的销售团队既能增强也会削弱员工队伍，这两者往往是相伴而生的。硅谷倾向于相当排斥这类计划——“哦，我们要租一栋 25 层的大楼，其中 20 层都是销售人员，这就是我们要推动事情发展的方式。”</p>
+<p><strong>这类计划在这里 tends to 得不到很多兴趣， tend to 遭到大量批评， tend to 无法吸引人才聚集， tend to 让投资人谈论资本效率、网络效应等其他在这里关键的东西。</strong></p>
+<p>所以事实上 Groupon 必须在芝加哥起步并不令人意外——芝加哥在这方面非常强。这也表明即使软件初创公司也可以在其他地方存在。</p>
+<p>但即使你开始思考这个问题，你会说还有什么类型的初创公司如果搬到这里来做简直是愚蠢的？</p>
+<p>比如一个时尚初创公司——不是 Poshmark 那种移动市场平台类（那类东西在这里有很多优势），而是我在设计一个新的时尚品牌，然后我来硅谷做。这其实不是一个好主意。时尚公司的想法可能很棒，但你想要的是支持你所做的事情的网络。</p>
+<p>所以”我应该把初创公司设在哪里”这个问题之所以是判断是否是伟大创始人的测试，是因为当你创办公司时发生的事情之一是：我会去到这件事能够成功做成的那个地方。</p>
+<p>我常用来形容创业的隐喻是：<strong>一边跳下悬崖，一边在下落过程中组装飞机。</strong> 原因是这很难——它有一种准生死的退出性质，也就是默认死亡（default dead），所以你开始抓住每一个可能获胜的机会。因此，伟大的创始人会搬到网络所在的地方。</p>
+<p>对于科技初创公司来说，这个网络图示上就是硅谷；对于移动端、对于市场平台类业务，这确实是个好地方。但对于许多其他类型的事务，你应该考虑不同的地理位置。</p>
+<hr>
+<h2 id="逆向思维容易逆向难在逆向且正确">逆向思维：容易逆向，难在逆向且正确</h2>
+<p>这是一个非常时髦的话题。如今说自己是逆向思维者（contrarian）已经非常常规了。让我们聊聊真正的逆向思维者是什么。</p>
+<p><strong>实际上成为一个逆向思维者很容易。难的是成为一个逆向思维者并且是对的。</strong></p>
+<p>特别是当你在思考——我的想法够不够逆向？我的想法够不够与众不同？一个真正聪明的人实际上会如何不同意我的观点？因为如果你想不出一个聪明人——不是一个无知的或者疯狂的人，而是一个多少有些专业知识的聪明人——会认为你的想法有一些严重的挑战，那它其实不算逆向思维。</p>
+<p><strong>逆向思维是相对于受众而言的。</strong> 所以当你在考虑真正好的逆向思维想法时，比如说是消费互联网领域——好吧，其他消费互联网从业者会认为实际上不是一个好主意的是什么？</p>
+<p>思考逆向思维的另一个层面是问自己：<strong>我知道什么别人不知道的？</strong> 因为这不只是”哦我很聪明别人不聪明”，而是”我的逆向观点为什么是对的”。这是一个很糟糕的测试标准——虽然有时碰巧是真的，闪电当然可以在田野里击中你。所以要大量思考的是：我知道什么别人不知道的？</p>
+<h4 id="linkedin-早期的例子">LinkedIn 早期的例子</h4>
+<p>例如在 LinkedIn 极早期，我建议所有创始人都去做的一件事是：跟每一个愿意和你交谈并给你反馈的聪明人聊天。所以 LinkedIn 我四处走动，到处说这是我的想法，你觉得怎么样？</p>
+<p><strong>我的人际网络中三分之二以上的人——包括一些非常聪明的人都认为我疯了。</strong></p>
+<p>他们之所以认为我疯了，是因为我说这是一个网络产品，只有当里面有足够多的人时才有价值。第一个人在里面没有任何价值，直到他邀请第二个人进来。第二个人和第一个人——他们在里面也没有价值，因为他们本来就认识对方。那你什么时候才能真正交付你的用例？答案是 50 万到 100 万人的时候。所以你永远达不到规模。永远不会增长。</p>
+<p>但我知道批评者们不知道的是：我可以想到一套不同的方式，让人们会说”嘿，我相信这个愿景”、“我觉得这有趣”、“我觉得应该有这样一款产品存在”或者”我愿意玩玩看”。而我可以利用这些不同层次的兴趣来增长网络，达到足够的规模，从而开始兑现 LinkedIn 的价值主张。这就是我知道的、而批评者们没有想到的具体事情。</p>
+<p>所以当你在思考逆向思维时，你必须思考的是：<strong>聪明人如何从智力的立场出发不同意我的观点？以及有没有一件我知道但他们不知道的事情最终会被证明为真？</strong></p>
+<p>在这种情况下，总的来说，作为一个创始人在真正意义上保持逆向思维是好的。</p>
+<h3 id="逆向思维的多种形式">逆向思维的多种形式</h3>
+<p>关于逆向思维的最后一部分是：有很多不同的方式可以成为逆向思维者。</p>
+<p>一种常见的形式是：<strong>其他人认为你有一个好的小点子，但实际上它不小，它是大的。</strong> 或者事实上你可以聚集人才——而大多数消费级 cellular 初创公司 tends to 是另一种情况，LinkedIn 的另一个例子——只有火箭式的才能成功，但实际上复利曲线也可以非常有价值。LinkedIn 从未有过它的火箭时刻，它是年复一年复合增长的。但在消费互联网领域，这变得不典型。</p>
+<hr>
+<h2 id="驾驭悖论创始人的核心能力">驾驭悖论：创始人的核心能力</h2>
+<p>到这里你开始遇到一系列创业者本质上会碰到的基本问题。我应该自己做工作吗？还是应该招募人员并把工作委派出去？</p>
+<p>经典答案是：<strong>事实上你需要两者都做。</strong> 不仅需要两者都做，你有时候需要在一方面投入 100%，同时在另一方面也投入 100%——虽然这在数学上不太说得通，但确实是两边都要 100%。</p>
+<p>当你开始思考什么让你成为一位伟大创始人时，你会发现你需要驾驭的是一系列表面上的悖论。</p>
+<h3 id="灵活-vs-坚持">灵活 vs 坚持</h3>
+<p>我经常谈论的一个悖论是：<strong>你必须既灵活又坚持。</strong></p>
+<p>原因是创业者经常得到的建议是：要有愿景，坚定地对抗逆境。意识到你有一个与人们看法相反的愿景，然后坚持下去。度过困难时期，到达目的地。</p>
+<p>另一条同样有力地给出的建议是：倾听数据，倾听客户。<strong>转型（Pivot），保持灵活。</strong></p>
+<p>作为一个伟大创始人，关键问题是：<strong>我什么时候该坚持？什么时候该灵活？</strong></p>
+<p>我最常用的工具是：你应该有一个你正在进行的项目——比如一家公司、一项投资、一套论点——本质上说明你认为它为什么可能是好主意（可能带有逆向性质）。它应该包含你认为别人不知道而你已知的信息。</p>
+<p>然后当你进入战场时，你问自己：<strong>我对我的投资论点的信心是在增加还是在减少？</strong></p>
+<p>如果在增加，那就坚持方向。而且顺便说一句，即使面对逆境，你的信心也可能增加。</p>
+<p>如果在减少，那不意味着直接退出。PayPal、LinkedIn、Airbnb——<strong>我参与过的很多初创公司都有过这样的月份：天哪我们为什么会觉得这是个好主意？这是一种”阴影中的低谷”时刻。</strong></p>
+<p>例如 PayPal 在 2000 年 8 月，我们每月进账 1200 万美元，但费用曲线呈指数增长，我们没有收入，信心在下降。然而我们说的是：我们要做什么来解决这个问题？这给了你一个立即的行动计划。</p>
+<h3 id="信念-vs-恐惧">信念 vs 恐惧</h3>
+<p>另一个悖论是：<strong>我应该有信念还是应该有恐惧？</strong></p>
+<p>你是应该说”我有关于世界应该如何的愿景，我应该忽略其他一切，就这样走下去”？还是再次地，作为伟大创始人的一部分能力是：既要能够持有信念——思考你想去哪里、想往哪里走——又要足够聪明地倾听批评、负面反馈和竞争对手的动态。你在评估：这是否在改变我的投资论点？这是否在改变我计划要做的事情？</p>
+<p>这不意味着失去信心——你有信心，但同时你也保持警觉。问题还是如何把这两件事结合在一起。</p>
+<h3 id="内部聚焦-vs-外部聚焦">内部聚焦 vs 外部聚焦</h3>
+<p>我应该聚焦内部吗？——打造产品，忽略世界，忽略竞争对手？</p>
+<p>还是应该聚焦外部？——招募人员，会见他人，收集网络情报？</p>
+<p>答案又是<strong>两者都需要</strong>。我之所以关注这类”两者兼顾而非二选一”的习惯，是因为伟大创始人的核心能力之一就是能够在这些界线之间灵活切换。有时候 90% 倾向一方，有时候 80% 倾向另一方。根据当前问题的状况执行判断。</p>
+<h3 id="愿景-vs-数据">愿景 vs 数据</h3>
+<p>当我在尝试解决这个问题时——我们应该做什么？我应该如何分配工作？——还有一个经典问题是人们会说”我完全由数据驱动，客户怎么说用户群就怎么做”。</p>
+<p>关于收集数据、以数据为指导有很多创业神话和其他讨论。</p>
+<p>但事实是：<strong>数据只存在于你正在构建的愿景框架之内，存在于你去向何方的假设之中。</strong> 数据甚至可以是负面的，你可以想：实际上这个负面数据意味着我需要改变或修正我的思维方式。但我仍然保持关于我在做的具体事情的特定愿景。顺便说一句，有时候当你有具体愿景时你不一定会最终到达你原本设想的大愿景。</p>
+<h4 id="paypal-的例子">PayPal 的例子</h4>
+<p>例如在 PayPal，我们分发了印着”新全球货币”字样的 T 恤。事实上我和彼得开玩笑——我们确实有了这个世界货币，我们在交易的是美元，你可能听说过，它已经存在一段时间了。本质上是一种大规模的商户模式——当然这正是比特币目前正在发生的事情，那是另一个话题了。</p>
+<p>关键是那个愿景：我们正在创建一个通用网络，允许任何人向任何人支付款项，允许任何商家将电子商务的速度带入任何正在进行的商业交易中。那个愿景保持了真正的北极星方向。</p>
+<p>但我们首先说好，我们先做一个银行模式；然后我们认为我们会做一个债务模式；实际上我们会做一个大规模商户模式。这到底是如何演变的？所以你总是在结合愿景和数据，而数据存在于愿景框架内。有时你学到的东西会改变你的愿景。</p>
+<hr>
+<h2 id="智能承担风险">智能承担风险</h2>
+<p>通常创业者被认为是要冒险的人。当其他人在风险面前畏惧退缩时，他们大胆前行。</p>
+<p>这是真的，你必须是一个敢于冒险的人。你必须思考如何做出真正连贯的风险决策——因为实际上唯一真正的大机会、唯一聪明的持异议者也不同意你的机会，恰好是与更多风险相关的那些。</p>
+<p>另一方面，技能集中的一部分——当你开始作为企业家思考风险时——是：<strong>我如何智能地承担风险？</strong> 我如何承担集中的风险——但如果我在那一点上对了，其他很多事情就会朝有利于我的方向发展？一旦我开始这样做，我就试着搞清楚如何让自己命中的可能性尽可能高？我如何最小化其他风险？我如何以一种聪明的方式来承担这种风险——而不是”哦管他的风险呢谁在乎冲就完了”？</p>
+<p>这种结合就是这张图片想要表达的——这是我们找到的最佳图像，大概就是这个感觉。</p>
+<p>回到投资论点的话题上来。</p>
+<h3 id="制定投资论点">制定投资论点</h3>
+<p>拥有论点的一部分是把它列成一个要点清单。以 LinkedIn 为例：</p>
+<ul>
+<li>每个人都会从公开的职业网络中受益</li>
+<li>每个人都会认识到——包括公司——这样发展下去更好</li>
+<li>初始采用率将主要来自那些想象世界、试用产品的人群</li>
+<li>最终大众市场会在他们开始拥有一个已经有网络的网络时加入——而这个网络对他们有价值</li>
+</ul>
+<p>这就是投资论点的样子。然后你有经济模型、初始招聘策略以及扩展策略等。</p>
+<p>你有了这个投资论点，然后你问：<strong>我的投资论点是在增强信心还是在削弱信心？</strong> 我从市场中获得的数据、我与聪明人交流后的反馈如何改变我对它的信心？这就是你最小化风险的方式。</p>
+<h4 id="paypal-早期转型的例子">PayPal 早期转型的例子</h4>
+<p>例如在 PayPal 极早期，发生的一件事是他们说要在 Palm Pilot 上用现金和手机做支付，因为这很容易。我们在产品发布之前就意识到 Palm Pilot 上的现金行不通。</p>
+<p>基本上发生了什么——我去找马克斯和彼得，我说这是我们的挑战——你们可能不记得 Palm Pilot 是什么了，它们是早期的 PDA。而我们生活在 Palm Pilot 的中心地带，整个用例就是在餐厅分摊账单，桌上每个人都有一个 Palm Pilot 来算账。每家餐厅从零到一的覆盖。</p>
+<p>所以仅仅通过思考你前进的方向你就会撞上雷区，你需要转型。就在那时马克斯·列夫钦提出了通过电子邮件发送付款的想法。我们可以以电子邮件支付作为骨干。我们觉得是的，这是个好主意。当然整个事情就此转型了。这也是执行过程中最小化风险的思考的一部分。</p>
+<hr>
+<h2 id="长期愿景-vs-短期问题">长期愿景 vs 短期问题</h2>
+<p>又一个经典悖论：<strong>我应该有一个长期愿景，还是应该解决眼前的短期问题？</strong></p>
+<p>答案还是这两个悖论都是。问题是你应该在两者之间跳跃。</p>
+<p>你应该始终在心中保留长期愿景——因为如果你完全失去了方向，最终你会发现自己身处一片田野中，那里不是一条好的出路。</p>
+<p>但如果你不专注于解决眼前摆在你面前的问题，你就完蛋了。</p>
+<p>所以关于如何把这些事情整合在一起的问题是：好的，短期来看——我今天需要做什么？我今天有进展吗？我这周有进展吗？但总体上是否在正轨上？</p>
+<p>让我举一个例子说明这在融资或战略层面如何运作。人们经常认为产品战略是初创公司的根本——我有一个产品想法，这是一件事，我是一个创始人。<strong>但实际上比产品战略更基础的一层通常是产品分发渠道（Distribution）。</strong> 不管是消费互联网还是企业级或其他——因为事实上不管你的产品有多好，如果不能触达客户你就完了。</p>
+<p><strong>所以通常你必须拥有产品分销渠道。它比你实际的产品本身更基础。</strong> 再下一层是融资。<strong>原因是：如果你钱花光了整个努力就化为乌有——哪怕你有一个非常好的主意也没用。</strong></p>
+<p>所以当你在执行一个好的战略时——比如我在融资的时候，我在想的是下一轮融资。我在思考我如何为此做准备，在建立将来对此至关重要的关系。我不是在执行那种”唯一重要的是撑到下一轮融资”的模式。你在建设你的业务，但我在把它作为核心战略来思考——我经常在想的是：我的产品分发渠道如何运作才能使融资顺利？这就是你架构这些东西的方式。</p>
+<hr>
+<h2 id="如何判断你是否可能成为一位伟大的创始人">如何判断你是否可能成为一位伟大的创始人</h2>
+<p>你应该有一些超能力。一般来说做一个好的产品人是有用的。拥有良好的领导力技能是有用的——引入人际网络、说服他人的能力也是有用的。还有一项根本的能力是：<strong>识别自己是否在轨道上。</strong> 拥有那种信念，但同时对自己的投资论点的跟踪保持偏执般的警觉。当你以正确的方式这样做，你在学习，你在召集人员，你在围绕自己构建这一切。这就是一般来说你如何成为一位伟大的创始人。</p>
+<p>经典意义上——我故意放了五个白人男性的照片——这些是标志性创始人。<strong>但实际上创始人可以非常多样化。</strong> 他们可以在不同领域拥有非凡的天赋，因为有不同类型的外部公司。有不同种类的问题他们试图解决的。</p>
+<p>我说的多样性不是指性别、种族等方面的多样性。而是年龄的多样性、经验的多样性。马云在进入这个行业之前是一名教师。这才是你应该思考的那种事情。</p>
+<p><strong>问题是：你如何在 uneven ground 上穿行？你如何在你周围组装网络？你如何让人聚集到你身边？</strong> 当你试图创办公司时，这是一个不断变化的问题。</p>
+<p>我想让大家思考的是：<strong>不存在单一的技能组合。有的是学习和适应的能力。</strong> 有的是持续拥有驱动你的愿景的能力，同时从所有来源接收信息，并在你周围创建网络。这基本上就是成就一位伟大创始人的要素。</p>
+<p>你在迷雾中穿越不平地面时完成这些事情的能力——这就是创业者的写照。你是不是一直都知道这会成功？不会，除非你疯了。虽然有时候疯也能成事。</p>
+<hr>
+<h2 id="问答环节">问答环节</h2>
+<h3 id="问我很好奇你是如何选定不同策略来加强你的投资论点并帮助它起飞的似乎每个初创公司都面临同样的挑战">问：我很好奇你是如何选定不同策略来加强你的投资论点并帮助它起飞的。似乎每个初创公司都面临同样的挑战。</h3>
+<p><strong>答：</strong> 一件非常根本的事情是把产品分销渠道视为关键。对于 LinkedIn 我们有几件事对我们有利。</p>
+<p>第一，2003 年的网页很无聊。基本上发生的事情是所有人都认为消费互联网已经结束了。人们在做清洁技术（clean tech）和企业软件等其他事情。现在这个问题困难得多。因为每个人都认为互联网和移动端很有趣。所以突破噪音才是关键。所以我们使用的策略现在行不通了。我们基本上搭建起来，向一群人发出邀请，然后优化机制，做公关（PR）。</p>
+<p>我们早期做出的正确决定之一是：我们应该只允许邀请注册，还是应该允许陌生人自主注册？我们应该允许陌生人自主注册的原因是对此超级热情的人不一定是我们认识的说他们会注册并传播它的人。这类决定都是我们做出的那种。</p>
+<p>现在的挑战要困难得多。当你思考产品分销渠道时的挑战是：<strong>你如何争夺潜在客户或潜在成员的时间？他们需要相信什么？</strong></p>
+<p>回溯 2003 年，情况像是”压制也许不起作用，这可能是个好主意。管他呢，我试试吧——反正没太多别的东西可看。“今天有无数的事情。所以今天你看待产品分销策略时必须是：<strong>我真正的决定性优势是什么？我知道而别人不知道的捷径是什么？</strong></p>
+<hr>
+<h3 id="问你怎么知道某人是不是一个好创始人">问：你怎么知道某人是不是一个好创始人？</h3>
+<p><strong>答：</strong> <strong>我极度相信推荐引荐（references）。只有当有人通过推荐引荐来找见我时，我才会见面。</strong> 所以顺便说一件事，讲完后我得赶紧走了，因为我有个会议要参加。如果你想得到我的时间和注意力，去找一个推荐引荐。这不是在推销使用 LinkedIn，而是这是你筛选时间的方式。就像山姆认识我一样，通过推荐引荐给我实际上是这样做的方式。</p>
+<p>例如当我见 Airbnb 团队时，我之所以能在他们路演两分钟后打断他们说”我要给你们一个投资报价”——我想听完剩下的路演因为我觉得你们在做的事情神奇又棒——是因为我已经有了他们的推荐引荐。那只需要两分钟而不是三十分钟。因为在来之前我已经了解过他们了。而且顺便说一句，大体上这对大多数优秀投资者来说也是某种程度上的真实情况。<strong>那个网络才是真正关键的。</strong></p>
+<hr>
+<h3 id="问你相信命运的洞察力是伟大创始人的一个强烈信号吗">问：你相信”命运的洞察力”是伟大创始人的一个强烈信号吗？</h3>
+<p><strong>答：</strong> 我肯定会说你能够清晰连贯地表达你的目标、阐述某件不是试图包罗万象或<strong>瑞士军刀式</strong>的事情——专注一件事，就像你在这件事上是对的并且它能奏效——这在判断创始人时实际上是相当重要的。<strong>因为如果你没有那个层次的清晰度，你将无法在你身后组建起网络。</strong> 你无法获得投资者，你无法招到员工——你必须能够非常清楚地表达你正在做的使命。</p>
+<p>洞察力是有帮助的，虽然这在一定程度上取决于阶段。我发现我自己被那些以良好方式分析了问题的创始人所吸引。但很多时候我也见过没有展示出良好分析但有对自己在做的事情的直觉的伟大创始人。所以你更多的是在描绘他们周围正在发生的事情。</p>
+<hr>
+<h3 id="问刚开始时你如何保持坚持">问：刚开始时你如何保持坚持？</h3>
+<p><strong>答：</strong> LinkedIn 经历了很多——还记得吗，我们被视为 Friendster 的小替代品，然后是 Myspace，然后是 Facebook。我们有大量的”我们是这些受人尊敬的巨头旁边的小不点”的感觉，每个时期各有各的巨头。</p>
+<p>对我来说当我在思考 LinkedIn 时，这回到了投资论点作为一种机制。我继续相信正确的经济体系是为每个人的生活和组织的生活设计公开的职业档案。但那个世界是世界应该有的样子。每个人都会因此过得更好。而且我们比任何人都更接近那个世界。可能它起飞的速度没有我希望的快。可能整个世界都已经转向”社交 stuff 真的有意思”。我们在 2003 年夏天只有在说我们是”面向企业的 Friendster”时才能上新闻。一旦你仔细看看这个东西这完全说不通。但当时的说法是”好吧我们会报道你因为你是面向企业的 Friendster”。但这对让人们开始注意我们很重要，而我们的信心是——那个世界我仍然有信心，我仍然相信应该存在，而且没有谁比我们更接近它。到达那里可能花费的时间比我希望的长但这没关系。</p>
+<hr>
+<h3 id="问是什么让你对某个能否走到最后的人判断错误">问：是什么让你对某个能否走到最后的人判断错误？</h3>
+<p><strong>答：</strong> 在一定程度上你只能通过亲自去做来完全穿过这些雷区。所以你可能会对你的假设判断错误。</p>
+<p>经常让你判断错误的事情类型或者你对一个人的看法——例如我在互动中经常使用的一种方式是我推进这个想法，而我寻找的是既有灵活性又有坚持性。我在寻找的是：我有信念，我在思考我在论证什么。但我在听你说的话。我在适应你提出的顾虑。</p>
+<p>有时你会发现某人说”看我已经学会模仿那种行为了”——我已经学会了说我看起来像在和你推理，看起来像在思考你提出的挑战，但实际上我忽略了你。忽略我可能还好。<strong>但忽略整个世界通常是灾难。</strong></p>
+<p>所以这些就是在衡量中经常出错的事情。关于创始人最常问到的参考问题是适应性——<strong>我寻找的措辞之一是”无限学习曲线”（infinite learning curve）。</strong> 因为每种创业模式在某种程度上都是独特而新颖的。你能学会新的吗？学习会不会崩溃？是否存在某种技能集障碍？是否有自我 ego 的问题阻碍了适应——比如每个人都必须崇拜我，这会导致你在适应问题时行为出错。</p>
+<hr>
+<h3 id="问是什么造就了一个伟大的联合创始团队什么是评估联合创始人的好方法">问：是什么造就了一个伟大的联合创始团队？什么是评估联合创始人的好方法？</h3>
+<p><strong>答：</strong> 第一件事是，能够真正良好地协作极其重要。这就是我在团队部分强调的观点。如果事实上你们之间没有严肃的信任——</p>
+<p>所以关键事情是当你在思考创始人时，你是否在整个范围内拥有必要的多样性优势。通常你至少需要一名技术创始人。通常你需要有人专门负责业务方面——融资之类的事情。经典的技能组合，通常是某种跨成员的组合。</p>
+<p>当你再深一层时，人们经典地告诉你的事情之一是<strong>不要投资夫妻团队。</strong> 这会给它增加额外的负担和其他一切，因为有额外的动态等因素。</p>
+<p><strong>实际上我认为你在寻找的是：他们协作得好不好。他们是否帮助彼此找到真相？</strong> 所以例如我在与一个团队交谈时是最投入状态的。我在寻找的是当他们互相推理时——不是所有人都在唱同一个调子。而是”你有没有想过这个？“或者”把这个作为挑战怎么样？“你在导航一片充满风险的战场。</p>
+<p><strong>例如 PayPal 中一件很常见的事情是：</strong> 发明了产品系统和其他一切的马克斯会经常走进彼得的办公室——彼得·蒂尔——说”以下是一些会杀死我们的事情，让我让你关注这些。“所以不是我们所有人都在说”噢是的我们在唱 Kum-ba-yah”——而是在调整什么是真相、什么是我们需要解决的问题？什么是短期问题、什么是长期问题？我们如何应对？那种集体解决问题、集体学习的做法才是真正造就伟大团队的东西。</p>
+<hr>
+<h3 id="问不同的创始人不同的领域你如何识别他们">问：不同的创始人、不同的领域。你如何识别他们？</h3>
+<p><strong>答：</strong> 这次演讲的目标是讨论我认为创始人思维模式中独特之处。各个领域都有伟大的创始人——创始人之间是有差异的。</p>
+<p>例如在软件领域上市速度、学习速度是真的很关键。在硬件领域如果你搞砸了你就死了。所以精确度真的很重要。如果你构建并发送了错误的东西你就完了。</p>
+<p>所以总体上来说作为投资者——这也是很多投资者有他们学得非常好并反复应用的一套东西的原因——是因为他们试图真正理解一个领域以便能够识别这个领域中哪些创始人真正重要，以及如果我们在这个领域投资我们要如何做好？所以每个领域有独特的属性。</p>
+<p>例如其中一个经典的是：<strong>你在运营效率方面——利润率、成本控制等——必须有多好？</strong> 如果你处理的是原子世界的生意包括电商，你必须在运营效率上非常出色。如果你做的是一个数字游戏比如 Zynga 类型的初创公司那完全不重要对吧？所以你在寻找那种适配性。</p>
+<p>这部分的开头是事实上不是一个人什么都擅长。我和我在第一家初创公司 SocialNet 共事的朋友有过一次最好笑的对话。他看着我说：“Reid，我不会雇你来麦当劳当经理。“我说我也不会。我会做得非常差劲。所以是技能组合要适配。</p>
+<p>但整个要点其实是<strong>有能力驾驭一系列看起来像悖论的事情。</strong> 有时候偏向这一方多一点，有时候偏向那一方多一点。并且在当下对你正在做的事情有正确的判断力——这倾向于更加普遍适用。</p>
+<hr>
+<h3 id="问你怎么知道什么时候该转型pivot">问：你怎么知道什么时候该转型（pivot）？</h3>
+<p><strong>答：</strong> 拥有投资论点以及你对它的信心并对此相当清楚——这基本上是我给人们的答案——如果你的信心在相当长的时间内没有变化或者在减少（因为长时间没有进展就应该在减少），那就是在减少，你进入紧急模式。你试图找出可以做些什么来增加你的信心而这失败了。那是认真考虑转型的严重时机。</p>
+<p>你可能有关于融资的论点、关于增长或病毒传播或任何其他有效模式的论点的论点。好吧我试了这三件事第四件事看起来不如前三件好。接下来两件事看起来甚至更差。那就开始降低你的信心了。那就是你应该考虑转型的时候。</p>
+<p>转型时一个常见的错误是<strong>等到你已经撞上墙一切都死了才转。</strong> 那时你无法再做任何机动动作了。那就是你等太久了。</p>
+<hr>
+<h3 id="关于平衡">关于平衡</h3>
+<p>在我打算在幻灯片上谈的内容中，有一件经典的事情是平衡（balance）。我实际上认为创始人没有平衡。我和科罗拉多州长有过一次最好笑的对话，他说我们要吸引真正优秀的创业者来这里因为我们这里有平衡的生活方式。</p>
+<p><strong>字面意思如果我听到一个创始人在谈论我有多么平衡的生活他们就不是致力于赢。</strong> 所以真正伟大的创始人是：我将 literally 把一切投入到做这件事中。可能只有几年时间。我可能做一阵子但在我做这件事的时候我是不平衡的。你 super……</p>
+<p>[此处内容因原文截断而结束]</p> <div class="cta-box"> <p>觉得有用？看看我的书和课程</p> <div class="cta-buttons"> <a href="/book" class="cta-btn cta-btn-primary">选择改变命运</a> <a href="/community" class="cta-btn cta-btn-secondary">写作课程</a> </div> </div> <nav class="article-nav"> <a href="/blog/yc-lecture-08-building-product-talking-to-users-and-growing" class="article-nav-link article-nav-prev"> <span class="article-nav-label"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+阅读上一篇
+</span> <span class="article-nav-title">打造产品、与用户对话与实现增长</span> </a> <a href="/blog/yc-lecture-10-how-to-manage" class="article-nav-link article-nav-next"> <span class="article-nav-label">
+阅读下一篇
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg> </span> <span class="article-nav-title">如何管理</span> </a> </nav> </article> </main> </div> </main> <footer> <div class="footer-inner"> <p>© 2026 像企业家一样写作</p> <div class="footer-links"> <a href="https://mp.weixin.qq.com/" target="_blank">公众号：种一个梦</a> </div> </div> </footer>  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    let _searchIndex = null;
+
+    async function loadSearchIndex() {
+      if (_searchIndex) return _searchIndex;
+      try {
+        const resp = await fetch('/search.json?t=' + Date.now());
+        _searchIndex = await resp.json();
+      } catch (e) {
+        console.warn('search.json load failed', e);
+        _searchIndex = { posts: [], books: [] };
+      }
+      return _searchIndex;
+    }
+
+    function openSearch() {
+      const overlay = document.getElementById('search-overlay');
+      const input = document.getElementById('search-input');
+      overlay.classList.add('active');
+      input.value = '';
+      input.focus();
+      renderResults('');
+    }
+
+    function closeSearch() {
+      document.getElementById('search-overlay').classList.remove('active');
+    }
+
+    function getSnippet(text, keyword, radius) {
+      radius = radius || 30;
+      if (!text) return '';
+      const idx = text.toLowerCase().indexOf(keyword.toLowerCase());
+      if (idx === -1) return text.substring(0, 80);
+      const start = Math.max(0, idx - radius);
+      const end = Math.min(text.length, idx + keyword.length + radius);
+      let s = text.substring(start, end);
+      if (start > 0) s = '…' + s;
+      if (end < text.length) s = s + '…';
+      return s;
+    }
+
+    function renderResults(query) {
+      const container = document.getElementById('search-results');
+      if (!query.trim()) {
+        container.innerHTML = '<div class="search-empty">输入关键词搜索文章和书籍…</div>';
+        return;
+      }
+      const q = query.toLowerCase();
+      const index = _searchIndex || { posts: [], books: [] };
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      if (matchedPosts.length === 0 && matchedBooks.length === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        return;
+      }
+      let html = '';
+      matchedPosts.forEach(p => {
+        const snippet = getSnippet(p.content || '', q, 35);
+        const displayDesc = (p.desc || '') || snippet;
+        html += '<a href="/blog/' + p.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">文章</span>' + p.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      matchedBooks.forEach(b => {
+        const snippet = getSnippet(b.content || '', q, 35);
+        const displayDesc = (b.desc || '') || snippet;
+        html += '<a href="/book/' + b.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">书籍</span>' + b.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      container.innerHTML = html;
+    }
+
+    // ===== 搜索 FAB 拖动逻辑 =====
+    (function() {
+      const fab = document.getElementById('search-toggle');
+      const FAB_SIZE = 56;
+      let isDragging = false;
+      let startX, startY, startLeft, startTop;
+      let dragMoved = false;
+
+      function onDown(clientX, clientY) {
+        isDragging = true;
+        dragMoved = false;
+        startX = clientX;
+        startY = clientY;
+        const rect = fab.getBoundingClientRect();
+        startLeft = rect.left;
+        startTop = rect.top;
+        fab.classList.add('dragging');
+      }
+
+      function onMove(clientX, clientY) {
+        if (!isDragging) return;
+        const dx = clientX - startX;
+        const dy = clientY - startY;
+        if (!dragMoved && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+          dragMoved = true;
+          // 切换到绝对 left/top 定位
+          fab.style.bottom = 'auto';
+          fab.style.right = 'auto';
+          fab.style.left = startLeft + 'px';
+          fab.style.top = startTop + 'px';
+        }
+        if (dragMoved) {
+          let newLeft = Math.max(4, Math.min(startLeft + dx, window.innerWidth - FAB_SIZE - 4));
+          let newTop  = Math.max(4, Math.min(startTop  + dy, window.innerHeight - FAB_SIZE - 4));
+          fab.style.left = newLeft + 'px';
+          fab.style.top  = newTop  + 'px';
+        }
+      }
+
+      function onUp() {
+        if (!isDragging) return;
+        isDragging = false;
+        fab.classList.remove('dragging');
+        if (!dragMoved) {
+          // 判定为点击，打开搜索
+          loadSearchIndex().then(() => openSearch());
+        }
+      }
+
+      fab.addEventListener('mousedown', e => { if (e.button === 0) { onDown(e.clientX, e.clientY); e.preventDefault(); } });
+      document.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+      document.addEventListener('mouseup', onUp);
+
+      fab.addEventListener('touchstart', e => { onDown(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); }, { passive: false });
+      document.addEventListener('touchmove', e => { if (isDragging) { onMove(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); } }, { passive: false });
+      document.addEventListener('touchend', onUp);
+    })();
+
+    document.getElementById('search-close').addEventListener('click', closeSearch);
+    document.getElementById('search-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeSearch();
+    });
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      renderResults(e.target.value);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        loadSearchIndex().then(() => openSearch());
+      }
+    });
+    });
+  </script> <!-- 页面关键词高亮（从搜索结果跳转过来时） --> <script>
+    (function() {
+      function getQueryParam(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name) || '';
+      }
+
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function highlightKeyword(keyword) {
+        if (!keyword.trim()) return;
+        const main = document.querySelector('main');
+        if (!main) return;
+
+        const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, null, false);
+        const nodesToReplace = [];
+        const regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
+
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node.parentElement && node.parentElement.tagName === 'MARK') continue;
+          if (regex.test(node.textContent)) {
+            nodesToReplace.push(node);
+          }
+        }
+
+        let firstMark = null;
+        nodesToReplace.forEach(textNode => {
+          const span = document.createElement('span');
+          span.innerHTML = textNode.textContent.replace(regex, '<mark class="search-highlight">$1</mark>');
+          const marks = span.querySelectorAll('mark');
+          if (marks.length > 0 && !firstMark) {
+            firstMark = marks[0];
+          }
+          const fragment = document.createDocumentFragment();
+          while (span.firstChild) {
+            fragment.appendChild(span.firstChild);
+          }
+          textNode.parentNode.replaceChild(fragment, textNode);
+        });
+
+        if (firstMark) {
+          firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(function() {
+            const marks = main.querySelectorAll('mark.search-highlight');
+            marks.forEach(function(m) {
+              const parent = m.parentNode;
+              parent.replaceChild(document.createTextNode(m.textContent), m);
+              parent.normalize();
+            });
+          }, 6000);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          highlightKeyword(getQueryParam('q'));
+        });
+      } else {
+        highlightKeyword(getQueryParam('q'));
+      }
+    })();
+  </script> <!-- 代码块复制按钮 --> <script>
+    (function() {
+      function initCopyButtons() {
+        document.querySelectorAll('.prose pre').forEach(function(pre) {
+          if (pre.querySelector('.copy-btn')) return;
+          var btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.textContent = '复制';
+          btn.setAttribute('aria-label', '复制代码');
+          btn.addEventListener('click', function() {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+              btn.textContent = '已复制';
+              btn.classList.add('copied');
+              setTimeout(function() {
+                btn.textContent = '复制';
+                btn.classList.remove('copied');
+              }, 2000);
+            }).catch(function() {
+              btn.textContent = '失败';
+              setTimeout(function() { btn.textContent = '复制'; }, 2000);
+            });
+          });
+          pre.style.position = 'relative';
+          pre.appendChild(btn);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCopyButtons);
+      } else {
+        initCopyButtons();
+      }
+    })();
+  </script> <!-- 微信电子书弹窗（滚动触发 + 每天一次） --> <script>
+    (function() {
+      // === 配置 ===
+      var STORAGE_DAY   = 'ebook_popup_day';    // 今天已弹过
+      var STORAGE_DISMISS = 'ebook_popup_dismiss_until'; // 用户点「暂时不要」的过期时间戳
+      var SCROLL_THRESHOLD = 0.40; // 滚动 40% 触发
+      var TIME_THRESHOLD   = 60000;  // 或停留 60 秒触发
+
+      // === 已有领取人数（可手动更新）===
+      var CLAIM_COUNT = 327;
+
+      // === 工具函数 ===
+      function todayStr() {
+        var d = new Date();
+        return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+      }
+      function getDismissUntil() {
+        try { return parseInt(localStorage.getItem(STORAGE_DISMISS), 10); } catch(e) { return 0; }
+      }
+
+      // === 判断是否应该弹出 ===
+      function shouldShow() {
+        // 用户点过「暂时不要」且未过期
+        var dismissUntil = getDismissUntil();
+        if (dismissUntil && Date.now() < dismissUntil) return false;
+        // 今天已弹过
+        try {
+          if (localStorage.getItem(STORAGE_DAY) === todayStr()) return false;
+        } catch(e) {}
+        return true;
+      }
+
+      // === 记录：今天已弹 ===
+      function markShown() {
+        try { localStorage.setItem(STORAGE_DAY, todayStr()); } catch(e) {}
+      }
+
+      // === 记录：暂时不要（7天后）===
+      function markDismissed() {
+        var t = Date.now() + 7 * 24 * 60 * 60 * 1000;
+        try { localStorage.setItem(STORAGE_DISMISS, String(t)); } catch(e) {}
+      }
+
+      // === 显示 / 关闭 ===
+      var overlay    = document.getElementById('ebook-popup-overlay');
+      var closeBtn   = document.getElementById('ebook-popup-close');
+      var dismissBtn = document.getElementById('ebook-popup-dismiss');
+      var shown      = false;
+      var timeTimer  = null;
+
+      function showPopup() {
+        if (shown || !overlay || !shouldShow()) return;
+        shown = true;
+        markShown();
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function dismissPopup() {
+        if (!overlay) return;
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        if (timeTimer) clearTimeout(timeTimer);
+      }
+
+      if (!overlay) return;
+
+      // === 触发条件 1：滚动超过 40% ===
+      var scrollFired = false;
+      window.addEventListener('scroll', function() {
+        if (scrollFired) return;
+        var h = document.body.scrollHeight - window.innerHeight;
+        if (h <= 0) return;
+        if (window.scrollY / h > SCROLL_THRESHOLD) {
+          scrollFired = true;
+          showPopup();
+        }
+      }, { passive: true });
+
+      // === 触发条件 2：停留超过 60 秒 ===
+      timeTimer = setTimeout(function() {
+        if (!scrollFired) showPopup();
+      }, TIME_THRESHOLD);
+
+      // === 关闭按钮 ===
+      if (closeBtn) closeBtn.addEventListener('click', dismissPopup);
+
+      // === 「暂时不要」按钮 ===
+      if (dismissBtn) {
+        dismissBtn.addEventListener('click', function() {
+          markDismissed();
+          dismissPopup();
+        });
+      }
+
+      // === 点击遮罩关闭 ===
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) dismissPopup();
+      });
+
+      // === ESC 关闭 ===
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+          dismissPopup();
+        }
+      });
+    })();
+  </script> </body></html>  <script type="module">(function(){const e=document.getElementById("reading-progress");if(e){let c=function(){const n=window.scrollY||document.documentElement.scrollTop,s=document.documentElement.scrollHeight-document.documentElement.clientHeight,d=s>0?n/s*100:0;e.style.width=d+"%",e.classList.toggle("show",n>50)};window.addEventListener("scroll",c,{passive:!0}),c()}const t=document.querySelector(".book-toc-header"),o=document.querySelector(".book-toc");t&&o&&t.addEventListener("click",function(){o.classList.toggle("expanded")})})();</script>

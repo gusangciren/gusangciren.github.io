@@ -1,0 +1,426 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="你的知识、技能和经验就是摇钱树苗，关键是要种下去"><title>第一个100块：种一棵属于你的摇钱树 — 像企业家一样写作</title><link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml"><link rel="sitemap" type="application/xml" href="/sitemap-index.xml"><!-- Static CSS — no build hash, safe for incremental deploys --><link rel="stylesheet" href="/global.css"><!-- 自托管字体 --><link rel="preload" href="/fonts/NotoSerifSC-Regular.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/_astro/BaseLayout.BYj8Tvw5.css">
+<link rel="stylesheet" href="/_astro/_..CcR4Cqk3.css"></head> <body> <nav class="navbar"> <div class="nav-inner"> <a href="/" class="logo"> <img src="/images/logo-header.png" alt="Logo" class="logo-img"> <span>像企业家一样写作</span> </a> <div class="nav-links"> <a href="/blog">文章</a> <a href="/book">书籍</a> <a href="/community">社群</a> <a href="/join">答疑</a> </div> </div> </nav> <!-- 搜索浮窗 --> <div id="search-overlay" class="search-overlay"> <div class="search-modal"> <div class="search-header"> <input id="search-input" type="text" placeholder="搜索文章标题、描述..." autocomplete="off"> <button id="search-close" class="search-close-btn" aria-label="关闭搜索">✕</button> </div> <div id="search-results" class="search-results"></div> </div> </div> <!-- 浮动搜索按钮 --> <button id="search-toggle" class="search-fab" aria-label="搜索"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"> <circle cx="11" cy="11" r="7"></circle> <line x1="16.5" y1="16.5" x2="21" y2="21"></line> </svg> </button> <!-- ===== 微信电子书弹窗 ===== --> <div id="ebook-popup-overlay" class="ebook-popup-overlay" onclick="if(event.target===this){this.classList.remove('active');document.body.style.overflow='';}"> <div class="ebook-popup-card"> <div class="ebook-popup-topbar"></div> <button id="ebook-popup-close" class="ebook-popup-close" aria-label="关闭" onclick="event.stopPropagation();document.getElementById('ebook-popup-overlay').classList.remove('active');document.body.style.overflow='';">✕</button> <div class="ebook-popup-body"> <!-- 送你 --> <div class="ebook-popup-gift">送你一本我的电子书</div> <!-- 书名 --> <div class="ebook-popup-bigtitle">《闭环：在你睡觉时赚钱》</div> <div class="ebook-popup-bigsub">从0到1的自媒体方法论</div> <!-- 社会认同 --> <div class="ebook-popup-proof"> <span class="ebook-proof-avatars"> <span class="ebook-proof-avatar" style="background: #f5e0d0;"> <span style="font-size:12px;font-weight:700;color:#c45c2e;">M</span> </span> <span class="ebook-proof-avatar" style="background: #d0e8e0;"> <span style="font-size:12px;font-weight:700;color:#3a7a5e;">S</span> </span> <span class="ebook-proof-avatar" style="background: #d8dff0;"> <span style="font-size:12px;font-weight:700;color:#4a6aab;">L</span> </span> </span> <span><span class="ebook-proof-count">327</span> 人已领取</span> </div> <!-- 二维码 --> <div class="ebook-popup-qr"> <img src="/images/wechat-qr.png" alt="微信二维码"> </div> <!-- 下载按钮 — 仅手机展示 --> <a class="ebook-popup-download" href="/images/wechat-qr.png" download> <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path> <polyline points="7 10 12 15 17 10"></polyline> <line x1="12" y1="15" x2="12" y2="3"></line> </svg>
+下载二维码到手机
+</a> <!-- 流程提示 --> <p class="ebook-popup-steps"> <span class="step">扫二维码</span> → <span class="step">添加好友</span> → 回复<span class="keyword-value">闭环</span> → <span class="step">立马领取</span> </p> </div> <div class="ebook-popup-footer"> <p>免费领取 · 无需购买任何产品 · 24 小时内回复</p> </div> </div> </div> <main>   <div id="reading-progress" class="reading-progress"></div> <!-- 书籍系列：左侧目录 + 右侧正文 -->
+    <div class="book-layout"> <!-- 左侧目录 --> <aside class="book-toc"> <div class="book-toc-inner"> <div class="book-toc-header"> <span class="book-toc-series">第一个100块</span> <span class="book-toc-count">目录</span> </div> <nav class="book-toc-nav"> <div class="book-toc-section "> <a href="/blog/first-100-yuan-important-logic" class="book-toc-item"> <span class="book-toc-order">0</span> <span class="book-toc-title">创造者与等待者的核心逻辑</span> </a>  </div><div class="book-toc-section active"> <a href="/blog/first-100-yuan-money-tree" class="book-toc-item"> <span class="book-toc-order">1</span> <span class="book-toc-title">种一棵属于你的摇钱树</span> </a>  </div><div class="book-toc-section "> <a href="/blog/first-100-yuan-how-to-get-audience" class="book-toc-item"> <span class="book-toc-order">2</span> <span class="book-toc-title">如何从零获得第一批观众</span> </a>  </div><div class="book-toc-section "> <a href="/blog/first-100-yuan-byproduct-of-growth" class="book-toc-item"> <span class="book-toc-order">3</span> <span class="book-toc-title">成长才是最大的副产品</span> </a>  </div><div class="book-toc-section "> <a href="/blog/first-100-yuan-serve-your-audience" class="book-toc-item"> <span class="book-toc-order">4</span> <span class="book-toc-title">为观众提供真正有价值的服务</span> </a>  </div><div class="book-toc-section "> <a href="/blog/first-100-yuan-earn-while-you-sleep" class="book-toc-item"> <span class="book-toc-order">5</span> <span class="book-toc-title">如何在你睡觉的时候赚钱</span> </a>  </div><div class="book-toc-section "> <a href="/blog/first-100-yuan-million-year" class="book-toc-item"> <span class="book-toc-order">6</span> <span class="book-toc-title">从100块到年入百万的路径</span> </a>  </div> </nav> <a href="/book" class="book-toc-back"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+返回书架
+</a> </div> </aside> <!-- 右侧正文 --> <main class="book-main"> <article class="prose"> <header class="article-header"> <h1>第一个100块：种一棵属于你的摇钱树</h1> <div class="article-meta"> <span class="article-series">第一个100块</span> <time> 2026年3月1日 </time> </div> </header> <p><img src="/images/100/003_Image_1.png" alt=""></p>
+<ul>
+<li>如果有 5 个人站在山脚下，被要求画一条通往山顶的路线，他们都会努力攀登山峰，但一旦登顶，他们就可以俯瞰群山，为其他人画出一条更高效的攀登路线。</li>
+</ul>
+<p><strong>通过在线写作来每日赚取一顿早餐钱，我想这没有任何问题。它是一个普通人可实现的、短期的、具体小目标。</strong></p>
+<p>但，我想提前和你说明这一点：如果你并不满足于一顿早餐钱，想要赚取更多的100块，仅仅写出更受人欢迎的文章是不够的。因为市场上充斥着那些只掌握写作技能的人来和你竞争。</p>
+<p>靠写作（内容）完成更大的事业，你需要构建和销售。当你开始构建产品并销售的时候，你并不真正从事写作，而是从事广告文案、产品营销、服务行业，它真的就是在创业。</p>
+<p>如果你想“独自一人”生活，你得会做饭、会洗衣、会购物、会社交….<strong>但</strong>无需精通于做饭、精通于洗衣….你不用了解制作PPT的每一个细节。</p>
+<p>同样的道理，在一开始，你不需要精通于所有的技能。学习“最少且必要”的知识点，充分发挥边际规律即可。</p>
+<p>当你构建一个由微技能组成的技能堆时，它会解锁大多数人看不到的财富。如果你能掌握其中的一些或全部技能，你就能很好地开始一个人的生意。</p>
+<p>但这篇文章还是从<strong>如何赚取第一个100块开始</strong>，这只是一个开始，我希望你不会一直停留在这里，我也不认为你会满足于此。</p>
+<p>（“第一个100块”七步曲，专注于帮助你发布第一篇文章、构建第一个产品、撰写第一篇销售信、获得第一个100块。如果这一点闭环走通了，其他一切都会自然解决。）</p>
+<p><strong>我是如何靠写作赚到第一个100块钱：</strong></p>
+<p>我的账号是在2020年11月份注册，一开始是心血来潮偶尔发一下，接着是一周两篇，名称也叫成长周记本，随着时间的流逝，能力的明显进步，从去年开始，我坚持日更（周末除外）。</p>
+<p>在这四年的时光里，有一些问题反反复复出现：不知道写什么？真正赚钱的事情别人会告诉我吗？是否应该追逐热点？写作的意义是什么？如何实现商业价值？我真的走了很远的路，走了很多的弯路，才将这份“毕业论文”送到你面前。</p>
+<p>但在过去的时光里，我并没有想着赚钱，<strong>我只是想借助写作来掌握真正的本领</strong>——掌握桶的构建。<strong>（写作就是思考、写作就是费曼学习法）</strong></p>
+<p>甚至很晚才开通公众号底部广告权限，因为我害怕广告收入会迫使自己追逐热点而浮于表面，在我的第一个10W+的爆款文章《<a href="https://mp.weixin.qq.com/s?__biz=MzkyOTE4MDcyOA==&#x26;mid=2247488415&#x26;idx=1&#x26;sn=51b0565d17ef80cbab7a0974b8d8aca1&#x26;scene=21#wechat_redirect">终身学习的习惯</a>》中已有清晰的解释：我要靠认知变现。</p>
+<p>细心的读者会发现，我不是拒绝广告变现，而是说明：你的创作初心不可以是靠广告变现。</p>
+<p>如果你真的只是靠广告变现，那么你没有任何的自由（和打工一样），你的注意力天然不会在好内容上、不在成长上、不在为读者提供真正的价值上，而是在八卦热点上。</p>
+<p>甚至在许多时候，你和读者朋友的利益是矛盾的。这极有可能会走向“双输”的状况。</p>
+<p>如果真的想要靠广告变现，个人成长不是一个好的赛道——真心的，八卦新闻、娱乐可能才是好赛道。</p>
+<p>但我想提醒你：你创作的内容会通过注意力的影响反向塑造你。当你凝视深渊的时候，深渊也在凝视你。</p>
+<p>我在2024.1月才开通广告收入变现权限，而且只开通底部广告位，在年末时我的广告收入依然有600之多（公众号目前支持推荐算法，我相信你会比获得更好的收入）。</p>
+<p>其次，我的文章《<a href="https://mp.weixin.qq.com/s?__biz=MzkyOTE4MDcyOA==&#x26;mid=2247488625&#x26;idx=1&#x26;sn=a300a4e00a9796099e799d3efdf9ea7f&#x26;scene=21#wechat_redirect">货币的本质是信用、是共识</a>》被发布在《金融文化》杂志上，有税前1000块的稿费，以及一个400块钱的赞助广告，一共收入为：2000块左右。还达成了另一个主要目标，先保持秘密。</p>
+<p><img src="/images/100/004_Image_1.png" alt=""></p>
+<p><img src="/images/100/005_Image_1.png" alt=""></p>
+<ul>
+<li>如果你想看看这一篇被发布在杂志上的文章长什么样子，看这个<a href="https://mp.weixin.qq.com/s/O7hHfGd5nz1nebKjYvSFuQ">货币的本质是信用</a>  ——  慢慢享用，钱已经被“好朋友”付过。<a href="/100/2024%E5%B9%B4-%E7%AC%AC%E4%B8%80%E6%9C%9F-P34%E8%B4%A7%E5%B8%81%E7%9A%84%E6%9C%AC%E8%B4%A8%E6%98%AF%E4%BF%A1%E7%94%A8.pdf">货币的本质是信用-PDF</a></li>
+</ul>
+<p>这一部分收入我并没有直接用于消费，而是再投资，定投在一个指数基金上（我把它称为做事基金），如今一共三千之多。</p>
+<p>并不多，但我认为自己在玩一个致富游戏，做一场人生实验，而实验的结果会分享给读者、以及构建出产品利他于别人。同时，我也在充分践行自己给读者推荐人生的原则——<a href="https://mp.weixin.qq.com/s?__biz=MzkyOTE4MDcyOA==&#x26;mid=2247488374&#x26;idx=1&#x26;sn=c32a5ecad397f13c6e7518881bb00808&#x26;scene=21#wechat_redirect">养成再生产的习惯，即“投资”的习惯</a>，不要把种子吃掉。</p>
+<p>每当我读到《纳瓦尔宝典》中开篇这一句话，就让我异常兴奋：假设有一天，我创业失败，身无分文，这时把我随意丢到任何一个说英语的国家的街道上，我相信自己会在5年或10年内重新变得富有，<strong>因为我已经掌握了“赚钱”这门技巧</strong> —— 而这门技巧人人都能学会。</p>
+<p>那么，</p>
+<p><strong>你该如何靠写作赚到第一个100块钱：</strong></p>
+<p>靠内容创作赢得收入有很多种方式（平台激励、商业广告、带货分销、打赏、数字产品、服务出售、咨询），其中大的集合又有许多子集，后续会聊到部分。</p>
+<p>但，这次从最基本的广告收入开始（平台激励广告计划）。</p>
+<p><strong>1.平台激励广告计划。</strong></p>
+<p>平台激励广告计划是平台为创作者提供创作收入最普遍的方式，如<strong>公众号文中广告和底部广告</strong>。</p>
+<p>当读者在阅读文章时，浏览、点击、转化插入的文中广告时，就会给创业者带来相应的现金激励…..</p>
+<p>这是平台激励创作者的最基本的方式，有许多的内容平台都提供相似的内容变现方式：公众号、视频号、今日头条、抖音、支付宝、知乎…….</p>
+<p>不同的平台会有相应不同的激励计算规则。微信公众号是以千次曝光（CPM，Cost Per Mille）来计算的创作者广告收入。因此，<strong>能够写出高阅读量的文章，相应获得的收入也越多。</strong></p>
+<p>为了能够让你有更快地启动、更高的播放量，我可以给你两点提示：标题很重要、第一句话很重要。</p>
+<p>其次，一个有阅读量的文章格式大概是这样的：《<a href="https://mp.weixin.qq.com/s?__biz=MzkyOTE4MDcyOA==&#x26;mid=2247495613&#x26;idx=1&#x26;sn=1d554a8c722bacbfab60c26d0b97d8eb&#x26;scene=21#wechat_redirect">发布一篇文章之前，你需要知道的1件事</a>》，注意格式（也叫列表式格式），而不单单是内容。</p>
+<p>你可以在女儿国逗留一下（获得广告收入），但你最终的目标是去西天取经（认知变现）。那才是自己真正向往的地方，可自我掌握创作时间、创造性的工作。</p>
+<p>不要在途中迷失自我。</p>
+<p><strong>2.授人以鱼，不如授人以渔。</strong></p>
+<p>我很喜欢马云的类比，他说：平台就是第二次世界大战中出现的一种新型武器——航空母舰。</p>
+<p>航母本身就是一个平台，它不能打仗，只有它上面的舰载机才能打仗，航母的作用就是给舰载机提供弹药、燃油，让舰载机迅速起飞、降落。</p>
+<p>因此对于平台来说，只有创作者富有了，平台才能富有。这是双边平台的基本逻辑。</p>
+<p>平台肯定会为创作者提供许多的变现工具和方法，甚至会提供比较详细的课程、内容指导等等。你只要认真阅读官方的“说明文档”、帮助文档就可以快速入门。</p>
+<p>比如公众号的“收入变现”模块为读者提供了许多变现方式、再比如抖音平台在“创作者中心”中提供了许多变现方式以及课程指导等，其他平台也是类似，平台一定会为创作者提供多样的变现方式。</p>
+<p>因为创作者是战斗机。</p>
+<hr> <div class="cta-box"> <p>觉得有用？看看我的书和课程</p> <div class="cta-buttons"> <a href="/book" class="cta-btn cta-btn-primary">选择改变命运</a> <a href="/community" class="cta-btn cta-btn-secondary">写作课程</a> </div> </div> <nav class="article-nav"> <a href="/blog/first-100-yuan-important-logic" class="article-nav-link article-nav-prev"> <span class="article-nav-label"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+阅读上一篇
+</span> <span class="article-nav-title">创造者与等待者的核心逻辑</span> </a> <a href="/blog/first-100-yuan-how-to-get-audience" class="article-nav-link article-nav-next"> <span class="article-nav-label">
+阅读下一篇
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg> </span> <span class="article-nav-title">如何从零获得第一批观众</span> </a> </nav> </article> </main> </div> </main> <footer> <div class="footer-inner"> <p>© 2026 像企业家一样写作</p> <div class="footer-links"> <a href="https://mp.weixin.qq.com/" target="_blank">公众号：种一个梦</a> </div> </div> </footer>  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    let _searchIndex = null;
+
+    async function loadSearchIndex() {
+      if (_searchIndex) return _searchIndex;
+      try {
+        const resp = await fetch('/search.json?t=' + Date.now());
+        _searchIndex = await resp.json();
+      } catch (e) {
+        console.warn('search.json load failed', e);
+        _searchIndex = { posts: [], books: [] };
+      }
+      return _searchIndex;
+    }
+
+    function openSearch() {
+      const overlay = document.getElementById('search-overlay');
+      const input = document.getElementById('search-input');
+      overlay.classList.add('active');
+      input.value = '';
+      input.focus();
+      renderResults('');
+    }
+
+    function closeSearch() {
+      document.getElementById('search-overlay').classList.remove('active');
+    }
+
+    function getSnippet(text, keyword, radius) {
+      radius = radius || 30;
+      if (!text) return '';
+      const idx = text.toLowerCase().indexOf(keyword.toLowerCase());
+      if (idx === -1) return text.substring(0, 80);
+      const start = Math.max(0, idx - radius);
+      const end = Math.min(text.length, idx + keyword.length + radius);
+      let s = text.substring(start, end);
+      if (start > 0) s = '…' + s;
+      if (end < text.length) s = s + '…';
+      return s;
+    }
+
+    function renderResults(query) {
+      const container = document.getElementById('search-results');
+      if (!query.trim()) {
+        container.innerHTML = '<div class="search-empty">输入关键词搜索文章和书籍…</div>';
+        return;
+      }
+      const q = query.toLowerCase();
+      const index = _searchIndex || { posts: [], books: [] };
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      if (matchedPosts.length === 0 && matchedBooks.length === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        return;
+      }
+      let html = '';
+      matchedPosts.forEach(p => {
+        const snippet = getSnippet(p.content || '', q, 35);
+        const displayDesc = (p.desc || '') || snippet;
+        html += '<a href="/blog/' + p.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">文章</span>' + p.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      matchedBooks.forEach(b => {
+        const snippet = getSnippet(b.content || '', q, 35);
+        const displayDesc = (b.desc || '') || snippet;
+        html += '<a href="/book/' + b.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">书籍</span>' + b.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      container.innerHTML = html;
+    }
+
+    // ===== 搜索 FAB 拖动逻辑 =====
+    (function() {
+      const fab = document.getElementById('search-toggle');
+      const FAB_SIZE = 56;
+      let isDragging = false;
+      let startX, startY, startLeft, startTop;
+      let dragMoved = false;
+
+      function onDown(clientX, clientY) {
+        isDragging = true;
+        dragMoved = false;
+        startX = clientX;
+        startY = clientY;
+        const rect = fab.getBoundingClientRect();
+        startLeft = rect.left;
+        startTop = rect.top;
+        fab.classList.add('dragging');
+      }
+
+      function onMove(clientX, clientY) {
+        if (!isDragging) return;
+        const dx = clientX - startX;
+        const dy = clientY - startY;
+        if (!dragMoved && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+          dragMoved = true;
+          // 切换到绝对 left/top 定位
+          fab.style.bottom = 'auto';
+          fab.style.right = 'auto';
+          fab.style.left = startLeft + 'px';
+          fab.style.top = startTop + 'px';
+        }
+        if (dragMoved) {
+          let newLeft = Math.max(4, Math.min(startLeft + dx, window.innerWidth - FAB_SIZE - 4));
+          let newTop  = Math.max(4, Math.min(startTop  + dy, window.innerHeight - FAB_SIZE - 4));
+          fab.style.left = newLeft + 'px';
+          fab.style.top  = newTop  + 'px';
+        }
+      }
+
+      function onUp() {
+        if (!isDragging) return;
+        isDragging = false;
+        fab.classList.remove('dragging');
+        if (!dragMoved) {
+          // 判定为点击，打开搜索
+          loadSearchIndex().then(() => openSearch());
+        }
+      }
+
+      fab.addEventListener('mousedown', e => { if (e.button === 0) { onDown(e.clientX, e.clientY); e.preventDefault(); } });
+      document.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+      document.addEventListener('mouseup', onUp);
+
+      fab.addEventListener('touchstart', e => { onDown(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); }, { passive: false });
+      document.addEventListener('touchmove', e => { if (isDragging) { onMove(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); } }, { passive: false });
+      document.addEventListener('touchend', onUp);
+    })();
+
+    document.getElementById('search-close').addEventListener('click', closeSearch);
+    document.getElementById('search-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeSearch();
+    });
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      renderResults(e.target.value);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        loadSearchIndex().then(() => openSearch());
+      }
+    });
+    });
+  </script> <!-- 页面关键词高亮（从搜索结果跳转过来时） --> <script>
+    (function() {
+      function getQueryParam(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name) || '';
+      }
+
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function highlightKeyword(keyword) {
+        if (!keyword.trim()) return;
+        const main = document.querySelector('main');
+        if (!main) return;
+
+        const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, null, false);
+        const nodesToReplace = [];
+        const regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
+
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node.parentElement && node.parentElement.tagName === 'MARK') continue;
+          if (regex.test(node.textContent)) {
+            nodesToReplace.push(node);
+          }
+        }
+
+        let firstMark = null;
+        nodesToReplace.forEach(textNode => {
+          const span = document.createElement('span');
+          span.innerHTML = textNode.textContent.replace(regex, '<mark class="search-highlight">$1</mark>');
+          const marks = span.querySelectorAll('mark');
+          if (marks.length > 0 && !firstMark) {
+            firstMark = marks[0];
+          }
+          const fragment = document.createDocumentFragment();
+          while (span.firstChild) {
+            fragment.appendChild(span.firstChild);
+          }
+          textNode.parentNode.replaceChild(fragment, textNode);
+        });
+
+        if (firstMark) {
+          firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(function() {
+            const marks = main.querySelectorAll('mark.search-highlight');
+            marks.forEach(function(m) {
+              const parent = m.parentNode;
+              parent.replaceChild(document.createTextNode(m.textContent), m);
+              parent.normalize();
+            });
+          }, 6000);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          highlightKeyword(getQueryParam('q'));
+        });
+      } else {
+        highlightKeyword(getQueryParam('q'));
+      }
+    })();
+  </script> <!-- 代码块复制按钮 --> <script>
+    (function() {
+      function initCopyButtons() {
+        document.querySelectorAll('.prose pre').forEach(function(pre) {
+          if (pre.querySelector('.copy-btn')) return;
+          var btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.textContent = '复制';
+          btn.setAttribute('aria-label', '复制代码');
+          btn.addEventListener('click', function() {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+              btn.textContent = '已复制';
+              btn.classList.add('copied');
+              setTimeout(function() {
+                btn.textContent = '复制';
+                btn.classList.remove('copied');
+              }, 2000);
+            }).catch(function() {
+              btn.textContent = '失败';
+              setTimeout(function() { btn.textContent = '复制'; }, 2000);
+            });
+          });
+          pre.style.position = 'relative';
+          pre.appendChild(btn);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCopyButtons);
+      } else {
+        initCopyButtons();
+      }
+    })();
+  </script> <!-- 微信电子书弹窗（滚动触发 + 每天一次） --> <script>
+    (function() {
+      // === 配置 ===
+      var STORAGE_DAY   = 'ebook_popup_day';    // 今天已弹过
+      var STORAGE_DISMISS = 'ebook_popup_dismiss_until'; // 用户点「暂时不要」的过期时间戳
+      var SCROLL_THRESHOLD = 0.40; // 滚动 40% 触发
+      var TIME_THRESHOLD   = 60000;  // 或停留 60 秒触发
+
+      // === 已有领取人数（可手动更新）===
+      var CLAIM_COUNT = 327;
+
+      // === 工具函数 ===
+      function todayStr() {
+        var d = new Date();
+        return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+      }
+      function getDismissUntil() {
+        try { return parseInt(localStorage.getItem(STORAGE_DISMISS), 10); } catch(e) { return 0; }
+      }
+
+      // === 判断是否应该弹出 ===
+      function shouldShow() {
+        // 用户点过「暂时不要」且未过期
+        var dismissUntil = getDismissUntil();
+        if (dismissUntil && Date.now() < dismissUntil) return false;
+        // 今天已弹过
+        try {
+          if (localStorage.getItem(STORAGE_DAY) === todayStr()) return false;
+        } catch(e) {}
+        return true;
+      }
+
+      // === 记录：今天已弹 ===
+      function markShown() {
+        try { localStorage.setItem(STORAGE_DAY, todayStr()); } catch(e) {}
+      }
+
+      // === 记录：暂时不要（7天后）===
+      function markDismissed() {
+        var t = Date.now() + 7 * 24 * 60 * 60 * 1000;
+        try { localStorage.setItem(STORAGE_DISMISS, String(t)); } catch(e) {}
+      }
+
+      // === 显示 / 关闭 ===
+      var overlay    = document.getElementById('ebook-popup-overlay');
+      var closeBtn   = document.getElementById('ebook-popup-close');
+      var dismissBtn = document.getElementById('ebook-popup-dismiss');
+      var shown      = false;
+      var timeTimer  = null;
+
+      function showPopup() {
+        if (shown || !overlay || !shouldShow()) return;
+        shown = true;
+        markShown();
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function dismissPopup() {
+        if (!overlay) return;
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        if (timeTimer) clearTimeout(timeTimer);
+      }
+
+      if (!overlay) return;
+
+      // === 触发条件 1：滚动超过 40% ===
+      var scrollFired = false;
+      window.addEventListener('scroll', function() {
+        if (scrollFired) return;
+        var h = document.body.scrollHeight - window.innerHeight;
+        if (h <= 0) return;
+        if (window.scrollY / h > SCROLL_THRESHOLD) {
+          scrollFired = true;
+          showPopup();
+        }
+      }, { passive: true });
+
+      // === 触发条件 2：停留超过 60 秒 ===
+      timeTimer = setTimeout(function() {
+        if (!scrollFired) showPopup();
+      }, TIME_THRESHOLD);
+
+      // === 关闭按钮 ===
+      if (closeBtn) closeBtn.addEventListener('click', dismissPopup);
+
+      // === 「暂时不要」按钮 ===
+      if (dismissBtn) {
+        dismissBtn.addEventListener('click', function() {
+          markDismissed();
+          dismissPopup();
+        });
+      }
+
+      // === 点击遮罩关闭 ===
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) dismissPopup();
+      });
+
+      // === ESC 关闭 ===
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+          dismissPopup();
+        }
+      });
+    })();
+  </script> </body></html>  <script type="module">(function(){const e=document.getElementById("reading-progress");if(e){let c=function(){const n=window.scrollY||document.documentElement.scrollTop,s=document.documentElement.scrollHeight-document.documentElement.clientHeight,d=s>0?n/s*100:0;e.style.width=d+"%",e.classList.toggle("show",n>50)};window.addEventListener("scroll",c,{passive:!0}),c()}const t=document.querySelector(".book-toc-header"),o=document.querySelector(".book-toc");t&&o&&t.addEventListener("click",function(){o.classList.toggle("expanded")})})();</script>

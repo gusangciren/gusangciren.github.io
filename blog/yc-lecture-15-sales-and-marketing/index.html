@@ -1,0 +1,492 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="YC 创业课第15讲｜Aaron Levie（Box CEO）"><title>销售与营销 — 像企业家一样写作</title><link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml"><link rel="sitemap" type="application/xml" href="/sitemap-index.xml"><!-- Static CSS — no build hash, safe for incremental deploys --><link rel="stylesheet" href="/global.css"><!-- 自托管字体 --><link rel="preload" href="/fonts/NotoSerifSC-Regular.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/_astro/BaseLayout.BYj8Tvw5.css">
+<link rel="stylesheet" href="/_astro/_..CcR4Cqk3.css"></head> <body> <nav class="navbar"> <div class="nav-inner"> <a href="/" class="logo"> <img src="/images/logo-header.png" alt="Logo" class="logo-img"> <span>像企业家一样写作</span> </a> <div class="nav-links"> <a href="/blog">文章</a> <a href="/book">书籍</a> <a href="/community">社群</a> <a href="/join">答疑</a> </div> </div> </nav> <!-- 搜索浮窗 --> <div id="search-overlay" class="search-overlay"> <div class="search-modal"> <div class="search-header"> <input id="search-input" type="text" placeholder="搜索文章标题、描述..." autocomplete="off"> <button id="search-close" class="search-close-btn" aria-label="关闭搜索">✕</button> </div> <div id="search-results" class="search-results"></div> </div> </div> <!-- 浮动搜索按钮 --> <button id="search-toggle" class="search-fab" aria-label="搜索"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"> <circle cx="11" cy="11" r="7"></circle> <line x1="16.5" y1="16.5" x2="21" y2="21"></line> </svg> </button> <!-- ===== 微信电子书弹窗 ===== --> <div id="ebook-popup-overlay" class="ebook-popup-overlay" onclick="if(event.target===this){this.classList.remove('active');document.body.style.overflow='';}"> <div class="ebook-popup-card"> <div class="ebook-popup-topbar"></div> <button id="ebook-popup-close" class="ebook-popup-close" aria-label="关闭" onclick="event.stopPropagation();document.getElementById('ebook-popup-overlay').classList.remove('active');document.body.style.overflow='';">✕</button> <div class="ebook-popup-body"> <!-- 送你 --> <div class="ebook-popup-gift">送你一本我的电子书</div> <!-- 书名 --> <div class="ebook-popup-bigtitle">《闭环：在你睡觉时赚钱》</div> <div class="ebook-popup-bigsub">从0到1的自媒体方法论</div> <!-- 社会认同 --> <div class="ebook-popup-proof"> <span class="ebook-proof-avatars"> <span class="ebook-proof-avatar" style="background: #f5e0d0;"> <span style="font-size:12px;font-weight:700;color:#c45c2e;">M</span> </span> <span class="ebook-proof-avatar" style="background: #d0e8e0;"> <span style="font-size:12px;font-weight:700;color:#3a7a5e;">S</span> </span> <span class="ebook-proof-avatar" style="background: #d8dff0;"> <span style="font-size:12px;font-weight:700;color:#4a6aab;">L</span> </span> </span> <span><span class="ebook-proof-count">327</span> 人已领取</span> </div> <!-- 二维码 --> <div class="ebook-popup-qr"> <img src="/images/wechat-qr.png" alt="微信二维码"> </div> <!-- 下载按钮 — 仅手机展示 --> <a class="ebook-popup-download" href="/images/wechat-qr.png" download> <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path> <polyline points="7 10 12 15 17 10"></polyline> <line x1="12" y1="15" x2="12" y2="3"></line> </svg>
+下载二维码到手机
+</a> <!-- 流程提示 --> <p class="ebook-popup-steps"> <span class="step">扫二维码</span> → <span class="step">添加好友</span> → 回复<span class="keyword-value">闭环</span> → <span class="step">立马领取</span> </p> </div> <div class="ebook-popup-footer"> <p>免费领取 · 无需购买任何产品 · 24 小时内回复</p> </div> </div> </div> <main>   <div id="reading-progress" class="reading-progress"></div> <!-- 书籍系列：左侧目录 + 右侧正文 -->
+    <div class="book-layout"> <!-- 左侧目录 --> <aside class="book-toc"> <div class="book-toc-inner"> <div class="book-toc-header"> <span class="book-toc-series">YC 创业课</span> <span class="book-toc-count">目录</span> </div> <nav class="book-toc-nav"> <div class="book-toc-section "> <a href="/blog/yc-lecture-01-how-to-start-a-startup" class="book-toc-item"> <span class="book-toc-order">1</span> <span class="book-toc-title">如何创办初创公司</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-02-ideas-products-teams-execution-part2" class="book-toc-item"> <span class="book-toc-order">2</span> <span class="book-toc-title">创意、产品、团队与执行（第二部分）</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-03-counterintuitive-parts-and-how-to-have-ideas" class="book-toc-item"> <span class="book-toc-order">3</span> <span class="book-toc-title">创业中反直觉的部分，以及如何产生创意</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-04-how-to-build-products-users-love" class="book-toc-item"> <span class="book-toc-order">4</span> <span class="book-toc-title">如何打造用户热爱的产品</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-05-how-to-build-products-users-love-part2" class="book-toc-item"> <span class="book-toc-order">5</span> <span class="book-toc-title">如何打造用户喜爱的产品（第二部分）</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-06-doing-things-that-dont-scale-pr" class="book-toc-item"> <span class="book-toc-order">6</span> <span class="book-toc-title">做无法规模化的事、公关，以及如何起步</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-07-how-to-raise-money" class="book-toc-item"> <span class="book-toc-order">7</span> <span class="book-toc-title">如何融资</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-08-building-product-talking-to-users-and-growing" class="book-toc-item"> <span class="book-toc-order">8</span> <span class="book-toc-title">打造产品、与用户对话与实现增长</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-09-how-to-be-a-great-founder" class="book-toc-item"> <span class="book-toc-order">9</span> <span class="book-toc-title">如何成为一位伟大的创始人</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-10-how-to-manage" class="book-toc-item"> <span class="book-toc-order">10</span> <span class="book-toc-title">如何管理</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-11-how-to-operate" class="book-toc-item"> <span class="book-toc-order">11</span> <span class="book-toc-title">如何运营</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-12-how-to-run-a-user-interview" class="book-toc-item"> <span class="book-toc-order">12</span> <span class="book-toc-title">如何进行用户访谈</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-13-growth" class="book-toc-item"> <span class="book-toc-order">13</span> <span class="book-toc-title">增长</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-14-business-strategy-and-monopoly-theory" class="book-toc-item"> <span class="book-toc-order">14</span> <span class="book-toc-title">商业战略与垄断理论</span> </a>  </div><div class="book-toc-section active"> <a href="/blog/yc-lecture-15-sales-and-marketing" class="book-toc-item"> <span class="book-toc-order">15</span> <span class="book-toc-title">销售与营销</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-16-sales-marketing-pitch-investor-roleplaying" class="book-toc-item"> <span class="book-toc-order">16</span> <span class="book-toc-title">销售、营销与融资路演</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-17-legal-finance-hr" class="book-toc-item"> <span class="book-toc-order">17</span> <span class="book-toc-title">创业公司的法律、财务与 HR 机制</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-18-company-culture-and-building-a-team" class="book-toc-item"> <span class="book-toc-order">18</span> <span class="book-toc-title">企业文化与团队建设（第一部分）</span> </a>  </div> </nav> <a href="/book" class="book-toc-back"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+返回书架
+</a> </div> </aside> <!-- 右侧正文 --> <main class="book-main"> <article class="prose"> <header class="article-header"> <h1>销售与营销</h1> <div class="article-meta"> <span class="article-series">YC 创业课</span> <time> 2026年6月27日 </time> </div> </header> <blockquote>
+<p>YC 创业课程第十二讲<br>
+主讲人：Aaron Levie（Box 联合创始人兼 CEO）<br>
+整理自现场字幕，信息保留率 ≥99%</p>
+</blockquote>
+<hr>
+<h2 id="一开场为什么你应该做企业软件公司">一、开场：为什么你应该做企业软件公司</h2>
+<p>（会场播放《Eye of the Tiger》，Aaron Levie 走上台）</p>
+<p>能把音乐声开大一点，让它更有带动感吗？好了，好了。 guys，我们得找到节拍然后跟着节拍拍手。好了，请停下音乐。请放上演示文稿。谢谢。这大概是的企业软件里最让人 pumped up 的事情了。剩下的都是下坡路了。谢谢你们那段排练得很好的开场介绍。</p>
+<p>我是 Aaron Levie，Box 的 CEO 兼联合创始人。欢迎来到这期关于如何构建企业软件公司的课程。</p>
+<p>**我今天的工作是，试图说服你们今天来这里演讲的其他人都是错的，你们 actual 想构建一家企业软件公司。**希望我们能贯穿这个主题，你们会很好地理解为什么做企业是超级酷的。以及为什么那种「消费者赛道更有趣」的认知是错的，为什么你们想进入企业软件。</p>
+<p>谁想构建一家企业软件公司？好的，不错。谢谢。希望我们最后会做一次投票，希望那个数字没有缩小。这真的是我今天唯一的目标。</p>
+<hr>
+<h2 id="二box-的故事从消费者服务到企业服务">二、Box 的故事：从消费者服务到企业服务</h2>
+<h3 id="21-box-今天的数据">2.1 Box 今天的数据</h3>
+<p>我们要谈三件事。第一是 Box 的简要背景。因为当我们最开始的时候，<strong>我们不知道我们想做企业软件</strong>。所以我想稍微讲讲为什么我们追企业，以及我们今天做什么。然后我们要谈改变企业软件的几个主要因素，这些因素让今天做创业公司成为可能。最后我们要看一些模式——识别并自己去构建创业公司的方式。希望这会是一些实际的、有用的建议。</p>
+<p>关于构建企业服务，这些是 Box 的高层数据：<strong>我们有大约二十四万家企业使用 Box，有超过两千七百万用户将 Box 引入了他们的组织，以及财富 500 强中的百分之九十九。</strong></p>
+<p>实际上那百分之一其实是微软，他们似乎不想从我们这里买东西。我们得在那方面再努力一点。</p>
+<p>很多用户把 Box 引入职场环境，这些是使用这个产品的一些组织。我们有非常广泛的行业，从制造业消费品到像通用电气这样的公司。斯坦福医疗保健 actual 使用这个产品在医疗部门内部进行协作。在医疗保健、媒体、制造业之间，这些是我们服务的一些行业范围。</p>
+<h3 id="22-box-是怎么走到今天的">2.2 Box 是怎么走到今天的？</h3>
+<p>问题是，我们是如何走到今天的？因为我们没有以成为一家企业软件公司为目标来创办公司，即使事情最终是这样发生的。</p>
+<p>**我们在 2005 年推出了公司，我们在 2004 年大学时有了这个想法。**2004 年有人在用互联网吗？好的，很棒。我不知道千禧一代用不用互联网，所以很棒。抱歉，好了，不再讲年龄笑话了。好了，重点是。回到 2004 年，你可能记得那时候没太多事情可做。很无聊对吧？这是在 Facebook 之前，这 certainly 是在 Snapchat 之前，所以在那之前没太多事情可做。你不能给人们发十五秒的消息或照片然后它们消失，因为你甚至没有手机。</p>
+<p>**所以在互联网上，在 2004 年，没太多事情发生。这有点像互联网的样子，一片荒芜的荒凉景观。**澄清一下，欢乐的骆驼是 Google，悲伤的骆驼是 Yahoo！这是 2004 年的互联网。Yahoo！从那以后做得好多了，但在 2004 年中，他们正在试图找到他们的路。而 Google 正在接管世界。</p>
+<p><strong>但这就是整个世界的程度。</strong></p>
+<h3 id="23-2004-年的文件共享之痛">2.3 2004 年的文件共享之痛</h3>
+<p>所以我们在 2004 年在大学里注意到的是，出于某种原因，共享文件真的很难。**尽管现在这看起来是一个多么简单的想法，你回到十年前。**要么是非常昂贵，要么是非常难在公司之间移动数据。我当时有一个实习，我用数据做的大部分工作是复印打印出来的纸张并把它们放进柜子里。如果你不是计算机科学专业的人，那就是你作为实习生做的事情。所以我非常非常擅长复印纸张，遗憾的是，今天不是很常用的技能。但共享文件真的很难。在课堂环境中，你们在大团队中工作，共享文件也很难。我去南加州大学（USC），USC 给你五十兆字节的存储空间。**五十兆字节，你 basically 可以存一个文件。然后它会每六个月自动删除。**所以无论谁当时在管 IT，他们 certainly 不是在运行硬盘。所以存储和共享文件真的、真的很难。好吧，我们为什么不让人从任何地方存储和共享文件变得容易？</p>
+<p><strong>所以我们有了当时 Box.net 的想法。<strong>我们注意到，软件世界有很多因素在改变。第一是</strong>存储成本正在急剧下降</strong>。所以在我们的业务中，基本上每一年或两年，你可以将进入硬盘的存储和数据量翻倍。所以现在不经济的东西变得可行了。计算的成本、存储的成本已经下降。</p>
+<p>我们有更强大的浏览器和网络。Firefox 刚刚兴起。人们正在使用更快的互联网，用于家庭和课堂。然后人们有更多的地方想要存储和共享信息。所以我们有这三个因素正在某种程度上兴起。所以在我给出一些战术建议时，请回顾这些因素。**要记住的第一点：始终寻找改变的技术因素。**每个底层技术因素发生重大变化的市场，都处于即将以非常重大的方式改变的环境中。</p>
+<p>我们很幸运，对云端数据的需求正在增长重要性。成本和可行性也在迅速改善。我们决定把这个很快的 Box 版本放在一起，以 Box.net 名义推出。想法是，让共享文件变得真的很容易。结果这个想法引起了共鸣。</p>
+<p><strong>我们从一位叫 Mark Cuban 的人那里得到了天使 funding。</strong></p>
+<hr>
+<h2 id="三抉择时刻消费者-vs-企业">三、抉择时刻：消费者 vs 企业</h2>
+<h3 id="31-退学创业">3.1 退学创业</h3>
+<p>**我们要从大学退学，我们要搬到湾区，那会很棒。**当你从大学退学时，有人已经从大学退学了吗？好的，很好。<strong>待在学校里！</strong></p>
+<p>当你从大学退学时，每个人都把它想象得像会很不可思议。比尔·盖茨从大学退学，会像比尔·盖茨。或者迈克尔·戴尔从大学退学，会像迈克尔·戴尔一样令人兴奋。史蒂夫·乔布斯从大学退学，所以这是人们想象的，但没人有记得<strong>这家伙</strong>也从大学退学了。</p>
+<p>所以这真的是成功的保证。有趣的是，我甚至不知道这家伙是否从大学退学了。看起来他不得不。如果有人和他有亲属关系，我道歉，这只是互联网上一个有趣的图片。</p>
+<p>所以 basically 我们决定我们要从大学退学，我们搬到了先伯克利，然后帕洛阿尔托。**我们决定免费开放产品。我们让每月数十万人注册产品。**如果你去 Box.net，你会得到一 GB 的免费文件存储空间。这在 2006 年 again 是大的。但我们获得了这么多用户，我们试图搞清楚做什么。</p>
+<h3 id="32-撞墙卡在中间">3.2 撞墙：卡在中间</h3>
+<p>我们遇到的是一个任何创业公司都会遇到的常见问题。我们的商业模式让它非常突出，我们为消费者构建了一个非常强大、非常可靠的企业级产品。我们真的推出了一款真的很不重要的产品。所以对消费者来说，我们遇到的是，你们有所有这些可以付费的功能，但很多消费者不需要所有这些功能。而对的企业来说，我们真的没有足够的安全性和关于企业想如何使用他们的数据的能力。</p>
+<p>所以我们拥有的比消费者需要的多，比企业需要的少。**所以我们发现自己处在十字路口。**我们发现自己 basically 在这个时期，非常难以搞清楚我们想用业务做什么。所以我们必须做出这个选择。我们在这个路径上，我们必须选择走哪条路。</p>
+<p>这是在 2006 年早期、中期到 2006 年晚期。我当时 23 岁，我的联合创始人 22 岁。我们的创始团队甚至更年轻，我们都从大学退学了。</p>
+<h3 id="33-两条道路的对比">3.3 两条道路的对比</h3>
+<p>所以在 2006 年、2007 年，我们想象了这两条道路，世界非常、非常不同。</p>
+<p>当你做消费者创业公司时，它 basically 很有趣。你们一直有派对，just 超级令人兴奋。然后在企业领域，你们正在与这些大型……这是一个相当吃力不讨好的模式，因为人们 generally 讨厌企业软件。</p>
+<p>所以我们想象这两条道路的方式是，我们必须选择这两个世界中的一个。所以我们看着那个，想：<strong>好的，消费者看起来真的有趣，企业看起来真的难，而且有很多竞争。</strong></p>
+<p>同时，在这个消费者空间中，你始终在打如何变现的问题？你如何 actual 让人们为产品付费？在消费者空间中，你只能做两种商业模式。</p>
+<p>**你们要么让人们为你的应用付费，要么你们可以在应用上提供广告。**给你们一点视角，这些是今天的数字。在消费者世界中，每年在移动应用上花费约三百五十亿美元。相当大的数字对吧？三百五十亿美元。那是今天花在移动应用上的很多钱。对于广告，全球数字广告是一千三百五十亿美元。所以大多数消费者企业正在追求的是，如果你不做电子商务，正在追求约一千七百亿美元，要么是应用的购买力，要么是围绕这些类型的服务的全球广告。所以大数字，那里有很多机会。</p>
+<p>**然而，在企业中，每年在 enterprise IT 上有 3.7 万亿美元。**这些服务器、基础设施、软件、网络、服务。所有那技术栈等于每年花费几万亿。我们意识到的是，这两个市场之间存在相当宽的 delta。我们将努力让消费者每月支付几美元。而 Google、微软和苹果将试图让这个产品随时间变得免费。有传言说 Google Drive 要出来了。所有那些产品都要出来了，正在出来。</p>
+<p>**但在企业中，不是关于他们试图在 IT 上省钱。他们要么试图提高生产力，他们试图增加业务。**所以价值等式非常不同。所以对消费者来说，我们希望尽可能少地花钱，花在尽可能少的事情上。**在企业上，有点转变，actual 我能从技术中得到什么？那对我有多少价值？**所以那是一个非常关键的数据点。</p>
+<h3 id="34-企业软件的糟糕名声">3.4 企业软件的糟糕名声</h3>
+<p>然而，问题是企业软件非常不上相（unsexy）对吧？竞争非常激烈，非常难构建业务。这不是你早上从床上跳起来说他超级兴奋去构建一家企业软件公司的东西。原因实际上在当时非常直接。**构建软件的方式非常慢。**非常慢，因为你不能为客户弄坏任何东西，销售过程非常慢，因为客户需要很长时间来购买技术。所以我认为每个人都习惯了这个哲学，当你试图销售企业软件时，可能需要长达几年的时间，他们才能 actual 购买软件。然后可能需要更多年的时间，他们才能首先实施技术。所以很多公司存在了多年，而其技术甚至还没有被使用。</p>
+<p>这感觉像一个巨大的问题，不是我们想成为一部分的东西。技术本身是复杂的，我不知道有多少人不得不使用企业软件，但它 generally 真的很复杂。你试图搞清楚，为什么在上帝的创造中，设计师试图把四十七个按钮放在一页上。你 just 甚至不能理解它，原因我们一会儿会讲到。**但 basically 就是对设计或用户服务没有爱或关心。**软件就是复杂。最后，如果那还不够糟糕，你必须搞清楚你要如何销售这个软件。对于任何热爱互联网力量的人来说，这种让销售中介到达你的客户的概念，看起来真的没有吸引力。<strong>你必须雇佣一群人</strong>，他们将要去每个国家，他们将是你和客户之间的唯一接口。**你雇佣这个叫 Chuck 的人，Chuck 将带着一个公文包滚进来，他将试图向客户销售大量企业软件。**只是为了让我们清楚，这就是 Chuck 的样子。那就是销售过程，你们，在企业中至少，那是我们在脑海中想象的。</p>
+<p>Chuck 看起来是个快乐的人，但他仍然是让你的软件到达的中介。那么我们为什么要通过这个销售中介来扩大业务规模？我会在一分钟内讲为什么我们在销售业务上是错的。但这就是我们有点恐惧。如果那还不够难，我们有投资者在 2007 年说，basically 你们不可能在企业中成功。你们 again，basically 是一个 20 岁左右的创始人团队。你们团队中没有人曾在企业中待过。微软、Oracle、IBM，这些公司会把你们踩在脚下。这会非常、非常难成功。公平地说，他们在几个领域是对的。我们是一个非常没有经验的团队。我们在职业生涯中仍然非常早期。例如，我们的联合创始人看起来像他 13 岁。只是为了清楚他的样子。所以这在某种程度上是有道理的，对吧？这是他作为我们的 CFO，我想这是他 29 岁时。但看起来我们要带着钱跑去迪士尼乐园。我理解为什么他们认为我们不能成功。我无法想象给他钱。</p>
+<hr>
+<h2 id="四为什么还是要做企业世界已经改变了">四、为什么还是要做企业：世界已经改变了</h2>
+<p>所以我们决定，我们仍然必须去做。我们必须给我们最好的机会。我们要把规模、消费者体验、我们公司的 DNA 带进去，我们要看看我们是否能把这个带入企业。</p>
+<p>我们很幸运。**我们有一个投资者，在他职业生涯早期，对我们做了一个信念，因为有某种东西在企业中正在改变，我们将能够利用。**我们决定，如果我们要做企业，如果我们要追企业，我们将不得不以一组非常不同的规则来玩。</p>
+<p><strong>这个时代软件复杂性有什么可以改变？这个新的时代销售过程非常慢有什么可以改变？我们如何移动并直接到达用户客户，而不是有一个真的间接的过程来把我们的技术推出去？我们如何为用户而不是仅仅为客户的 RFP 流程构建设计？</strong></p>
+<p>所以我们看了所有对企业来说是 true 的因素，我们要做，并非在所有情况下，相反的事情。我们要找到技术世界中已经改变的东西，我们可以构建更新、更好的软件公司。那是我们在八年前 embark on 的决定，那就是我们一直专注于企业的原因。</p>
+<p>今天，again 我们有大约二十四万家企业使用产品。原因是**我们架构了商业模式，我们架构了软件，我们架构了解决方案，以在世界的某一个特定版本中工作，结果那个解决方案是发生的那个。**我会稍微讲讲世界中已经改变的东西，我们在某种程度上围绕构建我们的公司。我强烈建议你们，如果你正在构建一家企业软件公司，将你的技术定向。那就是我们做决定的原因，我们如何开始承担这个问题。</p>
+<hr>
+<h2 id="五企业软件世界的五大变化">五、企业软件世界的五大变化</h2>
+<p>**关于企业的一切，根据定义，企业使用的软件，在过去五年 just 已经改变了。**如果说曾经有一个神奇的时间来构建一家企业软件公司，现在就是那个时间，就组织中正在发生的事情发生了多少变化而言。</p>
+<p>让我们讲几件这些事情。</p>
+<h3 id="51-应用公司正在迁移到云端">5.1 应用公司正在迁移到云端</h3>
+<p>**第一个是大多数应用公司正在迁移到云端。**最大的事情是，如果你要开办一家商业管理公司，或一家商业智能公司，甚至一家联系人管理公司，多年前你必须在每个客户地点实施你的想法。无论你卖给了多少客户，无论你在什么地区，每个客户都必须把它放在他们的数据中心。那是本地计算（on-premise computing）的缺陷。你在做所有这项工作，你在创造如此多的冗余，它正在减慢为企业的交付和构建软件的整个过程。</p>
+<p>突然之间，云端出现了，像 Salesforce.com 这样的东西，像 Amazon Web Services 这样的东西，basically 说：**为什么每个想要实施几台服务器的客户，都必须实施服务器，把它们放在他们的数据服务器中，但周围有安全性或网络，六个月后它们上线，开发者可以在组织中使用它们，应用也是一样？**他们说，为什么这在今天有任何意义？我们可以 just 把几万台服务器放在一起，按需提供，你们可以在你们想要的时候使用你们想要的任何东西，我们可以做到。</p>
+<p>我们正在从一个昂贵计算的世界，转移到一个更便宜、按需计算的世界。启动创业公司的好处是，客户没有相同的摩擦，他们将要去采用新技术。<strong>一旦计算变得更便宜，就更容易采用新的解决方案。这意味着，他们向你们展示的障碍——障碍要低得多，这对创业公司来说很棒。</strong></p>
+<h3 id="52-从定制平台到标准化软件">5.2 从定制平台到标准化软件</h3>
+<p>我们正在从一个定制平台的世界，转移到一个标准化软件的世界。过去你们必须在软件本身之上构建所有定制、所有客户体验，现在客户意识到他们不会开放平台，他们可以在产品之上定制一个层。</p>
+<p>过去当你开始一家企业软件公司时，你只能卖给世界上前五或一万家公司。因为只有那些公司有 wear with all、人才、基础设施和预算，将你们的技术雇佣到企业中。今天，literally 一家两人公司可以注册 Box，以及我们与拥有超过三十万员工的通用电气合作。所以你们现在可以为世界上任何地方的小企业服务，以及一些地球上最大的公司，这意味着你们可以追的市场要大得多。这让追企业成为一个更好的经济命题。</p>
+<h3 id="53-平台本身变得更加全球化">5.3 平台本身变得更加全球化</h3>
+<p>平台 themselves 正在变得更加全球化。我们开始公司后几周，我们的客户就在国际上了。如果你们以传统方式做企业，那实际上需要数年才能 actual 在内部进行。</p>
+<h3 id="54-移动设备最深刻的转变">5.4 移动设备：最深刻的转变</h3>
+<p>**最后，最深刻的转变 of all，移动设备。**iPhone、iPad、Android、平板电脑，所有这些模型已经变得更加由用户主导。这是根本重要的。</p>
+<p>**在 IT 世界中，incumbents（在位者）通常获胜，因为他们与 IT 组织、与 CIO、与公司的消费能力有现有关系。在一个由用户主导的模型中，用户正在把他们自己的技术带进来。**他们把他们自己的技术带进销售团队，他们把他们自己的技术带进营销团队，他们把他们自己的技术带进财务，你们可以围绕那个用户构建软件。这意味着他们可以把企业带进来，你们可以在他们想要更好控制、更好安全性、更好可扩展性时，向企业销售。</p>
+<p>**所以你们仍然有作为商业软件公司的相同模型，但现在进入公司的方式是通过最终用户。**所以那些是定量因素变化。只是几个定量变化，地球上有近二十亿智能手机。这改变了地球上的每一个 IT 模型。因为十年前，如果你们管理公司的技术，你们只需要管理你们建筑内的计算机网络。但现在有数十亿智能手机，你们必须管理随时随地、在任何网络上计算的方式。这在软件公司中变得大，因为没有 incumbent 构建了技术栈来驱动这条工作线，以及企业如何使用他们的数据。所以那创造了一个巨大的创业机会。</p>
+<h3 id="55-三十亿人上线">5.5 三十亿人上线</h3>
+<p>有将近三十亿人在线。这意味着每一个企业都在改变他们将如何把他们的产品给他们的客户。这意味着每一个行业都在改变。<strong>在一个企业中，技术革命只会发生两次机会。</strong></p>
+<p><strong>第一个是原材料发生变化。所以计算成本下降，它们集中并让人们按需使用。</strong></p>
+<p>**第二件可以改变的事情是，这些企业必须追的人，需要在那些企业的产品中有新体验。**让我给你们一个例子。如果你们离校园，你们 probably 使用像 Uber 或 Lyft 这样的东西。如果你们在航运业务，如果你们在交通运输业务，Uber 代表了你们行业的巨大变化。所以你们不能让 Uber 存在而不理解，Uber 的影响是什么？Instacart 的影响是什么？Lyft 对我的商业模式的影响是什么？</p>
+<p>在一个企业正在处理那种变化的世界中，你们将需要新技术来帮助他们创建他们的商业模式，他们如何适应这种颠覆。这就是为什么现在甚至是开始行业垂直软件公司都非常惊人的时刻。现在每一个行业都在经历商业模式和技术导向的颠覆。意味着他们将需要从创业公司获得技术来帮助他们 through 这个。</p>
+<hr>
+<h2 id="六行业案例零售医疗媒体">六、行业案例：零售、医疗、媒体</h2>
+<p><strong>在零售行业</strong>，有一个全渠道（omni-channel）或多渠道商务的愿景。你们要在网上购物，你们要在手机上购物，你们要在商店里购物，你们也想让东西被送到你们这里。所以大多数 incumbent 技术不驱动多渠道商务。没人为此做好准备，当消费者想随时随地从任何地方购买商品，有更好的信息、更好的智能时，这意味着什么？所以世界上的每一个零售商都将需要一个新的技术栈来驱动他们的零售体验。</p>
+<p><strong>在医疗保健领域</strong>，每一个医疗保健机构都试图找到构建更个性化体验、更预测性体验的方法，他们想让药物适应个人。随着医疗保健的商业模式改变为关于手术、为检查收费，而是，really 客户为健康和保持健康付费。然后突然之间，每一个医疗保健机构都需要技术来提供医疗保健体验。他们会想要提供远程医疗。他们会想要在更多区域地点提供医疗保健，而不是仅仅在垄断医院环境中。</p>
+<p><strong>在媒体领域</strong>，例如，你们有一个世界，行业正在从真的线性编程转移，无论是电视还是音乐还是电影，这是一个线性供应链导向的商业模式，当一部电影被制作出来，它去影院三个月，然后 afterwards 它去 iTunes 或其他平台，到一个人们想要按需体验的世界。</p>
+<hr>
+<h2 id="七实战建议构建企业软件公司的模式">七、实战建议：构建企业软件公司的模式</h2>
+<p>现在我会给你们一些实用建议来帮助你们起步。公平地说，大多数这些建议是通过 retrospect 的镜头看的，这意味着这不是它将如何发生，但我可以回顾时间说，这些是导致这为 true 的事情。构建一家公司是很难确定性的。你们可能不会搞清楚所有这些事情，但这会给你们一种模式感，在你们构建或思考构建一家企业软件公司时识别。</p>
+<h3 id="71-发现技术颠覆">7.1 发现技术颠覆</h3>
+<p>**第一个是发现技术颠覆。**无论你们是在构建消费者还是企业，这都是真的。其余的更多是企业，但这只是基础的，如果你们要构建一个技术公司。你们必须寻找新的使能技术，或主要趋势，比如根本趋势，在事情如何做和它们如何能被做之间创造一个宽缺口。</p>
+<p>回顾我们的业务，缺口 basically 是存储变得更便宜，互联网变得更快，浏览器变得更好，然而我们仍然以这种非常复杂、非常麻烦的方式共享文件。**任何时候，在可能性和今天事情如何运作之间的 delta 处于最宽时。**那就是构建新技术去解决问题的机会。</p>
+<p>当你们在看企业时，问题是，计算成本下降如此迅速，改变了企业可以用他们的数据做什么？</p>
+<p>一个有趣的例子是 <strong>PlanGrid</strong>。PlanGrid 是一个移动应用，让你们管理建筑项目，让你们访问你们的蓝图，让你们管理围绕建筑过程的所有数据。这家公司意识到，每年花费约四十亿美元打印蓝图。他们有所有的印刷品和每次有变化时的更新，然后它们必须波纹和级联通过一个非常广泛的承包商和建筑工人网络，每次。即使是一个轻微的、微小的变化，突然之间他们意识到，有了 iPad，我们有完美的外形尺寸来加载蓝图和内容。这是可以在建筑行业中波纹的东西，这不是以高科技闻名的，除了在设计方面。他们如何构建技术，让数据协作问题在一个一段时间没有真的改变的行业中是真的无缝和容易做的？这是对市场中变化的完美发现，并搞清楚这两件事如何汇合。</p>
+<h3 id="72-有意从小处开始">7.2 有意从小处开始</h3>
+<p>**接下来，在企业中，你们想有意从小处开始。**我这么说是什么意思？你们想找到，这在所有在企业中在用户轻范式中的公司更是真的，你们想找到 wedge（楔子），那是一种自然的东西，你们可以创建一个产品，它将滑入其他现有产品的缝隙中。但你们认为随时间推移会扩展到成为企业结构中更重要的产品。</p>
+<p>你们想开始做的事情是，我们说，我们要拿这个问题的这一小片，我们要让用户体验 incredible。我们要么要改变商业模式，我们要创建新技术，让这个以前的问题真的、真的简单。一开始可能感觉很小，也许你们在追小企业，然后你们要去上市场。也许你们从一个使用案例的一小片开始并扩展出去，但你们有意从小处开始。</p>
+<p>因为你们将无法与 incumbent 竞争，因为 incumbent 总是会去完整解决方案。所以你们必须找到，完整解决方案中的缝隙是什么，那些足够显著，客户将要想要用一个离散技术解决这个问题。但随时间推移，你们将能够扩展。again 到更大的客户或随时间推移更多的使用案例。</p>
+<p>一个很好的例子是 <strong>ZenPayroll</strong>（现 Gusto）。ZenPayroll 是几年前由斯坦福毕业生起步的。Basically，他们发现小企业的工资单是一个复杂且令人难以置信的讨厌的过程。那是因为我们使用同样的供应商几十年来做那个，它们是数字 ordinated。你们不会通过电子邮件以收据形式收到你们的付款。非常复杂。你们看不到你们工资的图表。周围真的没有好的数据。他们说我们要拿下最痛苦的那一片开始，围绕雇佣人和支付人。只是那个工资单管理过程。我们要插入很多现有结构。但我们要让它 dead 简单地去做这个。现在他们能够随时间推移而上移市场，以及随时间推移提供更多服务。</p>
+<h3 id="73-寻找不对称性">7.3 寻找不对称性</h3>
+<p>**然后接下来你们真的想找到不对称性。**你们想做 incumbents 不能或不会做的事情，因为要么经济学对它们没有意义，经济学是如此不寻常，要么因为技术上他们不能。</p>
+<p>我要给你们两个例子。所以，如果你们今天要为企业构建一个软件，追一个 incumbent 类别，那个有更多套件（suite）导向的方法。然后你们想要做的是构建技术，那是平台无关的（platform agnostic）。套件玩家会做的是希望一切与自身集成，垂直集成有更多价值。但你们想去追一个不同的访问。你们想要你们的技术跨所有平台工作。这样你们可以与这么多不同种类的客户合作。你们可以是这么多平台的朋友，这是传统 incumbent 不能做的。</p>
+<p>有家公司叫 <strong>Zenefits</strong>，他们有一个 HR 管理软件公司，帮助你们作为一家小创业公司管理所有你们的好处，所有你们的 HR 信息。而不是向可能不 value 软件阶段的创业公司收费，他们意识到他们可以从支付使用他们软件能力的保险公司获得佣金。客户本身没有为 Zenefits 付费。Zenefits 平台由保险公司支付，他们 thus 创造了一个商业模式，没有其他软件公司能够想到或攻击。他们 equally 正在去颠覆一个之前没有看到很多创新的类别，那是小企业中的健康和福利空间。</p>
+<h3 id="74-找到最疯狂但仍然合理的离群客户">7.4 找到最疯狂但仍然合理的离群客户</h3>
+<p>**接下来你们想找到最疯狂但仍然合理的离群客户，在客户生态系统内。**所以你们需要找到在业务边缘的客户，他们的商业模式，他们的行业，并找到那些客户的独特特征。利用它们作为你们的早期采用者。</p>
+<p>**Paul Graham 有一篇很棒的文章，他谈到生活在未来，并在你们生活在未来时构建缺失的东西。**这是在颠覆中发现趋势和模式的简单方法。在工作场所也是一样。如果你们找到在未来工作的客户，你们将能够与他们合作，发现未来缺失了什么。我们如何构建支持所有将要出现的新使用案例的技术？</p>
+<p>有一家叫 <strong>Skycatch</strong> 的公司做企业无人机。一开始它看起来有点奇怪，但在建筑空间、农业中，他们现在正在使用无人机进行数据捕获和建模不同环境。所以这家公司能够找到所有在他们行业 bleeding edge 的公司。那些企业的运作有什么独特或新东西。他们与很多那些早期采用者合作，建立了他们的平台。Which really 是第一家企业的无人机公司。</p>
+<h3 id="75-倾听客户但不总是构建他们告诉你们的东西">7.5 倾听客户，但不总是构建他们告诉你们的东西</h3>
+<p>**倾听你们的客户，但不总是构建他们告诉你们的 exactly 东西。**这是构建企业软件的一个非常关键的区分。你们的客户将会有大量请求。你们的工作是那些列表 instill 到最终产品中。这并不意味着你们不会构建他们告诉你们构建的 exactly 东西。**你们的工作是倾听他们的问题，并将那些翻译成将要为他们构建最好和最简单解决方案的东西。**这真的是你们的工作，Palantir 在这方面做得很好，非常、非常复杂的问题，然后将它们缩减为对客户不会知道如何要求的复杂问题的简单解决方案。</p>
+<p>你们想模块化而不是定制。所以构建一个平台，而不是构建所有定制技术和客户垂直体验到软件本身。确保你们真的思考开放性和 API 作为构建体验的方式。不要直接构建到产品中。始终专注于用户。现在构建一家企业软件公司的神奇事情是，你们可以把消费者关怀放在产品的中心。那将 always 意味着采用更容易，你们的产品有更好的机会病毒式传播。它变得更容易在组织中销售。</p>
+<p>**始终确保你们把消费者 DNA 带入产品。你们的产品应该自己销售。但这不意味着你们不需要销售人员。**所以这是一个非常关键的区分。利用关于互联网的一切，利用关于用户的一切来得到你们的用户。但你们仍然很可能需要销售，作为帮助你们客户导航你们产品、帮助你们客户导航竞争格局和生态系统的一种方式。所以你们将想要非常领域特定的销售同事，那将对你们客户在这些职位上部署启用非常有帮助。但不要让那成为 substitute，不要让那成为不构建伟大产品的障碍。</p>
+<hr>
+<h2 id="八推荐书单">八、推荐书单</h2>
+<p>**顺便读这三本书：《跨越鸿沟》（Crossing the Chasm）、《创新者的窘境》（The Innovator’s Dilemma）和《云背后》（Behind the Cloud）。**这三本结合起来，如果你们 binge 并读它们 all，你们会脱颖而出。</p>
+<hr>
+<h2 id="九结语">九、结语</h2>
+<p>今天，现在，是开办软件公司的绝佳时机。我祝你们最好的运气。如果它不成功，我们在招聘。**唯一另一件事是，请不要与我竞争，因为我已经有很多竞争了。**理想情况下，要么来和我们合作，要么构建你们自己的公司。</p>
+<p>非常感谢！</p> <div class="cta-box"> <p>觉得有用？看看我的书和课程</p> <div class="cta-buttons"> <a href="/book" class="cta-btn cta-btn-primary">选择改变命运</a> <a href="/community" class="cta-btn cta-btn-secondary">写作课程</a> </div> </div> <nav class="article-nav"> <a href="/blog/yc-lecture-14-business-strategy-and-monopoly-theory" class="article-nav-link article-nav-prev"> <span class="article-nav-label"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+阅读上一篇
+</span> <span class="article-nav-title">商业战略与垄断理论</span> </a> <a href="/blog/yc-lecture-16-sales-marketing-pitch-investor-roleplaying" class="article-nav-link article-nav-next"> <span class="article-nav-label">
+阅读下一篇
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg> </span> <span class="article-nav-title">销售、营销与融资路演</span> </a> </nav> </article> </main> </div> </main> <footer> <div class="footer-inner"> <p>© 2026 像企业家一样写作</p> <div class="footer-links"> <a href="https://mp.weixin.qq.com/" target="_blank">公众号：种一个梦</a> </div> </div> </footer>  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    let _searchIndex = null;
+
+    async function loadSearchIndex() {
+      if (_searchIndex) return _searchIndex;
+      try {
+        const resp = await fetch('/search.json?t=' + Date.now());
+        _searchIndex = await resp.json();
+      } catch (e) {
+        console.warn('search.json load failed', e);
+        _searchIndex = { posts: [], books: [] };
+      }
+      return _searchIndex;
+    }
+
+    function openSearch() {
+      const overlay = document.getElementById('search-overlay');
+      const input = document.getElementById('search-input');
+      overlay.classList.add('active');
+      input.value = '';
+      input.focus();
+      renderResults('');
+    }
+
+    function closeSearch() {
+      document.getElementById('search-overlay').classList.remove('active');
+    }
+
+    function getSnippet(text, keyword, radius) {
+      radius = radius || 30;
+      if (!text) return '';
+      const idx = text.toLowerCase().indexOf(keyword.toLowerCase());
+      if (idx === -1) return text.substring(0, 80);
+      const start = Math.max(0, idx - radius);
+      const end = Math.min(text.length, idx + keyword.length + radius);
+      let s = text.substring(start, end);
+      if (start > 0) s = '…' + s;
+      if (end < text.length) s = s + '…';
+      return s;
+    }
+
+    function renderResults(query) {
+      const container = document.getElementById('search-results');
+      if (!query.trim()) {
+        container.innerHTML = '<div class="search-empty">输入关键词搜索文章和书籍…</div>';
+        return;
+      }
+      const q = query.toLowerCase();
+      const index = _searchIndex || { posts: [], books: [] };
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      if (matchedPosts.length === 0 && matchedBooks.length === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        return;
+      }
+      let html = '';
+      matchedPosts.forEach(p => {
+        const snippet = getSnippet(p.content || '', q, 35);
+        const displayDesc = (p.desc || '') || snippet;
+        html += '<a href="/blog/' + p.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">文章</span>' + p.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      matchedBooks.forEach(b => {
+        const snippet = getSnippet(b.content || '', q, 35);
+        const displayDesc = (b.desc || '') || snippet;
+        html += '<a href="/book/' + b.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">书籍</span>' + b.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      container.innerHTML = html;
+    }
+
+    // ===== 搜索 FAB 拖动逻辑 =====
+    (function() {
+      const fab = document.getElementById('search-toggle');
+      const FAB_SIZE = 56;
+      let isDragging = false;
+      let startX, startY, startLeft, startTop;
+      let dragMoved = false;
+
+      function onDown(clientX, clientY) {
+        isDragging = true;
+        dragMoved = false;
+        startX = clientX;
+        startY = clientY;
+        const rect = fab.getBoundingClientRect();
+        startLeft = rect.left;
+        startTop = rect.top;
+        fab.classList.add('dragging');
+      }
+
+      function onMove(clientX, clientY) {
+        if (!isDragging) return;
+        const dx = clientX - startX;
+        const dy = clientY - startY;
+        if (!dragMoved && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+          dragMoved = true;
+          // 切换到绝对 left/top 定位
+          fab.style.bottom = 'auto';
+          fab.style.right = 'auto';
+          fab.style.left = startLeft + 'px';
+          fab.style.top = startTop + 'px';
+        }
+        if (dragMoved) {
+          let newLeft = Math.max(4, Math.min(startLeft + dx, window.innerWidth - FAB_SIZE - 4));
+          let newTop  = Math.max(4, Math.min(startTop  + dy, window.innerHeight - FAB_SIZE - 4));
+          fab.style.left = newLeft + 'px';
+          fab.style.top  = newTop  + 'px';
+        }
+      }
+
+      function onUp() {
+        if (!isDragging) return;
+        isDragging = false;
+        fab.classList.remove('dragging');
+        if (!dragMoved) {
+          // 判定为点击，打开搜索
+          loadSearchIndex().then(() => openSearch());
+        }
+      }
+
+      fab.addEventListener('mousedown', e => { if (e.button === 0) { onDown(e.clientX, e.clientY); e.preventDefault(); } });
+      document.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+      document.addEventListener('mouseup', onUp);
+
+      fab.addEventListener('touchstart', e => { onDown(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); }, { passive: false });
+      document.addEventListener('touchmove', e => { if (isDragging) { onMove(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); } }, { passive: false });
+      document.addEventListener('touchend', onUp);
+    })();
+
+    document.getElementById('search-close').addEventListener('click', closeSearch);
+    document.getElementById('search-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeSearch();
+    });
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      renderResults(e.target.value);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        loadSearchIndex().then(() => openSearch());
+      }
+    });
+    });
+  </script> <!-- 页面关键词高亮（从搜索结果跳转过来时） --> <script>
+    (function() {
+      function getQueryParam(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name) || '';
+      }
+
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function highlightKeyword(keyword) {
+        if (!keyword.trim()) return;
+        const main = document.querySelector('main');
+        if (!main) return;
+
+        const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, null, false);
+        const nodesToReplace = [];
+        const regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
+
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node.parentElement && node.parentElement.tagName === 'MARK') continue;
+          if (regex.test(node.textContent)) {
+            nodesToReplace.push(node);
+          }
+        }
+
+        let firstMark = null;
+        nodesToReplace.forEach(textNode => {
+          const span = document.createElement('span');
+          span.innerHTML = textNode.textContent.replace(regex, '<mark class="search-highlight">$1</mark>');
+          const marks = span.querySelectorAll('mark');
+          if (marks.length > 0 && !firstMark) {
+            firstMark = marks[0];
+          }
+          const fragment = document.createDocumentFragment();
+          while (span.firstChild) {
+            fragment.appendChild(span.firstChild);
+          }
+          textNode.parentNode.replaceChild(fragment, textNode);
+        });
+
+        if (firstMark) {
+          firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(function() {
+            const marks = main.querySelectorAll('mark.search-highlight');
+            marks.forEach(function(m) {
+              const parent = m.parentNode;
+              parent.replaceChild(document.createTextNode(m.textContent), m);
+              parent.normalize();
+            });
+          }, 6000);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          highlightKeyword(getQueryParam('q'));
+        });
+      } else {
+        highlightKeyword(getQueryParam('q'));
+      }
+    })();
+  </script> <!-- 代码块复制按钮 --> <script>
+    (function() {
+      function initCopyButtons() {
+        document.querySelectorAll('.prose pre').forEach(function(pre) {
+          if (pre.querySelector('.copy-btn')) return;
+          var btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.textContent = '复制';
+          btn.setAttribute('aria-label', '复制代码');
+          btn.addEventListener('click', function() {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+              btn.textContent = '已复制';
+              btn.classList.add('copied');
+              setTimeout(function() {
+                btn.textContent = '复制';
+                btn.classList.remove('copied');
+              }, 2000);
+            }).catch(function() {
+              btn.textContent = '失败';
+              setTimeout(function() { btn.textContent = '复制'; }, 2000);
+            });
+          });
+          pre.style.position = 'relative';
+          pre.appendChild(btn);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCopyButtons);
+      } else {
+        initCopyButtons();
+      }
+    })();
+  </script> <!-- 微信电子书弹窗（滚动触发 + 每天一次） --> <script>
+    (function() {
+      // === 配置 ===
+      var STORAGE_DAY   = 'ebook_popup_day';    // 今天已弹过
+      var STORAGE_DISMISS = 'ebook_popup_dismiss_until'; // 用户点「暂时不要」的过期时间戳
+      var SCROLL_THRESHOLD = 0.40; // 滚动 40% 触发
+      var TIME_THRESHOLD   = 60000;  // 或停留 60 秒触发
+
+      // === 已有领取人数（可手动更新）===
+      var CLAIM_COUNT = 327;
+
+      // === 工具函数 ===
+      function todayStr() {
+        var d = new Date();
+        return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+      }
+      function getDismissUntil() {
+        try { return parseInt(localStorage.getItem(STORAGE_DISMISS), 10); } catch(e) { return 0; }
+      }
+
+      // === 判断是否应该弹出 ===
+      function shouldShow() {
+        // 用户点过「暂时不要」且未过期
+        var dismissUntil = getDismissUntil();
+        if (dismissUntil && Date.now() < dismissUntil) return false;
+        // 今天已弹过
+        try {
+          if (localStorage.getItem(STORAGE_DAY) === todayStr()) return false;
+        } catch(e) {}
+        return true;
+      }
+
+      // === 记录：今天已弹 ===
+      function markShown() {
+        try { localStorage.setItem(STORAGE_DAY, todayStr()); } catch(e) {}
+      }
+
+      // === 记录：暂时不要（7天后）===
+      function markDismissed() {
+        var t = Date.now() + 7 * 24 * 60 * 60 * 1000;
+        try { localStorage.setItem(STORAGE_DISMISS, String(t)); } catch(e) {}
+      }
+
+      // === 显示 / 关闭 ===
+      var overlay    = document.getElementById('ebook-popup-overlay');
+      var closeBtn   = document.getElementById('ebook-popup-close');
+      var dismissBtn = document.getElementById('ebook-popup-dismiss');
+      var shown      = false;
+      var timeTimer  = null;
+
+      function showPopup() {
+        if (shown || !overlay || !shouldShow()) return;
+        shown = true;
+        markShown();
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function dismissPopup() {
+        if (!overlay) return;
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        if (timeTimer) clearTimeout(timeTimer);
+      }
+
+      if (!overlay) return;
+
+      // === 触发条件 1：滚动超过 40% ===
+      var scrollFired = false;
+      window.addEventListener('scroll', function() {
+        if (scrollFired) return;
+        var h = document.body.scrollHeight - window.innerHeight;
+        if (h <= 0) return;
+        if (window.scrollY / h > SCROLL_THRESHOLD) {
+          scrollFired = true;
+          showPopup();
+        }
+      }, { passive: true });
+
+      // === 触发条件 2：停留超过 60 秒 ===
+      timeTimer = setTimeout(function() {
+        if (!scrollFired) showPopup();
+      }, TIME_THRESHOLD);
+
+      // === 关闭按钮 ===
+      if (closeBtn) closeBtn.addEventListener('click', dismissPopup);
+
+      // === 「暂时不要」按钮 ===
+      if (dismissBtn) {
+        dismissBtn.addEventListener('click', function() {
+          markDismissed();
+          dismissPopup();
+        });
+      }
+
+      // === 点击遮罩关闭 ===
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) dismissPopup();
+      });
+
+      // === ESC 关闭 ===
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+          dismissPopup();
+        }
+      });
+    })();
+  </script> </body></html>  <script type="module">(function(){const e=document.getElementById("reading-progress");if(e){let c=function(){const n=window.scrollY||document.documentElement.scrollTop,s=document.documentElement.scrollHeight-document.documentElement.clientHeight,d=s>0?n/s*100:0;e.style.width=d+"%",e.classList.toggle("show",n>50)};window.addEventListener("scroll",c,{passive:!0}),c()}const t=document.querySelector(".book-toc-header"),o=document.querySelector(".book-toc");t&&o&&t.addEventListener("click",function(){o.classList.toggle("expanded")})})();</script>

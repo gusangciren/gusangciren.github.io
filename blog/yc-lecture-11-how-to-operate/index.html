@@ -1,0 +1,543 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="YC 创业课第11讲｜Ben Horowitz"><title>如何运营 — 像企业家一样写作</title><link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml"><link rel="sitemap" type="application/xml" href="/sitemap-index.xml"><!-- Static CSS — no build hash, safe for incremental deploys --><link rel="stylesheet" href="/global.css"><!-- 自托管字体 --><link rel="preload" href="/fonts/NotoSerifSC-Regular.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/_astro/BaseLayout.BYj8Tvw5.css">
+<link rel="stylesheet" href="/_astro/_..CcR4Cqk3.css"></head> <body> <nav class="navbar"> <div class="nav-inner"> <a href="/" class="logo"> <img src="/images/logo-header.png" alt="Logo" class="logo-img"> <span>像企业家一样写作</span> </a> <div class="nav-links"> <a href="/blog">文章</a> <a href="/book">书籍</a> <a href="/community">社群</a> <a href="/join">答疑</a> </div> </div> </nav> <!-- 搜索浮窗 --> <div id="search-overlay" class="search-overlay"> <div class="search-modal"> <div class="search-header"> <input id="search-input" type="text" placeholder="搜索文章标题、描述..." autocomplete="off"> <button id="search-close" class="search-close-btn" aria-label="关闭搜索">✕</button> </div> <div id="search-results" class="search-results"></div> </div> </div> <!-- 浮动搜索按钮 --> <button id="search-toggle" class="search-fab" aria-label="搜索"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"> <circle cx="11" cy="11" r="7"></circle> <line x1="16.5" y1="16.5" x2="21" y2="21"></line> </svg> </button> <!-- ===== 微信电子书弹窗 ===== --> <div id="ebook-popup-overlay" class="ebook-popup-overlay" onclick="if(event.target===this){this.classList.remove('active');document.body.style.overflow='';}"> <div class="ebook-popup-card"> <div class="ebook-popup-topbar"></div> <button id="ebook-popup-close" class="ebook-popup-close" aria-label="关闭" onclick="event.stopPropagation();document.getElementById('ebook-popup-overlay').classList.remove('active');document.body.style.overflow='';">✕</button> <div class="ebook-popup-body"> <!-- 送你 --> <div class="ebook-popup-gift">送你一本我的电子书</div> <!-- 书名 --> <div class="ebook-popup-bigtitle">《闭环：在你睡觉时赚钱》</div> <div class="ebook-popup-bigsub">从0到1的自媒体方法论</div> <!-- 社会认同 --> <div class="ebook-popup-proof"> <span class="ebook-proof-avatars"> <span class="ebook-proof-avatar" style="background: #f5e0d0;"> <span style="font-size:12px;font-weight:700;color:#c45c2e;">M</span> </span> <span class="ebook-proof-avatar" style="background: #d0e8e0;"> <span style="font-size:12px;font-weight:700;color:#3a7a5e;">S</span> </span> <span class="ebook-proof-avatar" style="background: #d8dff0;"> <span style="font-size:12px;font-weight:700;color:#4a6aab;">L</span> </span> </span> <span><span class="ebook-proof-count">327</span> 人已领取</span> </div> <!-- 二维码 --> <div class="ebook-popup-qr"> <img src="/images/wechat-qr.png" alt="微信二维码"> </div> <!-- 下载按钮 — 仅手机展示 --> <a class="ebook-popup-download" href="/images/wechat-qr.png" download> <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path> <polyline points="7 10 12 15 17 10"></polyline> <line x1="12" y1="15" x2="12" y2="3"></line> </svg>
+下载二维码到手机
+</a> <!-- 流程提示 --> <p class="ebook-popup-steps"> <span class="step">扫二维码</span> → <span class="step">添加好友</span> → 回复<span class="keyword-value">闭环</span> → <span class="step">立马领取</span> </p> </div> <div class="ebook-popup-footer"> <p>免费领取 · 无需购买任何产品 · 24 小时内回复</p> </div> </div> </div> <main>   <div id="reading-progress" class="reading-progress"></div> <!-- 书籍系列：左侧目录 + 右侧正文 -->
+    <div class="book-layout"> <!-- 左侧目录 --> <aside class="book-toc"> <div class="book-toc-inner"> <div class="book-toc-header"> <span class="book-toc-series">YC 创业课</span> <span class="book-toc-count">目录</span> </div> <nav class="book-toc-nav"> <div class="book-toc-section "> <a href="/blog/yc-lecture-01-how-to-start-a-startup" class="book-toc-item"> <span class="book-toc-order">1</span> <span class="book-toc-title">如何创办初创公司</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-02-ideas-products-teams-execution-part2" class="book-toc-item"> <span class="book-toc-order">2</span> <span class="book-toc-title">创意、产品、团队与执行（第二部分）</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-03-counterintuitive-parts-and-how-to-have-ideas" class="book-toc-item"> <span class="book-toc-order">3</span> <span class="book-toc-title">创业中反直觉的部分，以及如何产生创意</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-04-how-to-build-products-users-love" class="book-toc-item"> <span class="book-toc-order">4</span> <span class="book-toc-title">如何打造用户热爱的产品</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-05-how-to-build-products-users-love-part2" class="book-toc-item"> <span class="book-toc-order">5</span> <span class="book-toc-title">如何打造用户喜爱的产品（第二部分）</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-06-doing-things-that-dont-scale-pr" class="book-toc-item"> <span class="book-toc-order">6</span> <span class="book-toc-title">做无法规模化的事、公关，以及如何起步</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-07-how-to-raise-money" class="book-toc-item"> <span class="book-toc-order">7</span> <span class="book-toc-title">如何融资</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-08-building-product-talking-to-users-and-growing" class="book-toc-item"> <span class="book-toc-order">8</span> <span class="book-toc-title">打造产品、与用户对话与实现增长</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-09-how-to-be-a-great-founder" class="book-toc-item"> <span class="book-toc-order">9</span> <span class="book-toc-title">如何成为一位伟大的创始人</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-10-how-to-manage" class="book-toc-item"> <span class="book-toc-order">10</span> <span class="book-toc-title">如何管理</span> </a>  </div><div class="book-toc-section active"> <a href="/blog/yc-lecture-11-how-to-operate" class="book-toc-item"> <span class="book-toc-order">11</span> <span class="book-toc-title">如何运营</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-12-how-to-run-a-user-interview" class="book-toc-item"> <span class="book-toc-order">12</span> <span class="book-toc-title">如何进行用户访谈</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-13-growth" class="book-toc-item"> <span class="book-toc-order">13</span> <span class="book-toc-title">增长</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-14-business-strategy-and-monopoly-theory" class="book-toc-item"> <span class="book-toc-order">14</span> <span class="book-toc-title">商业战略与垄断理论</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-15-sales-and-marketing" class="book-toc-item"> <span class="book-toc-order">15</span> <span class="book-toc-title">销售与营销</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-16-sales-marketing-pitch-investor-roleplaying" class="book-toc-item"> <span class="book-toc-order">16</span> <span class="book-toc-title">销售、营销与融资路演</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-17-legal-finance-hr" class="book-toc-item"> <span class="book-toc-order">17</span> <span class="book-toc-title">创业公司的法律、财务与 HR 机制</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-18-company-culture-and-building-a-team" class="book-toc-item"> <span class="book-toc-order">18</span> <span class="book-toc-title">企业文化与团队建设（第一部分）</span> </a>  </div> </nav> <a href="/book" class="book-toc-back"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+返回书架
+</a> </div> </aside> <!-- 右侧正文 --> <main class="book-main"> <article class="prose"> <header class="article-header"> <h1>如何运营</h1> <div class="article-meta"> <span class="article-series">YC 创业课</span> <time> 2026年6月27日 </time> </div> </header> <p><strong>YC 创业课程第十四讲</strong>
+<strong>主讲：Keith Rabois（Khosla Ventures 合伙人，前 Square COO、PayPal 高管）</strong></p>
+<hr>
+<h2 id="开场锻造公司比锻造产品更难">开场：锻造公司比锻造产品更难</h2>
+<p>我要讲的是如何运营。我看了一些之前的课程，我会假设你们已经招聘了一群坚韧且足智多谋的人，已经打造了一个至少有些人喜欢的产品，希望融到了一些资金，现在你们正试图建立一家公司。</p>
+<p>你们一直在锻造产品，现在你们在锻造公司。而我实际上认为<strong>锻造公司比锻造产品要难得多。</strong> 根本原因就是<strong>人是不理性的</strong>。我们都懂这个道理——你的父母、你的另一半、你的兄弟姐妹、你的老师，你生活中的某个人是不理性的。建立一家公司基本上就是把所有你知道的不理性的人放进一栋楼里，然后每天至少和他们共处十二个小时。这非常具有挑战性。</p>
+<p>当然有一些应对技巧有些人擅长此道有些人则不。但这正是运营的实质所在。</p>
+<hr>
+<h2 id="公司是一台机器">公司是一台机器</h2>
+<p>基本上当你们在构建一家公司时你们在建造一台引擎。起初你们在白板上画图、架构它看起来特别干净漂亮完美。但当你们真正开始把它付诸实践时它实际上开始更像这样——用胶带把它粘在一起。<strong>需要人们付出巨大努力才能维持它的运转这就是为什么人们每周工作 80 到 100 小时。</strong> 那是维持这个东西不散架的英雄式努力因为你们实际上还没有到位打磨好的金属部件。</p>
+<p>最终你们想要构建的是一台高性能机器——一台几乎没有人需要每小时每分钟都担心的机器。正如我们在 eBay 时常开玩笑说的：<strong>如果火星人接管了 eBay 世界需要六个月才会注意到。</strong> 那就是最终你们想要达到的状态。</p>
+<p>正如沃伦·巴菲特所说：<strong>建立一家傻瓜也能运营的公司因为最终傻瓜一定会来运营它。</strong> 所以这就是你们想要的——基本上是一台傻瓜也能操作的高性能机器。</p>
+<hr>
+<h2 id="领导者的真正工作最大化组织产出">领导者的真正工作：最大化组织产出</h2>
+<p>那么作为领导者你真正的工作是什么？严格来说只有一本书真正解释了如何做到这一点。它相当古老 1982 年由安迪·格鲁夫撰写相当著名也很成功。他对你的工作的定义是：<strong>最大化组织的产出。</strong></p>
+<p>CEO 对一切负责。VP 则对一个组织的一部分负责以及<strong>你周围的组织</strong>负责。所以如果你是一个产品工程副总裁（VPE）你实际上对你影响所及的产品团队和营销团队的绩效负责因为你有影响力。</p>
+<p>所以这就是你衡量人的方式你要聚焦于产出而非投入。<strong>那句古老的箴言：衡量运动并把它误认为进步。</strong> 你只衡量进步。</p>
+<h3 id="初创公司的混乱是正常的">初创公司的混乱是正常的</h3>
+<p>首先当你开始创办一家公司时一切都会感觉像一团糟而且确实应该如此。如果你们有太多流程太多可预测性那你们很可能创新速度不够快、创造力不够强。所以应该感觉每天都有一个新问题而你们所做的从根本上说是<strong>分诊（triaging）。</strong></p>
+<p>有些事情看起来像问题但<strong>它们其实只是感冒</strong>——它们自己会消失。所以有人对这事或那事感到烦那是感冒你不应该为此压力山大当然也不应该把所有时间分配给它。</p>
+<p>有些事情会以感冒的形式出现但如果诊断不恰当它们可能变得致命。我要尝试给你们提供一些<strong>思考框架</strong>来区分什么时候事情只是感冒、什么时候事情可能是致命的。</p>
+<hr>
+<h2 id="第一课编辑者隐喻十四年管理生涯中最好的隐喻">第一课：编辑者隐喻——十四年管理生涯中最好的隐喻</h2>
+<p>我在 Square 学到的最重要的概念之一是<strong>编辑（editing）</strong> 的概念。这是我在十四年的管理工作中见过的<strong>最好的关于如何思考你的工作的隐喻。</strong> 它是一个自然的隐喻所以每天带着它很容易而且很容易传达给你的每个员工让他们能分辨自己在编辑还是在写作。</p>
+<p>编辑是你工作的最佳隐喻。我们要讨论你在编辑中做的具体事情。</p>
+<h3 id="简化再简化">简化、再简化</h3>
+<p>编辑做的第一件事——你们可能在学校都有过这种经历——你交一篇论文给助教或者把草稿给朋友编辑做的第一件事是拿出一支红笔或者现在上网他们开始划掉东西。<strong>基本上就是删除东西编辑最大的任务是简化、简化、再简化——通常意味着省略掉一些事。</strong></p>
+<p>所以这也是你的工作——为你团队中的每个人澄清和简化。你越简化人们的表现就越好。人们无法理解并跟踪一长串复杂的行动计划。<strong>所以你必须把它提炼成一、二或三件事并使用一个他们可以重复的框架——可以不加思考地重复、可以对朋友重复、可以在晚上重复的框架。</strong></p>
+<p>不要接受复杂性的借口。很多人会告诉你这太有挑战性了这太复杂了我知道别人简化但那不适合我这是个复杂业务。他们错了。<strong>你可以用 140 个字符改变世界。你可以用一个非常容易描述的概念建立历史上最重要的公司。</strong> 你可以用不到 50 个字符来营销产品。没有理由你不能以同样的方式构建你的公司。所以强迫自己对每一个倡议、每一个产品、每一次营销、你所做的一切进行简化。基本上拿出那支红笔开始删除东西吧。</p>
+<h3 id="提出澄清性问题">提出澄清性问题</h3>
+<p>编辑做的第二件事是向你提出澄清性问题。当你向某人提交一篇论文时他们通常会做什么？他们会在某个地方发现含糊之处然后问”你真的是这个意思吗？你真的是那个意思吗？给我举个例子？” 这就是你的工作。</p>
+<p>所以在开会时人们会看向你。而你真正要做的是提出很多问题。它们可以是简单的基本问题比如”我们应该尝试每周七天营业吗还是六天？” 它们也可以是根本性的问题比如”我们的竞争优势在哪里？”</p>
+<p>我们作为投资者也尝试这样做。有些投资者会就十亿个事情问你十亿个问题让你永远在做尽职调查。<strong>我们试图缩小到对这个公司最重要的一二三四是哪些事然后只关注那些事。</strong> 这让我们更加果断我们能快速做出决策。它不会分散你对真正的工作——也就是构建公司——的注意力。而且我认为我们仍然能达到最高保真的问题因为我们没有所有这些额外的无关细节和数据。</p>
+<p>这很难是需要练习的事情。但当你擅长它时安迪·格鲁夫估计每消除一个步骤你能提升 30-50% 的绩效。</p>
+<h3 id="分配资源">分配资源</h3>
+<p>接下来你要做的是分配资源。编辑一直都在做这件事。他们把驻中东的编辑调走把他们移到硅谷因为硅谷更有趣。或者把他们调到体育版块因为他们想在体育期刊和其他出版物的基础上竞争。所以可以是自上而下的——我拿走一大堆资源和人员说我们现在要去这里。然后下个季度下一年嗯中东报道变得无聊了我们不想再做那个了。我们去追别的吧。</p>
+<p>也可以是自下而上的——就像记者大多自己想出故事一样。<strong>与你共事的人大体上应该自己提出倡议。</strong> 所以一个报道 Google 的记者一般会从他们在各处听到的有趣故事中选出一两个提交给编辑批准。但不是编辑说”去报道 Google 这是我想的角度”偶尔他们会那样做但这不是记者每天做的核心工作。</p>
+<p>你随时间推移的目标是每天使用更少的红墨水。所以衡量你在沟通方面做得如何的一种方法是<strong>你一天产生多少红墨水。</strong> 如果你某天过得不好到处都是红墨水没关系。但如果下个月的红墨水上个月多下季度更多那你就要衡量一下自己了。</p>
+<h3 id="确保一致的声音">确保一致的声音</h3>
+<p>另一件非常重要的事——实际上对很多人来说不那么直观——是编辑的工作是<strong>确保一致的声音（consistent voice）。</strong></p>
+<p>如果你们任何人读过**《经济学人》** 你可以辨别出有一个一致的声音。你拿起《经济学人》的任何一篇文章任何一篇帖子都感觉像是同一个人写的。理想情况下你的公司在网站上、在新闻稿中、在包装上（如果是实体产品）、在任何招聘页面上都应该感觉像是同一个人写的。</p>
+<p>这极其困难做到。起初你会被诱惑自己做这件事创始人初期自己来做没问题。但随着时间你不应该自己包办所有的一致声音编辑工作。你要培训人们让他们能识别声音的差异。</p>
+<p>你看这个网页页面看起来和这个招聘页很不一样。你开始问为什么这样？是报告出了问题吗？这边的某个领导不理解公司的声音？你必须随着时间修复它但你要从目标开始——一切都应该感觉一样。这很难实践几乎每个公司都有一个组织部分不在同一个声音上。<strong>即使在苹果——在史蒂夫治下以此闻名的苹果——如果你问一个在那里工作的人关于内部工具关于招聘那些是否真地感觉像苹果产品？所有人都会告诉你不。</strong> 所以你永远不会 100% 但你肯定想尽可能接近那个目标。</p>
+<hr>
+<h2 id="第二课委托管理如何既委托又不放弃责任">第二课：委托管理——如何既委托又不放弃责任</h2>
+<p>接下来是一个复杂的话题：委托（delegating）。就像编辑隐喻里写的一样作家在世界做了大部分工作编辑不是任何出版物中大部分内容的作者。你的公司也是如此你不应该做大部分工作。而你摆脱大部分工作的方式就是委托。</p>
+<p><strong>委托的问题在于你实际上对一切负责。</strong> CEO、创始人没有借口。没有”那边那个部门的问题”或”那边那个人搞砸了”的说法。你始终对每一件事负责尤其是当事情出错时。</p>
+<p>那么你如何既委托又不放弃责任（abdicate）？这是一个相当棘手的挑战两者都是罪过。你过度委托那就是放弃责任；你微观管理那也是罪过。我来给你们<strong>几个解决技巧。</strong></p>
+<h3 id="任务相关成熟度">任务相关成熟度</h3>
+<p>第一这实际上来自《高产出管理》（High Output Management）和安迪·格鲁夫叫做<strong>任务相关成熟度（Task Relevant Maturity）。</strong> 这是一个花哨的短语意思是这个人以前做过这件事吗？真的很简单这个人在做这件事方面有多成熟？</p>
+<p>他们以前做过完全相同的事情越多你给的自由度就越多。而他们越是在尝试新事物你就越要指导和持续监控。这是一个基本概念但值得记在大脑背后。</p>
+<p>有趣且相当激进的含义是：任何高管、任何 CEO 都不应该只有一种管理风格。<strong>你的管理风格应该由你的员工决定。</strong> 所以对于某个特定的人你可能是一个非常微观的管理者因为他在这个量表上相当低。而对于另一个人你可能大量委托因为他在这个量表上相当成熟。</p>
+<p><strong>所以实际上如果你对某人做背景调查你打电话的一半人说他们是微观管理者另一半人说他们给了我很多责任那是特性不是缺陷。</strong> 我一开始完全不明白这一点。以前当人们对我做背景调查并带回这种复杂的拼图时我很困惑。后来我终于想到也许我正确地做了我的工作。然后我教其他人这才是正确的做法。</p>
+<h3 id="决策矩阵信心与后果">决策矩阵：信心与后果</h3>
+<p>我想出的一个更微妙的答案是如何做决策——委托 vs 自己做。你不想太经常自己做。所以我基本借用了彼得的一个概念——这是我人生中的第一个二乘二矩阵但他至少教会了我一件事。</p>
+<p>你基本上按照一个梯度对你自己的决策信心程度排序——极高或极低。有些时候你知道某件事是个错误有些时候你不会真那样做但你不知道是对的还是错的答案。然后有一个后果维度。有些事情如果你做出错误的决策对你的公司非常灾难性你会失败。有些事情影响很低——至少最初不会有太大差别。</p>
+<p><strong>所以我基本相信在后果低且你对自己观点的信心极低的地方你应该绝对委托。</strong> 并且完全委托让人们犯错和学习。</p>
+<p>另一方面显然在后果是灾难性的而你对自己是对的有着极高信念的地方你实际上不能让你的初级同事犯错误。你最终要对那个错误负责这真的很重要你就是不能允许那种事情发生。</p>
+<p><strong>做这件事最好的方式实际上是解释你的思考过程为什么。</strong> 当你忙碌时很容易走捷径去解释方式但这非常重要要去尝试。</p>
+<h4 id="square-的-inner-square-案例">Square 的 Inner Square 案例</h4>
+<p>我在 LinkedIn 有一个同事相当有才华但偶尔如果我不赞同他的某个意见他会有点恼火。所以我会花很多时间试图说服他为什么我以某种方式做一个决定。他的王牌——如果我没完全说服他就会打出来的牌是——<strong>“好吧你是老板。”</strong></p>
+<p>对我来说那就像在燃烧大量的社交资本。每次他说那句话我知道我在制造一条非常细的线如果我不频繁这样做最终会适得其反。你要追踪你那样做的次数。</p>
+<p>在 Square 的例子是我世界上最喜欢的人之一也是我的第二个聘员第一个营销聘员有一个他想运行的项目叫 <strong>Inner Square</strong>——允许 Square 商户发放……想象一辆餐车在外面柜台上放十个 Square 人们可以直接拿走。Kyle 有这个伟大的想法认为这将是一个很棒的营销计划。Square 会被传播给其他人而且在某种程度上符合品牌。所以它没有灾难性的后果。这十个 Square 每个都不花多少钱所以从财务上我们可以负担得起。</p>
+<p>但在那时我的十年经验告诉我它不会在我们的指标上有足够大的规模起作用我宁愿不做。Kyle 对此如此兴奋以至于我决定就让他去做。他了解到当你衡量这件事时它不大。它不为公司创造巨大价值。它的确需要相当的运营复杂性来把所有这些 Square 运送给人们并搞清楚怎么拿到等等等等。但它让他对自己的工作感到兴奋并且学会如何过滤未来的想法。<strong>所以让他犯这个”错”完全是值得的。</strong></p>
+<hr>
+<h2 id="第三课编辑团队木桶与弹药">第三课：编辑团队——木桶与弹药</h2>
+<p>接下来你要做的最重要的事情是<strong>编辑团队</strong>。这些是与 you 共事的人。没有人会有完美的团队你也肯定不会从那样的状态开始。所以我要做的是在编辑团队时最大化成功的概率。</p>
+<p>我喜欢<strong>木桶与弹药（barrels and ammunition）</strong> 这个想法。大多数公司当他们进入招聘模式时——如山姆指出的你应该稍微推迟一点——但一旦开始就雇佣很多人你期望当你增加更多人时你的马力或你发货东西的速度会增加。结果证明不是这样的。当你雇佣更多工程师你不会多做多少事。你有时做得更少。你雇佣更多设计师你肯定不会多做反而一天做得更少。</p>
+<p><strong>原因是因为大多数伟大的人实际上是弹药。但你在公司需要的是木桶（barrels）。</strong> 你只能通过你拥有的独特木桶来射击。那就是你的公司速度如何提高的方式。然后你给它们装上弹药然后你可以做很多事。你从一家木桶公司起步——大多是你开始的样子——到两家木桶公司你一天/一周/一季做的事情翻倍。如果你到三家木桶太棒了。如果你到四家木棒极了。</p>
+<p><strong>木桶非常难以找到。</strong> 但当你拥有它们时要给他们很多股权。提拔他们每周带他们去吃晚饭因为他们几乎不可替代因为<strong>他们也具有很强的文化特定性。</strong> 所以一家公司的木桶在另一家公司可能不是木桶。</p>
+<h4 id="如何识别木桶">如何识别木桶</h4>
+<p>识别木桶的方法之一是他们可以从构思一个想法开始一路带到发货并带着人们一起走。那是一种非常有文化属性的技能组合。</p>
+<p>两个问题可能会出现在你们脑海里。你怎么分辨谁是木桶谁不是？一是你从一组非常小的责任开始它可以非常微不足道。可以是这样的事情：我想每晚九点奖励我办公室里的工程师给他们一份美味、新鲜、冰的冰沙。这实际上是一个真实的例子。我很挫折我们的工程师工作非常努力大概 20%、30% 会留到晚上我们已经给他们提供了晚餐但我想给他们一些酷的东西来奖励他们。你可以想想酒精但那有点复杂。所以冰沙可能比披萨好一点披萨会让你耗尽精力。</p>
+<p>但没人能让冰沙在我办公室九点准时出现——冰的、味道好的、送到正确位置让工程师能找到它们的。</p>
+<p>你以为这很简单但实际上花了两个月才搞定。所以我们让一个实习生开始我想在他第二天我就跟他说这个问题的时候他说好吧我来做。我当时看着他就像不可能。我见过我的办公室经理失败我的助理失败他们实际上挺不错的。这不会发生的。然后<strong>瞧 behold 他们出现了。</strong> 准时冰冷送到正确位置。我的第一反应是太好了不是关于冰沙而是我现在可以给他更重要更复杂的事情去做了。</p>
+<p><strong>而这实际上是你想对每个员工每天做的事就是扩展责任范围直到它破裂。</strong> 它会破裂每个人都无法经营世界每个人都有某种能处理的复杂程度。你想做的是不断扩展直到你看到它在哪里破裂那就应该是他们停留的角色。那个精细程度层次。但有些人会让你惊讶。会有一些人你没有预期到不同背景没有很多经验就能处理极其复杂的任务。所以继续测试它不断推敲边界。</p>
+<p>另一个要寻找的信号是一旦你雇佣了某人在开放式办公室里只要观察谁走到其他人的办公桌前。特别是<strong>那些他们不向其汇报的人。</strong> 如果有人一直去某个员工的办公桌而他不向那个人汇报那是一个信号他们相信那个人可以帮助他们。如果你持续看到这些那这些就是你的木桶。提拔他们尽可能多地给他们机会。</p>
+<h3 id="个人成长率-vs-公司成长率">个人成长率 vs 公司成长率</h3>
+<p>每个人都会问的另一件事是什么时候你在某人之上雇佣一个人？什么时候你指导某人？什么时候你替换某人？思考方式是每家公司都有自己的成长率每个个人也有自己的成长率。</p>
+<p>所以有些非常成功的公司比如 <strong>LinkedIn。</strong> LinkedIn 始终是一家非常线性的公司它从来没有这样暴涨过。例如我在发布十八个月后加入那时我们只有 150 万用户。对于社交产品来说是非常小的数字。当我加入时我是第二十七名员工两年半后离开时我们只有五十七名员工。</p>
+<p>相比之下当我作为第二十名员工加入 Square 时两年半后我们有二百五十三名员工。</p>
+<p>所以每家公司在曲线上都有自己的速度。如果公司这样发展你只有在他们自己的学习曲线也这样发展时才能让他们保持在角色上。另一方面如果你的学习曲线是这样任何比那学得快的人你可以给他们同样的角色。所以始终追踪员工的个人斜率和公司成长率。</p>
+<hr>
+<h2 id="第四课聚焦与优先级每人只做一件事">第四课：聚焦与优先级——每人只做一件事</h2>
+<p>既然你已经弄清楚了你的木桶你能识别出那些可以从你脑海中的想法开始规划它带着它跑发货它并且完美的人。你要把这些木桶瞄准哪里？</p>
+<p>我认为你需要花大量时间聚焦于人。这实际上是我从彼得·蒂尔那里学到的。他在 PayPal 坚持<strong>每一个人都只能做一件事。</strong></p>
+<p>我们都反抗公司里的每一个人都反抗这个想法因为这太不自然了这与其他公司差别太大了——那里的人想做很多事情尤其当你变得更资深时你肯定想做更多事情而被要求只做一件事你会感到受侮辱。</p>
+<p>彼得会相当严格地执行这一点他会说除了我分配给你的这一件事之外我不会和你谈论任何事。我不想听你在这里做得有多棒闭嘴。然后专注直到你征服这个问题。</p>
+<p><strong>这背后的洞察是大多数人会解决他们知道如何解决的问题。</strong> 大致来说他们会解决 B+ 问题而不是 A+ 问题。A+ 问题对你公司来说是高效问题但它们很难。你早上醒来时不会有解决方案所以你倾向于拖延它们。想象一下你早上醒来创建今天要做的事情清单通常最上面有个 A+ 但你永远腾不出时间去做它。于是你解决了第二和第三。</p>
+<p>然后你有一百多人的公司于是这产生了连锁效应。你有一家总是在解决 B+ 问题的公司这意味着你确实在增长意味着你在增加价值但你从未真正创造那个突破性的想法。没有人每天花 100% 的时间撞墙直到解决问题。</p>
+<p>所以我强烈推荐某种版本的那个。你可以不那么严格你可以给人们三件事来做但我仍然会追踪<strong>如果你只给每个人一件优先事项来处理会发生什么</strong>的概念。</p>
+<hr>
+<h2 id="第五课建立杠杆与规模仪表盘与透明度">第五课：建立杠杆与规模——仪表盘与透明度</h2>
+<p>你不想自己做出所有这些决定。你必须创造工具使人们能够在你自己会做出的相同水平上做出决定。那么你如何创造规模和杠杆？</p>
+<h3 id="建立仪表盘">建立仪表盘</h3>
+<p><strong>我首先要推荐的是建立一个仪表盘。</strong> 这是一个旧的 Square 仪表盘即使今天看来也挺像样的。仪表盘的构建应该由创始人起草。你需要在白板上简化公司的价值主张和成功指标。你可以让别人构建仪表盘我不在乎那个。但你需要画出来。就像业务成功对我们来说是什么样子以及关键输入是什么——然后让人创建一个对公司中的每个人来说都非常直观的东西包括客户支持在内可以使用。</p>
+<p>然后你成功的关键衡量标准是你的员工中有多少比例每天都使用那个仪表盘？如果它真的有用它应该接近 100%。不太可能达到 100% 但你要衡量它。就像你有其他关键绩效指标的质量评分一样你的仪表盘需要对用户像你的产品一样直观。</p>
+<h3 id="透明度">透明度</h3>
+<p><strong>另一个概念是透明度。</strong> 人们谈论很多它是每个人都认同的目标但当推卸责任时很少有人真正遵守它。</p>
+<p>让我带你了解一下透明度和不同阶段的透明度。<strong>指标是第一步。</strong> 所以你公司中的每个人都应该有权了解正在发生的事情。另一件我喜欢做的事是拿你们的董事会材料。当你变得更正式董事会材料会更复杂。然后在董事会会议后与每个单一员工审阅每一张幻灯片。如果你真想的话可以去掉薪酬信息。但每一张其他幻灯片你应该和每个单一员工一起过一遍并解释它。如果你能记住从董事会得到的一些反馈那传递下去真的很酷。</p>
+<p>我们在 Square 做的另一件事是当我们扩大规模时不是每个人会被邀请参加每一次会议但他们想去参加每一次会议。你扩大规模的方法是为每一次会议创建笔记然后把它们发送给整个公司。所以我们为每次涉及超过两个人的会议至少创建了笔记有人会写笔记然后发给整个公司。所以每个人感觉当公司增加员工时他们继续追踪什么是有趣的、正在发生什么。他们从不感觉被排斥希望如此。</p>
+<p>另一件事甚至是关于会议室的细节。Square 的每个会议室都有玻璃墙。因为一旦你有普通的墙壁人们就会想知道里面发生了什么。如果你能看到确切是谁在开会、谁在和谁开会他们几乎不会像担心关着门后面发生了什么那么多。</p>
+<p><strong>Stripe</strong> 你可能看过一篇博客文章我认为是帕特里克写的关于<strong>电子邮件透明度</strong>——关于实际允许每个人访问电子邮件。那相当前卫但它有某些优点。我会把你听到和读到的所有策略称为<strong>最小可行透明度（minimal viable transparency）。</strong> 我认为实际上你可以推动得更远。史蒂夫·乔布斯实际上在 NeXT 尝试过他实际上尝试了薪酬透明。我认为虽然 NeXT 不是特别成功但真正的原因不是因为实验薪酬透明度。那有很多优点。</p>
+<p>对薪酬透明的批评是我们希望人们成为队友一起工作一起合作。如果你看看体育界人们是队友一起合作他们的薪酬实际上是公开的。事实上我们任何人都可以查到他们在体育界的薪酬来获得精确数字。而且不知何故它似乎有效。所以我并不完全认同<strong>你需要保持薪酬不透明。</strong></p>
+<hr>
+<h2 id="第六课指标与异常">第六课：指标与异常</h2>
+<p>最后是关于指标。你想衡量事物。你想衡量产出而不是投入。再次强调你应该亲自规定这一点。你应该自己起草仪表盘来把它们全部整合在一起。</p>
+<h3 id="配对指标">配对指标</h3>
+<p><strong>一个重要的概念是配对指标（pairing indicators）。</strong> 也就是说如果你衡量一件事而且只有一件事公司 tends to 不优化于那件事而且经常以牺牲重要的东西为代价。</p>
+<p>支付和金融服务中的成本例子是风险。给风险团队目标并说”我们想要降低我们的欺诈率”真的很容易。听起来很棒。直到他们开始把受众中的每个用户当作嫌疑人因为他们想要降低欺诈率。所以他们要求你们每个人打电话给他们并提供更多的补充信息和传真东西。然后你有了全世界最低的欺诈率你也有了全世界最低的客户满意度评分。</p>
+<p><strong>你想和你的欺诈率同时衡量的应该是你的假阳性率。</strong> 那迫使团队真正创新。类似地你可以给招聘人员关于招聘的指标。猜猜什么？你会有很多人来面试。但如果你不追踪面试官的质量你可能对你招进来的人和给面试的人的质量非常不满意。所以你总是要创建对立面并衡量两者。负责那个团队的两个人都需要被衡量这两者。</p>
+<h3 id="寻找异常">寻找异常</h3>
+<p>最后围绕指标我在职业生涯中得到的一个洞察是你有点想要<strong>寻找异常（anomalies）。</strong> 你实际上不想寻找预期的行为。</p>
+<p><strong>PayPal 的著名例子：</strong> 公司计划进攻的十大市场中没有一个包括 eBay。有一天有人注意到 54 位卖家实际上手写了”请通过 PayPal 付钱给我”到他们的 eBay 列表中并把此事提请当时的高管团队注意。高管团队的第一反应是天哪怎么回事？把他们清理出系统那不是焦点。幸运的是戴维德·萨克斯第二天回来说我觉得我们找到了我们的市场。让我们实际上为这些强力卖家构建工具而不是强迫他们在列表中手写”请通过 PayPal 付钱给我”。我们为什么不做一个 HTML 按钮让他们插入就行了呢？那实际上奏效了。</p>
+<p>然后他想为什么我们要让他们每次插入呢？我们为什么不自动为他们插入呢？他们只需要插入一次然后他们所有的列表将永远自动显示它。那成为了 PayPal 的成功。</p>
+<p><strong>类似地我在 LinkedIn 时看到了一个对我毫无意义的统计。</strong> 当时网站的 UI 有点不同。所有点击的 25% 可能 35% 来自主页的人们去他们自己的个人资料。那完全没有意义。它在设置里你得去边缘找一个链接。它是 25-35% 的每次点击按比例来看所以这只是无效的东西。它没有任何意义。我从没见过 UI 表现成那样。</p>
+<p>我到处走了几个星期试图搞清楚这件事然后某个聪明人——实际上是马克斯·列夫钦——对我说了些什么我说啊哈！<strong>人们在照镜子。</strong> 那是一个非常好的答案因为他们不是在编辑他们的资料。没人每天都有东西要在资料里编辑。但他们只是每天在镜子里看着自己因为这让他们感觉良好。</p>
+<p>然后你可以测试这个——如果我有更多内容我会更经常看镜子吗？结果是的。如果你有更多推荐你会更常看镜子吗？是的。所以我们搞清楚了功利主义产品之下的东西团队以为他们在构建的产品实际上是情感上的虚荣心。</p>
+<p><strong>它不像 PayPal 例子那样转化为最好的功能。我们不能确切地在首页放一个按钮说”今天更虚荣一点”。</strong> 那可能不会完美运作。所以它真的从未像 PayPal 例子那样起飞。但它真的澄清了产品的用户真正想要什么。<strong>而我们如果不是通过异常数据是不会发现那个的。</strong></p>
+<hr>
+<h2 id="第七课细节决定成败">第七课：细节决定成败</h2>
+<p>最后一个话题是<strong>细节</strong>。在我的指定阅读中有一本比尔·沃尔什写的很棒的书叫做**《比分自己照顾自己》（The Score Takes Care of Itself）。**</p>
+<p>这本书的基本观点是<strong>如果你把所有细节都做对了你不必担心如何建立一家十亿美元的业务、你不必担心拥有十亿美元的收入、你不必担心拥有十亿用户。</strong> 那是你每天把细节做到卓越的副产品。</p>
+<p>他在书中谈论的真正引起我共鸣的话题是他在 1979 年接管了 49 人队。他们是橄榄球最差的球队我相信是 2 胜 14 负如果你不懂橄榄球那真的很差。在接下来十年他把球队变成了 NFL 最好的球队赢得了三次超级碗。而从最差球队变成最好之一的许多方面他要做的第一件事是什么？<strong>他实际上教导前台接电话的方式。他写了一篇三页的备忘录关于如何接电话。</strong></p>
+<p>那听起来荒谬但他的观点是组织作为一个整体以完全正确的方式做每一件事。然后接球手将以 7 码而不是 8 码跑路线。而这实际上很重要。如果球队上的每个人都以同样的表现水平执行你将拥有一支以最高可能水平表现的球队。在最高表现水平下球队将打出最好的比赛。</p>
+<p>那么如何联系到公司可能包括很多表面上看起来不重要、表面上不重要的细节。大多数人会同意面对用户时细节很重要。但真正的辩论是关于那些不面对用户的事情。</p>
+<p><strong>史蒂夫·乔布斯在 Mac 上著名地坚持要有一个完美无瑕的电路板。</strong> 你们可以在各种书中读到这一点。Mac 对你们中不记得的人来说——也许你们大多数人都见过——不能被打开。所以电路板不能被世界上的任何人看到。除了在 Apple 工作的人之外没有办法打开 Mac。</p>
+<p><strong>史蒂夫坚持它必须绝对完美和美丽。</strong> 那就是构建这类公司所需的细节痴迷类型。</p>
+<p>可能对你来说比电路板更实际的例子可能是：<strong>你给人们提供什么样的食物？</strong> 它实际上比你可能猜测的更重要。当人们不喜欢你提供的食物时他们会怎么做？他们会八卦、他们会向朋友抱怨、他们会走到某人的办公桌旁。突然之间他们抱怨的那个午餐成了他们花费最多时间来八卦和投诉的事情而不是头脑风暴。你没有这个偶然相遇另一个偶然相遇创造出火花的想法相反他们都在闲逛和消磨时间。</p>
+<p><strong>你能做的最好的事情是给人们他们想要的食物或者对他们有益的食物让他们更有生产力。</strong> <strong>所以这可能看起来像你以为的光荣工作更像是到处跑为人们做 TaskRabbit。</strong> 但它的意义在于把干扰他们的事情从他们的盘子中拿开以便他们成为高性能机器。如果你从人们那里拿走了足够的干扰事情并给了他们成功的工具突然间你的组织产出了更多得多。</p>
+<p>类似地经常人们搞错的一件事是<strong>办公空间。</strong> 一件自然的事情是当你需要一个办公室时让你的办公室经理或你的团队出去找办公室。他们会出去带回来照片和想法。**你需要自己做这件事。**<strong>人们每天工作的办公环境决定了你将处于的文化。</strong></p>
+<hr>
+<h2 id="领导力以身作则">领导力：以身作则</h2>
+<p>最终我不相信你不需要大量努力就能创建一家公司你需要以身作则。</p>
+<p>比尔·沃尔什在他的书的第一章问了这个问题：你怎么知道你在做好这份工作？这就是他在被问到那个问题时给大家的<strong>那句话</strong>：</p>
+<blockquote>
+<p>“如果你每天下班时没有感到完全耗尽如果你没有觉得你本来可以做得更多如果你没有觉得你让组织中的某个人失望了那么你可能没有尽你所能地努力工作。”
+—— 比尔·沃尔什</p>
+</blockquote>
+<p>如果这就是你每天的感觉那你可能在正确的轨道上。如果不吸引人那么老实说你不应该创业。讲完准备的部分了如果有问题我试着帮忙回答。</p>
+<hr>
+<h2 id="问答环节">问答环节</h2>
+<h3 id="问你谈到了让薪酬透明你会怎么做特别是当人们把自己的价值等同于薪水金额时">问：你谈到了让薪酬透明。你会怎么做特别是当人们把自己的价值等同于薪水金额时？</h3>
+<p><strong>答：</strong> 我可能会按波段来做。你可以这样做——公司里的每个人都得到相同的薪酬。或者你可以按纪律来——所有工程师——或者你可以按经验来做。史蒂夫在 NeXT 的做法是有一个高波段和一个低波段。<strong>你要么有很多经验要么经验少就这样。</strong> 所以低波段现在大约是 85,000 美元 flat。每个人都 flat 地拿 85,000 如果你是主管有经验每个人都拿 130,000 就是这样。大概是 NeXT 根据通胀换算过来的。</p>
+<h3 id="问那么问题是除了食物其他人关心什么样的细节">问：那么问题是除了食物其他人关心什么样的细节？</h3>
+<p><strong>答：</strong> 他们使用的笔记本电脑。这只是每个人的默认设置。五年前给人们高性能机器是一种福利——而不是通过拥有戴尔机器和丑陋显示器来优化我们的成本只是一个例子。如果你想想所有这些人——在这个大规模竞争生态系统中无情地足智多谋且同样才华横溢——在竞争人才——你学会了给人们最好的工具来做最好的可能的工作。所以严格地问：我怎么让人们更成功？什么事他们不需要在做的或分心的？我能给他们什么东西让他们每天更有价值？然后只是按天分解然后你自己解决那些事情。</p>
+<h3 id="问当你在创业环境中资源稀缺你如何优化这些东西">问：当你在创业环境中资源稀缺。你如何优化这些东西？</h3>
+<p><strong>答：</strong> 这是个好问题。首先我认为你必须有自己的办公室。我不相信共享办公空间。彼得稍微谈过这点<strong>每一个好的初创公司都是一个邪教（cult）。</strong> 如果你和别人共享空间很难创造一个邪教。因为邪教意味着你认为你比其他每一家初创公司都更好你有一种特殊的做事方式比世界上任何人都更好。而如果你和别人共享物理空间很难内化那个。</p>
+<p>所以我会从那里开始。但这是一个优先级问题。到处都稀缺所以这只是你关注的零的数量级的问题。可能不是 10 美元的支出但 100、1000、10,000 然后一百万就开始是四舍五入误差了。</p>
+<p>所以我会想清楚什么是最重要的——一个创造良好氛围的高质量办公室让你能招募人才。因为招募者对此非常精明。他们走进你的办公室他们能立刻看出很多文化。我可以走进一间公司办公室我一走进去就能判断会不会投资。认真地说我走进去就直接排除我不想投资的。有些时候我走进一间办公室像哇这真的令人印象深刻。你可以看出人们如何一起工作他们工作多么努力他们有多分心。</p>
+<p><strong>红杉资本的 Roelof Botha 关于 YouTube 给了我一个要点。</strong> 所以当我投资 YouTube 在非常非常开始的时候它还不明显会成功。然后 Roelof 为这位客户领导了 YouTube 的 A 轮投资我们一起在一次董事会会议上他说我真的认为 YouTube 会行得通。我说为什么？他说<strong>每次我去我的投资组合公司之一时一半的办公室在午餐期间看 YouTube。</strong> 我说非常好的迹象。所以你捕捉到这些小事情你可以预测很多。</p>
+<h3 id="问作为新经理获得街头信誉street-credit的最好方式是什么">问：作为新经理获得街头信誉（street credit）的最好方式是什么？</h3>
+<p><strong>答：</strong> 硅谷几乎所有优秀的经理都是因为他们的个人表现而被提升的。在官僚文化中比例甚至更高。所以我们在 PayPal 尝试只提升在他们领域表现出色的人。彼得不相信总经理（general managers）。实际上我记得在 PayPal 第一周和他一起在校园找工作时。他在问我进展如何各种 CEO 类的问题。然后我们进入了公司是否需要更多经理的辩论。他说不不要经理。我们只会提升人所以工程副总裁将是单个最佳工程师。设计副总裁将是单个最佳设计师。产品副总裁将是单个最佳产品人员。他们将学习以后再管理。<strong>好处是你不会打击人们的士气。</strong> 因为每个人都知道他们的老板实际上比他们更擅长他们的工作。而且他们可以学到东西。你可以稍后学习一点管理技术而不是提升那些只是好的管理者但没有学科和技能的人。那样会打击士气所以我认为在某件事上表现出色然后在一群人做事方面出色是下一个任务。但有些事情你只能通过做来学习。有些人不能通过读书学会弹吉他。你必须实际尝试管理一点而且一开始你不会做得很好。我还有一套关于你从个人过渡到管理者时实际做什么的策略和课程。这很难。人们一开始做不对的事情之一是他们的时间分配。实际上我推荐的是做我称之为<strong>日历审计（calendar audit）</strong> 的东西。追踪你一个月的时间花在了什么上。多少是编辑多少是写作等等。然后随时间优化它。你可以找个导师。找过一个经理的人和你一起工作不是你的老板因为你老板有一套复杂的目标包括我们发货了多少。导师可以只聚焦于你让你更成功。</p>
+<h3 id="问你可以做些什么来确保公司里一致的声音">问：你可以做些什么来确保公司里一致的声音？</h3>
+<p><strong>答：</strong> 所以我会审视每个部门里的每一份文案。另一个几乎从来——看看你的招聘网站。它几乎从未有与你的转化漏斗相同的质量。我会看客户支持。另一个经典的永远不会达到同样质量的领域。<strong>把客户支持当作产品对待所以你实际上有一个工程团队和一个设计团队随着时间的推移专注于让它达到世界级。</strong> 通常我们在规模化公司有其他高管。大多数高管在其他公司受过不同的训练并带来那些东西。你必须交叉训练（crosstrain）。所以如果你从 Google 雇了一个工程 VP 那和从 Apple 来的设计领袖非常不同。他们实际上不以相同的方式学习任何东西。所以你不得不以某种方式把它整合在一起。要么其中一个必须学习另一种风格。要么你必须创造自己的风格并真正教给你的高管。所以它一直出现。你要做的就是拿起公司的产品寻找有不同的声音的东西你可以看到它视觉声音措辞到处都是。</p>
+<h3 id="山姆奥尔特曼你能谈谈你管理人的战术吗你多久见他们一次">山姆·奥尔特曼：你能谈谈你管理人的战术吗？你多久见他们一次？</h3>
+<p><strong>答：</strong> <strong>标准的建议听起来很明显但在 1982 年安迪写他的书时是很激进的即大约每两周进行一次一对一。</strong> 有些人说每周但我不会超过两周。每周在很多公司可能是理想的。原因还有一句谚语你应该只有五到七个直接报告。那实际上源自每周一次一对一的概念。所以你可以在一周内在你的日历里塞进足够的一对一并完成其他事情。我认为一对一每周一次是理想的。我认为议程应该由向经理报告的员工制定而不是经理。一对一主要是为了让员工受益。他们应该带着这些走进来——这是我想谈的三件事。甚至提前通过 email 发送要点让你有时间思考你不是在临时发挥地回答你的问题。但这可能是最好的结构。但如果某人真的很好已经做了很长时间且有内部公信力你可能会把每周一次推到每两周一次。也许每月。我不知道我会超过每月一次。</p>
+<h3 id="问什么时候可以接受妥协并雇佣一个弹药而不是一个木桶的人">问：什么时候可以接受妥协并雇佣一个弹药而不是一个木桶的人？</h3>
+<p><strong>答：</strong> 说实话你自然会雇佣比木桶更多的弹药。所以两者之间有一个比率。问题就是比率。在某些时候比率会变得不正常你在公司里只有一个木桶和五十名工程师。你还不如只有十名工程师因为你不会完成任何工作。你只是在浪费资源。你会让工程师感到沮丧因为每个人都需要你的批准你的签字你的编辑。它只会堆积起来让人沮丧。我认为大致一比十到一比二十是正确的范围。你在有更多木桶之前不需要更多工程师。设计师有点不同。但你总是会比木桶雇佣更多弹药。一个好的木桶会有这种感觉。纠正这一点的方法是有一种自然倾向在你团队上创造人头数。像帝国建设倾向。像我管二十个人山姆只管十你管三个人。所以我比山姆重要。而山姆比你重要。<strong>在这里放 X 除以 Y 等于产出</strong>然后明确他们成功完成了多少件事然后除以他们团队的人数。然后告诉他们这将是他们的绩效评估的等级。令人震惊的是 Y 不会在那个团队开始增长。这是惊人的效果要明确这一点。</p>
+<h3 id="问作为风险投资家你多久与你的公司见面和互动">问：作为风险投资家你多久与你的公司见面和互动？</h3>
+<p><strong>答：</strong> 当我们投资时我们确实做一些种子公司投入资金较少但我们投资 A 轮或 B 轮时我们加入董事会大约每两周我与创始人或 CEO 会面。那是默认的。当然有拐点时刻当事情顺利或不顺时那就是临时的。实际上现在我大量通过短信做。我甚至有一个 CEO 一直 Snapchat 给我。我宁愿他不要但世界变了很多。但我尝试面对面会议每两周。</p>
+<h3 id="问作为风险投资家对我来说更像是一个心理学家所以如果你来到我的办公室我们有中间一张桌子的两把椅子我们坐下就像是告诉我你的问题我的回应通常是你有没有想过这个你有没有和这个人谈过你试过这个吗等等就是问很多问题然后来回往复但那就是我做的-90">问：作为风险投资家对我来说更像是一个心理学家。所以如果你来到我的办公室我们有中间一张桌子的两把椅子。我们坐下就像是告诉我你的问题。我的回应通常是你有没有想过这个？你有没有和这个人谈过？你试过这个吗？等等。就是问很多问题然后来回往复。但那就是我做的 90%。</h3>
+<h3 id="问作为-ceo-你应该把多少时间分配给招聘">问：作为 CEO 你应该把多少时间分配给招聘？</h3>
+<p><strong>答：</strong> 嗯这取决于你的优先级在哪里。山姆在他的讲座中稍微谈到过这点。所以一家公司会把招聘放在第一、第二或第三。在那个频谱的某个地方。如果是你的头号优先事项那么 25% 可能是个很好的分配。<strong>实际上我更喜欢对 CEO 进行日历审计甚至比对新的经理更多。</strong> 所以当我与第一次担任 CEO 角色时不顺利的 CEO 合作时我实际上强制他们向我展示他们的日历。现在我要破坏这个窍门了。但我让他们在纸上写出来然后不管什么都具体说明。然后我让他们拉出他们的日历看看是否匹配。<strong>从来不匹配。从来不会。</strong> 招聘是通常最经常出岔的一个。一半的 CEO 会说招聘是他们的头号优先事项。它几乎永远不会是任何人日历上最大的时间块。所以你要做的就是将资源与优先级在日历审计中进行匹配。没有软件为你做得非常好。会很棒对吧现在我们拉出某人的 Google 日历并手动数小时。这很疯狂的。但那就是最好的方法——只需问问他们的优先事项。优先事项是融资你不要把大部分时间分配给招聘。还有一个问题。</p>
+<h3 id="问表面上看这些建议是矛盾的你如何协调这些角色">问：表面上看这些建议是矛盾的。你如何协调这些角色？</h3>
+<p><strong>答：</strong> 这是个好问题。你如何在细节确实重要但你有那一件事要做、你想只把时间分配给那一两三件事的情况下协调它们？即使在健康的组织中也有一些张力。有一些张力——为什么我们专注于写剧本而不是用户可能看到的东西。</p>
+<p>把细节做对的底层哲学在一家公司非常早期的阶段安装进去相当重要。<strong>因为人们会开始那样行事并以这种方式自己做出决定。</strong> 所以你不必字面意义上那样做。如果你必须那样做那就表明基础不够牢固。当你刚开始创办公司时就是要把细节做对。每个人精确每个人在每个任务上都总是那样思考。然后它会扩大你带进来的人会那样思考那样思考的人 tends to 被雇到而不能的那样不会被雇。每个团队和每个领导者 tends to 自己强制执行。所以 CEO 几乎从不做那事。所以部分是你如何开始的。</p>
+<p><strong>文化的关键是它是一个做决定的框架。如果它被烘焙进你的文化人们学会如何在不你说任何话的情况下跨文化做决定。你永远不必真的做任何事情除了观看、提拔和调动人员。</strong></p>
+<hr>
+<p>酷。我想就这些了。</p> <div class="cta-box"> <p>觉得有用？看看我的书和课程</p> <div class="cta-buttons"> <a href="/book" class="cta-btn cta-btn-primary">选择改变命运</a> <a href="/community" class="cta-btn cta-btn-secondary">写作课程</a> </div> </div> <nav class="article-nav"> <a href="/blog/yc-lecture-10-how-to-manage" class="article-nav-link article-nav-prev"> <span class="article-nav-label"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+阅读上一篇
+</span> <span class="article-nav-title">如何管理</span> </a> <a href="/blog/yc-lecture-12-how-to-run-a-user-interview" class="article-nav-link article-nav-next"> <span class="article-nav-label">
+阅读下一篇
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg> </span> <span class="article-nav-title">如何进行用户访谈</span> </a> </nav> </article> </main> </div> </main> <footer> <div class="footer-inner"> <p>© 2026 像企业家一样写作</p> <div class="footer-links"> <a href="https://mp.weixin.qq.com/" target="_blank">公众号：种一个梦</a> </div> </div> </footer>  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    let _searchIndex = null;
+
+    async function loadSearchIndex() {
+      if (_searchIndex) return _searchIndex;
+      try {
+        const resp = await fetch('/search.json?t=' + Date.now());
+        _searchIndex = await resp.json();
+      } catch (e) {
+        console.warn('search.json load failed', e);
+        _searchIndex = { posts: [], books: [] };
+      }
+      return _searchIndex;
+    }
+
+    function openSearch() {
+      const overlay = document.getElementById('search-overlay');
+      const input = document.getElementById('search-input');
+      overlay.classList.add('active');
+      input.value = '';
+      input.focus();
+      renderResults('');
+    }
+
+    function closeSearch() {
+      document.getElementById('search-overlay').classList.remove('active');
+    }
+
+    function getSnippet(text, keyword, radius) {
+      radius = radius || 30;
+      if (!text) return '';
+      const idx = text.toLowerCase().indexOf(keyword.toLowerCase());
+      if (idx === -1) return text.substring(0, 80);
+      const start = Math.max(0, idx - radius);
+      const end = Math.min(text.length, idx + keyword.length + radius);
+      let s = text.substring(start, end);
+      if (start > 0) s = '…' + s;
+      if (end < text.length) s = s + '…';
+      return s;
+    }
+
+    function renderResults(query) {
+      const container = document.getElementById('search-results');
+      if (!query.trim()) {
+        container.innerHTML = '<div class="search-empty">输入关键词搜索文章和书籍…</div>';
+        return;
+      }
+      const q = query.toLowerCase();
+      const index = _searchIndex || { posts: [], books: [] };
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      if (matchedPosts.length === 0 && matchedBooks.length === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        return;
+      }
+      let html = '';
+      matchedPosts.forEach(p => {
+        const snippet = getSnippet(p.content || '', q, 35);
+        const displayDesc = (p.desc || '') || snippet;
+        html += '<a href="/blog/' + p.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">文章</span>' + p.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      matchedBooks.forEach(b => {
+        const snippet = getSnippet(b.content || '', q, 35);
+        const displayDesc = (b.desc || '') || snippet;
+        html += '<a href="/book/' + b.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">书籍</span>' + b.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      container.innerHTML = html;
+    }
+
+    // ===== 搜索 FAB 拖动逻辑 =====
+    (function() {
+      const fab = document.getElementById('search-toggle');
+      const FAB_SIZE = 56;
+      let isDragging = false;
+      let startX, startY, startLeft, startTop;
+      let dragMoved = false;
+
+      function onDown(clientX, clientY) {
+        isDragging = true;
+        dragMoved = false;
+        startX = clientX;
+        startY = clientY;
+        const rect = fab.getBoundingClientRect();
+        startLeft = rect.left;
+        startTop = rect.top;
+        fab.classList.add('dragging');
+      }
+
+      function onMove(clientX, clientY) {
+        if (!isDragging) return;
+        const dx = clientX - startX;
+        const dy = clientY - startY;
+        if (!dragMoved && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+          dragMoved = true;
+          // 切换到绝对 left/top 定位
+          fab.style.bottom = 'auto';
+          fab.style.right = 'auto';
+          fab.style.left = startLeft + 'px';
+          fab.style.top = startTop + 'px';
+        }
+        if (dragMoved) {
+          let newLeft = Math.max(4, Math.min(startLeft + dx, window.innerWidth - FAB_SIZE - 4));
+          let newTop  = Math.max(4, Math.min(startTop  + dy, window.innerHeight - FAB_SIZE - 4));
+          fab.style.left = newLeft + 'px';
+          fab.style.top  = newTop  + 'px';
+        }
+      }
+
+      function onUp() {
+        if (!isDragging) return;
+        isDragging = false;
+        fab.classList.remove('dragging');
+        if (!dragMoved) {
+          // 判定为点击，打开搜索
+          loadSearchIndex().then(() => openSearch());
+        }
+      }
+
+      fab.addEventListener('mousedown', e => { if (e.button === 0) { onDown(e.clientX, e.clientY); e.preventDefault(); } });
+      document.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+      document.addEventListener('mouseup', onUp);
+
+      fab.addEventListener('touchstart', e => { onDown(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); }, { passive: false });
+      document.addEventListener('touchmove', e => { if (isDragging) { onMove(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); } }, { passive: false });
+      document.addEventListener('touchend', onUp);
+    })();
+
+    document.getElementById('search-close').addEventListener('click', closeSearch);
+    document.getElementById('search-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeSearch();
+    });
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      renderResults(e.target.value);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        loadSearchIndex().then(() => openSearch());
+      }
+    });
+    });
+  </script> <!-- 页面关键词高亮（从搜索结果跳转过来时） --> <script>
+    (function() {
+      function getQueryParam(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name) || '';
+      }
+
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function highlightKeyword(keyword) {
+        if (!keyword.trim()) return;
+        const main = document.querySelector('main');
+        if (!main) return;
+
+        const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, null, false);
+        const nodesToReplace = [];
+        const regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
+
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node.parentElement && node.parentElement.tagName === 'MARK') continue;
+          if (regex.test(node.textContent)) {
+            nodesToReplace.push(node);
+          }
+        }
+
+        let firstMark = null;
+        nodesToReplace.forEach(textNode => {
+          const span = document.createElement('span');
+          span.innerHTML = textNode.textContent.replace(regex, '<mark class="search-highlight">$1</mark>');
+          const marks = span.querySelectorAll('mark');
+          if (marks.length > 0 && !firstMark) {
+            firstMark = marks[0];
+          }
+          const fragment = document.createDocumentFragment();
+          while (span.firstChild) {
+            fragment.appendChild(span.firstChild);
+          }
+          textNode.parentNode.replaceChild(fragment, textNode);
+        });
+
+        if (firstMark) {
+          firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(function() {
+            const marks = main.querySelectorAll('mark.search-highlight');
+            marks.forEach(function(m) {
+              const parent = m.parentNode;
+              parent.replaceChild(document.createTextNode(m.textContent), m);
+              parent.normalize();
+            });
+          }, 6000);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          highlightKeyword(getQueryParam('q'));
+        });
+      } else {
+        highlightKeyword(getQueryParam('q'));
+      }
+    })();
+  </script> <!-- 代码块复制按钮 --> <script>
+    (function() {
+      function initCopyButtons() {
+        document.querySelectorAll('.prose pre').forEach(function(pre) {
+          if (pre.querySelector('.copy-btn')) return;
+          var btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.textContent = '复制';
+          btn.setAttribute('aria-label', '复制代码');
+          btn.addEventListener('click', function() {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+              btn.textContent = '已复制';
+              btn.classList.add('copied');
+              setTimeout(function() {
+                btn.textContent = '复制';
+                btn.classList.remove('copied');
+              }, 2000);
+            }).catch(function() {
+              btn.textContent = '失败';
+              setTimeout(function() { btn.textContent = '复制'; }, 2000);
+            });
+          });
+          pre.style.position = 'relative';
+          pre.appendChild(btn);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCopyButtons);
+      } else {
+        initCopyButtons();
+      }
+    })();
+  </script> <!-- 微信电子书弹窗（滚动触发 + 每天一次） --> <script>
+    (function() {
+      // === 配置 ===
+      var STORAGE_DAY   = 'ebook_popup_day';    // 今天已弹过
+      var STORAGE_DISMISS = 'ebook_popup_dismiss_until'; // 用户点「暂时不要」的过期时间戳
+      var SCROLL_THRESHOLD = 0.40; // 滚动 40% 触发
+      var TIME_THRESHOLD   = 60000;  // 或停留 60 秒触发
+
+      // === 已有领取人数（可手动更新）===
+      var CLAIM_COUNT = 327;
+
+      // === 工具函数 ===
+      function todayStr() {
+        var d = new Date();
+        return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+      }
+      function getDismissUntil() {
+        try { return parseInt(localStorage.getItem(STORAGE_DISMISS), 10); } catch(e) { return 0; }
+      }
+
+      // === 判断是否应该弹出 ===
+      function shouldShow() {
+        // 用户点过「暂时不要」且未过期
+        var dismissUntil = getDismissUntil();
+        if (dismissUntil && Date.now() < dismissUntil) return false;
+        // 今天已弹过
+        try {
+          if (localStorage.getItem(STORAGE_DAY) === todayStr()) return false;
+        } catch(e) {}
+        return true;
+      }
+
+      // === 记录：今天已弹 ===
+      function markShown() {
+        try { localStorage.setItem(STORAGE_DAY, todayStr()); } catch(e) {}
+      }
+
+      // === 记录：暂时不要（7天后）===
+      function markDismissed() {
+        var t = Date.now() + 7 * 24 * 60 * 60 * 1000;
+        try { localStorage.setItem(STORAGE_DISMISS, String(t)); } catch(e) {}
+      }
+
+      // === 显示 / 关闭 ===
+      var overlay    = document.getElementById('ebook-popup-overlay');
+      var closeBtn   = document.getElementById('ebook-popup-close');
+      var dismissBtn = document.getElementById('ebook-popup-dismiss');
+      var shown      = false;
+      var timeTimer  = null;
+
+      function showPopup() {
+        if (shown || !overlay || !shouldShow()) return;
+        shown = true;
+        markShown();
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function dismissPopup() {
+        if (!overlay) return;
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        if (timeTimer) clearTimeout(timeTimer);
+      }
+
+      if (!overlay) return;
+
+      // === 触发条件 1：滚动超过 40% ===
+      var scrollFired = false;
+      window.addEventListener('scroll', function() {
+        if (scrollFired) return;
+        var h = document.body.scrollHeight - window.innerHeight;
+        if (h <= 0) return;
+        if (window.scrollY / h > SCROLL_THRESHOLD) {
+          scrollFired = true;
+          showPopup();
+        }
+      }, { passive: true });
+
+      // === 触发条件 2：停留超过 60 秒 ===
+      timeTimer = setTimeout(function() {
+        if (!scrollFired) showPopup();
+      }, TIME_THRESHOLD);
+
+      // === 关闭按钮 ===
+      if (closeBtn) closeBtn.addEventListener('click', dismissPopup);
+
+      // === 「暂时不要」按钮 ===
+      if (dismissBtn) {
+        dismissBtn.addEventListener('click', function() {
+          markDismissed();
+          dismissPopup();
+        });
+      }
+
+      // === 点击遮罩关闭 ===
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) dismissPopup();
+      });
+
+      // === ESC 关闭 ===
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+          dismissPopup();
+        }
+      });
+    })();
+  </script> </body></html>  <script type="module">(function(){const e=document.getElementById("reading-progress");if(e){let c=function(){const n=window.scrollY||document.documentElement.scrollTop,s=document.documentElement.scrollHeight-document.documentElement.clientHeight,d=s>0?n/s*100:0;e.style.width=d+"%",e.classList.toggle("show",n>50)};window.addEventListener("scroll",c,{passive:!0}),c()}const t=document.querySelector(".book-toc-header"),o=document.querySelector(".book-toc");t&&o&&t.addEventListener("click",function(){o.classList.toggle("expanded")})})();</script>

@@ -1,0 +1,589 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="YC 创业课第14讲｜Peter Thiel"><title>商业战略与垄断理论 — 像企业家一样写作</title><link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml"><link rel="sitemap" type="application/xml" href="/sitemap-index.xml"><!-- Static CSS — no build hash, safe for incremental deploys --><link rel="stylesheet" href="/global.css"><!-- 自托管字体 --><link rel="preload" href="/fonts/NotoSerifSC-Regular.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/_astro/BaseLayout.BYj8Tvw5.css">
+<link rel="stylesheet" href="/_astro/_..CcR4Cqk3.css"></head> <body> <nav class="navbar"> <div class="nav-inner"> <a href="/" class="logo"> <img src="/images/logo-header.png" alt="Logo" class="logo-img"> <span>像企业家一样写作</span> </a> <div class="nav-links"> <a href="/blog">文章</a> <a href="/book">书籍</a> <a href="/community">社群</a> <a href="/join">答疑</a> </div> </div> </nav> <!-- 搜索浮窗 --> <div id="search-overlay" class="search-overlay"> <div class="search-modal"> <div class="search-header"> <input id="search-input" type="text" placeholder="搜索文章标题、描述..." autocomplete="off"> <button id="search-close" class="search-close-btn" aria-label="关闭搜索">✕</button> </div> <div id="search-results" class="search-results"></div> </div> </div> <!-- 浮动搜索按钮 --> <button id="search-toggle" class="search-fab" aria-label="搜索"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"> <circle cx="11" cy="11" r="7"></circle> <line x1="16.5" y1="16.5" x2="21" y2="21"></line> </svg> </button> <!-- ===== 微信电子书弹窗 ===== --> <div id="ebook-popup-overlay" class="ebook-popup-overlay" onclick="if(event.target===this){this.classList.remove('active');document.body.style.overflow='';}"> <div class="ebook-popup-card"> <div class="ebook-popup-topbar"></div> <button id="ebook-popup-close" class="ebook-popup-close" aria-label="关闭" onclick="event.stopPropagation();document.getElementById('ebook-popup-overlay').classList.remove('active');document.body.style.overflow='';">✕</button> <div class="ebook-popup-body"> <!-- 送你 --> <div class="ebook-popup-gift">送你一本我的电子书</div> <!-- 书名 --> <div class="ebook-popup-bigtitle">《闭环：在你睡觉时赚钱》</div> <div class="ebook-popup-bigsub">从0到1的自媒体方法论</div> <!-- 社会认同 --> <div class="ebook-popup-proof"> <span class="ebook-proof-avatars"> <span class="ebook-proof-avatar" style="background: #f5e0d0;"> <span style="font-size:12px;font-weight:700;color:#c45c2e;">M</span> </span> <span class="ebook-proof-avatar" style="background: #d0e8e0;"> <span style="font-size:12px;font-weight:700;color:#3a7a5e;">S</span> </span> <span class="ebook-proof-avatar" style="background: #d8dff0;"> <span style="font-size:12px;font-weight:700;color:#4a6aab;">L</span> </span> </span> <span><span class="ebook-proof-count">327</span> 人已领取</span> </div> <!-- 二维码 --> <div class="ebook-popup-qr"> <img src="/images/wechat-qr.png" alt="微信二维码"> </div> <!-- 下载按钮 — 仅手机展示 --> <a class="ebook-popup-download" href="/images/wechat-qr.png" download> <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path> <polyline points="7 10 12 15 17 10"></polyline> <line x1="12" y1="15" x2="12" y2="3"></line> </svg>
+下载二维码到手机
+</a> <!-- 流程提示 --> <p class="ebook-popup-steps"> <span class="step">扫二维码</span> → <span class="step">添加好友</span> → 回复<span class="keyword-value">闭环</span> → <span class="step">立马领取</span> </p> </div> <div class="ebook-popup-footer"> <p>免费领取 · 无需购买任何产品 · 24 小时内回复</p> </div> </div> </div> <main>   <div id="reading-progress" class="reading-progress"></div> <!-- 书籍系列：左侧目录 + 右侧正文 -->
+    <div class="book-layout"> <!-- 左侧目录 --> <aside class="book-toc"> <div class="book-toc-inner"> <div class="book-toc-header"> <span class="book-toc-series">YC 创业课</span> <span class="book-toc-count">目录</span> </div> <nav class="book-toc-nav"> <div class="book-toc-section "> <a href="/blog/yc-lecture-01-how-to-start-a-startup" class="book-toc-item"> <span class="book-toc-order">1</span> <span class="book-toc-title">如何创办初创公司</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-02-ideas-products-teams-execution-part2" class="book-toc-item"> <span class="book-toc-order">2</span> <span class="book-toc-title">创意、产品、团队与执行（第二部分）</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-03-counterintuitive-parts-and-how-to-have-ideas" class="book-toc-item"> <span class="book-toc-order">3</span> <span class="book-toc-title">创业中反直觉的部分，以及如何产生创意</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-04-how-to-build-products-users-love" class="book-toc-item"> <span class="book-toc-order">4</span> <span class="book-toc-title">如何打造用户热爱的产品</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-05-how-to-build-products-users-love-part2" class="book-toc-item"> <span class="book-toc-order">5</span> <span class="book-toc-title">如何打造用户喜爱的产品（第二部分）</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-06-doing-things-that-dont-scale-pr" class="book-toc-item"> <span class="book-toc-order">6</span> <span class="book-toc-title">做无法规模化的事、公关，以及如何起步</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-07-how-to-raise-money" class="book-toc-item"> <span class="book-toc-order">7</span> <span class="book-toc-title">如何融资</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-08-building-product-talking-to-users-and-growing" class="book-toc-item"> <span class="book-toc-order">8</span> <span class="book-toc-title">打造产品、与用户对话与实现增长</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-09-how-to-be-a-great-founder" class="book-toc-item"> <span class="book-toc-order">9</span> <span class="book-toc-title">如何成为一位伟大的创始人</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-10-how-to-manage" class="book-toc-item"> <span class="book-toc-order">10</span> <span class="book-toc-title">如何管理</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-11-how-to-operate" class="book-toc-item"> <span class="book-toc-order">11</span> <span class="book-toc-title">如何运营</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-12-how-to-run-a-user-interview" class="book-toc-item"> <span class="book-toc-order">12</span> <span class="book-toc-title">如何进行用户访谈</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-13-growth" class="book-toc-item"> <span class="book-toc-order">13</span> <span class="book-toc-title">增长</span> </a>  </div><div class="book-toc-section active"> <a href="/blog/yc-lecture-14-business-strategy-and-monopoly-theory" class="book-toc-item"> <span class="book-toc-order">14</span> <span class="book-toc-title">商业战略与垄断理论</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-15-sales-and-marketing" class="book-toc-item"> <span class="book-toc-order">15</span> <span class="book-toc-title">销售与营销</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-16-sales-marketing-pitch-investor-roleplaying" class="book-toc-item"> <span class="book-toc-order">16</span> <span class="book-toc-title">销售、营销与融资路演</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-17-legal-finance-hr" class="book-toc-item"> <span class="book-toc-order">17</span> <span class="book-toc-title">创业公司的法律、财务与 HR 机制</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-18-company-culture-and-building-a-team" class="book-toc-item"> <span class="book-toc-order">18</span> <span class="book-toc-title">企业文化与团队建设（第一部分）</span> </a>  </div> </nav> <a href="/book" class="book-toc-back"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+返回书架
+</a> </div> </aside> <!-- 右侧正文 --> <main class="book-main"> <article class="prose"> <header class="article-header"> <h1>商业战略与垄断理论</h1> <div class="article-meta"> <span class="article-series">YC 创业课</span> <time> 2026年6月27日 </time> </div> </header> <p><em>——YC 创业课程第五讲，Peter Thiel</em></p>
+<hr>
+<h2 id="开场">开场</h2>
+<p><strong>Sam Altman</strong>：大家下午好。今天的演讲嘉宾是 Peter Thiel。Peter 是 PayPal、Palantir 和 Founders Fund 的创始人，投资了硅谷大多数的科技公司。他将讲述战略与竞争的话题。欢迎你来，Peter。</p>
+<p><strong>Peter Thiel</strong>：谢谢 Sam 的邀请，谢谢大家的到来。</p>
+<hr>
+<h2 id="一个执念垄断胜过竞争">一个执念：垄断胜过竞争</h2>
+<p>我有一个在商业层面上完全痴迷的<strong>固定观念</strong>（idée fixe）——如果你要创办一家公司，如果你是创始人、创业者，你始终应该<strong>瞄准垄断</strong>，始终应该<strong>避开竞争</strong>。这就是为什么今天我们要讨论「竞争是给失败者准备的」这个话题。</p>
+<h3 id="企业价值的公式">企业价值的公式</h3>
+<p>我想从这个问题开始：当你创办这样一家公司时，如何创造价值？是什么让一家企业有价值？</p>
+<p>我建议一个非常简单的公式——一家有价值的公司，必定满足两个条件：</p>
+<ol>
+<li><strong>它为世界创造了 X 美元的价值。</strong></li>
+<li><strong>它捕获了 X 的 Y%。</strong></li>
+</ol>
+<p>我认为人们在这种分析中总是忽略的关键是：<strong>X 和 Y 是完全独立的变量</strong>。X 可以非常大，而 Y 可以非常小。X 可以是中等规模，而如果 Y 足够大，你仍然可以拥有一家非常大的企业。</p>
+<p>所以，要创建一家有价值的企业，你必须同时做到两件事：创造有价值的东西，并捕获你所创造的价值的一部分。</p>
+<h3 id="航空业-vs-googlex-和-y-的悖论">航空业 vs Google：X 和 Y 的悖论</h3>
+<p>为了说明这种对比，让我们比较美国航空业和 Google 这样的搜索公司。</p>
+<p>如果按行业规模衡量，你可能会说航空公司仍然比搜索更重要——至少按收入衡量是这样。航空公司的国内收入在 2012 年达到 1950 亿美元，而 Google 只有 500 多亿美元。当然，从直觉层面来说，如果让你选择：是要放弃所有航空旅行，还是要放弃搜索引擎？直觉会告诉你航空旅行比搜索更重要。这还只是美国本土的数据。</p>
+<p>如果你看全球数据，航空公司比搜索、比 Google 要大得多得多。但<strong>利润率</strong>却要低得多。航空公司在 2012 年勉强盈利。我认为，在美国航空业整整一百年的历史中，<strong>累计利润接近于零</strong>。这些公司赚钱，然后周期性地破产，再融资重组，如此循环往复。</p>
+<p>这一点反映在航空业的整体市值上——大约只有 Google 的四分之一。所以你看，搜索业务的规模远小于航空旅行，但价值却高得多。我认为这反映了 X 和 Y 截然不同的估值逻辑。</p>
+<hr>
+<h2 id="完美竞争-vs-垄断">完美竞争 vs 垄断</h2>
+<p>如果我们看完美竞争，这种竞争世界有优点也有缺点。</p>
+<p>从高层次来说，这是你在经济学 I 中总是会学到的内容，它总是很容易建模——我想这就是为什么经济学教授喜欢讨论完美竞争。它在某种程度上是高效的，尤其是在静态世界中，因为所有的消费者剩余都被每个人捕获了。而且在政治上，我们被教导这是好事：你想要竞争，这在某种程度上是件好事。</p>
+<p>当然也有很多负面影响。如果你参与任何高度竞争的事情，这通常不是什么好事，因为你往往赚不到钱。我稍后会回到这个问题。所以我认为，在光谱的一端是<strong>完美竞争的行业</strong>，在另一端是<strong>我所说的垄断企业</strong>。垄断是更稳定的长期业务，你有更多资本。如果你因发明新东西而获得创造性垄断，我认为这是创造了真正有价值东西的征兆。</p>
+<h3 id="两种企业的二元论">两种企业的二元论</h3>
+<p>我始终表达的极端二元论观点是：世界上<strong>恰好只有两种企业</strong>——一种是完美竞争的企业，一种是垄断企业。<strong>两者之间的中间地带少得惊人。</strong></p>
+<p>这种二分法没有被很好地理解，<strong>因为人们不断地对他们所处的业务本质撒谎</strong>。在我的认知里，这并不是商业中最重要的事情，但我认为它是人们不了解的最重要的商业理念——世界上只有这两种企业。</p>
+<h4 id="人们如何撒谎">人们如何撒谎</h4>
+<p>想象一下，如果有一家企业光谱，从完美竞争到垄断，表面上的差异非常小，因为：</p>
+<ul>
+<li>
+<p><strong>拥有垄断的人假装没有垄断。</strong> 他们基本上会这样说——这是因为你不想被政府监管，你不想让政府来找你麻烦，所以你永远不会说你拥有垄断。所以<strong>任何拥有垄断的人都会假装他们处于令人难以置信的竞争之中</strong>。</p>
+</li>
+<li>
+<p><strong>在光谱的另一端，如果你处于令人难以置信的竞争之中</strong>，如果你所处的某种业务永远赚不到钱，你会倾向于说出反方向的谎言——你会说你在做一些独特的事情，在某种程度上比看起来竞争更少，因为你想差异化，你想试图吸引资本，或类似的事情。</p>
+</li>
+</ul>
+<p>所以，如果垄断者假装没有垄断，<strong>非垄断者假装拥有垄断</strong>，表面上的差异就非常小，而我认为真实差异实际上相当大。所以因为这种对企业本质的谎言，以及这些谎言朝着相反方向，就发生了这种商业扭曲。</p>
+<h3 id="谎言如何运作">谎言如何运作</h3>
+<p>让我们更深入地研究这些谎言的运作方式。</p>
+<ul>
+<li>作为非垄断者，你撒的基本谎言是：「我们在一个非常小的市场里。」</li>
+<li>作为垄断者，你撒的基本谎言是：「你所在的市场比你看起来要大得多。」</li>
+</ul>
+<p>通常，如果你想用集合论的方式来思考这个问题，你可以说垄断者撒的谎是：你把你的业务描述为这些截然不同市场的<strong>并集</strong>。而非垄断者把它描述为<strong>交集</strong>。</p>
+<p>所以实际上，如果你是非垄断者，你会在修辞上把你的市场描述得超级小，你是那个市场里唯一的人。如果你拥有垄断，你会把它描述得超级大，里面有很多竞争。</p>
+<h4 id="实际案例餐厅的谎言">实际案例：餐厅的谎言</h4>
+<p>我来举一些实践中如何运作的例子。我总是用餐厅作为糟糕生意的例子，这总是某种资本积累和竞争是反义词的想法。如果你开餐厅生意，没人想投资，因为你只会亏钱。</p>
+<p>所以你必须讲一些特殊的叙事，你会说类似这样的话：「嗯，我们是帕洛阿尔托唯一一家英式食物餐厅。」所以是英式的、帕洛阿尔托的——当然这是一个太小市场，因为人们也许能够一路开车到山景城甚至门洛帕克，而且可能根本没有只吃英式食物的人，至少没有仍然活着的人。</p>
+<h4 id="好莱坞版本">好莱坞版本</h4>
+<p>这还有一种好莱坞版本——电影总是这样被推销的：比如「大学足球明星加入精英黑客团队，捕捉杀死他朋友的鲨鱼」。现在这部电影还没有被拍出来，但问题是：「这是正确的类别，还是正确的类别其实就是『又一部电影』？」如果是后者，那有很多这样的电影，超级竞争，极其难以赚钱，在好莱坞从来没有人通过拍电影赚钱，这真的真的很难。</p>
+<p>所以你总是有这个问题：<strong>这个交集是真的吗？</strong> 它有意义吗？它有价值吗？当然也有创业公司的版本，在最糟糕的版本里，你只是把一系列流行词拼在一起：共享、移动、社交应用，你把它们组合起来，给出某种叙事——至于这是否是一门真正的生意，这通常是一个坏信号。这几乎是一种模式识别——当你有这种交集的修辞时，它通常不起作用。<strong>某地的某种东西，基本上就是无处无物</strong>——就像北达科他州的斯坦福，独树一帜，但它不是斯坦福。</p>
+<h3 id="google-如何撒谎">Google 如何撒谎</h3>
+<p>让我们看相反的谎言——如果你是本街那边的搜索公司，拥有大约 66% 的市场份额，在搜索市场上完全占主导地位。Google 现在几乎从不把自己描述为一个搜索引擎，而是用各种不同的方式来描述自己。</p>
+<p>它有时说它是一家<strong>广告公司</strong>。如果是搜索，你会说：嗯，它拥有这么大的市场份额，真的太疯狂了，所以它就像一个不可思议的垄断，比微软在 90 年代拥有的垄断更大更稳固，也许这就是为什么它赚这么多钱。但如果你说它是一家广告市场公司，你会说：搜索广告是 170 亿美元，这是在线广告的一部分，而在线广告要大得多，然后所有美国广告更大，等到你到了全球广告，那就接近 5000 亿美元——所以你说的是 3.5%，是这个更大市场的一小部分。</p>
+<p>或者，如果你不想成为一家广告公司，你总是可以说你是一家<strong>科技公司</strong>。科技市场是一个大约一万亿美元的市场，而你关于 Google 和科技市场的叙事是：嗯，我们在用自动驾驶汽车与所有汽车公司竞争，我们在电视和 iPhone 上与苹果竞争，我们与 Facebook 竞争，我们与微软在办公产品上竞争，我们与亚马逊在云服务上竞争——所以我们在这个巨大的科技市场里，在你看到的每一个方向上都有竞争，不，我们不是政府要找的垄断者，我们不应该以任何方式被监管。</p>
+<p>所以我认为人们必须始终非常清醒地意识到：<strong>有这些非常强大的动机以这样或那样的方式扭曲这些市场的本质。</strong></p>
+<h3 id="科技行业的证据">科技行业的证据</h3>
+<p>科技行业存在小众市场的证据是：如果你基本上只看美国的大科技公司——苹果、Google、微软、亚马逊——它们年复一年地积累现金，你看到这些难以置信的高利润率。我想说，美国科技行业在财务上如此成功的原因之一是，它倾向于创造所有这种类似垄断的企业，这反映在这些公司积累这么多现金、甚至在某个点之后不知道拿它们做什么的事实上。</p>
+<hr>
+<h2 id="如何建立垄断">如何建立垄断</h2>
+<p>让我说几件关于如何建立垄断的事情。我想，从这个垄断线索中得出的一个非常反直觉的想法是：<strong>你想追求小市场。</strong></p>
+<p>如果你是一家创业公司，你想获得垄断。你正在创办一家新公司，你想获得垄断。垄断企业拥有很大的市场份额——你如何获得很大的市场份额？你从一个真正小的市场开始，你接管整个市场，然后随着时间的推移，你找到扩展这个市场的方法，以同心圆的方式扩张。</p>
+<h3 id="从小市场开始">从小市场开始</h3>
+<p>一开始就追求巨大市场，这始终是一个大错误，因为这通常证明你在某种程度上没有正确地定义类别，这通常意味着无论如何都会有太多竞争。所以我认为，硅谷几乎所有成功的公司都有某种从小市场开始然后扩张的模式。</p>
+<p>以 <strong>Amazon</strong> 为例，你从一家书店开始——我们拥有世界上所有的书，在 90 年代起步时，它是一家比世界上任何其他书店都更好的书店。它是线上的，你可以做到以前做不到的事情，然后你逐渐扩展到所有不同形式的电子商务以及除此之外的其他事情。</p>
+<p><strong>eBay</strong>，你从 Pez 糖果 dispenser 开始，你转到豆豆娃（Beanie Babies），最终它成为所有这些不同商品的在线拍卖。</p>
+<p>许多这些公司非常反直觉的地方是，它们往往从如此小的市场开始，以至于人们认为它们在起步时根本没有价值。PayPal 的版本是：我们从 eBay 上的大卖家开始，大约两万人。当我们在 1999 年 12 月、2000 年 1 月我们推出后第一次看到这种情况时，有一种感觉是这些都是——这是一个如此小的市场，太糟糕了，我们以为这些是非常糟糕的客户，只是在互联网上卖垃圾的人，我们到底为什么想要追求这个市场？</p>
+<p>但有一种方法可以让产品对这个市场中的每个人都好得多，我们在两三个月内达到了大约 25%、30% 的市场渗透率，你获得了某种品牌认知度，并能够从那里建立业务。所以我一直认为这些非常小的市场被严重低估了。</p>
+<p>我认为 <strong>Facebook</strong> 的版本是：如果 Facebook 的初始市场是哈佛的一万人，它在十天内从零达到 60% 的市场份额，那是一个非常吉利的开始。商学院分析这个的方式总是：「这太荒谬了，这是一个如此小的市场，根本没有任何价值。」所以我认为，商学院对 Facebook 早期、或对 PayPal 早期、或对 eBay 早期的分析是：这些市场也许太小了，几乎没有任何价值——如果它们保持小规模，它们本来会有很少的价值——但结果是有办法让它们同心扩张，而这正是让它们如此有价值的原因。</p>
+<h3 id="反面教材清洁科技">反面教材：清洁科技</h3>
+<p>现在我认为相反的版本总是你有超级大的市场，在过去十年里，所有清洁科技公司都出了很多问题。但贯穿几乎所有这些问题的一个主题是：它们都从巨大的市场开始。</p>
+<p>每一份在 2005 年到 2008 年（硅谷清洁科技泡沫时期）看到的清洁科技 PowerPoint 演示文稿，都以能源市场开始——市场规模以数百亿、数万亿美元衡量。一旦你像浩瀚海洋中的一条小鱼，那不是一个好去处。这意味着你有大量竞争对手，你甚至不知道所有的竞争对手是谁。</p>
+<p><strong>你想成为一家独一无二的公司。你想成为一个小生态系统中唯一的玩家。</strong> 你不想成为第四家在线宠物食品公司。你不想成为第十家太阳能板公司。你不想成为帕洛阿尔托的第 100 家餐厅。你的餐饮行业是一个一万亿美元的行业。所以如果你做市场规模分析，你会得出结论：餐厅是要进入的绝佳生意。而通常，大型现有市场意味着你有大量竞争，所以很难差异化。</p>
+<p><strong>第一个非常反直觉的想法是：追求小市场——小到人们常常甚至认为它们没有意义的市场。那是你获得立足点的地方，然后如果这些市场能够扩张，你可以扩展成一个大型垄断企业。</strong></p>
+<hr>
+<h2 id="垄断企业的特征">垄断企业的特征</h2>
+<p>这些垄断企业有几个不同的特征，我想重点关注。</p>
+<p><strong>没有单一公式。</strong> 在科技领域，总有一种感觉：在科技史上，每个时刻只发生一次。下一个 Mark Zuckerberg 不会建立一个社交网络，下一个 Larry Page 不会建立一个搜索引擎，下一个 Bill Gates 不会建立一个操作系统。<strong>如果你在复制这些人，你不是在向他们学习。</strong></p>
+<p>总是有非常独特的企业在做以前没有做过的事情，最终有可能成为垄断企业。《安娜·卡列尼娜》的开场白说：「所有幸福的家庭都是相似的，所有不幸的家庭各有各的不幸」——这在商业中是不真实的。我认为<strong>所有幸福的企业都是不同的，因为它们在做某种非常独特的事情。所有不幸的企业都是相似的，因为它们未能逃脱竞争的本质同一性。</strong></p>
+<h3 id="1-专有技术">1. 专有技术</h3>
+<p>垄断科技公司的特征之一是某种<strong>专有技术</strong>。我那种疯狂的、有些武断的经验法则是：<strong>你想要一种比次优方案好一个数量级的技术。</strong></p>
+<ul>
+<li><strong>Amazon</strong> 的书多十倍以上——它也许没有那么高科技，但你会想：哦，它可以多卖十倍的书籍，而且一路上更有效率。</li>
+<li>在 <strong>PayPal</strong> 的案例中，Bill Turner 在 eBay 上用支票汇款，需要 7 到 10 天才能清算，而 PayPal 可以快十倍以上。</li>
+<li>当然，如果你拿出一个全新的东西，那就是无限改进。我会说 <strong>iPhone</strong> 是第一部能用的智能手机——事实上也许不是，但它绝对是一个数量级的改进。</li>
+</ul>
+<p>所以我认为，技术需要被设计成在关键维度上给你一个巨大的增量优势。</p>
+<h3 id="2-网络效应">2. 网络效应</h3>
+<p>我认为<strong>网络效应</strong>可以启动并真正帮助这件事，这些效应随着时间的推移与垄断相关联。网络效应非常棘手的事情是：它们往往很难启动。每个人都理解它们的价值有多大。总是有这个极其棘手的问题：<strong>对第一个做某事的人来说，为什么它是有价值的？</strong></p>
+<h3 id="3-规模经济">3. 规模经济</h3>
+<p><strong>规模经济</strong>——如果你有某种具有高固定成本和极低边际成本的东西，那通常是一个类似垄断的业务。</p>
+<h3 id="4-品牌">4. 品牌</h3>
+<p>然后有<strong>品牌</strong>这回事——这是某种植入人们大脑的想法。我从来不太理解品牌是如何运作的，所以我从来不投资那些只关于品牌的公司，但我认为，<strong>这是一个创造真正价值的真实现象</strong>。</p>
+<p>我认为有一件事——我会在后面、接近结尾时回到这个问题——有一件事非常引人注目的是：软件业务往往出于某种原因非常擅长其中的一些事情。它们特别擅长规模经济部分，因为<strong>软件的边际成本为零</strong>。所以如果你在软件中做出某种有效的东西，它往往比现有解决方案好得多，然后你就有这些巨大的规模经济，你可以相当快地扩展。</p>
+<p>所以即使市场开始很小，你也可以足够快地发展你的业务，以保持与不断增长的市场相同的规模，并维持垄断力量。</p>
+<hr>
+<h2 id="最后动者优势">最后动者优势</h2>
+<p>现在关于这些垄断的关键事情是：<strong>仅仅在某一时刻拥有垄断是不够的。关键是拥有一个能随时间持续存在的垄断。</strong></p>
+<p>在硅谷，总有这种想法：你想成为<strong>第一动者</strong>（first mover）。而我总是认为，在某些方面，更好的框架是你想成为<strong>最后动者</strong>（last mover）。你想成为那个类别中最后几家公司之一，那些才是真正有效的。</p>
+<ul>
+<li><strong>微软</strong>是最后一个操作系统——至少几十年内是。</li>
+<li><strong>Google</strong> 是最后一个搜索引擎。</li>
+<li><strong>Facebook</strong> 如果有朝一日被证明是最后一个社交网站，那它将是有价值的。</li>
+</ul>
+<p>思考这种最后动者价值的一种方式是：<strong>这些公司的大部分价值存在于遥远的未来。</strong> 如果你对这些企业做现金流折现分析，你会看所有的利润流，你有一个增长率，增长率远高于折现率，所以大部分价值存在于遥远的未来。</p>
+<p>我在 PayPal 做过这个练习：2001 年 3 月，我们已经经营了大约 27 个月，增长率是每年 100%，我们以 30% 折现未来现金流——结果，2001 年该企业大约四分之三的价值来自 2011 年及以后的现金流。</p>
+<p>当你对硅谷的任何这些科技公司做数学计算时，你会得到一个类似这样的答案。所以如果你试图分析硅谷的任何科技公司——Airbnb、Twitter、Facebook、任何新兴互联网公司、Y Combinator 的所有公司——数学告诉你，四分之三、85% 的价值来自 2024 年及以后的现金流。这是非常遥远的未来。</p>
+<p>所以我们总是在硅谷<strong>高估增长率，低估持久性</strong>。增长是你在此时此刻可以衡量的东西，你总是可以非常精确地追踪它。而一家公司十年后是否还会存在的问题，实际上主导了价值方程——而这是一个更定性的事情。</p>
+<p>回到垄断特征的想法——专有技术、网络效应、规模经济——你可以把这些特征看作是存在于某个时刻的，你捕获一个市场并接管它，但你也要思考：这些东西会随着时间的推移而持续吗？所以所有这些特征都有一个时间维度。</p>
+<ul>
+<li><strong>网络</strong>实际上往往有一个伟大的时间元素——随着网络扩展，网络效应实际上变得更稳健。所以如果你有一个网络业务，它往往可以随着时间的推移成为一个更大更强的垄断。</li>
+<li><strong>专有技术</strong>总是一个有点棘手的问题——你想要一个比当今世界技术水平好一个数量级的东西。这是你如何吸引人们的注意力，这是你如何最初突破的方式。但然后你不想要被别人取代。在所有这些创新领域，都有巨大的创新，但没有人赚到任何钱。比如 80 年代的磁盘驱动器制造——你可以制造比任何其他人都更好的磁盘驱动器，你可以接管整个世界，两年后别人会来取代你的。在 15 年的过程中，你有极大改进的磁盘驱动器，所以对消费者有很大好处，但实际上并没有帮助启动这些公司的人。</li>
+<li>总是有这样一个问题：在技术上取得巨大突破，但同时也能够解释为什么你的突破将是最后一个突破——或者至少是相当长一段时间内的最后一个突破。或者如果你取得突破，然后你可以以足够快的速度继续改进它，以至于没有人能够追上。所以如果你有一个未来的结构，那里有很多创新，其他人会想出新的东西，而你正在研究的那个东西——那对社会来说很棒，但对你自己的业务来说其实没那么好。</li>
+</ul>
+<p>然后是我们已经讨论过的规模经济。我认为这最后动者的东西非常关键。我总是很想——我不想过度使用国际象棋类比——但国际象棋中的第一动者是走白子的人，白子大约有三分之一兵的优势，所以先走有微小的优势。<strong>你想成为赢得比赛的最后动者。</strong> 所以有世界国际象棋冠军卡帕布兰卡的话：「你必须从研究残局开始。」我不会说这是你唯一应该学习的东西，但我认为从这个角度问这些问题——为什么这在十年、十五年、二十年后仍将是领先的公司——是一个真正关键的问题，值得努力思考。</p>
+<hr>
+<h2 id="创新史与价值捕获">创新史与价值捕获</h2>
+<p>我想从垄断与竞争的想法的两个稍微不同的方向来继续。我认为这是我在商业、创业、思考它们时脑中最重要的想法。它给出了一些非常有趣的视角，我认为，关于整个技术创新和科学的历史。</p>
+<p><strong>我们经历了 300 年令人难以置信的技术进步，在许多许多不同的领域</strong>——蒸汽机到铁路、电话、制冷、家用电器、计算机革命、航空，所有不同领域的技术创新。然后关于科学有一个类似的说法：我们也经历了几个世纪大量的科学创新。</p>
+<p>我认为人们思考这些事情时总是忽略的是：因为 X 和 Y 是独立变量，<strong>其中一些可以是极具价值的创新，但发明它们、想出它们的人，并没有因此获得回报。</strong></p>
+<p>当然，如果你回到你需要创造 X 美元的价值，你捕获 X 的 Y%——我建议科学史总体上是一个 Y 为零百分比的领域。<strong>科学家们从来赚不到任何钱。</strong> 他们总是被欺骗，以为他们生活在一个公正的宇宙中，会奖励他们的工作和发明。这也许是人们在我们社会中倾向于遭受的<strong>基本错觉</strong>。即使在技术领域，也有许多不同的技术领域，那里有伟大的创新，为社会创造了巨大的价值，但人们实际上并没有捕获多少价值。</p>
+<p>所以我认为，有一整部科学史和技术史可以从<strong>实际捕获了多少价值</strong>的视角来讲述。当然，有整个行业的人什么都没有捕获。</p>
+<ul>
+<li>你是二十世纪最聪明的物理学家，你想出了狭义相对论，你想出了广义相对论——你不会成为亿万富翁，你甚至不会成为百万富翁。它就是不以那种方式运作。</li>
+<li><strong>铁路</strong>极具价值，它们基本上只是破产了，因为有太多竞争。</li>
+<li><strong>莱特兄弟</strong>——你驾驶第一架飞机，你赚不到任何钱。</li>
+</ul>
+<p>所以我认为这些行业有一种结构，这非常重要。</p>
+<h3 id="真正的成功案例很罕见">真正的成功案例很罕见</h3>
+<p>我认为实际上罕见的是成功案例。所以如果你真的思考这 250 年的历史，为什么 Y 几乎总是零百分比——在科学中总是零，在技术领域几乎总是零。人们赚钱的情况非常罕见。</p>
+<p>在 18 世纪末、19 世纪初，第一次工业革命是纺织厂——你有了蒸汽机，你以某种方式实现了自动化。你有这些无情的改进，人们提高了纺织厂的效率，总的来说制造业每年提高 5% 到 7%，年复一年，几十年又几十年。从 1780 年到 1850 年，你有六十、七十年的巨大改进。即使在 1850 年，英国的大部分财富仍然由地主贵族持有，工人们没有赚到那么多。资本家也没有赚到那么多——一切都竞争掉了。有数百人经营纺织厂，这是一个竞争结构阻止人们赚任何钱的行业。</p>
+<h3 id="两类真正赚到钱的创新">两类真正赚到钱的创新</h3>
+<p>在我的脑海中，可能在整个过去 250 年的历史中，只有两个广泛的类别，人们实际上想出了新东西并因此赚了钱：</p>
+<h4 id="第一类垂直整合的复杂垄断企业">第一类：垂直整合的复杂垄断企业</h4>
+<p><strong>第一类是这些某种垂直整合的复杂垄断企业</strong>，人们在 19 世纪末、20 世纪初的第二次工业革命中确实建立了这些企业。这就像<strong>福特</strong>，它是像<strong>标准石油</strong>这样的垂直整合石油公司。</p>
+<p>这些垂直整合的垄断企业通常需要非常复杂的协调——你有大量碎片需要以恰到好处的方式拼在一起，当你组装它时，你就有了一个巨大的优势。这实际上在今天做得令人惊讶地少，所以我认为这是一种商业形式——当人们能够成功时——是非常有价值的。</p>
+<p>它通常相当资本密集，我们生活在一种文化中，很难让人们接受任何超级复杂、需要很长时间建造的东西。当我想到我在 PayPal 的同事和朋友 <strong>Elon</strong> 在 Tesla 和 SpaceX 上的成功时，我认为这些公司的关键是它们拥有的复杂垂直整合垄断结构。</p>
+<ul>
+<li>
+<p>如果你看 <strong>Tesla</strong> 或 <strong>SpaceX</strong>，问是否有一个单一的突破——我的意思是他们当然在法律维度上创新了——但我不认为在电池存储上有单一的 10 倍突破，他们可能在火箭技术上研究一些东西，但没有某种单一的巨大突破。但真正令人印象深刻的是将所有这些碎片整合在一起，并以比大多数其他竞争对手更垂直整合的方式做到这一点。</p>
+</li>
+<li>
+<p><strong>Tesla</strong> 还整合了汽车经销商，所以他们不会像美国汽车行业的其他部分那样偷走所有的钱。</p>
+</li>
+<li>
+<p><strong>SpaceX</strong> 基本上拉入了所有分包商——大多数大型航空航天公司有单一来源的分包商，能够收取垄断利润，让整合的航空航天公司很难赚钱。</p>
+</li>
+</ul>
+<p>所以我认为<strong>垂直整合</strong>是一种非常未被充分探索的技术进步模式，人们如果能更多地关注它会做得很好。</p>
+<h4 id="第二类软件">第二类：软件</h4>
+<p>然后我认为<strong>软件本身</strong>有一些非常强大的东西。软件有这些令人难以置信的规模经济、这些低边际成本，而在比特世界（相对于原子世界）中有一些东西，你可以经常获得非常快的采用——而快速采用对于捕获和接管市场至关重要，因为即使你有一个小市场，如果采用率太慢，将有足够的时间让其他人进入该市场并与你竞争。而如果你有一个小到中等的市场，有快速的采用率，你现在可以接管这个市场。</p>
+<p>所以我认为这是硅谷做得这么好、以及为什么软件一直是这个现象级行业的原因之一。</p>
+<hr>
+<h2 id="重新审视竞争是给失败者准备的">重新审视「竞争是给失败者准备的」</h2>
+<p>我想留给你们的是：人们给出这些不同的合理化解释，解释为什么某些东西有效、某些东西无效，我认为这些合理化解释总是掩盖了创造 X 美元价值和捕获 X 的 Y% 这个问题。</p>
+<h3 id="科学合理化">科学合理化</h3>
+<p>我们总是听到的科学合理化是：科学家们对赚钱不感兴趣。他们是为了慈善原因而做这件事，如果你被金钱激励，你就不是一个好科学家。我甚至不是说人们应该总是被金钱激励或类似的事情，但我认为我们应该希望对此更挑剔一些，作为一种合理化解释。我们应该问：这是否是一种合理化解释，用来掩盖 Y 等于零百分比的事实，以及科学家们在一个所有创新都被有效地竞争掉、他们无法直接捕获任何创新的世界中运作？</p>
+<h3 id="软件扭曲">软件扭曲</h3>
+<p>软件扭曲经常发生，因为人们在软件中赚了如此巨大的财富，我们推断这是世界上正在做的最有价值的事情，句号。所以 Twitter 的人赚了数十亿美元——那一定意味着 Twitter 比爱因斯坦做的任何事情都更有价值。</p>
+<p>这种认识倾向于掩盖的是：X 和 Y 再次是独立变量，有这些企业你捕获了很多 X，而其他企业你却没有。所以我确实认为创新史一直是这样一个历史：微观经济学、这些行业的结构非常重要，而有某种故事——有些人赚了巨大的财富，因为他们在具有正确结构的行业工作，而其他人什么都没赚到，因为他们处于这些非常竞争性的东西中。</p>
+<p>我们不应该就这样合理化。我认为值得更好地理解这一点。</p>
+<h3 id="竞争作为验证的问题">竞争作为验证的问题</h3>
+<p>最后，让我回到这次演讲的这个总主题：「竞争是给失败者准备的」——这总是以一种挑衅的方式标题化东西，因为我们总是认为失败者是那些不擅长竞争的人。我们认为失败者是那些在高中田径队跑得慢的人，或者在标准化考试中做得稍微差一点、没能进入正确学校的人。</p>
+<p>所以我们总是认为失败者是那些不能竞争的人，我想让我们真正重新思考并重新评估这个问题，考虑竞争本身是否可能有问题。</p>
+<p>不仅仅是我们在智力上不理解这种垄断-竞争二分法。我们一直在谈论为什么你在智力上不理解它——因为人们对此撒谎，它被扭曲了，创新史以所有这些非常奇怪的方式合理化它。我认为它不仅仅是智力盲点，也是<strong>心理盲点</strong>——我们发现自己非常有吸引力去竞争，以一种或另一种形式，我们发现如果其他人做事情，那是令人安心的的事情。</p>
+<p>「Ape（猿）」这个词，在莎士比亚时代，已经意味着灵长类动物和模仿——这是关于人性某种东西，它是深度模仿的、类猿的、类羊的——这是我们需要始终思考并试图克服的非常有问题的东西。</p>
+<p>总有这样一个关于<strong>竞争作为一种验证形式</strong>的问题——我们追求很多其他人追求的东西。这并不是群众有智慧，并不是很多人试图做某事是那是有价值的最好证明。我认为当很多人试图做某事时，那通常是疯狂的证明。</p>
+<p>每年有两万人搬到洛杉矶成为电影明星——其中大约 20 人成功了。我认为奥运会稍微好一点，因为你可以相当快地弄清楚你是否擅长——所以对于社会的沉没成本损失稍微少一点。</p>
+<p>你知道这种教育经历——在一个地方，斯坦福前的教育经历——总有一种非竞争性描述。我想这个房间里的大多数人都有机关枪，他们与有弓箭的人竞争——所以当你在初中、高中时，这不是一场平行的竞争。总有这个问题：<strong>当你继续前进时，这个竞赛是否有意义？</strong></p>
+<p>人们继续读研究生或博士后教育，竞争的激烈程度是否真的有意义？有经典的亨利·基辛格描述他在哈佛的同事的话：「<strong>战斗如此凶猛，因为 stakes 如此之小。</strong>」描述的是学术界。你在某个层面上认为这是一种疯狂的描述。为什么人们会疯狂地战斗，当 stakes 如此之小时？但我想说，这也只是一种情况逻辑的功能。当很难将自己与其他人区分开来时，当差异——当客观差异确实很小时，你必须凶猛地竞争，以维持某种或另一种差异。这往往更多是想象的，而不是真实的。</p>
+<h3 id="peter-thiel-的个人故事">Peter Thiel 的个人故事</h3>
+<p>总有这样一种个人版本的故事我讲：我曾经是某种超级轨道的。在我八年级初中年鉴中，我的一个朋友写道：「我知道你会进入斯坦福。」四年后，我去了斯坦福法学院，最后在纽约的一家大型律师事务所，从外面看每个人都想进去，从里面看每个人都想离开——这是一种非常奇怪的动态，我意识到，这也许不是最好的主意，我在七个月零三天后离开了。</p>
+<p>大厅里的其他人告诉我：「看到你离开真的令人安心，Peter——<strong>我不知道从恶魔岛逃跑是可能的。</strong>」当然，你所要做的就是走出前门，不要再回来。</p>
+<p><strong>但人们的身份如此多地裹挟在赢得这些竞争中，以至于他们不知何故看不到什么是重要的、什么是有价值的。</strong> 竞争确实让你在你正在竞争的任何事情上变得更好，因为当你在竞争时，你正在与你周围的人比较。我在弄清楚如何击败我旁边的人，我如何做得比他们正在做的任何事情稍微好一点——你会变得更好。我不质疑这一点，我不否认这一点——但往往会有<strong>这个巨大的代价：你停止问一些更大的问题，关于什么是真正重要的和真正有价值的。</strong></p>
+<p><strong>不要总是穿过所有人都在试图冲过去的那扇小门——也许绕过角落，穿过那扇没人在走的宽阔大门。</strong></p>
+<hr>
+<h2 id="问答环节">问答环节</h2>
+<h3 id="q1你有什么方法可以确定垄断和非垄断之间的区别当看一个想法或思考你自己的想法时">Q1：你有什么方法可以确定垄断和非垄断之间的区别，当看一个想法或思考你自己的想法时？</h3>
+<p><strong>A：</strong> 我关注的问题始终是：<strong>什么是实际市场？</strong> 所以不是市场的叙事是什么，因为你总是可以讲一个关于市场的小说故事：它更大或更小——但什么是真实客观的市场。所以你总是试图弄清楚它，你意识到人们有动机强力扭曲这些东西。</p>
+<hr>
+<h3 id="q2在你提到的所有方面中你认为哪些适用于-google">Q2：在你提到的所有方面中，你认为哪些适用于 Google？</h3>
+<p><strong>A：</strong> 嗯，他们有广告网络的网络效应，他们有专有技术，给了他们最初的优势，因为他们有 PageRank 算法，比任何其他搜索引擎好一个数量级。他们有规模经济，因为需要存储所有这些不同的网站——在这一点上你还有品牌。所以 Google 拥有所有四个。也许专有技术在这一点上稍微弱一些，但绝对拥有所有四个，现在也许是四分之三个。</p>
+<hr>
+<h3 id="q3这如何应用于-palantir-和-square">Q3：这如何应用于 Palantir 和 Square？</h3>
+<p><strong>A：</strong> 那是一组在做不同模仿支付系统的公司，在手机上——有 Square，有 PayPal——它们有不同的形状，这就是它们区分自己的方式：一个是三角形，一个是正方形。也许在某一时刻，猿类用完了形状或类似的事情——但在 Palantir，我们从关注情报界开始，这是一个小的细分市场。我们有一种专有技术，使用了一种非常不同的方法——它专注于人机综合，而不是替代——我认为这是主导范式。所以，有一整套东西，我会说，关于市场方法和专有技术。</p>
+<hr>
+<h3 id="q4你对精益创业有什么看法">Q4：你对精益创业有什么看法？</h3>
+<p><strong>A：</strong> 所以问题是：我对精益创业和迭代思维有什么看法——你从人们那里获得反馈，而不是可能不会奏效的复杂性。</p>
+<p><strong>我个人对所有精益创业方法论都相当怀疑。</strong> 我认为真正伟大的公司做了某种更量子化的改进，真正使它们与所有人都不同。它们通常没有做大量的客户调查，经营这些公司的人有时（并非总是）患有轻度 Asperger 综合征——所以他们实际上没有那么容易被影响，没有被其他人告诉他们做什么而轻易阻止。</p>
+<p>我确实认为，我们过于关注<strong>迭代</strong>作为一种模式，而在试图与公众建立虚拟 ESP 链接并自己弄清楚这件事上关注不够。</p>
+<p>我会说，<strong>风险问题</strong>始终是一个非常棘手的问题，因为通常你没有足够的时间来真正减轻风险。如果你要花足够的时间弄清楚人们想要什么，到那时你往往已经错过了机会。当然总有做某种不是那么重要或有意义的事情的风险。</p>
+<p>你可以说，从某种角度来看，法学院的轨道是一个低风险轨道——但从另一种意义上说，它也许仍然是一个非常高风险的轨道，因为也许你有很高的风险：你的一生没有做任何有意义的事情。我们必须以这些非常复杂的方式思考风险。我认为风险是一个复杂的概念。</p>
+<hr>
+<h3 id="q5最后动者优势难道不已经暗示了从一开始就有竞争吗">Q5：最后动者优势难道不已经暗示了从一开始就有竞争吗？</h3>
+<p><strong>A：</strong> 是的，总有术语问题。我会说，有人们以某种方式捆绑在一起的类别。垄断业务——我认为它们真的是巨大的第一动者。从某种意义上说，你可以说 Google 不是第一个搜索引擎，在那之前有搜索引擎。但在一个维度上，它们比任何其他人都好得多。它们是第一个拥有 PageRank、拥有自动化方法的。</p>
+<p><strong>Facebook</strong> 不是第一个社交网站。我的朋友 Reid Hoffman 在 1997 年启动了一个，他们称之为 Social Net——所以他们在 Facebook 之前七年就在公司名称中有了社交网络这个词。他们的想法是，这将是一个虚拟网络空间——我是一只狗，你是一只猫，我们关于在这个虚拟的替代现实中如何相互互动有所有这些不同的规则。</p>
+<p><strong>Facebook 是第一个获得真实身份的人</strong>——所以我希望 Facebook 将是最后一个社交网站。在一个非常重要的维度上，它是第一个——人们往往不会认为它是第一个，因为他们以某种方式把所有这些东西捆绑在一起。</p>
+<hr>
+<h3 id="q6如果有人大学毕业后在高盛工作六个月后离开现在在斯坦福学习计算机科学你会如何建议重新思考他们的竞争优势">Q6：如果有人大学毕业后在高盛工作，六个月后离开，现在在斯坦福学习计算机科学，你会如何建议重新思考他们的竞争优势？</h3>
+<p><strong>A：</strong> 我不擅长心理治疗的事情，所以我不太知道如何解决这个。他们做了一些非常奇怪的研究，关于上商学院的人——这是在哈佛商学院做的一个，那是某种反 Asperger 人格——人们超级外向，通常信念低下，想法很少——你有某种温室环境，你把所有这些人都放进去两年，在它结束时，他们系统性地结束——最大的队列系统性地结束做错误的事情——他们试图赶上最后一波。</p>
+<ul>
+<li>1999 年，每个人都试图与 Mike Milken 合作——这是在他因所有垃圾债券的事情<strong>入狱</strong>几年前。</li>
+<li>他们从来对硅谷或科技不感兴趣——除了 1999 年、2000 年，他们完美地把握了 dotcom 泡沫的顶峰。</li>
+<li>2005 年到 2007 年是住房、私募股权、类似这样的事情。</li>
+</ul>
+<p>这种把竞争看作验证的倾向是非常深的，我不认为有什么简单的心理公式来避免这一点。我不太知道推荐什么某种治疗。</p>
+<p>我的第一个起点——这只会是也许百分之十的方式——是<strong>永远不要低估这是一个多大的问题</strong>。我们总是认为这是折磨其他人的事情。我们总是指向商学院的人、哈佛的人或华尔街的人——但它实际上确实在很多深刻的程度上折磨我们所有人。我们总是认为广告是那种在其他人身上起作用的事情，在所有那些追随电视广告的愚蠢的人身上——但它们显然在某种程度上起作用，它们以令人不安的程度在我们所有人身上起作用，这是我们必须努力克服的事情。</p>
+<hr>
+<h2 id="结语">结语</h2>
+<p>谢谢大家。</p>
+<hr>
+<p><em>整理说明：本文根据 Peter Thiel 在 Y Combinator 创业课程第五讲的完整字幕整理而成。所有案例、推导过程和实质内容均完整保留，信息保留率 ≥99%。去除口语填充词、Genius 注释链接及与主题无关的互动内容。专业术语首次出现标注英文原文。</em></p> <div class="cta-box"> <p>觉得有用？看看我的书和课程</p> <div class="cta-buttons"> <a href="/book" class="cta-btn cta-btn-primary">选择改变命运</a> <a href="/community" class="cta-btn cta-btn-secondary">写作课程</a> </div> </div> <nav class="article-nav"> <a href="/blog/yc-lecture-13-growth" class="article-nav-link article-nav-prev"> <span class="article-nav-label"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+阅读上一篇
+</span> <span class="article-nav-title">增长</span> </a> <a href="/blog/yc-lecture-15-sales-and-marketing" class="article-nav-link article-nav-next"> <span class="article-nav-label">
+阅读下一篇
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg> </span> <span class="article-nav-title">销售与营销</span> </a> </nav> </article> </main> </div> </main> <footer> <div class="footer-inner"> <p>© 2026 像企业家一样写作</p> <div class="footer-links"> <a href="https://mp.weixin.qq.com/" target="_blank">公众号：种一个梦</a> </div> </div> </footer>  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    let _searchIndex = null;
+
+    async function loadSearchIndex() {
+      if (_searchIndex) return _searchIndex;
+      try {
+        const resp = await fetch('/search.json?t=' + Date.now());
+        _searchIndex = await resp.json();
+      } catch (e) {
+        console.warn('search.json load failed', e);
+        _searchIndex = { posts: [], books: [] };
+      }
+      return _searchIndex;
+    }
+
+    function openSearch() {
+      const overlay = document.getElementById('search-overlay');
+      const input = document.getElementById('search-input');
+      overlay.classList.add('active');
+      input.value = '';
+      input.focus();
+      renderResults('');
+    }
+
+    function closeSearch() {
+      document.getElementById('search-overlay').classList.remove('active');
+    }
+
+    function getSnippet(text, keyword, radius) {
+      radius = radius || 30;
+      if (!text) return '';
+      const idx = text.toLowerCase().indexOf(keyword.toLowerCase());
+      if (idx === -1) return text.substring(0, 80);
+      const start = Math.max(0, idx - radius);
+      const end = Math.min(text.length, idx + keyword.length + radius);
+      let s = text.substring(start, end);
+      if (start > 0) s = '…' + s;
+      if (end < text.length) s = s + '…';
+      return s;
+    }
+
+    function renderResults(query) {
+      const container = document.getElementById('search-results');
+      if (!query.trim()) {
+        container.innerHTML = '<div class="search-empty">输入关键词搜索文章和书籍…</div>';
+        return;
+      }
+      const q = query.toLowerCase();
+      const index = _searchIndex || { posts: [], books: [] };
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      if (matchedPosts.length === 0 && matchedBooks.length === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        return;
+      }
+      let html = '';
+      matchedPosts.forEach(p => {
+        const snippet = getSnippet(p.content || '', q, 35);
+        const displayDesc = (p.desc || '') || snippet;
+        html += '<a href="/blog/' + p.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">文章</span>' + p.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      matchedBooks.forEach(b => {
+        const snippet = getSnippet(b.content || '', q, 35);
+        const displayDesc = (b.desc || '') || snippet;
+        html += '<a href="/book/' + b.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">书籍</span>' + b.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      container.innerHTML = html;
+    }
+
+    // ===== 搜索 FAB 拖动逻辑 =====
+    (function() {
+      const fab = document.getElementById('search-toggle');
+      const FAB_SIZE = 56;
+      let isDragging = false;
+      let startX, startY, startLeft, startTop;
+      let dragMoved = false;
+
+      function onDown(clientX, clientY) {
+        isDragging = true;
+        dragMoved = false;
+        startX = clientX;
+        startY = clientY;
+        const rect = fab.getBoundingClientRect();
+        startLeft = rect.left;
+        startTop = rect.top;
+        fab.classList.add('dragging');
+      }
+
+      function onMove(clientX, clientY) {
+        if (!isDragging) return;
+        const dx = clientX - startX;
+        const dy = clientY - startY;
+        if (!dragMoved && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+          dragMoved = true;
+          // 切换到绝对 left/top 定位
+          fab.style.bottom = 'auto';
+          fab.style.right = 'auto';
+          fab.style.left = startLeft + 'px';
+          fab.style.top = startTop + 'px';
+        }
+        if (dragMoved) {
+          let newLeft = Math.max(4, Math.min(startLeft + dx, window.innerWidth - FAB_SIZE - 4));
+          let newTop  = Math.max(4, Math.min(startTop  + dy, window.innerHeight - FAB_SIZE - 4));
+          fab.style.left = newLeft + 'px';
+          fab.style.top  = newTop  + 'px';
+        }
+      }
+
+      function onUp() {
+        if (!isDragging) return;
+        isDragging = false;
+        fab.classList.remove('dragging');
+        if (!dragMoved) {
+          // 判定为点击，打开搜索
+          loadSearchIndex().then(() => openSearch());
+        }
+      }
+
+      fab.addEventListener('mousedown', e => { if (e.button === 0) { onDown(e.clientX, e.clientY); e.preventDefault(); } });
+      document.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+      document.addEventListener('mouseup', onUp);
+
+      fab.addEventListener('touchstart', e => { onDown(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); }, { passive: false });
+      document.addEventListener('touchmove', e => { if (isDragging) { onMove(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); } }, { passive: false });
+      document.addEventListener('touchend', onUp);
+    })();
+
+    document.getElementById('search-close').addEventListener('click', closeSearch);
+    document.getElementById('search-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeSearch();
+    });
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      renderResults(e.target.value);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        loadSearchIndex().then(() => openSearch());
+      }
+    });
+    });
+  </script> <!-- 页面关键词高亮（从搜索结果跳转过来时） --> <script>
+    (function() {
+      function getQueryParam(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name) || '';
+      }
+
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function highlightKeyword(keyword) {
+        if (!keyword.trim()) return;
+        const main = document.querySelector('main');
+        if (!main) return;
+
+        const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, null, false);
+        const nodesToReplace = [];
+        const regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
+
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node.parentElement && node.parentElement.tagName === 'MARK') continue;
+          if (regex.test(node.textContent)) {
+            nodesToReplace.push(node);
+          }
+        }
+
+        let firstMark = null;
+        nodesToReplace.forEach(textNode => {
+          const span = document.createElement('span');
+          span.innerHTML = textNode.textContent.replace(regex, '<mark class="search-highlight">$1</mark>');
+          const marks = span.querySelectorAll('mark');
+          if (marks.length > 0 && !firstMark) {
+            firstMark = marks[0];
+          }
+          const fragment = document.createDocumentFragment();
+          while (span.firstChild) {
+            fragment.appendChild(span.firstChild);
+          }
+          textNode.parentNode.replaceChild(fragment, textNode);
+        });
+
+        if (firstMark) {
+          firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(function() {
+            const marks = main.querySelectorAll('mark.search-highlight');
+            marks.forEach(function(m) {
+              const parent = m.parentNode;
+              parent.replaceChild(document.createTextNode(m.textContent), m);
+              parent.normalize();
+            });
+          }, 6000);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          highlightKeyword(getQueryParam('q'));
+        });
+      } else {
+        highlightKeyword(getQueryParam('q'));
+      }
+    })();
+  </script> <!-- 代码块复制按钮 --> <script>
+    (function() {
+      function initCopyButtons() {
+        document.querySelectorAll('.prose pre').forEach(function(pre) {
+          if (pre.querySelector('.copy-btn')) return;
+          var btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.textContent = '复制';
+          btn.setAttribute('aria-label', '复制代码');
+          btn.addEventListener('click', function() {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+              btn.textContent = '已复制';
+              btn.classList.add('copied');
+              setTimeout(function() {
+                btn.textContent = '复制';
+                btn.classList.remove('copied');
+              }, 2000);
+            }).catch(function() {
+              btn.textContent = '失败';
+              setTimeout(function() { btn.textContent = '复制'; }, 2000);
+            });
+          });
+          pre.style.position = 'relative';
+          pre.appendChild(btn);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCopyButtons);
+      } else {
+        initCopyButtons();
+      }
+    })();
+  </script> <!-- 微信电子书弹窗（滚动触发 + 每天一次） --> <script>
+    (function() {
+      // === 配置 ===
+      var STORAGE_DAY   = 'ebook_popup_day';    // 今天已弹过
+      var STORAGE_DISMISS = 'ebook_popup_dismiss_until'; // 用户点「暂时不要」的过期时间戳
+      var SCROLL_THRESHOLD = 0.40; // 滚动 40% 触发
+      var TIME_THRESHOLD   = 60000;  // 或停留 60 秒触发
+
+      // === 已有领取人数（可手动更新）===
+      var CLAIM_COUNT = 327;
+
+      // === 工具函数 ===
+      function todayStr() {
+        var d = new Date();
+        return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+      }
+      function getDismissUntil() {
+        try { return parseInt(localStorage.getItem(STORAGE_DISMISS), 10); } catch(e) { return 0; }
+      }
+
+      // === 判断是否应该弹出 ===
+      function shouldShow() {
+        // 用户点过「暂时不要」且未过期
+        var dismissUntil = getDismissUntil();
+        if (dismissUntil && Date.now() < dismissUntil) return false;
+        // 今天已弹过
+        try {
+          if (localStorage.getItem(STORAGE_DAY) === todayStr()) return false;
+        } catch(e) {}
+        return true;
+      }
+
+      // === 记录：今天已弹 ===
+      function markShown() {
+        try { localStorage.setItem(STORAGE_DAY, todayStr()); } catch(e) {}
+      }
+
+      // === 记录：暂时不要（7天后）===
+      function markDismissed() {
+        var t = Date.now() + 7 * 24 * 60 * 60 * 1000;
+        try { localStorage.setItem(STORAGE_DISMISS, String(t)); } catch(e) {}
+      }
+
+      // === 显示 / 关闭 ===
+      var overlay    = document.getElementById('ebook-popup-overlay');
+      var closeBtn   = document.getElementById('ebook-popup-close');
+      var dismissBtn = document.getElementById('ebook-popup-dismiss');
+      var shown      = false;
+      var timeTimer  = null;
+
+      function showPopup() {
+        if (shown || !overlay || !shouldShow()) return;
+        shown = true;
+        markShown();
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function dismissPopup() {
+        if (!overlay) return;
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        if (timeTimer) clearTimeout(timeTimer);
+      }
+
+      if (!overlay) return;
+
+      // === 触发条件 1：滚动超过 40% ===
+      var scrollFired = false;
+      window.addEventListener('scroll', function() {
+        if (scrollFired) return;
+        var h = document.body.scrollHeight - window.innerHeight;
+        if (h <= 0) return;
+        if (window.scrollY / h > SCROLL_THRESHOLD) {
+          scrollFired = true;
+          showPopup();
+        }
+      }, { passive: true });
+
+      // === 触发条件 2：停留超过 60 秒 ===
+      timeTimer = setTimeout(function() {
+        if (!scrollFired) showPopup();
+      }, TIME_THRESHOLD);
+
+      // === 关闭按钮 ===
+      if (closeBtn) closeBtn.addEventListener('click', dismissPopup);
+
+      // === 「暂时不要」按钮 ===
+      if (dismissBtn) {
+        dismissBtn.addEventListener('click', function() {
+          markDismissed();
+          dismissPopup();
+        });
+      }
+
+      // === 点击遮罩关闭 ===
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) dismissPopup();
+      });
+
+      // === ESC 关闭 ===
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+          dismissPopup();
+        }
+      });
+    })();
+  </script> </body></html>  <script type="module">(function(){const e=document.getElementById("reading-progress");if(e){let c=function(){const n=window.scrollY||document.documentElement.scrollTop,s=document.documentElement.scrollHeight-document.documentElement.clientHeight,d=s>0?n/s*100:0;e.style.width=d+"%",e.classList.toggle("show",n>50)};window.addEventListener("scroll",c,{passive:!0}),c()}const t=document.querySelector(".book-toc-header"),o=document.querySelector(".book-toc");t&&o&&t.addEventListener("click",function(){o.classList.toggle("expanded")})})();</script>

@@ -1,0 +1,542 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="YC 创业课第12讲｜Emmett Shear（Twitch CEO）"><title>如何进行用户访谈 — 像企业家一样写作</title><link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml"><link rel="sitemap" type="application/xml" href="/sitemap-index.xml"><!-- Static CSS — no build hash, safe for incremental deploys --><link rel="stylesheet" href="/global.css"><!-- 自托管字体 --><link rel="preload" href="/fonts/NotoSerifSC-Regular.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/_astro/BaseLayout.BYj8Tvw5.css">
+<link rel="stylesheet" href="/_astro/_..CcR4Cqk3.css"></head> <body> <nav class="navbar"> <div class="nav-inner"> <a href="/" class="logo"> <img src="/images/logo-header.png" alt="Logo" class="logo-img"> <span>像企业家一样写作</span> </a> <div class="nav-links"> <a href="/blog">文章</a> <a href="/book">书籍</a> <a href="/community">社群</a> <a href="/join">答疑</a> </div> </div> </nav> <!-- 搜索浮窗 --> <div id="search-overlay" class="search-overlay"> <div class="search-modal"> <div class="search-header"> <input id="search-input" type="text" placeholder="搜索文章标题、描述..." autocomplete="off"> <button id="search-close" class="search-close-btn" aria-label="关闭搜索">✕</button> </div> <div id="search-results" class="search-results"></div> </div> </div> <!-- 浮动搜索按钮 --> <button id="search-toggle" class="search-fab" aria-label="搜索"> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"> <circle cx="11" cy="11" r="7"></circle> <line x1="16.5" y1="16.5" x2="21" y2="21"></line> </svg> </button> <!-- ===== 微信电子书弹窗 ===== --> <div id="ebook-popup-overlay" class="ebook-popup-overlay" onclick="if(event.target===this){this.classList.remove('active');document.body.style.overflow='';}"> <div class="ebook-popup-card"> <div class="ebook-popup-topbar"></div> <button id="ebook-popup-close" class="ebook-popup-close" aria-label="关闭" onclick="event.stopPropagation();document.getElementById('ebook-popup-overlay').classList.remove('active');document.body.style.overflow='';">✕</button> <div class="ebook-popup-body"> <!-- 送你 --> <div class="ebook-popup-gift">送你一本我的电子书</div> <!-- 书名 --> <div class="ebook-popup-bigtitle">《闭环：在你睡觉时赚钱》</div> <div class="ebook-popup-bigsub">从0到1的自媒体方法论</div> <!-- 社会认同 --> <div class="ebook-popup-proof"> <span class="ebook-proof-avatars"> <span class="ebook-proof-avatar" style="background: #f5e0d0;"> <span style="font-size:12px;font-weight:700;color:#c45c2e;">M</span> </span> <span class="ebook-proof-avatar" style="background: #d0e8e0;"> <span style="font-size:12px;font-weight:700;color:#3a7a5e;">S</span> </span> <span class="ebook-proof-avatar" style="background: #d8dff0;"> <span style="font-size:12px;font-weight:700;color:#4a6aab;">L</span> </span> </span> <span><span class="ebook-proof-count">327</span> 人已领取</span> </div> <!-- 二维码 --> <div class="ebook-popup-qr"> <img src="/images/wechat-qr.png" alt="微信二维码"> </div> <!-- 下载按钮 — 仅手机展示 --> <a class="ebook-popup-download" href="/images/wechat-qr.png" download> <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path> <polyline points="7 10 12 15 17 10"></polyline> <line x1="12" y1="15" x2="12" y2="3"></line> </svg>
+下载二维码到手机
+</a> <!-- 流程提示 --> <p class="ebook-popup-steps"> <span class="step">扫二维码</span> → <span class="step">添加好友</span> → 回复<span class="keyword-value">闭环</span> → <span class="step">立马领取</span> </p> </div> <div class="ebook-popup-footer"> <p>免费领取 · 无需购买任何产品 · 24 小时内回复</p> </div> </div> </div> <main>   <div id="reading-progress" class="reading-progress"></div> <!-- 书籍系列：左侧目录 + 右侧正文 -->
+    <div class="book-layout"> <!-- 左侧目录 --> <aside class="book-toc"> <div class="book-toc-inner"> <div class="book-toc-header"> <span class="book-toc-series">YC 创业课</span> <span class="book-toc-count">目录</span> </div> <nav class="book-toc-nav"> <div class="book-toc-section "> <a href="/blog/yc-lecture-01-how-to-start-a-startup" class="book-toc-item"> <span class="book-toc-order">1</span> <span class="book-toc-title">如何创办初创公司</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-02-ideas-products-teams-execution-part2" class="book-toc-item"> <span class="book-toc-order">2</span> <span class="book-toc-title">创意、产品、团队与执行（第二部分）</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-03-counterintuitive-parts-and-how-to-have-ideas" class="book-toc-item"> <span class="book-toc-order">3</span> <span class="book-toc-title">创业中反直觉的部分，以及如何产生创意</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-04-how-to-build-products-users-love" class="book-toc-item"> <span class="book-toc-order">4</span> <span class="book-toc-title">如何打造用户热爱的产品</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-05-how-to-build-products-users-love-part2" class="book-toc-item"> <span class="book-toc-order">5</span> <span class="book-toc-title">如何打造用户喜爱的产品（第二部分）</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-06-doing-things-that-dont-scale-pr" class="book-toc-item"> <span class="book-toc-order">6</span> <span class="book-toc-title">做无法规模化的事、公关，以及如何起步</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-07-how-to-raise-money" class="book-toc-item"> <span class="book-toc-order">7</span> <span class="book-toc-title">如何融资</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-08-building-product-talking-to-users-and-growing" class="book-toc-item"> <span class="book-toc-order">8</span> <span class="book-toc-title">打造产品、与用户对话与实现增长</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-09-how-to-be-a-great-founder" class="book-toc-item"> <span class="book-toc-order">9</span> <span class="book-toc-title">如何成为一位伟大的创始人</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-10-how-to-manage" class="book-toc-item"> <span class="book-toc-order">10</span> <span class="book-toc-title">如何管理</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-11-how-to-operate" class="book-toc-item"> <span class="book-toc-order">11</span> <span class="book-toc-title">如何运营</span> </a>  </div><div class="book-toc-section active"> <a href="/blog/yc-lecture-12-how-to-run-a-user-interview" class="book-toc-item"> <span class="book-toc-order">12</span> <span class="book-toc-title">如何进行用户访谈</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-13-growth" class="book-toc-item"> <span class="book-toc-order">13</span> <span class="book-toc-title">增长</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-14-business-strategy-and-monopoly-theory" class="book-toc-item"> <span class="book-toc-order">14</span> <span class="book-toc-title">商业战略与垄断理论</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-15-sales-and-marketing" class="book-toc-item"> <span class="book-toc-order">15</span> <span class="book-toc-title">销售与营销</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-16-sales-marketing-pitch-investor-roleplaying" class="book-toc-item"> <span class="book-toc-order">16</span> <span class="book-toc-title">销售、营销与融资路演</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-17-legal-finance-hr" class="book-toc-item"> <span class="book-toc-order">17</span> <span class="book-toc-title">创业公司的法律、财务与 HR 机制</span> </a>  </div><div class="book-toc-section "> <a href="/blog/yc-lecture-18-company-culture-and-building-a-team" class="book-toc-item"> <span class="book-toc-order">18</span> <span class="book-toc-title">企业文化与团队建设（第一部分）</span> </a>  </div> </nav> <a href="/book" class="book-toc-back"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+返回书架
+</a> </div> </aside> <!-- 右侧正文 --> <main class="book-main"> <article class="prose"> <header class="article-header"> <h1>如何进行用户访谈</h1> <div class="article-meta"> <span class="article-series">YC 创业课</span> <time> 2026年6月27日 </time> </div> </header> <blockquote>
+<p>YC 创业课程第十六讲<br>
+主讲人：Emmett Shear（Twitch CEO）<br>
+整理自现场字幕，信息保留率 ≥99%</p>
+</blockquote>
+<hr>
+<h2 id="一开场从失败中学到的第一课">一、开场：从失败中学到的第一课</h2>
+<p><strong>Sam Altman</strong>：大家下午好。今天的特邀演讲者是 Emmett Shear。Emmett 是 Twitch 的 CEO，Twitch 被亚马逊收购后，他现在在亚马逊工作。Emmett 将分享如何进行出色的用户访谈——这是「如何创业」课程中「与用户对话」的部分。内容非常实用，感谢 Emmett 的到来！</p>
+<p><strong>Emmett Shear</strong>：谢谢 Sam。我大学毕业后的第一家创业公司，是和 Justin Kan 一起创办的，叫 Kiko Calendar。结果不太理想——说得好听点，还行；说得实际点，我们把它放到 eBay 上卖掉了。这不是你希望看到的创业结局。</p>
+<p>那段经历还不错，我们学到了很多，尤其是编程方面的东西。但我们对日历一窍不通。我们两人都不是日历的用户，而且在开发过程中，我们根本没有去和任何真正使用日历的人聊过。这不是最优做法。</p>
+<p>我们在「构建产品」这件事上做得还行，但在「与用户对话」这件事上完全失败了。</p>
+<hr>
+<h2 id="二作弊的代价做自己的用户">二、作弊的代价：做自己的用户</h2>
+<p>我们的第二家创业公司用了一个很常见的「作弊手段」——我们自己是目标消费者。我们想做一个电视节目，叫 Justin.tv，真实记录 Justin Kan 的生活。我们围绕这个想法构建了技术和网站。我们自己就是产品的用户。</p>
+<p>这种做法的好处是，你不需要和别人聊，因为你清楚自己想要什么、需要什么。但它的局限性也很明显。大多数创业公司做不到「为自己而建」。当你真的这样做时，偶尔会非常幸运——你恰好代表了某个庞大的用户群体，他们想要和你完全一样的东西。但更多时候，它只会变成一个没有方向的侧项目。</p>
+<p>我们持续做了一段时间 Justin.tv，确实取得了一定的成功，因为确实有一群人和我们一样，想把生活直播到互联网上。但 Justin.tv 始终无法突破的那个天花板，在于我们没有想清楚如何在这个最初的电视节目之外构建更多东西。</p>
+<p>我们打造了一款优秀的产品——如果你想做一个 24/7 直播自己生活的真人秀，我们的网站就是为你准备的，我们有你需要的 exactly 那些功能。但如果我们想走得更远，想把它开放给更广泛的用户和场景，我们缺乏洞察力，因为我们不是那类用户。</p>
+<hr>
+<h2 id="三转型-twitch第一次真正做用户访谈">三、转型 Twitch：第一次真正做用户访谈</h2>
+<p>于是我们决定对 Justin.tv 进行转型。我们觉得构建了很多有价值的技术，但还没有找到一个能让它真正做大的使用场景。</p>
+<p>有两个方向看起来有希望：移动端和游戏。我负责公司内部的游戏业务。我们在游戏方向上做了一件和以前完全不同的大事——我们真的去和用户对话了。</p>
+<p>虽然我喜欢看游戏视频，但我很清楚，我和公司里的其他人都不懂「游戏直播」这件事里最重要的那部分——如何获取内容，也就是直播者这边。我对内容本身很感兴趣，我认为那里有市场——「看游戏视频原来可以这么有趣」，这个洞察在当时并不常见。</p>
+<p>但关于直播者侧，我一无所知。</p>
+<p>于是我们做了大量的用户访谈。我们和很多人聊，这些数据构成了 Twitch 接下来三年所有产品功能决策的核心。我们持续与用户对话，甚至专门在公司内部建立了一个整个部门，他们的工作就是与用户对话。这是 Justin.tv 时期完全没有的东西——那时候公司里没有任何人的工作是和最重要的用户对话。</p>
+<hr>
+<h2 id="四谁才是最重要的人找对访谈对象">四、谁才是最重要的人：找对访谈对象</h2>
+<p>我想让你们理解一点：做用户访谈时，<strong>你选择访谈谁，和你问什么问题、从中得出什么结论一样重要。</strong></p>
+<p>当我们研究市场、分析人们为什么看某个直播、去某个网站时，我们发现答案是：他们跟着内容走。你有他们喜欢的内容，直播者去哪里，他们就跟着去哪里。</p>
+<p>所以我们判定，直播者是最重要的人。</p>
+<p>如果我们只和观众聊，得到的反馈会和与直播者聊完全不同。而与直播者对话，让我们洞察到如何为他们构建产品。这在战略上是正确的。</p>
+<p>我很想告诉你们一个公式，告诉你如何确定你的目标用户是谁——但<strong>没有公式</strong>。这归结为你必须认真思考，运用判断力，弄清楚你到底在为谁构建这个产品。</p>
+<hr>
+<h2 id="五实战演练笔记-app-的用户访谈">五、实战演练：笔记 App 的用户访谈</h2>
+<p>我想做一个互动练习。我会从你们那里收集一些想法，然后选一个出来。</p>
+<p>现在，请大家坐下来，立即完成这个过程的第一步：<strong>为了搞清楚应该构建什么，你需要去哪里找到你需要对话的人？</strong></p>
+<p>我们要用的想法是：一款课堂场景的笔记 App。现有的笔记体验还不够好，我想做一款改善这种体验的笔记 App，让课堂笔记变得更好。也许它有协作功能，也许它能帮你更好地专注，也许有多媒体增强功能。各种可能的功能都有。</p>
+<p>请用 120 秒时间思考以下问题——不是思考你应该问什么问题，或者这个 App 应该有什么功能——而是**你要和谁对话？**谁给你的反馈能告诉你这东西好不好？请在脑子里想，但最好写下来，列出你要对话的 5 类人，以及你认为最重要的一类是谁。</p>
+<p>没有什么比实际走一遍流程更能让你真正理解正确的做法。我现在听到键盘敲击声很高兴。如果你在家里跟着做，也请实际思考一下——你要和谁对话，因为这是几乎所有创业公司的第一个问题。你需要回答：<strong>我的用户是谁？我在哪里能找到他们？</strong></p>
+<hr>
+<h3 id="51-第一组反馈大学生">5.1 第一组反馈：大学生</h3>
+<p><strong>观众 1</strong>：我肯定会先和大学生聊，因为我们坐在这里听讲座的时间很多。具体来说，我想和不同专业的大学生聊，看看专业是否有影响——比如英语专业和历史专业，做笔记的方式是否和数学或计算机科学不同。</p>
+<p><strong>Emmett</strong>：你会和一大批大学生聊。你会挑选某个特定子集吗？我们不想和所有大学生聊。</p>
+<p><strong>观众 1</strong>：我只想和大学生聊，然后按学习不同领域来划分。不同学习技术的人也应该分开，因为有些人做大量笔记，有些人不做那么多笔记，但也会记一些。</p>
+<p><strong>Emmett</strong>：这是一个很好的开始。如果用户目标是大学生，和他们聊显然能获得很多价值——他们目前的笔记习惯，以及什么会让他们兴奋。</p>
+<p>但向大学生卖东西有一个问题：**大学生其实不怎么花钱。**让他们掏钱包非常难，尤其是要他们为学校相关的东西付费。人们甚至不想买教科书。你们可能都用支票、借记卡，或者向朋友借。</p>
+<p>所以，如果只追学生，你会错过这个 App 最重要的人——如果你真的做了一款面向大学的笔记 App，<strong>最有可能真正购买它的人是大学的 IT 部门。</strong></p>
+<p>presumably，你想把软件卖给学生，而必须被说服购买的人通常是学校管理员。这是一种思路。我觉得你很可能会去和学生聊，然后发现他们现在根本不买任何笔记软件。当然也有可能他们在买，那我就完全错了——这就是为什么你必须去和用户对话。</p>
+<p>但你需要尝试其他群体。所以我会同时和大学 IT 管理员聊。这是另一个很有希望的群体。你还可以和家长聊。**谁愿意为孩子的教育花钱？谁愿意掏钱包？**孩子大一新生刚去上大学的家长。你需要这款 App 让你的孩子高效，这样他们就不会从大学退学。实际上，有很多群体不一定是最明显的用户，但他们对你的 App 的成功至关重要。</p>
+<p>当你在创业最初期，有了一个你觉得很棒的想法，你需要尽可能广泛地覆盖群体。你不能只和一类人聊。你需要熟悉各种可能做出贡献的人。</p>
+<hr>
+<h3 id="52-模拟访谈和-stephanie-对话">5.2 模拟访谈：和 Stephanie 对话</h3>
+<p><strong>Emmett</strong>：我们请一位志愿者上来，模拟一次用户访谈。我们要和一位大学生聊，试图搞清楚我们应该在这个笔记 App 里构建什么。请第二位志愿者上来，你好。</p>
+<p><strong>观众 2（Stephanie）</strong>：你好，我是 Stephanie。</p>
+<p><strong>Emmett</strong>：你好 Stephanie。谢谢你同意参加这次用户访谈。我想听听你的笔记习惯。你今天怎么记笔记？</p>
+<p><strong>Stephanie</strong>：我用多种方式记笔记。因为速度和效率，也因为我可以稍后回看，用笔记本电脑记笔记对我来说很容易。其中大部分是基于文本的，但在某些课程中，比如历史课，大部分是文本。但如果我上物理课，会有更复杂的图表和不同角度需要画出来。</p>
+<p><strong>Emmett</strong>：你现在用哪些软件做这些？</p>
+<p><strong>Stephanie</strong>：纸质笔和纸质笔记本。电子的话用 Google Docs 和 Evernote。</p>
+<p><strong>Emmett</strong>：为什么同时用两个东西？</p>
+<p><strong>Stephanie</strong>：Evernote 适合我自己收集东西。它可以分享，但 Google Docs 更容易分享。如果朋友已经在 Google Docs 里建了一个文件夹，我只需要往那个文件夹里添加内容。如果是为了个人使用，我倾向于用 Evernote。</p>
+<p><strong>Emmett</strong>：听起来你有很多笔记协作的需求。</p>
+<p><strong>Stephanie</strong>：是的，我希望它们是整合在一起的。</p>
+<p><strong>Emmett</strong>：多告诉我一些。你从别人做的笔记中获得最大价值，还是学期末主要复习自己的笔记？这是怎么运作的？</p>
+<p><strong>Stephanie</strong>：主要是我自己的，因为我对组织方式很挑剔。设计方面或格式，甚至颜色，我都很讲究。我们用的字体真的会影响我学习的方式。所以我倾向于个性化笔记，即使是在合并之后。</p>
+<p><strong>Emmett</strong>：所以你从别人那里拉取笔记，然后把它们整合进适合你的体系。很棒！如果你有 Evernote 笔记、Google Docs 笔记、纸质笔记，学期结束后，你会回看这些东西吗？还是按季度？季度结束后，你会回看吗？</p>
+<p><strong>Stephanie</strong>：课程笔记不太会，但如果是我为讲座做的笔记，比如这些，或者面试准备，我会回看，因为我喜欢让这些东西保持新鲜。它们帮我为未来的事情做准备。</p>
+<p><strong>Emmett</strong>：有意思。多告诉我一些。你不只是在课堂上记笔记。</p>
+<p><strong>Stephanie</strong>：我记笔记总结要点。比如这些讲座里的励志名言。如果我要去一个活动，要见某个人，笔记帮我记住讲座上说了什么。</p>
+<p><strong>Emmett</strong>：太棒了。通常我会挖掘更多细节。我脑子里还有很多开放性问题。你和谁协作？你的笔记有多长？你花多少时间记笔记？我会深入挖掘她目前的行为，但出于时间考虑，不让大家一直听一个人笔记习惯的细节，我们继续。谢谢你，Stephanie。</p>
+<hr>
+<h3 id="53-访谈的核心原则不问功能">5.3 访谈的核心原则：不问功能</h3>
+<p>注意，我们完全没有谈论 App 的具体内容。我不太关心功能。我不想知道 Google Docs 或 Evernote 里某个特定功能集的情况。我可能会多挖一点哪些功能实际被使用了。如果她在积极协作，那是怎样运作的？我听到了一些有趣的东西：「我们用文件夹。」这对我来说很有意思。</p>
+<p>当你做这第一轮访谈时，主要目标不一定是问关于优化用户流程的问题，或者任何具体细节的问题。<strong>那会分散注意力，因为用户以为他们知道自己想要什么。</strong></p>
+<p>你会遇到「无马马车效应」——你被要求设计一匹更快的马，而不是被要求设计真正解决问题的方案。</p>
+<p>所以你要尽可能远离功能讨论，因为他们告诉你的东西感觉压倒性地真实。当你有一个真实用户向你要求一个功能时，很难拒绝他们，因为这里有一个真实的人，真的有这个问题。他们说：「给我做这个功能。」但当你开始和很多人聊，真正了解他们的问题时，你会搞清楚这是否真的是一个有希望的领域。</p>
+<hr>
+<h2 id="六负面信号没有发现问题">六、负面信号：没有发现问题</h2>
+<p>基于我听到的内容，从那次用户访谈出发，我并不一定能确定存在一个问题。至少，可能没有一个足够大的问题，值得为之构建一个全新的产品。我没有听到很多大的阻碍点，没有听到现有工作方式有什么真正严重的问题。除非我有一个大的想法，否则我会把这当作一个负面信号。</p>
+<p>这不一定意味着你不能继续前进，继续和更多人聊。仅仅因为和第一个人聊没有获得任何东西，并不意味着不会有更多人真的有问题。一旦你和大约 6 到 8 个人聊过，你通常就差不多完成了。你不太可能发现大量新信息。这就是为什么重要的是和不同类型的极端人群聊。去找不一样的人，因为如果你和 6 个斯坦福大学生聊，你会得到和 6 个高中生或 6 个家长非常不同的回应。</p>
+<p>基于这些信息，你可以想出一组想法。你有了关于某人如何记笔记的信息，你有一些关于如何构建很酷东西的想法。如果你要在 Google Docs 之上只构建一个功能，那会是什么功能？</p>
+<p>对于一个像这样的新产品，这可能是开始思考方向的好方法。他们现在广泛使用这个东西，我们如何让那个体验刚好好一个量级？某种对这个人有真正吸引力的东西，某种领先一步的东西。</p>
+<hr>
+<h3 id="61-验证想法不要直接问用户">6.1 验证想法：不要直接问用户</h3>
+<p>你有这个想法了。你得到了这个用户的反馈。如果我们有一款 Google Docs，具备协作方面和群组方面的功能，但你可以拉入更多零散的小笔记，一款更围绕笔记设计的产品——问题是，一旦有了这个想法，这够吗？这真的是人们会切换去用的东西吗？</p>
+<p>有两种方式可以验证这一点。第一，如果你编程很快，你可以直接去构建它，扔到世界上，看看会发生什么。当这可行时，这是解决问题的绝佳方式。但很多时候，那个「好一点点」的小东西可能需要你三个月才能实际构建出来。所以你想在开始构建之前，进一步验证那个想法。</p>
+<p>你可以拿那个想法，画出它看起来会是什么样的图。画出工作流程，把它摆在人们面前。**你真正不想做的是问他们对某个功能的伟大想法的看法。问他们：「你对此兴奋吗？」**因为如果你告诉用户一个功能，然后问他们「这个功能好吗？」，你得到的反馈往往是「哦，是的，很棒。」但当你真正构建出来后，你会发现，虽然他们觉得这是个聪明的想法，但没有人真的关心到要切换过来，要去获取它。</p>
+<p><strong>所以唯一不能问的问题是：「这个功能到底好不好？」</strong></p>
+<p><strong>Sam Altman</strong>：在「问」和「实际构建完整东西」之间，你能做的最小的事情是什么？</p>
+<p><strong>Emmett</strong>：在给定你不能直接问「这好不好」的情况下，你能actually拿来验证你产品的最小东西是什么？这在很大程度上取决于特定的功能。通常你能做的最好的事情就是 hack 点东西出来。如果你是在 Google Docs 之上构建想法，不要去重建一个「Google Docs 但用于笔记」。想办法写一个浏览器扩展，把那一小点增量功能塞进去，看看人们是否真的觉得有用。<strong>归根结底是想办法作弊</strong>，因为如果你不能真正把它摆在人们面前，真的很难发现答案。</p>
+<p>对于更大的东西，当你 actually 试图让人们花钱时，事情就变得容易多了。如果你在做销售，那就太好了。**销售是这个问题的万能药。**让人们给你信用卡，我保证他们真的对功能感兴趣。这是你能为产品做的最具验证性的事情之一。走出去，actual让客户承诺提前付钱给你。</p>
+<p>当你做一个学生笔记 App 时，问题在于这相对困难。除非你的想法是你 actually 要卖它，试用版可能是免费的。你不一定能通过试图向人们收费学到很多东西。但如果你走出去，能让人们说「嘿，我要给你钱」，**金钱测试是惊人的。**它厘清了他们是否真的对你的产品感到兴奋。如果你连五美元都不兴奋，你可能并不是很兴奋。</p>
+<hr>
+<h2 id="七twitch-实战三组反馈的对比分析">七、Twitch 实战：三组反馈的对比分析</h2>
+<p>我想做的最后一件事是梳理 Twitch 发生的事情。我准备了一些幻灯片。它们代表了 Twitch 反馈的摘录。我原来有一份 26 页的文档，记录所有反馈，然后意识到读那个会有点乏味。很多人当我们问他们问题时都这么跟我们说。我已经为你们预先压缩了反馈。</p>
+<h3 id="71-现有直播者justintv-平台的反馈">7.1 现有直播者（Justin.tv 平台）的反馈</h3>
+<p>为了推出 Twitch，我们和一批现有 Justin.tv 直播者聊了，问他们直播的体验、喜欢什么、为什么直播、直播什么，以及他们生活中还有什么事。</p>
+<p>当你和产品的详细用户聊时，他们会回来告诉你关于功能的所有细节，因为他们深陷在功能里。你必须读懂字里行间。他们要求我们做诸如「我想要一种方式清除我聊天室里的封禁列表」——这实际上是一个非常常见的请求，因为我们的聊天室运作方式有一个非常特定的问题。人们会要求创建高亮后能够编辑标题的能力。这些东西真的很一致。</p>
+<p>随着我们和直播者聊，我们大概聊了 12 到 14 位 Justin.tv 游戏平台的直播者，我们得到了所有这样的反馈：「你们的竞争对手有所有这些很酷的功能，比如投票和滚动文本。我可以在那里个性化聊天。」然后我们有一些正面反馈：「你们没有广告。你们能够封禁喷子。」一大堆关于聊天的东西，关于与观众的互动性。这些都真的很有意思。这就是 Justin.tv 直播者希望我们构建的。这就是他们使用产品时感到痛苦的地方。</p>
+<p><strong>如果你觉得我们去做的是去解决这些问题，那你错了。</strong></p>
+<p>已经在使用你的服务的人，愿意忍受所有这些问题——这某种程度上意味着这些可能不是最大的问题。如果你愿意忽略你不能编辑封禁列表、标题不可编辑、没有办法把喷子赶出你的频道这些事实，而你仍然在使用这个服务，也许那些不是巨大的问题。</p>
+<p>这引出了一个非常重要的观点：<strong>你必须比较不同的人群，比较他们争论的激烈程度。</strong></p>
+<hr>
+<h3 id="72-竞争对手直播者的反馈">7.2 竞争对手直播者的反馈</h3>
+<p>这里有竞争对手直播者的反馈，这真的很有意思。这是我们听到很多来自使用其他直播平台的人说的话。他们希望能够同时把多个人切换到他们的频道上。他们抱怨我们没有收益分成计划。他们谈了很多关于他们试图谋生，他们真的想通过游戏直播这件事赚钱。他们谈到了视频稳定性。我们的服务在欧洲表现不好。在全球范围内，视频稳定性是一个巨大、巨大的问题。</p>
+<p>如果你对比一下，真的非常不同。不使用我们服务的人关心的东西，和正在使用我们服务的人关心的东西完全不同。我们聚焦在这些东西上，因为这些东西糟糕到人们甚至不愿意使用我们的服务。其中大部分我们实际上没有想过，因为我们的用户群恰好受过良好教育，知道他们所有的选择。联系到他们意味着他们可能已经试过所有四个服务，actual有一个观点。</p>
+<p>当你能获得那样见多识广、对空间理解那么好的用户时，真的很棒。</p>
+<hr>
+<h3 id="73-非直播者的反馈最重要的一组">7.3 非直播者的反馈（最重要的一组）</h3>
+<p>我们做的另一件重要的事情是和非直播者聊。我们和所有不使用我们或竞争对手的人聊。在很多方面，那些是最重要的。和你的竞争对手聊是短期胜利，除非你的软件像 Google 那样的搜索引擎，每个人都在用，那可能没有非用户可转换。在游戏直播的情况下，几乎每个人都是非用户。你竞争的大多数人都是非用户。他们是那些从未使用过你的服务的人，他们说的才是真正最重要的。</p>
+<p>他们说的是阻挡你通过功能扩展市场规模的东西。</p>
+<p>如果你只看你的竞争对手，和使用竞争对手产品的人聊，你永远无法扩张。你没有学到帮助你扩大市场规模的东西。你想和那些甚至还没有尝试使用这些东西的人聊。那些可能想过，但还没有深入进去的人。他们说了什么？</p>
+<ul>
+<li>「我的电脑不够快。」</li>
+<li>「我专注于每天训练 12 小时，准备下一场锦标赛。」</li>
+<li>「我喜欢制作完美的视频，我喜欢编辑它。我上传一些东西到 YouTube。我不做直播。我没有欲望进入那个空间。」</li>
+<li>「在韩国，这是一个大问题。一旦我们的策略在有重要锦标赛的地方播出，我们就要从头开始。我们得想出一个全新的策略。我们最不想做的事情就是直播我们的练习赛，你疯了吗？那会伤害我们在下一场大赛中的表现。」</li>
+</ul>
+<p>这变成了我们一个巨大的外联项目，试图搞清楚如何让人们克服这个障碍。我们给人们带去电脑。我们与游戏直播软件公司密切合作，帮助那些制作直播软件的人。我们开始在游戏中构建直播功能，在平台中构建。我们把直播构建进 Xbox。我们把直播带进 PlayStation 4，因为我们需要克服这个问题。直播是不可能的——至少在他们的看法里不可能。</p>
+<hr>
+<h2 id="八从反馈到行动问题而非功能">八、从反馈到行动：问题而非功能</h2>
+<p>这是我们为直播考察的三个大群体。你把那些反馈结合起来，它告诉你的不是要构建的功能，因为他们要求的功能——投票、拥有子账户的能力——我们大部分还没有构建。重要的是<strong>问题，是他们试图实现的目标。</strong></p>
+<p>人们想要钱。人们想要稳定性和质量。人们想要全球观众普遍可访问。这成为了我们的焦点。我们几乎把所有资源都投入到了没有人曾在访谈中提到的事情上。那些才是真正解决问题的东西。</p>
+<p>你能判断它起作用的方式是，当我们构建这些东西时，我们会回到我们访谈过的同一批人那里，我们会说：「你告诉我们你真的很关心赚钱。我们为你构建了这个订阅计划，让你能赚钱。」</p>
+<p>这令人惊讶，因为大多数人实际上从未有过那种体验。他们从未和某人说过「如果你的产品有 X 功能就太好了」，然后一个月后你的产品 actual 有了 X 功能，或者至少一个解决他们提出的问题的功能。我们首先转化到我们产品上的人，是那些我们为了用户研究而与之对话的人。他们是最被打动的人。这很有趣。它真的起作用了，因为我们挑选了有代表性的人。我们挑选了大直播者、小直播者、中等直播者。我们确保我们在解决他们的关切。这完全不同于我们在 Justin.tv 处理问题的方式。</p>
+<hr>
+<h2 id="九数据-vs-访谈为什么光看数据不够">九、数据 vs 访谈：为什么光看数据不够</h2>
+<p>在 Justin.tv，当我们试图做这件事时，我们会经过大量数据。我们花大量时间查看 Google Analytics、Mixpanel 和内部分析工具。搞清楚人们如何试图使用服务、我们的流量来自哪里、流程的完成率。你能从中学到东西。我不是告诉你不要看你的数据。但它不会告诉你你需要解决的是什么问题。</p>
+<p>我们会在 Justin.tv 凭空想出这些想法，不和任何人聊，然后十次里有九次，那个想法结果会是坏的。</p>
+<p>这实际上是做用户访谈和获取用户反馈令人失望的事情之一——我想这也是很多人不做它的原因。<strong>你大部分时间会得到关于你最喜欢的功能的负面消息。你会有这个很棒的想法，然后你去和用户聊，结果没人真的想要它。他们实际上关心的是一套完全不同的东西，他们根本不关心你认为重要的东西。</strong></p>
+<p>这有点令人难过，但想想如果在四个月後你推出那个功能，结果发现根本没人想用它，那会有多难过。</p>
+<hr>
+<h2 id="十问答环节">十、问答环节</h2>
+<p><strong>观众 4</strong>：你认为创业公司在访谈上最常犯的错误是什么？大多数创业公司根本不做访谈，但那些做了的，最常见的错误是什么？</p>
+<p><strong>Emmett</strong>：最常见的错误是向人们展示你的产品。**不要向他们展示你的产品。**这就像告诉他们一个功能。你想了解他们脑子里已经有什么。你想避免把东西放进去。另一件事是问关于你钟爱的功能方向的问题。如果你觉得你想在你的产品中加入订阅，去问人们：「你会为订阅付费吗？你会用这个功能吗？」</p>
+<p>人们常犯的另一个大错误是和「容易找到的人」聊，而不是和「他们需要聊的人」聊。某些用户真的很容易找到，因为他们已经是你们论坛的成员了。你们有一些产品论坛，你们和那个论坛上的用户聊，因为他们容易接触。我们花了数周时间挖掘身份信息，搞清楚这些人是谁，这样我们才能和他们聊。这是一个不支持私信的网站，所以没有明显的方式与他们互动。我们花了很多时间试图建立网络，找到那些用户。因为如果你只和容易聊的人聊，你得到的不是最好的数据。</p>
+<p>幸运的一面是，几乎每个人在被问及他们的想法时都会感到受宠若惊，所以他们会 actual 和你聊，告诉你事情。</p>
+<hr>
+<p><strong>观众 5</strong>：让公司其他人认同这件事有多难？你可以说「我负责，所以你们按我说的做」，但这可能不是最好的方式。</p>
+<p><strong>Emmett</strong>：好问题。如果你只是去对他们说：「我和用户聊了。我想清楚了。我们必须构建这个」，这真的很难，因为人们不信任你。但展示访谈给他们看，有一种魔力。我建议 recording 访谈。它也阻止你在中间做笔记，那有点分散注意力。它让你很难 actual 参与到对话中。然后你可以把录音播放给别人听。他们不需要在所有访谈的整个过程中都在场，但当你想就你应该构建什么以及为什么提出观点时，你可以把访谈回放给公司其他人听。这就像魔力一样，它对人们的想法、对什么是正确构建的东西，有着惊人的影响力。</p>
+<hr>
+<p><strong>观众 6</strong>：既然你提到了录音，你会坚持做 Skype 访谈而不是通过电子邮件吗？</p>
+<p><strong>Emmett</strong>：你 definitely 想要 Skype。如果可以避免，你不想通过电子邮件做访谈，因为电子邮件访谈是非互动的。最有趣的收获来自「有意思，多告诉我一些」——你瞬间 hit 这个脉络，他们会说出你没有预期的东西。然后你应该进入侦探模式。侦探模式是：「呵，那很有意思。你能多告诉我一些吗？」人们不喜欢沉默，所以他们会继续说话来填补空白。</p>
+<p>通过 Skype 或当面做访谈的最大好处是，你有那种互动反馈。你能 actual 从人们那里挖掘出更多东西。电子邮件访谈基本上没用。当面或通过 Skype 的访谈也很容易录音。确保你先问他们是否可以录音。未经同意录音是不礼貌的，但如果他们愿意给你做一次用户访谈，他们 probably 也愿意让你录音。</p>
+<hr>
+<p><strong>观众 6</strong>：那国际市场呢？你提到你们在韩国有很多用户。</p>
+<p><strong>Emmett</strong>：这真的很难。直到今天，Twitch 在英语国家的工作效果比在非英语国家好得多。很大程度上是因为我们更擅长与英语国家的用户对话，了解他们的需求。我们在其他国家不那么擅长。我们尝试通过雇佣说韩语的人并让他们翻译来解决这个问题。我们尝试通过找到既说英语又说韩语的有代表性的人并与他们联系来解决这个问题。但问题是，无论你多么努力，你都无法获得一个具有代表性的样本。他们能说流利英语这一事实本身就意味着他们不能代表所有不说流利英语的人。这是一个难题。这就是为什么公司发现更容易在本国市场构建业务。与国外用户对话真的很难。</p>
+<hr>
+<p><strong>观众 7</strong>：你们用什么渠道联系他们？你们会给报酬吗？</p>
+<p><strong>Emmett</strong>：我们用来联系他们的渠道是站内消息系统。大多数网站都有某种方式联系用户。如果他们是另一个网站的可见用户，你就用那个网站的消息系统，说：「嘿，我一直在看你的直播……」或者「我很想问你一些关于你使用情况的问题。你愿意上个 Skype 电话吗？」</p>
+<p>我们也找出那些人在哪里。我们在活动中遇到他们，因为很多这样的人去相同的活动。我们不会在活动中进行用户访谈，但我们会认识他们。我们会交换名片，然后和他们取得联系。</p>
+<p>我们往往不给人们报酬。如果人们不足够关心这个问题，不喜欢有人在试图解决它，你可能找错树了。我们从不需要付钱给人们就能让他们和我们聊。</p>
+<hr>
+<p><strong>观众 7</strong>：那站内用户反馈工具呢？</p>
+<p><strong>Emmett</strong>：这是另一整套非常重要的用户反馈。你说的是当你有一个新产品，你想看看它是否 actual 会起作用。你把它摆在人们面前，看看他们如何使用或是否使用。这 super、super 重要。它可以在你推出之前告诉你你在构建东西时哪里出了错，这很棒。但它不会告诉你应该构建什么。它帮你梳理你构建的东西的瑕疵和边缘情况。</p>
+<p>一般来说，那不是我们获取的用户反馈。我的意思是那是好东西，但它更类似于数据驱动的方法。你在找出为什么人们在这个流程中掉线。你没有找出他们作为一个人真正应该在意的问题。**这种早期阶段的用户访谈对创业公司至关重要。这是你想聚焦的地方。**我们不会把任何人请到现场，almost 都是电话或 Skype。</p>
+<hr>
+<p><strong>观众 8</strong>：在寻找能提供不同类型反馈的人群时，有没有应该首先聚焦的群体？</p>
+<p><strong>Emmett</strong>：鉴于我们的资源非常有限，我们聚焦于使用竞争产品的人。我们知道他们已经对我们需要的行为感兴趣，他们愿意 actual 做这件事。因此我们所要做的就是说服他们切换，这比创造一种新行为容易得多。我们这样做是因为我们必须获得一些快速胜利。我在 Justin.tv 内部的游戏项目如果每月不能显示 25% 的增长，就会被砍掉。这意味着聚焦短期，让人们现在就进来。结果证明这通常也是好的。</p>
+<hr>
+<p><strong>观众 9</strong>：一开始视频游戏行业是去中心化的。没有很多凝聚力，但现在非常不同了。你说你最初和直播者和流媒体自己聊。那有什么变化吗？例如，Riot Games 已经禁止用户或职业玩家直播他们自己的东西。你们试图获得杠杆吗？</p>
+<p><strong>Emmett</strong>：是的，所以问题是关于游戏发行商的。游戏发行商是这个空间里的重要人物。任何大公司都不会给你这个小型创业公司时间。这既好又坏。这意味着你不需要和他们聊，因为他们对你不感兴趣。但这也意味着你 actual 不能和他们聊。我们试过了，但没人想和我们聊。一旦我们开始获得一些 traction，成为空间里的一个玩家，他们就愿意了。</p>
+<p>我不想说他们坏话，因为他们在这方面够nice。当你是一个 tiny 小创业公司时，有很多 tiny 小创业公司，他们没有时间和你们所有人聊。随着我们变大，游戏发行商对我们来说变得越来越重要。如果我要谈 Twitch 现在和谁做用户访谈，我们现在从谁那里拉取信息，那会包括游戏发行商。Definitely！他们在这个空间里变得越来越活跃。三、四年前他们不是特别活跃。</p>
+<p>一般的用户访谈真正重要的人来自你在意的人的池子，这会随时间转移。让你在前六个月起步的人，不会是三年后使用它的人。**非常重要的一点是，你要持续做这件事。**很容易在开始时做一点，取得一些成功，然后停止与新人对话。这是让你构建的下一组功能不如第一组功能好的好方法。</p>
+<hr>
+<p><strong>观众 10</strong>：如果你是一个用户，你如何给出好的用户反馈？</p>
+<p><strong>Emmett</strong>：如何给出好的用户反馈？我希望一个用户告诉我他们真正在想什么。他们的 problem 真正是什么。只是某种程度的漫谈。我希望有人 just 告诉我他们生活中的事情。你对他们作为一个人了解得越多，对他们正在做的事情的背景了解得越多，就越容易理解为什么他们想要他们想要的东西。这真的是关键问题。</p>
+<p>我在做用户访谈时寻找的人，是愿意多说、愿意给我完整画面的人。另一方面，如果你想通过好的用户访谈反馈来帮助人们，漫谈。Just 谈论一切。</p>
+<hr>
+<p><strong>Emmett Shear</strong>：好了，非常感谢大家！</p>
+<p><strong>Sam Altman</strong>：非常感谢！</p> <div class="cta-box"> <p>觉得有用？看看我的书和课程</p> <div class="cta-buttons"> <a href="/book" class="cta-btn cta-btn-primary">选择改变命运</a> <a href="/community" class="cta-btn cta-btn-secondary">写作课程</a> </div> </div> <nav class="article-nav"> <a href="/blog/yc-lecture-11-how-to-operate" class="article-nav-link article-nav-prev"> <span class="article-nav-label"> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"></path></svg>
+阅读上一篇
+</span> <span class="article-nav-title">如何运营</span> </a> <a href="/blog/yc-lecture-13-growth" class="article-nav-link article-nav-next"> <span class="article-nav-label">
+阅读下一篇
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"></path></svg> </span> <span class="article-nav-title">增长</span> </a> </nav> </article> </main> </div> </main> <footer> <div class="footer-inner"> <p>© 2026 像企业家一样写作</p> <div class="footer-links"> <a href="https://mp.weixin.qq.com/" target="_blank">公众号：种一个梦</a> </div> </div> </footer>  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    let _searchIndex = null;
+
+    async function loadSearchIndex() {
+      if (_searchIndex) return _searchIndex;
+      try {
+        const resp = await fetch('/search.json?t=' + Date.now());
+        _searchIndex = await resp.json();
+      } catch (e) {
+        console.warn('search.json load failed', e);
+        _searchIndex = { posts: [], books: [] };
+      }
+      return _searchIndex;
+    }
+
+    function openSearch() {
+      const overlay = document.getElementById('search-overlay');
+      const input = document.getElementById('search-input');
+      overlay.classList.add('active');
+      input.value = '';
+      input.focus();
+      renderResults('');
+    }
+
+    function closeSearch() {
+      document.getElementById('search-overlay').classList.remove('active');
+    }
+
+    function getSnippet(text, keyword, radius) {
+      radius = radius || 30;
+      if (!text) return '';
+      const idx = text.toLowerCase().indexOf(keyword.toLowerCase());
+      if (idx === -1) return text.substring(0, 80);
+      const start = Math.max(0, idx - radius);
+      const end = Math.min(text.length, idx + keyword.length + radius);
+      let s = text.substring(start, end);
+      if (start > 0) s = '…' + s;
+      if (end < text.length) s = s + '…';
+      return s;
+    }
+
+    function renderResults(query) {
+      const container = document.getElementById('search-results');
+      if (!query.trim()) {
+        container.innerHTML = '<div class="search-empty">输入关键词搜索文章和书籍…</div>';
+        return;
+      }
+      const q = query.toLowerCase();
+      const index = _searchIndex || { posts: [], books: [] };
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      if (matchedPosts.length === 0 && matchedBooks.length === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        return;
+      }
+      let html = '';
+      matchedPosts.forEach(p => {
+        const snippet = getSnippet(p.content || '', q, 35);
+        const displayDesc = (p.desc || '') || snippet;
+        html += '<a href="/blog/' + p.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">文章</span>' + p.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      matchedBooks.forEach(b => {
+        const snippet = getSnippet(b.content || '', q, 35);
+        const displayDesc = (b.desc || '') || snippet;
+        html += '<a href="/book/' + b.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+          '<div class="search-result-title"><span class="search-result-type">书籍</span>' + b.title + '</div>' +
+          '<div class="search-result-desc">' + displayDesc + '</div>' +
+        '</a>';
+      });
+      container.innerHTML = html;
+    }
+
+    // ===== 搜索 FAB 拖动逻辑 =====
+    (function() {
+      const fab = document.getElementById('search-toggle');
+      const FAB_SIZE = 56;
+      let isDragging = false;
+      let startX, startY, startLeft, startTop;
+      let dragMoved = false;
+
+      function onDown(clientX, clientY) {
+        isDragging = true;
+        dragMoved = false;
+        startX = clientX;
+        startY = clientY;
+        const rect = fab.getBoundingClientRect();
+        startLeft = rect.left;
+        startTop = rect.top;
+        fab.classList.add('dragging');
+      }
+
+      function onMove(clientX, clientY) {
+        if (!isDragging) return;
+        const dx = clientX - startX;
+        const dy = clientY - startY;
+        if (!dragMoved && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+          dragMoved = true;
+          // 切换到绝对 left/top 定位
+          fab.style.bottom = 'auto';
+          fab.style.right = 'auto';
+          fab.style.left = startLeft + 'px';
+          fab.style.top = startTop + 'px';
+        }
+        if (dragMoved) {
+          let newLeft = Math.max(4, Math.min(startLeft + dx, window.innerWidth - FAB_SIZE - 4));
+          let newTop  = Math.max(4, Math.min(startTop  + dy, window.innerHeight - FAB_SIZE - 4));
+          fab.style.left = newLeft + 'px';
+          fab.style.top  = newTop  + 'px';
+        }
+      }
+
+      function onUp() {
+        if (!isDragging) return;
+        isDragging = false;
+        fab.classList.remove('dragging');
+        if (!dragMoved) {
+          // 判定为点击，打开搜索
+          loadSearchIndex().then(() => openSearch());
+        }
+      }
+
+      fab.addEventListener('mousedown', e => { if (e.button === 0) { onDown(e.clientX, e.clientY); e.preventDefault(); } });
+      document.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+      document.addEventListener('mouseup', onUp);
+
+      fab.addEventListener('touchstart', e => { onDown(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); }, { passive: false });
+      document.addEventListener('touchmove', e => { if (isDragging) { onMove(e.touches[0].clientX, e.touches[0].clientY); e.preventDefault(); } }, { passive: false });
+      document.addEventListener('touchend', onUp);
+    })();
+
+    document.getElementById('search-close').addEventListener('click', closeSearch);
+    document.getElementById('search-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeSearch();
+    });
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      renderResults(e.target.value);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        loadSearchIndex().then(() => openSearch());
+      }
+    });
+    });
+  </script> <!-- 页面关键词高亮（从搜索结果跳转过来时） --> <script>
+    (function() {
+      function getQueryParam(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name) || '';
+      }
+
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function highlightKeyword(keyword) {
+        if (!keyword.trim()) return;
+        const main = document.querySelector('main');
+        if (!main) return;
+
+        const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, null, false);
+        const nodesToReplace = [];
+        const regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
+
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node.parentElement && node.parentElement.tagName === 'MARK') continue;
+          if (regex.test(node.textContent)) {
+            nodesToReplace.push(node);
+          }
+        }
+
+        let firstMark = null;
+        nodesToReplace.forEach(textNode => {
+          const span = document.createElement('span');
+          span.innerHTML = textNode.textContent.replace(regex, '<mark class="search-highlight">$1</mark>');
+          const marks = span.querySelectorAll('mark');
+          if (marks.length > 0 && !firstMark) {
+            firstMark = marks[0];
+          }
+          const fragment = document.createDocumentFragment();
+          while (span.firstChild) {
+            fragment.appendChild(span.firstChild);
+          }
+          textNode.parentNode.replaceChild(fragment, textNode);
+        });
+
+        if (firstMark) {
+          firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(function() {
+            const marks = main.querySelectorAll('mark.search-highlight');
+            marks.forEach(function(m) {
+              const parent = m.parentNode;
+              parent.replaceChild(document.createTextNode(m.textContent), m);
+              parent.normalize();
+            });
+          }, 6000);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          highlightKeyword(getQueryParam('q'));
+        });
+      } else {
+        highlightKeyword(getQueryParam('q'));
+      }
+    })();
+  </script> <!-- 代码块复制按钮 --> <script>
+    (function() {
+      function initCopyButtons() {
+        document.querySelectorAll('.prose pre').forEach(function(pre) {
+          if (pre.querySelector('.copy-btn')) return;
+          var btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.textContent = '复制';
+          btn.setAttribute('aria-label', '复制代码');
+          btn.addEventListener('click', function() {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+              btn.textContent = '已复制';
+              btn.classList.add('copied');
+              setTimeout(function() {
+                btn.textContent = '复制';
+                btn.classList.remove('copied');
+              }, 2000);
+            }).catch(function() {
+              btn.textContent = '失败';
+              setTimeout(function() { btn.textContent = '复制'; }, 2000);
+            });
+          });
+          pre.style.position = 'relative';
+          pre.appendChild(btn);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCopyButtons);
+      } else {
+        initCopyButtons();
+      }
+    })();
+  </script> <!-- 微信电子书弹窗（滚动触发 + 每天一次） --> <script>
+    (function() {
+      // === 配置 ===
+      var STORAGE_DAY   = 'ebook_popup_day';    // 今天已弹过
+      var STORAGE_DISMISS = 'ebook_popup_dismiss_until'; // 用户点「暂时不要」的过期时间戳
+      var SCROLL_THRESHOLD = 0.40; // 滚动 40% 触发
+      var TIME_THRESHOLD   = 60000;  // 或停留 60 秒触发
+
+      // === 已有领取人数（可手动更新）===
+      var CLAIM_COUNT = 327;
+
+      // === 工具函数 ===
+      function todayStr() {
+        var d = new Date();
+        return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+      }
+      function getDismissUntil() {
+        try { return parseInt(localStorage.getItem(STORAGE_DISMISS), 10); } catch(e) { return 0; }
+      }
+
+      // === 判断是否应该弹出 ===
+      function shouldShow() {
+        // 用户点过「暂时不要」且未过期
+        var dismissUntil = getDismissUntil();
+        if (dismissUntil && Date.now() < dismissUntil) return false;
+        // 今天已弹过
+        try {
+          if (localStorage.getItem(STORAGE_DAY) === todayStr()) return false;
+        } catch(e) {}
+        return true;
+      }
+
+      // === 记录：今天已弹 ===
+      function markShown() {
+        try { localStorage.setItem(STORAGE_DAY, todayStr()); } catch(e) {}
+      }
+
+      // === 记录：暂时不要（7天后）===
+      function markDismissed() {
+        var t = Date.now() + 7 * 24 * 60 * 60 * 1000;
+        try { localStorage.setItem(STORAGE_DISMISS, String(t)); } catch(e) {}
+      }
+
+      // === 显示 / 关闭 ===
+      var overlay    = document.getElementById('ebook-popup-overlay');
+      var closeBtn   = document.getElementById('ebook-popup-close');
+      var dismissBtn = document.getElementById('ebook-popup-dismiss');
+      var shown      = false;
+      var timeTimer  = null;
+
+      function showPopup() {
+        if (shown || !overlay || !shouldShow()) return;
+        shown = true;
+        markShown();
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function dismissPopup() {
+        if (!overlay) return;
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        if (timeTimer) clearTimeout(timeTimer);
+      }
+
+      if (!overlay) return;
+
+      // === 触发条件 1：滚动超过 40% ===
+      var scrollFired = false;
+      window.addEventListener('scroll', function() {
+        if (scrollFired) return;
+        var h = document.body.scrollHeight - window.innerHeight;
+        if (h <= 0) return;
+        if (window.scrollY / h > SCROLL_THRESHOLD) {
+          scrollFired = true;
+          showPopup();
+        }
+      }, { passive: true });
+
+      // === 触发条件 2：停留超过 60 秒 ===
+      timeTimer = setTimeout(function() {
+        if (!scrollFired) showPopup();
+      }, TIME_THRESHOLD);
+
+      // === 关闭按钮 ===
+      if (closeBtn) closeBtn.addEventListener('click', dismissPopup);
+
+      // === 「暂时不要」按钮 ===
+      if (dismissBtn) {
+        dismissBtn.addEventListener('click', function() {
+          markDismissed();
+          dismissPopup();
+        });
+      }
+
+      // === 点击遮罩关闭 ===
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) dismissPopup();
+      });
+
+      // === ESC 关闭 ===
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+          dismissPopup();
+        }
+      });
+    })();
+  </script> </body></html>  <script type="module">(function(){const e=document.getElementById("reading-progress");if(e){let c=function(){const n=window.scrollY||document.documentElement.scrollTop,s=document.documentElement.scrollHeight-document.documentElement.clientHeight,d=s>0?n/s*100:0;e.style.width=d+"%",e.classList.toggle("show",n>50)};window.addEventListener("scroll",c,{passive:!0}),c()}const t=document.querySelector(".book-toc-header"),o=document.querySelector(".book-toc");t&&o&&t.addEventListener("click",function(){o.classList.toggle("expanded")})})();</script>

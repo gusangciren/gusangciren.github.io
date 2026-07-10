@@ -1,0 +1,3 @@
+/* 字体自托管方案：使用 BootCDN CDN 加载 fontsource Noto Serif SC
+   替换 Google Fonts（国内被墙），确保中文字体正常加载 */
+@import url('https://cdn.bootcdn.net/ajax/libs/fontsource-noto-serif-sc/5.0.3/index.min.css');
