@@ -1,6 +1,35 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeader from '../components/SectionHeader.astro';
+import { getCollection } from 'astro:content';
+
+const books = await getCollection('books');
+const posts = await getCollection('blog');
+
+books.sort((a, b) => a.data.order - b.data.order);
+
+const firstChapterMap = new Map();
+const chapterCountMap = new Map();
+for (const book of books) {
+  const chapters = posts
+    .filter(p => p.data.series === book.data.seriesName && p.data.seriesOrder !== undefined)
+    .sort((a, b) => (a.data.seriesOrder as number) - (b.data.seriesOrder as number));
+  if (chapters.length > 0) {
+    firstChapterMap.set(book.id, chapters[0].data.slug);
+  }
+  chapterCountMap.set(book.id, chapters.length);
+}
+
+function getUnit(book) {
+  const t = book.data.title || '';
+  const s = book.data.subtitle || '';
+  if (t.includes('YC') || t.includes('课') || s.includes('讲')) return '讲';
+  return '章';
+}
+
+function titleWithBrackets(name) {
+  return /^[A-Za-z]/.test(name) ? name : `《${name}》`;
+}
 ---
 
 <BaseLayout title="像企业家一样写作">
@@ -28,28 +57,26 @@ import SectionHeader from '../components/SectionHeader.astro';
   <section class="section section-books">
     <div class="section-inner">
       <SectionHeader title="书籍作品" link="/book" />
-      <div class="books-preview">
-        <a href="/book#choice-changes-fate" class="book-preview-card">
-          <img src="/images/book1-cover.png" alt="选择改变命运" class="book-preview-cover" />
-          <div>
-            <h3>《选择改变命运》</h3>
-            <p>靠学识赢得未来</p>
-          </div>
-        </a>
-        <a href="/book#first-100-yuan" class="book-preview-card">
-          <img src="/images/book2-cover.png" alt="第一个100块" class="book-preview-cover" />
-          <div>
-            <h3>《第一个100块》</h3>
-            <p>从0到1的内容变现闭环</p>
-          </div>
-        </a>
-        <a href="/book#yc-startup" class="book-preview-card">
-          <img src="/images/yc-cover.png" alt="YC 创业课" class="book-preview-cover" />
-          <div>
-            <h3>YC 创业课</h3>
-            <p>如何创办初创公司 · 18讲全译本</p>
-          </div>
-        </a>
+      <div class="books-preview-grid">
+        {books.map((book) => {
+          const firstChapter = firstChapterMap.get(book.id);
+          const chapterCount = chapterCountMap.get(book.id) || 0;
+          const unit = getUnit(book);
+          const href = firstChapter ? `/blog/${firstChapter}` : '#';
+          const title = book.data.seriesName || book.data.title;
+          return (
+            <a href={href} class="book-card">
+              <div class="book-card-cover">
+                <img src={book.data.cover} alt={book.data.title} />
+              </div>
+              <h3>{titleWithBrackets(title)}</h3>
+              {book.data.subtitle && <p class="book-card-hook">{book.data.subtitle}</p>}
+              {chapterCount > 0 && (
+                <span class="book-card-cta">{chapterCount} {unit} · 开始阅读 →</span>
+              )}
+            </a>
+          );
+        })}
       </div>
     </div>
   </section>
@@ -144,11 +171,78 @@ import SectionHeader from '../components/SectionHeader.astro';
       background: rgba(245,80,0,0.03);
     }
     .hero-search-all:hover { background: rgba(245,80,0,0.08); }
+
+    /* ===== 首页书籍卡片（案例 5 · 迷你书店网格） ===== */
+    .books-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 24px;
+    }
+    .book-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 28px 22px;
+      background: var(--color-card-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 14px;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow .2s, transform .2s;
+    }
+    .book-card:hover {
+      box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+      transform: translateY(-3px);
+    }
+    .book-card-cover {
+      position: relative;
+      width: 120px;
+      aspect-ratio: 3/4;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 18px;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.16);
+      flex-shrink: 0;
+    }
+    .book-card-cover img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .book-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .book-card-hook {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      margin-bottom: 14px;
+      line-height: 1.55;
+    }
+    .book-card-cta {
+      font-size: 13.5px;
+      color: var(--color-accent);
+      font-weight: 600;
+    }
     @media (max-width: 640px) {
       .hero-search { max-width: 100%; }
       #hero-search-input { font-size: 1rem; padding: 12px 0; }
       .hero-search-go { width: 36px; height: 36px; }
       .hero-search-go svg { width: 16px; height: 16px; }
+      .books-preview-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+      .book-card { padding: 20px 14px; }
+      .book-card-cover { width: 92px; }
+      .book-card h3 { font-size: 1rem; }
+      .book-card-hook { font-size: 12px; }
+      .book-card-cta { font-size: 12.5px; }
+    }
+    @media (max-width: 400px) {
+      .books-preview-grid { grid-template-columns: 1fr; }
     }
   </style>
 </BaseLayout>

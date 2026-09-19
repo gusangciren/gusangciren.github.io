@@ -7,8 +7,9 @@ const posts = await getCollection('blog');
 
 books.sort((a, b) => a.data.order - b.data.order);
 
-// 为每本书找到第一章的链接
+// 为每本书找到第一章的链接 + 统计章节数
 const firstChapterMap = new Map();
+const chapterCountMap = new Map();
 for (const book of books) {
   const chapters = posts
     .filter(p => p.data.series === book.data.seriesName && p.data.seriesOrder !== undefined)
@@ -16,144 +17,139 @@ for (const book of books) {
   if (chapters.length > 0) {
     firstChapterMap.set(book.id, chapters[0].data.slug);
   }
+  chapterCountMap.set(book.id, chapters.length);
+}
+
+function getUnit(book) {
+  const t = book.data.title || '';
+  const s = book.data.subtitle || '';
+  if (t.includes('YC') || t.includes('课') || s.includes('讲')) return '讲';
+  return '章';
+}
+
+function titleWithBrackets(name) {
+  return /^[A-Za-z]/.test(name) ? name : `《${name}》`;
 }
 ---
 
 <BaseLayout title="书籍 — 像企业家一样写作">
   <div class="book-page">
-    {books.map((book) => {
-      const slug = book.id.replace(/\.(md|mdx)$/i, '');
-      return (
-        <div id={slug} class="book-section">
-          <div class="book-hero">
-            <div class="book-cover">
-              <img src={book.data.cover} alt={book.data.title} class="book-cover-img" />
+    <div class="books-grid-page">
+      {books.map((book) => {
+        const slug = book.id.replace(/\.(md|mdx)$/i, '');
+        const firstChapter = firstChapterMap.get(book.id);
+        const chapterCount = chapterCountMap.get(book.id) || 0;
+        const unit = getUnit(book);
+        const title = book.data.seriesName || book.data.title;
+        const href = firstChapter ? `/blog/${firstChapter}` : '#';
+        return (
+          <div id={slug} class="book-card-page">
+            <div class="book-card-cover">
+              <img src={book.data.cover} alt={book.data.title} />
             </div>
-            <div class="book-details">
-              <h1>《{book.data.title}》</h1>
-              {book.data.subtitle && <p class="tagline">{book.data.subtitle}</p>}
-              {book.data.motto && <p class="motto">「{book.data.motto}」</p>}
-              <p>{book.data.description}</p>
-
-              {firstChapterMap.has(book.id) && (
-                <div class="chapters-nav">
-                  <a href={`/blog/${firstChapterMap.get(book.id)}`} class="view-chapters-btn">
-                    开始阅读 →
-                  </a>
-                </div>
-              )}
-            </div>
+            <h2>{titleWithBrackets(title)}</h2>
+            {book.data.subtitle && <p class="book-card-tagline">{book.data.subtitle}</p>}
+            <p class="book-card-desc">{book.data.description}</p>
+            {firstChapter && chapterCount > 0 && (
+              <a href={href} class="book-card-cta">{chapterCount} {unit} · 开始阅读 →</a>
+            )}
           </div>
-        </div>
-      );
-    })}
+        );
+      })}
+    </div>
   </div>
 </BaseLayout>
 
 <style is:global>
+  /* ===== 书籍页 · 迷你书店网格（案例 5） ===== */
   .book-page {
     max-width: 960px;
     margin: 0 auto;
     padding: 40px 24px 80px;
   }
-  .book-section {
-    margin-bottom: 64px;
+  .books-grid-page {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 28px;
   }
-  .book-divider {
-    border: none;
-    border-top: 1px solid var(--color-border, #e5e5e5);
-    margin: 64px 0;
-  }
-  .book-hero {
+  .book-card-page {
     display: flex;
-    gap: 32px;
-    align-items: flex-start;
-    margin-bottom: 40px;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 32px 26px;
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    transition: box-shadow .2s, transform .2s;
   }
-  .book-cover {
+  .book-card-page:hover {
+    box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+    transform: translateY(-3px);
+  }
+  .book-card-page .book-card-cover {
+    position: relative;
+    width: 140px;
+    aspect-ratio: 3/4;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.16);
     flex-shrink: 0;
   }
-  .book-cover-img {
-    width: 160px;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 8px 28px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+  .book-card-page .book-card-cover img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
-  .chapters-nav {
-    margin-top: 20px;
+  .book-card-page h2 {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 6px;
   }
-  .view-chapters-btn {
-    display: flex;
+  .book-card-page .book-card-tagline {
+    font-size: 14px;
+    color: var(--color-accent);
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .book-card-page .book-card-desc {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    line-height: 1.75;
+    margin-bottom: 18px;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .book-card-page .book-card-cta {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 16px 28px;
-    background: var(--color-accent, #f55000);
+    padding: 12px 28px;
+    background: var(--color-accent);
     border: none;
     border-radius: 10px;
     color: #fff;
     text-decoration: none;
-    font-size: 1rem;
+    font-size: 14px;
     font-weight: 600;
-    letter-spacing: 0.04em;
-    transition: all 0.2s;
-    box-shadow: 0 2px 8px rgba(245,80,0,0.25);
+    transition: background .2s, transform .15s;
   }
-  .view-chapters-btn:hover {
+  .book-card-page .book-card-cta:hover {
     background: #d94500;
-    box-shadow: 0 4px 14px rgba(245,80,0,0.35);
     transform: translateY(-1px);
-  }
-  .book-details h1 {
-    font-family: var(--font-serif, Georgia, serif);
-    font-size: 1.6rem;
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-  .tagline {
-    font-size: 1rem;
-    color: var(--color-accent, #f55000);
-    font-weight: 500;
-    margin-bottom: 8px;
-  }
-  .motto {
-    font-size: 0.95rem;
-    color: var(--color-text-secondary, #888);
-    font-style: italic;
-    margin-bottom: 16px;
-    padding-left: 14px;
-    border-left: 3px solid var(--color-accent, #f55000);
-  }
-  .book-details > p:last-child {
-    font-size: 15px;
-    color: var(--color-text-secondary, #888);
-    line-height: 1.8;
-  }
-  .chapters {
-    margin-top: 40px;
-  }
-  .chapters h2 {
-    font-family: var(--font-serif, Georgia, serif);
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 20px;
-    padding-bottom: 12px;
-    border-bottom: 2px solid var(--color-accent, #f55000);
-    display: inline-block;
-  }
-  .chapter-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 12px;
   }
 
   @media (max-width: 640px) {
-    .book-hero {
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-    .book-cover-img {
-      width: 120px;
-    }
+    .book-page { padding: 28px 16px 60px; }
+    .books-grid-page { grid-template-columns: 1fr; gap: 20px; }
+    .book-card-page { padding: 24px 20px; }
+    .book-card-page .book-card-cover { width: 120px; }
+    .book-card-page .book-card-desc { -webkit-line-clamp: 3; }
   }
 </style>
