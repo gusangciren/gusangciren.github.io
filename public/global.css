@@ -625,12 +625,15 @@ html { scroll-behavior: smooth; }
 
 /* ========== Hero (index page) ========== */
 .hero {
-  padding: 80px 24px 64px;
-  border-bottom: 1px solid var(--color-border);
+  padding: 76px 24px 48px;
 }
 .hero-inner {
   max-width: 960px;
   margin: 0 auto;
+  text-align: center;
+}
+.hero-inner #hero-search-input {
+  text-align: left;
 }
 .hero h1 {
   font-size: clamp(1.8rem, 4vw, 2.8rem);
@@ -641,20 +644,14 @@ html { scroll-behavior: smooth; }
   color: var(--color-text);
 }
 .hero-cn {
-  font-size: 1rem;
+  font-size: 1.05rem;
   color: var(--color-text-secondary);
-  margin-bottom: 16px;
+  margin-bottom: 30px;
+  line-height: 1.7;
 }
-.hero-habit {
-  font-size: 1.2rem;
-  font-weight: 600;
+.hero-cn strong {
   color: var(--color-text);
-  margin-bottom: 4px;
-}
-.hero-habit-cn {
-  font-size: 1rem;
-  color: var(--color-text-secondary);
-  margin-bottom: 32px;
+  font-weight: 700;
 }
 .hero-actions {
   display: flex;

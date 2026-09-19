@@ -38,18 +38,15 @@ function titleWithBrackets(name) {
   <section class="hero">
     <div class="hero-inner">
       <h1>Build, sell, write, read, invest, and own.</h1>
-      <p class="hero-cn">构建，销售，写作，阅读，投资，掌控。</p>
-      <p class="hero-habit">Make these habits.</p>
-      <p class="hero-habit-cn">保持这些习惯。</p>
+      <p class="hero-cn">构建，销售，写作，阅读，投资，掌控——<strong>把这些变成习惯。</strong></p>
       <div class="hero-search">
         <div class="hero-search-box">
-          <input id="hero-search-input" type="text" placeholder="搜索书籍、章节或关键词…（试试「写作」）" autocomplete="off" />
+          <input id="hero-search-input" type="text" placeholder="我想知道····" autocomplete="off" />
           <button id="hero-search-go" class="hero-search-go" type="button" aria-label="搜索">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
           </button>
         </div>
         <div id="hero-search-dropdown" class="hero-search-dropdown"></div>
-        <p class="hero-search-hint">按书名、章节或关键词搜索 · 回车查看全部结果</p>
       </div>
     </div>
   </section>
@@ -57,14 +54,17 @@ function titleWithBrackets(name) {
   <!-- Books Preview -->
   <section class="section section-books">
     <div class="section-inner">
-      <SectionHeader title="书籍作品" link="/book" />
+      <SectionHeader title="书籍作品" />
       <div class="books-preview-grid">
         {books.map((book) => {
           const firstChapter = firstChapterMap.get(book.id);
           const chapterCount = chapterCountMap.get(book.id) || 0;
           const unit = getUnit(book);
           const href = firstChapter ? `/blog/${firstChapter}` : '#';
-          const title = book.data.seriesName || book.data.title;
+          // 有系列名的书（如《闭环》），首页统一显示「书名：副标题」，避免与书籍页名称不一致
+          const title = book.data.seriesName && book.data.subtitle
+            ? `${book.data.title}：${book.data.subtitle}`
+            : (book.data.seriesName || book.data.title);
           return (
             <a href={href} class="book-card">
               <div class="book-card-cover">
@@ -85,7 +85,7 @@ function titleWithBrackets(name) {
   <!-- Columns Preview -->
   <section class="section section-columns">
     <div class="section-inner">
-      <SectionHeader title="专栏" link="/columns" />
+      <SectionHeader title="专栏" />
       <div class="columns-preview-grid">
         {columns.map((column) => (
           <div class="column-preview-card">
@@ -118,6 +118,7 @@ function titleWithBrackets(name) {
     .hero-search {
       position: relative;
       max-width: 560px;
+      margin: 0 auto;
     }
     .hero-search-box {
       display: flex;
@@ -162,11 +163,6 @@ function titleWithBrackets(name) {
       flex-shrink: 0;
     }
     .hero-search-go:hover { background: #d94700; transform: scale(1.05); }
-    .hero-search-hint {
-      margin-top: 14px;
-      font-size: 13px;
-      color: var(--color-text-secondary);
-    }
     .hero-search-dropdown {
       position: absolute;
       top: calc(100% + 10px);
@@ -205,9 +201,10 @@ function titleWithBrackets(name) {
     .hero-search-all:hover { background: rgba(245,80,0,0.08); }
 
     /* ===== 首页书籍卡片（案例 5 · 迷你书店网格） ===== */
+    .section-books .section-inner { max-width: 1200px; }
     .books-preview-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 24px;
     }
     .book-card {
@@ -246,9 +243,10 @@ function titleWithBrackets(name) {
     }
     .book-card h3 {
       font-family: var(--font-serif);
-      font-size: 1.05rem;
+      font-size: 0.98rem;
       font-weight: 600;
       margin-bottom: 6px;
+      line-height: 1.45;
     }
     .book-card-hook {
       font-size: 13px;
@@ -257,9 +255,22 @@ function titleWithBrackets(name) {
       line-height: 1.55;
     }
     .book-card-cta {
-      font-size: 13.5px;
-      color: var(--color-accent);
+      display: inline-block;
+      font-size: 13px;
+      color: #fff;
+      background: #1a1a1a;
+      border: 1.5px solid #1a1a1a;
+      border-radius: 999px;
+      padding: 8px 16px;
       font-weight: 600;
+      text-decoration: none;
+      transition: background .2s, border-color .2s, transform .2s, box-shadow .2s;
+    }
+    .book-card:hover .book-card-cta {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(245,80,0,.25);
     }
 
     /* ===== 首页专栏预览卡片（方案 B） ===== */
@@ -311,10 +322,22 @@ function titleWithBrackets(name) {
     .column-preview-item:hover { color: var(--color-accent); }
     .column-preview-all {
       display: inline-block;
-      font-size: 13.5px;
-      color: var(--color-accent);
+      font-size: 13px;
+      color: #fff;
+      background: #1a1a1a;
+      border: 1.5px solid #1a1a1a;
+      border-radius: 999px;
+      padding: 8px 16px;
       font-weight: 600;
       text-decoration: none;
+      transition: background .2s, border-color .2s, transform .2s, box-shadow .2s;
+    }
+    .column-preview-all:hover {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(245,80,0,.25);
+      color: #fff;
     }
 
     @media (max-width: 640px) {

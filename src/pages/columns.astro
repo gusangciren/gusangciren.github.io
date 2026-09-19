@@ -42,10 +42,6 @@ function findIssue(column: (typeof columns)[number], n: number) {
                   微信合集 ↗
                 </a>
               )}
-              <details class="qr-box">
-                <summary>扫码在微信读</summary>
-                <img src="/images/wechat-qr.png" alt="微信二维码" />
-              </details>
             </div>
           </div>
 
@@ -133,9 +129,9 @@ function findIssue(column: (typeof columns)[number], n: number) {
   }
   .columns-header h1 {
     font-family: var(--font-serif);
-    font-size: 1.8rem;
+    font-size: 2.6rem;
     font-weight: 700;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
   }
   .columns-header p {
     font-size: 14px;
@@ -203,46 +199,6 @@ function findIssue(column: (typeof columns)[number], n: number) {
     background: #fff;
     color: var(--color-accent);
     border: 1.5px solid var(--color-accent);
-  }
-
-  /* 扫码折叠 */
-  .qr-box {
-    position: relative;
-    display: inline-block;
-  }
-  .qr-box summary {
-    list-style: none;
-    cursor: pointer;
-    font-size: 12.5px;
-    color: var(--color-text-secondary);
-    border: 1px dashed var(--color-border);
-    border-radius: 22px;
-    padding: 8px 14px;
-    user-select: none;
-    transition: all .2s;
-  }
-  .qr-box summary::-webkit-details-marker { display: none; }
-  .qr-box summary:hover {
-    border-color: var(--color-accent);
-    color: var(--color-accent);
-  }
-  .qr-box[open] summary {
-    border-style: solid;
-    border-color: var(--color-accent);
-    color: var(--color-accent);
-  }
-  .qr-box img {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    z-index: 20;
-    width: 150px;
-    height: 150px;
-    background: #fff;
-    border: 1px solid var(--color-border);
-    border-radius: 10px;
-    padding: 6px;
-    box-shadow: 0 8px 24px rgba(0,0,0,.12);
   }
 
   /* 区块 */
@@ -370,7 +326,6 @@ function findIssue(column: (typeof columns)[number], n: number) {
     .col-hero h2 { font-size: 1.3rem; }
     .sec { padding: 20px 18px; }
     .feat { grid-template-columns: 1fr; }
-    .qr-box img { width: 130px; height: 130px; }
     .grp-row .go { display: none; }
   }
 </style>
