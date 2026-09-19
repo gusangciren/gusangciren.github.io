@@ -2,9 +2,19 @@
 export interface Props {
   title: string;
   description?: string;
+  image?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, image } = Astro.props;
+
+const SITE_URL = 'https://gusangciren.github.io';
+const SITE_NAME = '像企业家一样写作';
+const DEFAULT_DESC =
+  '像企业家一样写作 —— 把写作当成一门生意。免费读完《选择改变命运》《第一个100块》与 YC 创业课中文版，以及 UAC 周刊全部往期。';
+const pageDesc = description || DEFAULT_DESC;
+const ogImage = image || '/images/logo-180x180.png';
+const canonicalURL = new URL(Astro.url.pathname, SITE_URL).href;
+const ogImageURL = new URL(ogImage, SITE_URL).href;
 ---
 
 <!doctype html>
@@ -13,8 +23,23 @@ const { title, description } = Astro.props;
     <meta charset="UTF-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={description} />
+    <meta name="description" content={pageDesc} />
+    <link rel="canonical" href={canonicalURL} />
     <title>{title}</title>
+
+    <!-- 社交分享卡片（微信 / 微博 / X 等抓取标题、描述与缩略图） -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={pageDesc} />
+    <meta property="og:image" content={ogImageURL} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:locale" content="zh_CN" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={pageDesc} />
+    <meta name="twitter:image" content={ogImageURL} />
+
     <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png" />
@@ -22,8 +47,7 @@ const { title, description } = Astro.props;
     <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
     <!-- Static CSS — no build hash, safe for incremental deploys -->
     <link rel="stylesheet" href="/global.css" />
-    <!-- 自托管字体 -->
-    <link rel="preload" href="/fonts/NotoSerifSC-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- 中文字体：经 BootCDN 加载（国内可访问，不走被墙的 Google Fonts） -->
     <link rel="stylesheet" href="/fonts/fonts.css" />
   </head>
   <body>
