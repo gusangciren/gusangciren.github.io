@@ -7,11 +7,11 @@ interface Props {
   secondaryLink?: string;
 }
 const {
-  title = '觉得有用？看看我的书和课程',
-  primaryText = '选择改变命运',
+  title = '觉得有用？继续阅读',
+  primaryText = '查看书籍',
   primaryLink = '/book',
-  secondaryText = '写作课程',
-  secondaryLink = '/community',
+  secondaryText = '',
+  secondaryLink = '/book',
 } = Astro.props;
 ---
 
@@ -19,6 +19,8 @@ const {
   <p>{title}</p>
   <div class="cta-buttons">
     <a href={primaryLink} class="cta-btn cta-btn-primary">{primaryText}</a>
-    <a href={secondaryLink} class="cta-btn cta-btn-secondary">{secondaryText}</a>
+    {secondaryText && (
+      <a href={secondaryLink} class="cta-btn cta-btn-secondary">{secondaryText}</a>
+    )}
   </div>
 </div>

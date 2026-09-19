@@ -1,15 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeader from '../components/SectionHeader.astro';
-import PostCard from '../components/PostCard.astro';
-
-import { getCollection } from 'astro:content';
-
-const posts = await getCollection('blog');
-const filteredPosts = posts.filter(p => p.data.series !== '第一个100块' && p.data.series !== '选择改变命运' && p.data.series !== 'YC 创业课');
-const sortedPosts = filteredPosts.sort((a, b) => new Date(b.data.date) - new Date(a.data.date));
-
-const { featured = posts.slice(0, 6) } = Astro.props;
 ---
 
 <BaseLayout title="像企业家一样写作">
@@ -21,9 +12,7 @@ const { featured = posts.slice(0, 6) } = Astro.props;
       <p class="hero-habit">Make these habits.</p>
       <p class="hero-habit-cn">保持这些习惯。</p>
       <div class="hero-actions">
-        <a href="/blog" class="btn-primary">读文章</a>
-        <a href="/book" class="btn-secondary">看书籍</a>
-        <a href="/community" class="btn-secondary">加入社群</a>
+        <a href="/book" class="btn-primary">看书籍</a>
       </div>
     </div>
   </section>
@@ -58,120 +47,4 @@ const { featured = posts.slice(0, 6) } = Astro.props;
     </div>
   </section>
 
-  <!-- Latest Articles -->
-  <section class="section">
-    <div class="section-inner">
-      <SectionHeader title="最新文章" link="/blog" />
-      <div class="card-grid">
-        {sortedPosts.slice(0, 6).map((post) => (
-          <PostCard post={post} />
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- Q&A CTA -->
-  <section class="section-qa-cta">
-    <div class="qa-cta-inner">
-      <div class="qa-cta-badge">免费答疑</div>
-      <h2 class="qa-cta-title">你有问题，我来回答</h2>
-      <p class="qa-cta-desc">关于写作、变现、成长——有任何困惑，都可以来问我。<br/>我会认真回复每一个问题。</p>
-      <div class="qa-cta-topics">
-        <span class="qa-topic">如何开始写作？</span>
-        <span class="qa-topic">内容怎么变现？</span>
-        <span class="qa-topic">怎么找到自己的方向？</span>
-        <span class="qa-topic">如何建立读者群？</span>
-      </div>
-      <a href="/join" class="qa-cta-btn">免费提问 →</a>
-    </div>
-  </section>
 </BaseLayout>
-
-<style>
-  /* Q&A CTA — 内联样式，避免依赖 global.css 加载问题 */
-  .section-qa-cta {
-    background: linear-gradient(135deg, #1c1917 0%, #292524 60%, #3a1a00 100%);
-    padding: 72px 24px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .section-qa-cta::before {
-    content: '';
-    position: absolute;
-    top: -80px; left: 50%; transform: translateX(-50%);
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(245,80,0,0.18) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .qa-cta-inner {
-    position: relative;
-    max-width: 680px;
-    margin: 0 auto;
-  }
-  .qa-cta-badge {
-    display: inline-block;
-    padding: 4px 14px;
-    background: rgba(245,80,0,0.2);
-    color: #ff6b2b;
-    border: 1px solid rgba(245,80,0,0.4);
-    border-radius: 100px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-  }
-  .qa-cta-title {
-    font-size: 36px;
-    font-weight: 700;
-    color: #fff;
-    margin: 0 0 16px;
-    line-height: 1.2;
-  }
-  .qa-cta-desc {
-    font-size: 15px;
-    color: rgba(255,255,255,0.65);
-    line-height: 1.8;
-    margin: 0 0 32px;
-  }
-  .qa-cta-topics {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-    margin-bottom: 36px;
-  }
-  .qa-topic {
-    padding: 7px 16px;
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 100px;
-    font-size: 13px;
-    color: rgba(255,255,255,0.8);
-    cursor: default;
-    transition: background 0.2s, border-color 0.2s;
-  }
-  .qa-topic:hover {
-    background: rgba(245,80,0,0.15);
-    border-color: rgba(245,80,0,0.4);
-    color: #ff6b2b;
-  }
-  .qa-cta-btn {
-    display: inline-block;
-    padding: 14px 40px;
-    background: #F55000;
-    color: #fff;
-    font-size: 16px;
-    font-weight: 600;
-    border-radius: 10px;
-    text-decoration: none;
-    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-    box-shadow: 0 4px 24px rgba(245,80,0,0.4);
-  }
-  .qa-cta-btn:hover {
-    background: #d94700;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(245,80,0,0.5);
-  }
-</style>

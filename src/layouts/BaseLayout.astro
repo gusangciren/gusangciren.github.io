@@ -34,10 +34,7 @@ const { title, description } = Astro.props;
           <span>像企业家一样写作</span>
         </a>
         <div class="nav-links">
-          <a href="/blog">文章</a>
           <a href="/book">书籍</a>
-          <a href="/community">社群</a>
-          <a href="/join">答疑</a>
         </div>
       </div>
     </nav>
@@ -565,7 +562,7 @@ const { title, description } = Astro.props;
         const snippet = getSnippet(p.content || '', q, 35);
         const displayDesc = (p.desc || '') || snippet;
         html += '<a href="/blog/' + p.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
-          '<div class="search-result-title"><span class="search-result-type">文章</span>' + p.title + '</div>' +
+          '<div class="search-result-title"><span class="search-result-type">章节</span>' + p.title + '</div>' +
           '<div class="search-result-desc">' + displayDesc + '</div>' +
         '</a>';
       });
