@@ -2,8 +2,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { columns } from '../data/columns';
 
-function titleWithBrackets(name: string) {
-  return /^[A-Za-z]/.test(name) ? name : `《${name}》`;
+function pad(n: number) {
+  return n < 10 ? '0' + n : String(n);
 }
 ---
 
@@ -11,16 +11,25 @@ function titleWithBrackets(name: string) {
   <div class="columns-page">
     <div class="columns-header">
       <h1>专栏</h1>
-      <p>UAC 周刊与《像企业家一样写作》，点击直达微信公众号原文阅读</p>
+      <p>点击任意一期，直达微信公众号原文阅读</p>
     </div>
 
     {columns.map((column) => (
       <section class="column-section" id={column.id}>
-        <div class="column-title-row">
-          <h2>{titleWithBrackets(column.name)}</h2>
-          <span class="column-count">{column.issueCount} 期</span>
+        <div class="col-head">
+          <div class="col-head-left">
+            <h2>{column.name}</h2>
+            <p>{column.issueCount} 期 · {column.description}</p>
+          </div>
+          {column.albumUrl ? (
+            <a class="album-btn" href={column.albumUrl} target="_blank" rel="noopener noreferrer">
+              微信合集 ↗
+            </a>
+          ) : (
+            <span class="album-btn disabled">暂无合集</span>
+          )}
         </div>
-        <p class="column-desc">{column.description}</p>
+
         <div class="column-list">
           {column.issues.map((issue) => (
             <a
@@ -29,9 +38,8 @@ function titleWithBrackets(name: string) {
               rel="noopener noreferrer"
               class="column-list-item"
             >
-              <span class="column-issue">第 {issue.issue} 期</span>
+              <span class="issue-badge">{pad(issue.issue)}</span>
               <span class="column-item-title">{issue.title}</span>
-              <span class="column-date">{issue.date}</span>
               <span class="column-go">微信阅读 ↗</span>
             </a>
           ))}
@@ -45,11 +53,11 @@ function titleWithBrackets(name: string) {
   .columns-page {
     max-width: 760px;
     margin: 0 auto;
-    padding: 40px 24px 80px;
+    padding: 100px 24px 80px;
   }
   .columns-header {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 44px;
   }
   .columns-header h1 {
     font-family: var(--font-serif);
@@ -63,29 +71,51 @@ function titleWithBrackets(name: string) {
   }
 
   .column-section {
-    margin-bottom: 48px;
-  }
-  .column-title-row {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-    margin-bottom: 6px;
-  }
-  .column-title-row h2 {
-    font-family: var(--font-serif);
-    font-size: 1.25rem;
-    font-weight: 600;
-  }
-  .column-count {
-    font-size: 12px;
-    color: var(--color-text-secondary);
-  }
-  .column-desc {
-    font-size: 14px;
-    color: var(--color-text-secondary);
-    margin-bottom: 16px;
+    margin-bottom: 52px;
   }
 
+  /* 专栏信息卡 + 合集入口 */
+  .col-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    background: var(--color-card-bg, #fff);
+  }
+  .col-head-left h2 {
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 0 0 4px;
+  }
+  .col-head-left p {
+    margin: 0;
+    font-size: 12.5px;
+    color: var(--color-text-secondary);
+  }
+  .album-btn {
+    flex-shrink: 0;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--color-accent);
+    padding: 7px 14px;
+    border-radius: 20px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: opacity .2s;
+  }
+  .album-btn:hover { opacity: .88; }
+  .album-btn.disabled {
+    background: #f0f0f0;
+    color: #aaa;
+  }
+
+  /* 期号徽章列表 */
   .column-list {
     border-top: 1px solid var(--color-border);
   }
@@ -93,45 +123,53 @@ function titleWithBrackets(name: string) {
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 14px 4px;
-    border-bottom: 1px solid var(--color-border);
+    padding: 12px 4px;
+    border-bottom: 1px solid #f2f2f2;
     text-decoration: none;
     color: inherit;
     transition: background .15s;
   }
   .column-list-item:hover {
-    background: rgba(245,80,0,.04);
+    background: rgba(245,80,0,.05);
   }
-  .column-issue {
-    font-size: 12.5px;
+  .issue-badge {
+    flex: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: rgba(245,80,0,.08);
     color: var(--color-accent);
-    font-weight: 600;
-    width: 58px;
-    flex-shrink: 0;
+    font-size: 12.5px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-variant-numeric: tabular-nums;
   }
   .column-item-title {
     flex: 1;
-    font-size: 15px;
+    font-size: 14.5px;
     font-weight: 500;
-  }
-  .column-date {
-    font-size: 12.5px;
-    color: var(--color-text-secondary);
-    flex-shrink: 0;
+    line-height: 1.5;
   }
   .column-go {
+    flex: none;
     font-size: 12.5px;
+    color: var(--color-text-secondary);
+    transition: color .15s;
+  }
+  .column-list-item:hover .column-go {
     color: var(--color-accent);
-    font-weight: 600;
-    flex-shrink: 0;
   }
 
   @media (max-width: 640px) {
-    .columns-page { padding: 28px 16px 60px; }
+    .columns-page { padding: 80px 16px 60px; }
     .columns-header h1 { font-size: 1.55rem; }
-    .column-list-item { padding: 12px 4px; gap: 10px; }
-    .column-issue { width: 52px; }
-    .column-item-title { font-size: 14px; }
-    .column-date { display: none; }
+    .col-head { padding: 14px; }
+    .col-head-left h2 { font-size: 0.98rem; }
+    .column-list-item { gap: 10px; padding: 11px 2px; }
+    .issue-badge { width: 30px; height: 30px; font-size: 11.5px; }
+    .column-item-title { font-size: 13.5px; }
+    .column-go { display: none; }
   }
 </style>
