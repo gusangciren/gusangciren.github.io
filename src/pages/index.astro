@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeader from '../components/SectionHeader.astro';
 import { getCollection } from 'astro:content';
+import { columns } from '../data/columns';
 
 const books = await getCollection('books');
 const posts = await getCollection('blog');
@@ -77,6 +78,37 @@ function titleWithBrackets(name) {
             </a>
           );
         })}
+      </div>
+    </div>
+  </section>
+
+  <!-- Columns Preview -->
+  <section class="section section-columns">
+    <div class="section-inner">
+      <SectionHeader title="专栏" link="/columns" />
+      <div class="columns-preview-grid">
+        {columns.map((column) => (
+          <div class="column-preview-card">
+            <h3>{titleWithBrackets(column.name)}</h3>
+            <p class="column-preview-desc">{column.description}</p>
+            <div class="column-preview-list">
+              {column.issues.slice(0, 3).map((issue) => (
+                <a
+                  href={issue.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="column-preview-item"
+                >
+                  <span>第 {issue.issue} 期 · {issue.title}</span>
+                  <span>↗</span>
+                </a>
+              ))}
+            </div>
+            <a href="/columns" class="column-preview-all">
+              查看全部 {column.issueCount} 期 →
+            </a>
+          </div>
+        ))}
       </div>
     </div>
   </section>
@@ -229,6 +261,62 @@ function titleWithBrackets(name) {
       color: var(--color-accent);
       font-weight: 600;
     }
+
+    /* ===== 首页专栏预览卡片（方案 B） ===== */
+    .section-columns .section-header h2 { font-size: 1.5rem; font-weight: 600; }
+    .columns-preview-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    .column-preview-card {
+      background: var(--color-card-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 14px;
+      padding: 26px 24px;
+      transition: box-shadow .2s, transform .2s;
+    }
+    .column-preview-card:hover {
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+      transform: translateY(-2px);
+    }
+    .column-preview-card h3 {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .column-preview-desc {
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      margin-bottom: 16px;
+      line-height: 1.55;
+    }
+    .column-preview-list {
+      border-top: 1px solid var(--color-border);
+      margin-bottom: 14px;
+    }
+    .column-preview-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--color-border);
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      transition: color .15s;
+    }
+    .column-preview-item:last-child { border-bottom: none; }
+    .column-preview-item:hover { color: var(--color-accent); }
+    .column-preview-all {
+      display: inline-block;
+      font-size: 13.5px;
+      color: var(--color-accent);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
     @media (max-width: 640px) {
       .hero-search { max-width: 100%; }
       #hero-search-input { font-size: 1rem; padding: 12px 0; }
@@ -240,6 +328,11 @@ function titleWithBrackets(name) {
       .book-card h3 { font-size: 1rem; }
       .book-card-hook { font-size: 12px; }
       .book-card-cta { font-size: 12.5px; }
+      .columns-preview-grid { grid-template-columns: 1fr; gap: 16px; }
+      .column-preview-card { padding: 20px 18px; }
+      .column-preview-card h3 { font-size: 1.05rem; }
+      .column-preview-desc { font-size: 12px; }
+      .column-preview-item { font-size: 12.5px; }
     }
     @media (max-width: 400px) {
       .books-preview-grid { grid-template-columns: 1fr; }

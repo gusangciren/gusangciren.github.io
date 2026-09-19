@@ -1,0 +1,137 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { columns } from '../data/columns';
+
+function titleWithBrackets(name: string) {
+  return /^[A-Za-z]/.test(name) ? name : `《${name}》`;
+}
+---
+
+<BaseLayout title="专栏 — 像企业家一样写作">
+  <div class="columns-page">
+    <div class="columns-header">
+      <h1>专栏</h1>
+      <p>UAC 周刊与《像企业家一样写作》，点击直达微信公众号原文阅读</p>
+    </div>
+
+    {columns.map((column) => (
+      <section class="column-section" id={column.id}>
+        <div class="column-title-row">
+          <h2>{titleWithBrackets(column.name)}</h2>
+          <span class="column-count">{column.issueCount} 期</span>
+        </div>
+        <p class="column-desc">{column.description}</p>
+        <div class="column-list">
+          {column.issues.map((issue) => (
+            <a
+              href={issue.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="column-list-item"
+            >
+              <span class="column-issue">第 {issue.issue} 期</span>
+              <span class="column-item-title">{issue.title}</span>
+              <span class="column-date">{issue.date}</span>
+              <span class="column-go">微信阅读 ↗</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+</BaseLayout>
+
+<style is:global>
+  .columns-page {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+  .columns-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .columns-header h1 {
+    font-family: var(--font-serif);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .columns-header p {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+  }
+
+  .column-section {
+    margin-bottom: 48px;
+  }
+  .column-title-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .column-title-row h2 {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  .column-count {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+  }
+  .column-desc {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    margin-bottom: 16px;
+  }
+
+  .column-list {
+    border-top: 1px solid var(--color-border);
+  }
+  .column-list-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 4px;
+    border-bottom: 1px solid var(--color-border);
+    text-decoration: none;
+    color: inherit;
+    transition: background .15s;
+  }
+  .column-list-item:hover {
+    background: rgba(245,80,0,.04);
+  }
+  .column-issue {
+    font-size: 12.5px;
+    color: var(--color-accent);
+    font-weight: 600;
+    width: 58px;
+    flex-shrink: 0;
+  }
+  .column-item-title {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .column-date {
+    font-size: 12.5px;
+    color: var(--color-text-secondary);
+    flex-shrink: 0;
+  }
+  .column-go {
+    font-size: 12.5px;
+    color: var(--color-accent);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 640px) {
+    .columns-page { padding: 28px 16px 60px; }
+    .columns-header h1 { font-size: 1.55rem; }
+    .column-list-item { padding: 12px 4px; gap: 10px; }
+    .column-issue { width: 52px; }
+    .column-item-title { font-size: 14px; }
+    .column-date { display: none; }
+  }
+</style>
