@@ -5,59 +5,128 @@ import { columns } from '../data/columns';
 function pad(n: number) {
   return n < 10 ? '0' + n : String(n);
 }
+
+function findIssue(column: (typeof columns)[number], n: number) {
+  return column.issues.find((i) => i.issue === n);
+}
 ---
 
 <BaseLayout title="专栏 — 像企业家一样写作">
   <div class="columns-page">
     <div class="columns-header">
       <h1>专栏</h1>
-      <p>点击任意一期，直达微信公众号原文阅读</p>
+      <p>两个持续更新的专栏，点击任意一期直达微信公众号原文</p>
     </div>
 
-    {columns.map((column) => (
-      <section class="column-section" id={column.id}>
-        <div class="col-head">
-          <div class="col-head-left">
+    {columns.map((column) => {
+      const latest = column.issues[0];
+      return (
+        <section class="col-block" id={column.id}>
+          {/* ===== 专栏头部：价值主张 + 入口 ===== */}
+          <div class="col-hero">
             <h2>{column.name}</h2>
-            <p>{column.issueCount} 期 · {column.description}</p>
+            <p class="claim">{column.claim}</p>
+            <div class="proof">
+              <span><b>{column.issueCount}</b> 期连载</span>
+              <span>{column.description}</span>
+            </div>
+            <div class="hero-actions">
+              <a class="btn" href={latest.url} target="_blank" rel="noopener noreferrer">
+                读最新一期 →
+              </a>
+              {column.albumUrl && (
+                <a class="btn ghost" href={column.albumUrl} target="_blank" rel="noopener noreferrer">
+                  微信合集 ↗
+                </a>
+              )}
+              <details class="qr-box">
+                <summary>扫码在微信读</summary>
+                <img src="/images/wechat-qr.png" alt="微信二维码" />
+              </details>
+            </div>
           </div>
-          {column.albumUrl ? (
-            <a class="album-btn" href={column.albumUrl} target="_blank" rel="noopener noreferrer">
-              微信合集 ↗
-            </a>
-          ) : (
-            <span class="album-btn disabled">暂无合集</span>
-          )}
-        </div>
 
-        <div class="column-list">
-          {column.issues.map((issue) => (
+          {/* ===== 编辑精选 ===== */}
+          <div class="sec">
+            <div class="sec-label">从这 3 篇开始</div>
+            <div class="feat">
+              {column.featured.map((f) => {
+                const it = findIssue(column, f.issue);
+                return (
+                  it && (
+                    <a
+                      class="feat-card"
+                      href={it.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <div class="n">第 {f.issue} 期</div>
+                      <div class="t">{it.title}</div>
+                      <div class="v">{f.value}</div>
+                    </a>
+                  )
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ===== 主题分组 ===== */}
+          <div class="sec">
+            <div class="sec-label">按主题读</div>
+            {column.groups.map((g) => (
+              <div class="grp">
+                <div class="grp-head">
+                  <h3>{g.name}</h3>
+                  <span class="c">{g.issues.length} 篇</span>
+                </div>
+                {g.issues.map((n) => {
+                  const it = findIssue(column, n);
+                  return (
+                    it && (
+                      <a
+                        class="grp-row"
+                        href={it.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <span class="badge">{pad(n)}</span>
+                        <span class="t">{it.title}</span>
+                        <span class="go">微信阅读 ↗</span>
+                      </a>
+                    )
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+
+          {/* ===== 底部 CTA ===== */}
+          <div class="cta-bar">
+            <p>共 {column.issueCount} 期 · 往期全部可直接阅读</p>
             <a
-              href={issue.url}
+              class="btn"
+              href={column.albumUrl || latest.url}
               target="_blank"
               rel="noopener noreferrer"
-              class="column-list-item"
             >
-              <span class="issue-badge">{pad(issue.issue)}</span>
-              <span class="column-item-title">{issue.title}</span>
-              <span class="column-go">微信阅读 ↗</span>
+              {column.albumUrl ? '在微信中看全部 →' : '开始阅读 →'}
             </a>
-          ))}
-        </div>
-      </section>
-    ))}
+          </div>
+        </section>
+      );
+    })}
   </div>
 </BaseLayout>
 
 <style is:global>
   .columns-page {
-    max-width: 760px;
+    max-width: 780px;
     margin: 0 auto;
     padding: 100px 24px 80px;
   }
   .columns-header {
     text-align: center;
-    margin-bottom: 44px;
+    margin-bottom: 48px;
   }
   .columns-header h1 {
     font-family: var(--font-serif);
@@ -70,106 +139,235 @@ function pad(n: number) {
     color: var(--color-text-secondary);
   }
 
-  .column-section {
-    margin-bottom: 52px;
-  }
-
-  /* 专栏信息卡 + 合集入口 */
-  .col-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+  .col-block {
+    margin-bottom: 64px;
     border: 1px solid var(--color-border);
-    border-radius: 12px;
-    padding: 16px 18px;
-    margin-bottom: 14px;
+    border-radius: 16px;
+    overflow: hidden;
     background: var(--color-card-bg, #fff);
   }
-  .col-head-left h2 {
-    font-family: var(--font-serif);
-    font-size: 1.05rem;
-    font-weight: 600;
-    margin: 0 0 4px;
+
+  /* 头部 */
+  .col-hero {
+    padding: 32px 28px 26px;
+    border-bottom: 1px solid var(--color-border);
+    background: linear-gradient(180deg, rgba(245,80,0,.04) 0%, transparent 100%);
   }
-  .col-head-left p {
-    margin: 0;
+  .col-hero h2 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 8px;
+  }
+  .col-hero .claim {
+    font-size: 0.92rem;
+    color: #444;
+    line-height: 1.7;
+    margin: 0 0 14px;
+  }
+  .proof {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
     font-size: 12.5px;
     color: var(--color-text-secondary);
+    margin-bottom: 16px;
   }
-  .album-btn {
-    flex-shrink: 0;
-    font-size: 12.5px;
-    font-weight: 600;
-    color: #fff;
+  .proof b {
+    color: var(--color-accent);
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .btn {
+    display: inline-block;
     background: var(--color-accent);
-    padding: 7px 14px;
-    border-radius: 20px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 9px 18px;
+    border-radius: 22px;
     text-decoration: none;
-    white-space: nowrap;
     transition: opacity .2s;
   }
-  .album-btn:hover { opacity: .88; }
-  .album-btn.disabled {
-    background: #f0f0f0;
-    color: #aaa;
+  .btn:hover { opacity: .88; }
+  .btn.ghost {
+    background: #fff;
+    color: var(--color-accent);
+    border: 1.5px solid var(--color-accent);
   }
 
-  /* 期号徽章列表 */
-  .column-list {
-    border-top: 1px solid var(--color-border);
+  /* 扫码折叠 */
+  .qr-box {
+    position: relative;
+    display: inline-block;
   }
-  .column-list-item {
+  .qr-box summary {
+    list-style: none;
+    cursor: pointer;
+    font-size: 12.5px;
+    color: var(--color-text-secondary);
+    border: 1px dashed var(--color-border);
+    border-radius: 22px;
+    padding: 8px 14px;
+    user-select: none;
+    transition: all .2s;
+  }
+  .qr-box summary::-webkit-details-marker { display: none; }
+  .qr-box summary:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+  .qr-box[open] summary {
+    border-style: solid;
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+  .qr-box img {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    z-index: 20;
+    width: 150px;
+    height: 150px;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 6px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  }
+
+  /* 区块 */
+  .sec {
+    padding: 26px 28px;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .sec-label {
+    font-size: 11px;
+    letter-spacing: .12em;
+    color: var(--color-text-secondary);
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
+  /* 精选 */
+  .feat {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .feat-card {
+    display: block;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 16px 15px;
+    text-decoration: none;
+    color: inherit;
+    transition: all .18s;
+  }
+  .feat-card:hover {
+    border-color: var(--color-accent);
+    background: rgba(245,80,0,.03);
+    transform: translateY(-2px);
+  }
+  .feat-card .n {
+    font-size: 11.5px;
+    color: var(--color-accent);
+    font-weight: 700;
+  }
+  .feat-card .t {
+    font-size: 13.5px;
+    font-weight: 600;
+    line-height: 1.45;
+    margin: 6px 0 6px;
+  }
+  .feat-card .v {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+  }
+
+  /* 分组 */
+  .grp { margin-bottom: 22px; }
+  .grp:last-child { margin-bottom: 0; }
+  .grp-head {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .grp-head h3 {
+    margin: 0;
+    font-size: 14.5px;
+    font-weight: 600;
+    font-family: var(--font-serif);
+  }
+  .grp-head .c {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+  }
+  .grp-row {
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 12px 4px;
-    border-bottom: 1px solid #f2f2f2;
+    gap: 12px;
+    padding: 9px 2px;
+    border-top: 1px solid #f2f2f2;
     text-decoration: none;
     color: inherit;
     transition: background .15s;
   }
-  .column-list-item:hover {
-    background: rgba(245,80,0,.05);
-  }
-  .issue-badge {
+  .grp-row:hover { background: rgba(245,80,0,.04); }
+  .badge {
     flex: none;
-    width: 34px;
-    height: 34px;
-    border-radius: 8px;
+    width: 30px;
+    height: 30px;
+    border-radius: 7px;
     background: rgba(245,80,0,.08);
     color: var(--color-accent);
-    font-size: 12.5px;
+    font-size: 11.5px;
     font-weight: 800;
     display: flex;
     align-items: center;
     justify-content: center;
     font-variant-numeric: tabular-nums;
   }
-  .column-item-title {
+  .grp-row .t {
     flex: 1;
-    font-size: 14.5px;
-    font-weight: 500;
+    font-size: 13.5px;
     line-height: 1.5;
   }
-  .column-go {
+  .grp-row .go {
     flex: none;
-    font-size: 12.5px;
-    color: var(--color-text-secondary);
+    font-size: 11.5px;
+    color: #ccc;
     transition: color .15s;
   }
-  .column-list-item:hover .column-go {
-    color: var(--color-accent);
+  .grp-row:hover .go { color: var(--color-accent); }
+
+  /* CTA */
+  .cta-bar {
+    padding: 24px 28px;
+    background: var(--color-bg, #fafaf9);
+    text-align: center;
+  }
+  .cta-bar p {
+    margin: 0 0 12px;
+    font-size: 13.5px;
+    font-weight: 600;
   }
 
   @media (max-width: 640px) {
     .columns-page { padding: 80px 16px 60px; }
-    .columns-header h1 { font-size: 1.55rem; }
-    .col-head { padding: 14px; }
-    .col-head-left h2 { font-size: 0.98rem; }
-    .column-list-item { gap: 10px; padding: 11px 2px; }
-    .issue-badge { width: 30px; height: 30px; font-size: 11.5px; }
-    .column-item-title { font-size: 13.5px; }
-    .column-go { display: none; }
+    .col-hero { padding: 24px 18px 20px; }
+    .col-hero h2 { font-size: 1.3rem; }
+    .sec { padding: 20px 18px; }
+    .feat { grid-template-columns: 1fr; }
+    .qr-box img { width: 130px; height: 130px; }
+    .grp-row .go { display: none; }
   }
 </style>

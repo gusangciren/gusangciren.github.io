@@ -7,7 +7,6 @@ const posts = await getCollection('blog');
 
 books.sort((a, b) => a.data.order - b.data.order);
 
-// 为每本书找到第一章的链接 + 统计章节数
 const firstChapterMap = new Map();
 const chapterCountMap = new Map();
 for (const book of books) {
@@ -20,136 +19,228 @@ for (const book of books) {
   chapterCountMap.set(book.id, chapters.length);
 }
 
-function getUnit(book) {
+function getUnit(book: (typeof books)[number]) {
   const t = book.data.title || '';
   const s = book.data.subtitle || '';
   if (t.includes('YC') || t.includes('课') || s.includes('讲')) return '讲';
   return '章';
 }
 
-function titleWithBrackets(name) {
+function titleWithBrackets(name: string) {
   return /^[A-Za-z]/.test(name) ? name : `《${name}》`;
 }
 ---
 
 <BaseLayout title="书籍 — 像企业家一样写作">
   <div class="book-page">
-    <div class="books-grid-page">
-      {books.map((book) => {
-        const slug = book.id.replace(/\.(md|mdx)$/i, '');
-        const firstChapter = firstChapterMap.get(book.id);
-        const chapterCount = chapterCountMap.get(book.id) || 0;
-        const unit = getUnit(book);
-        const title = book.data.seriesName || book.data.title;
-        const href = firstChapter ? `/blog/${firstChapter}` : '#';
-        return (
-          <div id={slug} class="book-card-page">
-            <div class="book-card-cover">
-              <img src={book.data.cover} alt={book.data.title} />
-            </div>
-            <h2>{titleWithBrackets(title)}</h2>
-            {book.data.subtitle && <p class="book-card-tagline">{book.data.subtitle}</p>}
-            <p class="book-card-desc">{book.data.description}</p>
-            {firstChapter && chapterCount > 0 && (
-              <a href={href} class="book-card-cta">{chapterCount} {unit} · 开始阅读 →</a>
+    <div class="books-header">
+      <h1>书籍</h1>
+      <p>三本可以直接在站内读完的书。不用注册，不用付费，点开就能读。</p>
+    </div>
+
+    {books.map((book) => {
+      const slug = book.id.replace(/\.(md|mdx)$/i, '');
+      const firstChapter = firstChapterMap.get(book.id);
+      const chapterCount = chapterCountMap.get(book.id) || 0;
+      const unit = getUnit(book);
+      const href = firstChapter ? `/blog/${firstChapter}` : '#';
+      return (
+        <section class="book-deep" id={slug}>
+          <div class="bd-cover">
+            <img src={book.data.cover} alt={book.data.title} />
+          </div>
+
+          <div class="bd-body">
+            <h2>{titleWithBrackets(book.data.title)}</h2>
+            <p class="bd-sub">
+              {book.data.subtitle}
+              {chapterCount > 0 && <span class="bd-count"> · {chapterCount} {unit}</span>}
+            </p>
+
+            {book.data.motto && <p class="bd-motto">{book.data.motto}</p>}
+
+            <p class="bd-desc">{book.data.description}</p>
+
+            {book.data.forWho && (
+              <p class="bd-forwho"><span>适合谁读</span>{book.data.forWho}</p>
+            )}
+
+            {book.data.benefits && book.data.benefits.length > 0 && (
+              <ul class="bd-benefits">
+                {book.data.benefits.map((b) => (
+                  <li>{b}</li>
+                ))}
+              </ul>
+            )}
+
+            {firstChapter ? (
+              <a href={href} class="bd-cta">免费读完 →</a>
+            ) : (
+              <span class="bd-cta disabled">即将上线</span>
             )}
           </div>
-        );
-      })}
-    </div>
+        </section>
+      );
+    })}
   </div>
 </BaseLayout>
 
 <style is:global>
-  /* ===== 书籍页 · 迷你书店网格（案例 5） ===== */
   .book-page {
-    max-width: 960px;
+    max-width: 860px;
     margin: 0 auto;
-    padding: 40px 24px 80px;
+    padding: 100px 24px 80px;
   }
-  .books-grid-page {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 28px;
-  }
-  .book-card-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  .books-header {
     text-align: center;
-    padding: 32px 26px;
-    background: var(--color-card-bg);
+    margin-bottom: 44px;
+  }
+  .books-header h1 {
+    font-family: var(--font-serif);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .books-header p {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+  }
+
+  /* ===== 深度卡 ===== */
+  .book-deep {
+    display: flex;
+    gap: 28px;
+    align-items: flex-start;
+    padding: 30px 28px;
+    margin-bottom: 24px;
+    background: var(--color-card-bg, #fff);
     border: 1px solid var(--color-border);
     border-radius: 16px;
     transition: box-shadow .2s, transform .2s;
   }
-  .book-card-page:hover {
-    box-shadow: 0 12px 32px rgba(0,0,0,0.08);
-    transform: translateY(-3px);
+  .book-deep:hover {
+    box-shadow: 0 10px 30px rgba(0,0,0,.06);
+    transform: translateY(-2px);
   }
-  .book-card-page .book-card-cover {
-    position: relative;
-    width: 140px;
+  .bd-cover {
+    flex: none;
+    width: 130px;
     aspect-ratio: 3/4;
     border-radius: 10px;
     overflow: hidden;
-    margin-bottom: 20px;
-    box-shadow: 0 12px 32px rgba(0,0,0,0.16);
-    flex-shrink: 0;
+    box-shadow: 0 10px 26px rgba(0,0,0,.16);
   }
-  .book-card-page .book-card-cover img {
-    position: absolute;
-    inset: 0;
+  .bd-cover img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
   }
-  .book-card-page h2 {
+
+  .bd-body { flex: 1; min-width: 0; }
+  .bd-body h2 {
     font-family: var(--font-serif);
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 6px;
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin: 0 0 4px;
   }
-  .book-card-page .book-card-tagline {
-    font-size: 14px;
+  .bd-sub {
+    font-size: 13.5px;
     color: var(--color-accent);
-    font-weight: 500;
-    margin-bottom: 10px;
-  }
-  .book-card-page .book-card-desc {
-    font-size: 14px;
-    color: var(--color-text-secondary);
-    line-height: 1.75;
-    margin-bottom: 18px;
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .book-card-page .book-card-cta {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px 28px;
-    background: var(--color-accent);
-    border: none;
-    border-radius: 10px;
-    color: #fff;
-    text-decoration: none;
-    font-size: 14px;
     font-weight: 600;
+    margin: 0 0 14px;
+  }
+  .bd-count { color: var(--color-text-secondary); font-weight: 500; }
+
+  .bd-motto {
+    font-family: var(--font-serif);
+    font-size: 0.92rem;
+    color: #555;
+    font-style: italic;
+    border-left: 3px solid var(--color-accent);
+    padding: 2px 0 2px 12px;
+    margin: 0 0 14px;
+    line-height: 1.6;
+  }
+
+  .bd-desc {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.8;
+    margin: 0 0 14px;
+  }
+
+  .bd-forwho {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    margin: 0 0 14px;
+    line-height: 1.6;
+  }
+  .bd-forwho span {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    color: var(--color-accent);
+    background: rgba(245,80,0,.07);
+    border-radius: 4px;
+    padding: 2px 8px;
+    margin-right: 8px;
+    vertical-align: 1px;
+  }
+
+  .bd-benefits {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 18px;
+  }
+  .bd-benefits li {
+    position: relative;
+    font-size: 13.5px;
+    line-height: 1.6;
+    padding: 4px 0 4px 22px;
+    color: #333;
+  }
+  .bd-benefits li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 12px;
+    width: 12px;
+    height: 2px;
+    background: var(--color-accent);
+  }
+
+  .bd-cta {
+    display: inline-block;
+    background: var(--color-accent);
+    color: #fff;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 10px;
+    text-decoration: none;
     transition: background .2s, transform .15s;
   }
-  .book-card-page .book-card-cta:hover {
+  .bd-cta:hover {
     background: #d94500;
     transform: translateY(-1px);
   }
+  .bd-cta.disabled {
+    background: #f0f0f0;
+    color: #aaa;
+    cursor: default;
+  }
 
-  @media (max-width: 640px) {
-    .book-page { padding: 28px 16px 60px; }
-    .books-grid-page { grid-template-columns: 1fr; gap: 20px; }
-    .book-card-page { padding: 24px 20px; }
-    .book-card-page .book-card-cover { width: 120px; }
-    .book-card-page .book-card-desc { -webkit-line-clamp: 3; }
+  @media (max-width: 700px) {
+    .book-page { padding: 80px 16px 60px; }
+    .book-deep {
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 20px;
+      text-align: left;
+    }
+    .bd-cover { width: 118px; }
+    .bd-body h2 { font-size: 1.2rem; }
   }
 </style>

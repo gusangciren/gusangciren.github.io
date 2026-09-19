@@ -6,4 +6,9 @@ description: 用企业家思维重新理解写作。不是教你写爆款文章�
 cover: /images/book2-cover.png
 seriesName: 第一个100块
 order: 2
+forWho: 想靠内容赚到第一笔钱，而不只是涨粉的人
+benefits:
+  - 找到你的赛道和第一批观众
+  - 把内容变成可以卖的产品
+  - 建立睡觉时也在赚钱的收入系统
 ---

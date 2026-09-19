@@ -1,7 +1,7 @@
 // 专栏数据：UAC 周刊 + 写作并变现（像企业家一样写作）
 // 后续新增/替换链接时，只需修改本文件，不需要改页面结构。
 // 标题保持微信公众号原文原样（命名规则 A，不做清洗）。
-// 排序：期号倒序，最新一期在最前。
+// issues 为倒序（最新在前）；groups 内部按正序，方便按顺序读。
 
 export interface ColumnIssue {
   issue: number;
@@ -9,12 +9,25 @@ export interface ColumnIssue {
   url: string;
 }
 
+export interface FeaturedIssue {
+  issue: number;
+  value: string;
+}
+
+export interface ColumnGroup {
+  name: string;
+  issues: number[];
+}
+
 export interface Column {
   id: string;
   name: string;
+  claim: string;
   description: string;
   albumUrl?: string;
   issueCount: number;
+  featured: FeaturedIssue[];
+  groups: ColumnGroup[];
   issues: ColumnIssue[];
 }
 
@@ -22,9 +35,22 @@ export const columns: Column[] = [
   {
     id: 'uac-weekly',
     name: 'UAC 周刊',
+    claim: "每周一篇，把写作、商业和认知里真正有用的东西讲透。不追热点，只写能放三年的东西。",
     description: '颠覆大众固有认知，推送不被算法喜爱的文章。',
     albumUrl: "https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzkyOTE4MDcyOA==&action=getalbum&album_id=3931407159660855300&scene=126#wechat_redirect",
     issueCount: 57,
+    featured: [
+      { issue: 21, value: "重新定义写作的目标：不为表达，为结果" },
+      { issue: 12, value: "把你的技能变成可以重复卖的东西" },
+      { issue: 6, value: "从随手记录到体系化创作的台阶" },
+    ],
+    groups: [
+      { name: "写作", issues: [1, 2, 4, 6, 9, 10, 19, 21, 44, 48, 55] },
+      { name: "David Perell 写作课", issues: [27, 28, 29, 30, 31, 33, 34, 37, 39, 41] },
+      { name: "变现 · 生意 · 营销", issues: [7, 8, 11, 12, 13, 14, 15, 16, 17, 18, 47, 49] },
+      { name: "认知 · 财富", issues: [3, 5, 20, 22, 23, 24, 25, 26, 32, 35, 36, 40, 42, 50, 52, 53, 54, 56, 57] },
+      { name: "创业 · 效率", issues: [38, 43, 45, 46, 51] },
+    ],
     issues: [
       { issue: 57, title: "我们正在耗尽资源吗？（世界观）", url: "https://mp.weixin.qq.com/s?__biz=MzkyOTE4MDcyOA==&mid=2247497860&idx=1&sn=ba4e07db396436585606e94fc291dae5&chksm=c20fc5d3f5784cc5eac0ee0e1b99b96d7462bd70e3000db35d181d3b04e70a30e30eb00a281b#rd" },
       { issue: 56, title: "关于睡眠你需要知道的几件事。", url: "https://mp.weixin.qq.com/s?__biz=MzkyOTE4MDcyOA==&mid=2247497835&idx=1&sn=07ee71b001fae1a0c7b6d1109112fabc&chksm=c20fc53cf5784c2ad53252c08ff441069e3e82bff96c122d2b3bd1f658bab858fce247cb1a73#rd" },
@@ -88,8 +114,21 @@ export const columns: Column[] = [
   {
     id: 'write-like-entrepreneur',
     name: '写作并变现：像企业家一样写作',
+    claim: "从一句话的记录，到写完一本书，再到靠它赚钱。把写作当成一门生意来做。",
     description: '从记录、写书到变现，用企业家思维做内容。',
     issueCount: 19,
+    featured: [
+      { issue: 1, value: "为什么高手都随手记录：把写作的启动成本降到最低" },
+      { issue: 3, value: "一次一句话、250 字，攒够就能成文成书" },
+      { issue: 17, value: "把写出来的东西变成收入的路径" },
+    ],
+    groups: [
+      { name: "开始写", issues: [1, 3, 6, 7, 9, 14] },
+      { name: "创造力与学习", issues: [5, 8, 10] },
+      { name: "工具箱", issues: [2, 11, 12] },
+      { name: "从阅读到写书", issues: [4, 15, 16, 18] },
+      { name: "变现与定位", issues: [13, 17, 19] },
+    ],
     issues: [
       { issue: 19, title: "《致富的秘密：打造别人想要的东西。》", url: "https://mp.weixin.qq.com/s?__biz=MzkyOTE4MDcyOA==&mid=2247497771&idx=1&sn=4a708dc38aa72f8d4d6e7e3596a85feb&chksm=c20fc57cf5784c6a7b6672de247776da516714403828d99ca877ff9f275bbde013166a0c7b01#rd" },
       { issue: 18, title: "《主题阅读：面向输出最有效的输入。》", url: "https://mp.weixin.qq.com/s?__biz=MzkyOTE4MDcyOA==&mid=2247497559&idx=1&sn=1a7bb17954ac737707ab20f38dcc1aeb&chksm=c20fca00f5784316d994778b3cb80e5990268996b794d31f508a1c927efde062106b4d6b46ee#rd" },

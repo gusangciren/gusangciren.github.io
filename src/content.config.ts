@@ -25,6 +25,8 @@ const books = defineCollection({
     seriesName: z.string(),
     order: z.number().default(0),
     chapterSize: z.number().optional(),
+    forWho: z.string().optional(),
+    benefits: z.array(z.string()).optional(),
   }),
 });
 

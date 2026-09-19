@@ -6,4 +6,9 @@ description: 人生由十几个重大选择和无数微小选择构成。在重�
 cover: /images/book1-cover.png
 seriesName: 选择改变命运
 order: 1
+forWho: 站在职业或人生十字路口，想把关键选择做对的人
+benefits:
+  - 看懂大脑是怎么做决定的
+  - 在重大选择上拿到最优解
+  - 在微小选择上养成好习惯
 ---

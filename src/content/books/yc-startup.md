@@ -6,4 +6,9 @@ description: Y Combinator 创业课（CS183B）中文全译本。18 讲覆盖创
 cover: /images/yc-cover.png
 seriesName: YC 创业课
 order: 4
+forWho: 正在创业或准备创业，想系统补课的人
+benefits:
+  - Sam Altman、Peter Thiel 等一线创业者的完整方法论
+  - 从创意、产品到融资、增长、法律的 18 讲覆盖
+  - 中文全译本，信息保留率 ≥99%
 ---
