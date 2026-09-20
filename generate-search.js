@@ -73,6 +73,47 @@ function parseMdFile(filePath) {
   };
 }
 
+function parseColumns() {
+  // 解析 src/data/columns.ts，把每期专栏抽成搜索条目
+  // 专栏正文在微信公众号（站内无全文），故只索引「第 N 期 · 标题」便于检索跳转
+  const colPath = path.join(process.cwd(), 'src/data/columns.ts');
+  const columns = [];
+  if (!fs.existsSync(colPath)) return columns;
+
+  const src = fs.readFileSync(colPath, 'utf-8');
+  // 按 `id: 'xxx'` 切块，每块是一个专栏
+  const blocks = src.split(/id:\s*'/).slice(1);
+  blocks.forEach(block => {
+    const idM = block.match(/^([^']+)'/);
+    const id = idM ? idM[1] : '';
+    const nameM = block.match(/name:\s*'([^']+)'/);
+    const name = nameM ? nameM[1] : id;
+    const issueBlocks = [...block.matchAll(/issues:\s*\[([\s\S]*?)\]/g)];
+    // 取「含 title: 的那个 issues 块」（groups 里的 issues:[1,2,..] 是期号数组，会被误匹配）
+    const target = issueBlocks.find(b => b[1].includes('title:'));
+    if (!target) return;
+    const issuesBody = target[1];
+    const issueRe = /issue:\s*(\d+),\s*title:\s*"([^"]*)",\s*url:\s*"([^"]*)"/g;
+    let m;
+    while ((m = issueRe.exec(issuesBody))) {
+      const issue = parseInt(m[1], 10);
+      const rawTitle = m[2];
+      columns.push({
+        type: 'column',
+        columnId: id,
+        columnName: name,
+        issue,
+        title: `第 ${issue} 期 · ${rawTitle}`,
+        rawTitle,
+        url: m[3],
+        desc: `《${name}》第 ${issue} 期`,
+        content: rawTitle,
+      });
+    }
+  });
+  return columns;
+}
+
 function main() {
   const posts = [];
   const seriesContent = {}; // seriesName -> aggregated content
@@ -146,12 +187,13 @@ function main() {
     });
   });
 
-  const result = { posts, books };
+  const columns = parseColumns();
+  const result = { posts, books, columns };
   fs.mkdirSync(path.dirname(OUT_FILE), { recursive: true });
   fs.writeFileSync(OUT_FILE, JSON.stringify(result, null, 2), 'utf-8');
 
   // 打印诊断信息
-  console.log(`✅ search.json 已生成：${posts.length} 篇文章，${books.length} 本书`);
+  console.log(`✅ search.json 已生成：${posts.length} 篇文章，${books.length} 本书，${columns.length} 期专栏`);
   console.log(`   已收录书籍系列：${Array.from(validSeries).join(' / ') || '无'}`);
   books.forEach(b => {
     console.log(`   📖 ${b.title} — content 长度: ${b.content.length} 字符`);

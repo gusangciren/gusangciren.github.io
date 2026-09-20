@@ -47,8 +47,10 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
     <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
     <!-- Static CSS — no build hash, safe for incremental deploys -->
     <link rel="stylesheet" href="/global.css" />
-    <!-- 中文字体：经 BootCDN 加载（国内可访问，不走被墙的 Google Fonts） -->
-    <link rel="stylesheet" href="/fonts/fonts.css" />
+    <!-- 中文字体：经 BootCDN 加载（国内可访问，不走被墙的 Google Fonts）。
+         用 preload + onload 切换，去掉 @import 的渲染阻塞；字体未到位时先用系统衬线字体（等同 font-display:swap） -->
+    <link rel="preload" as="style" href="/fonts/fonts.css" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/fonts/fonts.css"></noscript>
   </head>
   <body>
     <nav class="navbar">
@@ -210,6 +212,10 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
       margin-right: 6px;
       vertical-align: middle;
     }
+    .search-result-type.column {
+      background: rgba(37, 99, 235, 0.1);
+      color: #2563eb;
+    }
     .search-empty {
       padding: 32px 24px;
       text-align: center;
@@ -330,14 +336,22 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
       '</a>';
     }
 
+    // 专栏条目：外链到微信公众号（不加 ?q=）
+    function columnItemHtml(col, q) {
+      return '<a href="' + escapeHtml(col.url) + '" target="_blank" rel="noopener noreferrer" class="search-result-item">' +
+        '<div class="search-result-title"><span class="search-result-type column">专栏</span>' + highlight(col.title, q) + '</div>' +
+        '<div class="search-result-desc">' + highlight(col.desc || col.columnName, q) + '</div>' +
+      '</a>';
+    }
+
     function renderResults(query) {
       const container = document.getElementById('search-results');
       if (!query.trim()) {
-        container.innerHTML = '<div class="search-empty">输入关键词搜索书籍和章节…</div>';
+        container.innerHTML = '<div class="search-empty">输入关键词搜索书籍、章节与专栏…</div>';
         return;
       }
       const q = query.toLowerCase();
-      const index = _searchIndex || { posts: [], books: [] };
+      const index = _searchIndex || { posts: [], books: [], columns: [] };
       const matchedPosts = index.posts.filter(p =>
         p.title.toLowerCase().includes(q) ||
         (p.desc || '').toLowerCase().includes(q) ||
@@ -348,7 +362,13 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
         (b.desc || '').toLowerCase().includes(q) ||
         (b.content || '').toLowerCase().includes(q)
       );
-      if (matchedPosts.length === 0 && matchedBooks.length === 0) {
+      const matchedColumns = (index.columns || []).filter(c =>
+        c.title.toLowerCase().includes(q) ||
+        c.columnName.toLowerCase().includes(q) ||
+        c.rawTitle.toLowerCase().includes(q) ||
+        String(c.issue).includes(q)
+      );
+      if (matchedPosts.length === 0 && matchedBooks.length === 0 && matchedColumns.length === 0) {
         container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
         return;
       }
@@ -370,6 +390,16 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
         html += '<div class="search-group">';
         html += '<div class="search-group-title">《' + escapeHtml(title) + '》</div>';
         groups[series].forEach(p => { html += resultItemHtml(p, q, '/blog/' + p.slug, false); });
+        html += '</div>';
+      });
+      // 专栏按专栏名分组（外链到微信）
+      const colGroups = {};
+      matchedColumns.forEach(c => { const k = c.columnName || ''; (colGroups[k] = colGroups[k] || []).push(c); });
+      Object.keys(colGroups).forEach(name => {
+        colGroups[name].sort((a, b) => a.issue - b.issue);
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(name) + '》· 专栏</div>';
+        colGroups[name].forEach(c => { html += columnItemHtml(c, q); });
         html += '</div>';
       });
       container.innerHTML = html;
@@ -397,7 +427,13 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
         (b.desc || '').toLowerCase().includes(q) ||
         (b.content || '').toLowerCase().includes(q)
       );
-      const total = matchedPosts.length + matchedBooks.length;
+      const matchedColumns = (index.columns || []).filter(c =>
+        c.title.toLowerCase().includes(q) ||
+        c.columnName.toLowerCase().includes(q) ||
+        c.rawTitle.toLowerCase().includes(q) ||
+        String(c.issue).includes(q)
+      );
+      const total = matchedPosts.length + matchedBooks.length + matchedColumns.length;
       if (total === 0) {
         container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
         container.classList.add('show');
@@ -420,6 +456,16 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
         html += '<div class="search-group">';
         html += '<div class="search-group-title">《' + escapeHtml(title) + '》</div>';
         groups[series].slice(0, 3).forEach(p => { html += resultItemHtml(p, q, '/blog/' + p.slug, false); shown++; });
+        html += '</div>';
+      });
+      // 专栏命中（外链到微信）
+      const colGroups = {};
+      matchedColumns.forEach(c => { const k = c.columnName || ''; (colGroups[k] = colGroups[k] || []).push(c); });
+      Object.keys(colGroups).slice(0, 2).forEach(name => {
+        colGroups[name].sort((a, b) => a.issue - b.issue);
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(name) + '》· 专栏</div>';
+        colGroups[name].slice(0, 3).forEach(c => { html += columnItemHtml(c, q); shown++; });
         html += '</div>';
       });
       if (total > shown + Math.min(matchedBooks.length, 2)) {

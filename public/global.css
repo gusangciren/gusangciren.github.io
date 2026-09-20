@@ -10,7 +10,7 @@
   --color-border: #e7e5e4;
   --color-card-bg: #ffffff;
   --max-width: 720px;
-  --font-serif: 'Noto Serif SC', 'Source Han Serif SC', serif;
+  --font-serif: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', 'SimSun', serif;
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
@@ -829,4 +829,46 @@ html { scroll-behavior: smooth; }
   .benefits-grid { grid-template-columns: 1fr; }
   .community-hero h1 { font-size: 2.2rem; }
   .pricing-card { padding: 28px 20px; }
+}
+
+/* ========== 移动端导航栏（≤520px）：防溢出 ========== */
+@media (max-width: 520px) {
+  .nav-inner {
+    padding: 0 14px;
+    gap: 8px;
+  }
+  /* 窄屏只留 Logo 图标 + 站点名缩写，避免与链接挤压 */
+  .logo span {
+    display: none;
+  }
+  .logo {
+    gap: 0;
+    padding: 4px;
+  }
+  .nav-links {
+    gap: 16px;
+  }
+  .nav-links a {
+    font-size: 13px;
+  }
+  /* 兜底：极端窄屏允许横向滚动，绝不撑破 */
+  .navbar {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav-inner {
+    min-width: max-content;
+  }
+}
+
+/* ========== 正文图片自适应（防止撑破容器） ========== */
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+.prose pre,
+.prose table {
+  max-width: 100%;
+  overflow-x: auto;
 }
