@@ -104,7 +104,7 @@ function titleWithBrackets(name) {
                 </a>
               ))}
             </div>
-            <a href="/columns" class="column-preview-all">
+            <a href={`/columns/${column.id}`} class="column-preview-all">
               查看全部 {column.issueCount} 期 →
             </a>
           </div>
@@ -177,6 +177,7 @@ function titleWithBrackets(name) {
       z-index: 50;
       max-height: 52vh;
       overflow-y: auto;
+      text-align: left;
     }
     .hero-search-dropdown.show { display: block; }
     .hero-search-dropdown .search-result-item {
@@ -214,15 +215,17 @@ function titleWithBrackets(name) {
       text-align: center;
       padding: 28px 22px;
       background: var(--color-card-bg);
-      border: 1px solid var(--color-border);
+      border: 2px solid rgba(245,80,0,.5);
       border-radius: 14px;
+      box-shadow: 0 6px 22px rgba(245,80,0,.10);
       text-decoration: none;
       color: inherit;
-      transition: box-shadow .2s, transform .2s;
+      transition: box-shadow .2s, transform .2s, border-color .2s;
     }
     .book-card:hover {
-      box-shadow: 0 10px 28px rgba(0,0,0,0.08);
-      transform: translateY(-3px);
+      box-shadow: 0 16px 36px rgba(245,80,0,.22);
+      border-color: var(--color-accent);
+      transform: translateY(-4px);
     }
     .book-card-cover {
       position: relative;
@@ -282,13 +285,14 @@ function titleWithBrackets(name) {
     }
     .column-preview-card {
       background: var(--color-card-bg);
-      border: 1px solid var(--color-border);
+      border: 2px solid rgba(245,80,0,.5);
       border-radius: 14px;
       padding: 26px 24px;
-      transition: box-shadow .2s, transform .2s;
+      transition: box-shadow .2s, transform .2s, border-color .2s;
     }
     .column-preview-card:hover {
-      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+      box-shadow: 0 12px 30px rgba(245,80,0,.18);
+      border-color: var(--color-accent);
       transform: translateY(-2px);
     }
     .column-preview-card h3 {

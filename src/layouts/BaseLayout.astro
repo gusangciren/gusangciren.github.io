@@ -327,12 +327,12 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
       if (dropdown) { dropdown.classList.remove('show'); dropdown.innerHTML = ''; }
     }
 
-    function renderHeroResults(query) {
+    async function renderHeroResults(query) {
       const container = document.getElementById('hero-search-dropdown');
       if (!container) return;
       if (!query.trim()) { closeHeroSearch(); return; }
+      const index = await loadSearchIndex();
       const q = query.toLowerCase();
-      const index = _searchIndex || { posts: [], books: [] };
       const matchedPosts = index.posts.filter(p =>
         p.title.toLowerCase().includes(q) ||
         (p.desc || '').toLowerCase().includes(q) ||
@@ -381,7 +381,11 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
       const goBtn = document.getElementById('hero-search-go');
       if (!input || !dropdown) return;
 
-      input.addEventListener('input', () => renderHeroResults(input.value));
+      let inputTimeout;
+      input.addEventListener('input', () => {
+        clearTimeout(inputTimeout);
+        inputTimeout = setTimeout(() => renderHeroResults(input.value), 120);
+      });
       input.addEventListener('focus', () => { if (input.value.trim()) renderHeroResults(input.value); });
 
       input.addEventListener('keydown', (e) => {

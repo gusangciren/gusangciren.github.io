@@ -76,42 +76,17 @@ function parseMdFile(filePath) {
 function main() {
   const posts = [];
   const seriesContent = {}; // seriesName -> aggregated content
+  const validSeries = new Set(); // 有对应书籍的 seriesName
 
-  // ── 第一步：读取 blog 文章 ──
-  const blogDir = path.join(CONTENT_DIR, 'blog');
-  if (fs.existsSync(blogDir)) {
-    fs.readdirSync(blogDir).forEach(f => {
-      if (/\.(md|mdx)$/i.test(f)) {
-        const post = parseMdFile(path.join(blogDir, f));
-        if (!post) return;
-
-        // 属于某本书的章节 → 聚合到该 series 的内容中
-        if (post.series) {
-          if (!seriesContent[post.series]) {
-            seriesContent[post.series] = [];
-          }
-          // 用标题作为章节标记，方便搜索时识别来源
-          seriesContent[post.series].push(
-            `[${post.title}]\n${post.content}`
-          );
-        }
-
-        // 所有 blog 文章都进入 posts 数组（独立文章 + 章节都可搜）
-        posts.push(post);
-      }
-    });
-  }
-
-  // ── 第二步：读取 books 元数据，并合并章节正文 ──
-  const books = [];
+  // ── 第一步：先读 books，拿到所有合法的 seriesName ──
   const booksDir = path.join(CONTENT_DIR, 'books');
+  const booksRaw = [];
   if (fs.existsSync(booksDir)) {
     fs.readdirSync(booksDir).forEach(f => {
       if (/\.(md|mdx)$/i.test(f)) {
         const raw = fs.readFileSync(path.join(booksDir, f), 'utf-8');
         const parts = raw.split(/^---$/m);
         if (parts.length < 3) return;
-
         const fm = {};
         parts[1].split('\n').forEach(line => {
           const m = line.match(/^(\w+):\s*["']?(.+?)["']?\s*$/);
@@ -119,28 +94,56 @@ function main() {
             fm[m[1]] = m[2].replace(/^["']|["']$/g, '');
           }
         });
-
         const seriesName = fm.seriesName || '';
+        if (seriesName) validSeries.add(seriesName);
         const fileName = path.basename(f);
         const slug = fileName.replace(/\.(md|mdx)$/i, '');
-
-        // 合并该 series 的所有章节正文
-        const chapters = seriesContent[seriesName] || [];
-        const bookBody = stripMarkdown(parts.slice(2).join('---')).substring(0, 2000);
-        const aggregated = [
-          bookBody,
-          chapters.join('\n\n'),
-        ].filter(Boolean).join('\n\n');
-
-        books.push({
-          title: fm.title || slug,
-          slug: fm.slug || slug,
-          desc: fm.description || '',
-          content: aggregated.substring(0, 50000), // 限制总长度
-        });
+        booksRaw.push({ fm, slug, parts });
       }
     });
   }
+
+  // ── 第二步：读取 blog 文章，只保留属于书籍的章节 ──
+  const blogDir = path.join(CONTENT_DIR, 'blog');
+  if (fs.existsSync(blogDir)) {
+    fs.readdirSync(blogDir).forEach(f => {
+      if (/\.(md|mdx)$/i.test(f)) {
+        const post = parseMdFile(path.join(blogDir, f));
+        if (!post) return;
+
+        // 只索引「属于当前 books 的章节」；独立文章/已下线文章不再进入搜索结果
+        if (post.series && validSeries.has(post.series)) {
+          if (!seriesContent[post.series]) {
+            seriesContent[post.series] = [];
+          }
+          // 用标题作为章节标记，方便搜索时识别来源
+          seriesContent[post.series].push(
+            `[${post.title}]\n${post.content}`
+          );
+          posts.push(post);
+        }
+      }
+    });
+  }
+
+  // ── 第三步：生成 books 索引，合并章节正文 ──
+  const books = [];
+  booksRaw.forEach(({ fm, slug, parts }) => {
+    const seriesName = fm.seriesName || '';
+    const chapters = seriesContent[seriesName] || [];
+    const bookBody = stripMarkdown(parts.slice(2).join('---')).substring(0, 2000);
+    const aggregated = [
+      bookBody,
+      chapters.join('\n\n'),
+    ].filter(Boolean).join('\n\n');
+
+    books.push({
+      title: fm.title || slug,
+      slug: fm.slug || slug,
+      desc: fm.description || '',
+      content: aggregated.substring(0, 50000), // 限制总长度
+    });
+  });
 
   const result = { posts, books };
   fs.mkdirSync(path.dirname(OUT_FILE), { recursive: true });
@@ -148,6 +151,7 @@ function main() {
 
   // 打印诊断信息
   console.log(`✅ search.json 已生成：${posts.length} 篇文章，${books.length} 本书`);
+  console.log(`   已收录书籍系列：${Array.from(validSeries).join(' / ') || '无'}`);
   books.forEach(b => {
     console.log(`   📖 ${b.title} — content 长度: ${b.content.length} 字符`);
   });

@@ -21,13 +21,29 @@ function findIssue(column: (typeof columns)[number], n: number) {
       <p>两个持续更新的专栏，点击任意一期直达微信公众号原文</p>
     </div>
 
-    {columns.map((column) => {
+    {/* ===== 付费合集提示 ===== */}
+    <div class="bundle-bar">
+      <div class="bundle-txt">
+        <b>买一次，两样都得到</b>
+        <span>
+          UAC 周刊 与《写作并变现：像企业家一样写作》打包在<b>同一个付费合集</b>里——一次购买，两个专栏全部解锁。
+        </span>
+      </div>
+      <a class="btn" href={columns.find((c) => c.albumUrl)?.albumUrl} target="_blank" rel="noopener noreferrer">
+        查看付费合集 ↗
+      </a>
+    </div>
+
+    {columns.map((column, idx) => {
       const latest = column.issues[0];
       return (
         <section class="col-block" id={column.id}>
           {/* ===== 专栏头部：价值主张 + 入口 ===== */}
           <div class="col-hero">
-            <h2>{column.name}</h2>
+            <div class="col-hero-top">
+              <span class="col-num">{idx + 1}）</span>
+              <h2>{column.name}</h2>
+            </div>
             <p class="claim">{column.claim}</p>
             <div class="proof">
               <span><b>{column.issueCount}</b> 期连载</span>
@@ -138,25 +154,90 @@ function findIssue(column: (typeof columns)[number], n: number) {
     color: var(--color-text-secondary);
   }
 
+  /* 付费合集提示条 */
+  .bundle-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 18px 26px;
+    background: rgba(245,80,0,.06);
+    border: 1px solid rgba(245,80,0,.18);
+    border-radius: 16px;
+    margin-bottom: 40px;
+  }
+  .bundle-txt {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .bundle-txt b {
+    font-size: 14px;
+    color: var(--color-accent);
+  }
+  .bundle-txt span {
+    font-size: 12.5px;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+  .bundle-txt span b { font-size: 12.5px; }
+  .btn {
+    display: inline-block;
+    background: var(--color-accent);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 9px 18px;
+    border-radius: 22px;
+    text-decoration: none;
+    transition: opacity .2s;
+    flex: none;
+  }
+  .btn:hover { opacity: .88; }
+
   .col-block {
     margin-bottom: 64px;
-    border: 1px solid var(--color-border);
-    border-radius: 16px;
+    border: 1.5px solid rgba(245,80,0,.22);
+    border-radius: 18px;
     overflow: hidden;
     background: var(--color-card-bg, #fff);
+    box-shadow: 0 12px 34px rgba(0,0,0,.07);
   }
 
   /* 头部 */
   .col-hero {
-    padding: 32px 28px 26px;
+    padding: 30px 28px 26px;
     border-bottom: 1px solid var(--color-border);
-    background: linear-gradient(180deg, rgba(245,80,0,.04) 0%, transparent 100%);
+  }
+  .col-hero-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .col-num {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    height: 42px;
+    padding: 0 12px;
+    background: var(--color-accent);
+    color: #fff;
+    border-radius: 12px;
+    font-family: var(--font-serif);
+    font-size: 1.35rem;
+    font-weight: 800;
+    line-height: 1;
+    box-shadow: 0 4px 12px rgba(245,80,0,.3);
   }
   .col-hero h2 {
     font-family: var(--font-serif);
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 700;
-    margin: 0 0 8px;
+    margin: 0;
   }
   .col-hero .claim {
     font-size: 0.92rem;
@@ -324,6 +405,8 @@ function findIssue(column: (typeof columns)[number], n: number) {
     .columns-page { padding: 80px 16px 60px; }
     .col-hero { padding: 24px 18px 20px; }
     .col-hero h2 { font-size: 1.3rem; }
+    .col-hero-top { gap: 10px; margin-bottom: 8px; }
+    .col-num { min-width: 36px; height: 36px; font-size: 1.15rem; padding: 0 10px; border-radius: 10px; }
     .sec { padding: 20px 18px; }
     .feat { grid-template-columns: 1fr; }
     .grp-row .go { display: none; }
