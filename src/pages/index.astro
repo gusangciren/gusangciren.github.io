@@ -54,7 +54,7 @@ function titleWithBrackets(name) {
   <!-- Books Preview -->
   <section class="section section-books">
     <div class="section-inner">
-      <SectionHeader title="书籍作品" />
+      <SectionHeader title="书籍作品" icon="book" />
       <div class="books-preview-grid">
         {books.map((book) => {
           const firstChapter = firstChapterMap.get(book.id);
@@ -85,7 +85,7 @@ function titleWithBrackets(name) {
   <!-- Columns Preview -->
   <section class="section section-columns">
     <div class="section-inner">
-      <SectionHeader title="专栏" />
+      <SectionHeader title="专栏" icon="pen" />
       <div class="columns-preview-grid">
         {columns.map((column) => (
           <div class="column-preview-card">
@@ -278,7 +278,6 @@ function titleWithBrackets(name) {
     }
 
     /* ===== 首页专栏预览卡片（方案 B） ===== */
-    .section-columns .section-header h2 { font-size: 1.5rem; font-weight: 600; }
     .columns-preview-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);

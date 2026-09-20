@@ -449,6 +449,7 @@ html { scroll-behavior: smooth; }
 .price-period { font-size: 1.2rem; color: var(--color-text-secondary); }
 
 .section { padding: 64px 24px; }
+.section-books { padding-top: 40px; }
 .section-inner { max-width: 960px; margin: 0 auto; }
 .section-title {
   font-family: var(--font-serif);
@@ -625,7 +626,7 @@ html { scroll-behavior: smooth; }
 
 /* ========== Hero (index page) ========== */
 .hero {
-  padding: 76px 24px 48px;
+  padding: 76px 24px 32px;
 }
 .hero-inner {
   max-width: 960px;
@@ -777,13 +778,26 @@ html { scroll-behavior: smooth; }
 /* ========== SectionHeader component ========== */
 .section-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  text-align: center;
   margin-bottom: 32px;
+}
+.sh-title {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.sh-icon {
+  width: 26px;
+  height: 26px;
+  color: var(--color-accent);
+  flex: none;
 }
 .section-header h2 {
   font-family: var(--font-serif);
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 600;
   margin: 0;
 }
