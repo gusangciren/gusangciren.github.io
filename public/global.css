@@ -10,8 +10,8 @@
   --color-border: #e7e5e4;
   --color-card-bg: #ffffff;
   --max-width: 720px;
-  --font-serif: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', 'SimSun', serif;
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-serif: 'LXGW WenKai', 'LXGW WenKai Screen', 'Noto Serif SC', 'KaiTi', 'STKaiti', serif;
+  --font-sans: 'LXGW WenKai', 'LXGW WenKai Screen', 'PingFang SC', 'Microsoft YaHei', sans-serif;
 }
 
 * {

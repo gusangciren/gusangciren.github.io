@@ -1,3 +1,4 @@
-/* 字体自托管方案：使用 BootCDN CDN 加载 fontsource Noto Serif SC
-   替换 Google Fonts（国内被墙），确保中文字体正常加载 */
-@import url('https://cdn.bootcdn.net/ajax/libs/fontsource-noto-serif-sc/5.0.3/index.min.css');
+/* 全站字体：霞鹜文楷 LXGW WenKai（2026-09-21 方案 D）
+   BootCDN 加载，97 个 woff2 分片按 unicode-range 按需加载，单片仅几 KB。
+   只引 regular（400）；600/700/800 由浏览器合成加粗。 */
+@import url('https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-webfont/1.7.0/lxgwwenkai-regular.css');
