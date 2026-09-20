@@ -61,6 +61,7 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
         </a>
         <div class="nav-links" id="nav-pill">
           <span class="nav-slider" id="nav-slider"></span>
+          <a href="/">首页</a>
           <a href="/book">书籍</a>
           <a href="/columns">专栏</a>
         </div>
@@ -89,8 +90,9 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
         var path = window.location.pathname.replace(/\/+$/, '') || '/';
         var activeIdx = -1;
         links.forEach(function (a, i) {
-          var href = (a.getAttribute('href') || '').replace(/\/+$/, '');
-          if (href && (path === href || path.indexOf(href + '/') === 0)) activeIdx = i;
+          var href = (a.getAttribute('href') || '').replace(/\/+$/, '') || '/';
+          var match = (href === '/') ? (path === '/') : (path === href || path.indexOf(href + '/') === 0);
+          if (match) activeIdx = i;
         });
         if (activeIdx < 0) { slider.style.opacity = '0'; return; }
         links[activeIdx].classList.add('active');
