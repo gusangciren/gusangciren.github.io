@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeader from '../components/SectionHeader.astro';
 import { columns } from '../data/columns';
 
 function pad(n: number) {
@@ -16,12 +17,9 @@ function findIssue(column: (typeof columns)[number], n: number) {
   description="两个长期更新的专栏：UAC 周刊（57 期）与《像企业家一样写作》（19 期）。按主题策展，从最值得读的那一期开始。"
 >
   <div class="columns-page">
-    <div class="columns-header">
-      <h1>专栏</h1>
-      <p>两个持续更新的专栏，点击任意一期直达微信公众号原文</p>
-    </div>
+    <SectionHeader title="专栏" icon="pen" />
 
-    {/* ===== 付费合集提示 ===== */}
+    {/* ===== 付费合集入口 ===== */}
     <div class="bundle-bar">
       <div class="bundle-txt">
         <b>买一次，两样都得到</b>
@@ -34,133 +32,116 @@ function findIssue(column: (typeof columns)[number], n: number) {
       </a>
     </div>
 
-    {columns.map((column, idx) => {
-      const latest = column.issues[0];
-      return (
-        <section class="col-block" id={column.id}>
-          {/* ===== 专栏头部：价值主张 + 入口 ===== */}
-          <div class="col-hero">
-            <div class="col-hero-top">
-              <span class="col-num">{idx + 1}）</span>
-              <h2>{column.name}</h2>
-            </div>
-            <p class="claim">{column.claim}</p>
-            <div class="proof">
-              <span><b>{column.issueCount}</b> 期连载</span>
-              <span>{column.description}</span>
-            </div>
-            <div class="hero-actions">
-              <a class="btn" href={latest.url} target="_blank" rel="noopener noreferrer">
-                读最新一期 →
-              </a>
-              {column.albumUrl && (
-                <a class="btn ghost" href={column.albumUrl} target="_blank" rel="noopener noreferrer">
-                  微信合集 ↗
+    {/* ===== 双栏专栏详情 ===== */}
+    <div class="col-grid">
+      {columns.map((column, idx) => {
+        const latest = column.issues[0];
+        return (
+          <section class="col-block" id={column.id}>
+            {/* 专栏头部 */}
+            <div class="col-hero">
+              <div class="col-hero-top">
+                <span class="col-num">{idx + 1}）</span>
+                <h2>{column.name}</h2>
+              </div>
+              <p class="claim">{column.claim}</p>
+              <div class="proof">
+                <span class="stat"><b>{column.issueCount}</b> 期连载</span>
+                <span class="desc">{column.description}</span>
+              </div>
+              <div class="hero-actions">
+                <a class="btn" href={latest.url} target="_blank" rel="noopener noreferrer">
+                  读最新一期 →
                 </a>
-              )}
+              </div>
             </div>
-          </div>
 
-          {/* ===== 编辑精选 ===== */}
-          <div class="sec">
-            <div class="sec-label">从这 3 篇开始</div>
-            <div class="feat">
-              {column.featured.map((f) => {
-                const it = findIssue(column, f.issue);
-                return (
-                  it && (
-                    <a
-                      class="feat-card"
-                      href={it.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <div class="n">第 {f.issue} 期</div>
-                      <div class="t">{it.title}</div>
-                      <div class="v">{f.value}</div>
-                    </a>
-                  )
-                );
-              })}
-            </div>
-          </div>
-
-          {/* ===== 主题分组 ===== */}
-          <div class="sec">
-            <div class="sec-label">按主题读</div>
-            {column.groups.map((g) => (
-              <div class="grp">
-                <div class="grp-head">
-                  <h3>{g.name}</h3>
-                  <span class="c">{g.issues.length} 篇</span>
-                </div>
-                {g.issues.map((n) => {
-                  const it = findIssue(column, n);
+            {/* 编辑精选 */}
+            <div class="sec">
+              <div class="sec-label">从这 3 篇开始</div>
+              <div class="feat">
+                {column.featured.map((f) => {
+                  const it = findIssue(column, f.issue);
                   return (
                     it && (
                       <a
-                        class="grp-row"
+                        class="feat-card"
                         href={it.url}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <span class="badge">{pad(n)}</span>
-                        <span class="t">{it.title}</span>
-                        <span class="go">微信阅读 ↗</span>
+                        <div class="n">第 {f.issue} 期</div>
+                        <div class="t">{it.title}</div>
+                        <div class="v">{f.value}</div>
                       </a>
                     )
                   );
                 })}
               </div>
-            ))}
-          </div>
+            </div>
 
-          {/* ===== 底部 CTA ===== */}
-          <div class="cta-bar">
-            <p>共 {column.issueCount} 期 · 往期全部可直接阅读</p>
-            <a
-              class="btn"
-              href={column.albumUrl || latest.url}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {column.albumUrl ? '在微信中看全部 →' : '开始阅读 →'}
-            </a>
-          </div>
-        </section>
-      );
-    })}
+            {/* 主题分组 */}
+            <div class="sec">
+              <div class="sec-label">按主题读</div>
+              {column.groups.map((g) => (
+                <div class="grp">
+                  <div class="grp-head">
+                    <h3>{g.name}</h3>
+                    <span class="c">{g.issues.length} 篇</span>
+                  </div>
+                  {g.issues.map((n) => {
+                    const it = findIssue(column, n);
+                    return (
+                      it && (
+                        <a
+                          class="grp-row"
+                          href={it.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <span class="badge">{pad(n)}</span>
+                          <span class="t">{it.title}</span>
+                          <span class="go">微信阅读 ↗</span>
+                        </a>
+                      )
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+
+            {/* 底部 CTA */}
+            <div class="cta-bar">
+              <p>共 {column.issueCount} 期 · 往期全部可直接阅读</p>
+              <a
+                class="btn"
+                href={column.albumUrl || latest.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {column.albumUrl ? '在微信中看全部 →' : '开始阅读 →'}
+              </a>
+            </div>
+          </section>
+        );
+      })}
+    </div>
   </div>
 </BaseLayout>
 
 <style is:global>
   .columns-page {
-    max-width: 780px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 100px 24px 80px;
   }
-  .columns-header {
-    text-align: center;
-    margin-bottom: 48px;
-  }
-  .columns-header h1 {
-    font-family: var(--font-serif);
-    font-size: 2.6rem;
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
-  .columns-header p {
-    font-size: 14px;
-    color: var(--color-text-secondary);
-  }
 
-  /* 付费合集提示条 */
+  /* 付费合集入口 */
   .bundle-bar {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto;
     align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
+    gap: 24px;
     padding: 18px 26px;
     background: rgba(245,80,0,.06);
     border: 1px solid rgba(245,80,0,.18);
@@ -171,6 +152,7 @@ function findIssue(column: (typeof columns)[number], n: number) {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    min-width: 0;
   }
   .bundle-txt b {
     font-size: 14px;
@@ -182,6 +164,24 @@ function findIssue(column: (typeof columns)[number], n: number) {
     line-height: 1.6;
   }
   .bundle-txt span b { font-size: 12.5px; }
+
+  /* 双栏容器 */
+  .col-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+
+  /* 单个专栏块 */
+  .col-block {
+    border: 1.5px solid rgba(245,80,0,.22);
+    border-radius: 18px;
+    overflow: hidden;
+    background: var(--color-card-bg, #fff);
+    box-shadow: 0 12px 34px rgba(0,0,0,.07);
+  }
+
   .btn {
     display: inline-block;
     background: var(--color-accent);
@@ -192,17 +192,12 @@ function findIssue(column: (typeof columns)[number], n: number) {
     border-radius: 22px;
     text-decoration: none;
     transition: opacity .2s;
-    flex: none;
   }
   .btn:hover { opacity: .88; }
-
-  .col-block {
-    margin-bottom: 64px;
-    border: 1.5px solid rgba(245,80,0,.22);
-    border-radius: 18px;
-    overflow: hidden;
-    background: var(--color-card-bg, #fff);
-    box-shadow: 0 12px 34px rgba(0,0,0,.07);
+  .btn.ghost {
+    background: #fff;
+    color: var(--color-accent);
+    border: 1.5px solid var(--color-accent);
   }
 
   /* 头部 */
@@ -220,18 +215,11 @@ function findIssue(column: (typeof columns)[number], n: number) {
     flex: none;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    min-width: 42px;
-    height: 42px;
-    padding: 0 12px;
-    background: var(--color-accent);
-    color: #fff;
-    border-radius: 12px;
     font-family: var(--font-serif);
-    font-size: 1.35rem;
+    font-size: 2.2rem;
     font-weight: 800;
     line-height: 1;
-    box-shadow: 0 4px 12px rgba(245,80,0,.3);
+    color: var(--color-accent);
   }
   .col-hero h2 {
     font-family: var(--font-serif);
@@ -240,46 +228,56 @@ function findIssue(column: (typeof columns)[number], n: number) {
     margin: 0;
   }
   .col-hero .claim {
-    font-size: 0.92rem;
-    color: #444;
-    line-height: 1.7;
-    margin: 0 0 14px;
+    font-size: 1rem;
+    color: #333;
+    line-height: 1.85;
+    margin: 0 0 16px;
   }
   .proof {
     display: flex;
+    align-items: baseline;
     gap: 14px;
     flex-wrap: wrap;
+    margin: 0 0 18px;
+    padding: 12px 16px;
+    background: rgba(245, 80, 0, 0.06);
+    border-radius: 10px;
+  }
+  .proof .stat {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 5px;
     font-size: 12.5px;
     color: var(--color-text-secondary);
-    margin-bottom: 16px;
   }
   .proof b {
     color: var(--color-accent);
-    font-size: 1.05rem;
-    font-weight: 700;
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+  .proof .desc {
+    position: relative;
+    padding-left: 14px;
+    font-size: 12.5px;
+    color: var(--color-text-secondary);
+  }
+  .proof .desc::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 12px;
+    background: var(--color-border);
   }
   .hero-actions {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
     align-items: center;
-  }
-  .btn {
-    display: inline-block;
-    background: var(--color-accent);
-    color: #fff;
-    font-size: 13px;
-    font-weight: 600;
-    padding: 9px 18px;
-    border-radius: 22px;
-    text-decoration: none;
-    transition: opacity .2s;
-  }
-  .btn:hover { opacity: .88; }
-  .btn.ghost {
-    background: #fff;
-    color: var(--color-accent);
-    border: 1.5px solid var(--color-accent);
   }
 
   /* 区块 */
@@ -401,14 +399,18 @@ function findIssue(column: (typeof columns)[number], n: number) {
     font-weight: 600;
   }
 
+  @media (max-width: 900px) {
+    .col-grid { grid-template-columns: 1fr; gap: 28px; }
+    .feat { grid-template-columns: 1fr; }
+    .grp-row .go { display: none; }
+  }
   @media (max-width: 640px) {
     .columns-page { padding: 80px 16px 60px; }
+    .bundle-bar { grid-template-columns: 1fr; gap: 14px; padding: 16px 18px; }
     .col-hero { padding: 24px 18px 20px; }
     .col-hero h2 { font-size: 1.3rem; }
     .col-hero-top { gap: 10px; margin-bottom: 8px; }
-    .col-num { min-width: 36px; height: 36px; font-size: 1.15rem; padding: 0 10px; border-radius: 10px; }
+    .col-num { font-size: 1.8rem; }
     .sec { padding: 20px 18px; }
-    .feat { grid-template-columns: 1fr; }
-    .grp-row .go { display: none; }
   }
 </style>
