@@ -140,6 +140,7 @@ function main() {
     books.push({
       title: fm.title || slug,
       slug: fm.slug || slug,
+      series: seriesName,
       desc: fm.description || '',
       content: aggregated.substring(0, 50000), // 限制总长度
     });

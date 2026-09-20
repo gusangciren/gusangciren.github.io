@@ -216,6 +216,24 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
       color: var(--color-text-secondary, #999);
       font-size: 0.9rem;
     }
+    .search-group { padding: 6px 0; }
+    .search-group + .search-group,
+    .search-result-item + .search-group { border-top: 1px solid var(--color-border, #e5e5e5); }
+    .search-group .search-result-item:last-child { border-bottom: none; }
+    .search-group-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--color-text-secondary, #888);
+      padding: 10px 24px 4px;
+      letter-spacing: 0.3px;
+    }
+    .search-result-desc mark,
+    .search-result-title mark {
+      background: rgba(255, 224, 102, 0.7);
+      color: inherit;
+      border-radius: 2px;
+      padding: 0 1px;
+    }
 
     mark.search-highlight {
       background: linear-gradient(120deg, #ffe066 0%, #ffe066 100%);
@@ -279,6 +297,39 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
       return s;
     }
 
+    function escapeHtml(s) {
+      return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    function escapeReg(s) {
+      return (s || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+    function highlight(text, q) {
+      const safe = escapeHtml(text);
+      if (!q) return safe;
+      try {
+        const re = new RegExp('(' + escapeReg(q) + ')', 'gi');
+        return safe.replace(re, '<mark>$1</mark>');
+      } catch (e) { return safe; }
+    }
+    function matchScore(item, q) {
+      const t = (item.title || '').toLowerCase();
+      const d = (item.desc || '').toLowerCase();
+      const c = (item.content || '').toLowerCase();
+      if (t.includes(q)) return 3;
+      if (d.includes(q)) return 2;
+      if (c.includes(q)) return 1;
+      return 0;
+    }
+    function resultItemHtml(item, q, href, isBook) {
+      const snippet = getSnippet(item.content || '', q, 40);
+      const contentHit = (item.content || '').toLowerCase().includes(q);
+      const desc = (contentHit && snippet) ? snippet : (item.desc || snippet || '');
+      return '<a href="' + href + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+        '<div class="search-result-title"><span class="search-result-type' + (isBook ? ' book' : '') + '">' + (isBook ? '书籍' : '章节') + '</span>' + highlight(item.title, q) + '</div>' +
+        '<div class="search-result-desc">' + highlight(desc, q) + '</div>' +
+      '</a>';
+    }
+
     function renderResults(query) {
       const container = document.getElementById('search-results');
       if (!query.trim()) {
@@ -301,22 +352,25 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
         container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
         return;
       }
+      const bookBySeries = {};
+      index.books.forEach(b => { if (b.series) bookBySeries[b.series] = b.title; });
+
       let html = '';
-      matchedPosts.forEach(p => {
-        const snippet = getSnippet(p.content || '', q, 35);
-        const displayDesc = (p.desc || '') || snippet;
-        html += '<a href="/blog/' + p.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
-          '<div class="search-result-title"><span class="search-result-type">章节</span>' + p.title + '</div>' +
-          '<div class="search-result-desc">' + displayDesc + '</div>' +
-        '</a>';
-      });
-      matchedBooks.forEach(b => {
-        const snippet = getSnippet(b.content || '', q, 35);
-        const displayDesc = (b.desc || '') || snippet;
-        html += '<a href="/book/' + b.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
-          '<div class="search-result-title"><span class="search-result-type">书籍</span>' + b.title + '</div>' +
-          '<div class="search-result-desc">' + displayDesc + '</div>' +
-        '</a>';
+      // 书籍命中 → 单独作为「书籍」结果
+      if (matchedBooks.length) {
+        matchedBooks.sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        matchedBooks.forEach(b => { html += resultItemHtml(b, q, '/book/' + b.slug, true); });
+      }
+      // 章节按书籍分组
+      const groups = {};
+      matchedPosts.forEach(p => { const k = p.series || ''; (groups[k] = groups[k] || []).push(p); });
+      Object.keys(groups).forEach(series => {
+        const title = bookBySeries[series] || series || '其他';
+        groups[series].sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(title) + '》</div>';
+        groups[series].forEach(p => { html += resultItemHtml(p, q, '/blog/' + p.slug, false); });
+        html += '</div>';
       });
       container.innerHTML = html;
     }
@@ -343,32 +397,32 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
         (b.desc || '').toLowerCase().includes(q) ||
         (b.content || '').toLowerCase().includes(q)
       );
-      if (matchedPosts.length === 0 && matchedBooks.length === 0) {
+      const total = matchedPosts.length + matchedBooks.length;
+      if (total === 0) {
         container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
         container.classList.add('show');
         return;
       }
-      const total = matchedPosts.length + matchedBooks.length;
-      const showPosts = matchedPosts.slice(0, 4);
-      const showBooks = matchedBooks.slice(0, 3);
+      const bookBySeries = {};
+      index.books.forEach(b => { if (b.series) bookBySeries[b.series] = b.title; });
       let html = '';
-      showPosts.forEach(p => {
-        const snippet = getSnippet(p.content || '', q, 35);
-        const displayDesc = (p.desc || '') || snippet;
-        html += '<a href="/blog/' + p.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
-          '<div class="search-result-title"><span class="search-result-type">章节</span>' + p.title + '</div>' +
-          '<div class="search-result-desc">' + displayDesc + '</div>' +
-        '</a>';
+      if (matchedBooks.length) {
+        matchedBooks.slice(0, 2).sort((a, b) => matchScore(b, q) - matchScore(a, q)).forEach(b => {
+          html += resultItemHtml(b, q, '/book/' + b.slug, true);
+        });
+      }
+      const groups = {};
+      matchedPosts.forEach(p => { const k = p.series || ''; (groups[k] = groups[k] || []).push(p); });
+      let shown = 0;
+      Object.keys(groups).slice(0, 3).forEach(series => {
+        const title = bookBySeries[series] || series || '其他';
+        groups[series].sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(title) + '》</div>';
+        groups[series].slice(0, 3).forEach(p => { html += resultItemHtml(p, q, '/blog/' + p.slug, false); shown++; });
+        html += '</div>';
       });
-      showBooks.forEach(b => {
-        const snippet = getSnippet(b.content || '', q, 35);
-        const displayDesc = (b.desc || '') || snippet;
-        html += '<a href="/book/' + b.slug + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
-          '<div class="search-result-title"><span class="search-result-type">书籍</span>' + b.title + '</div>' +
-          '<div class="search-result-desc">' + displayDesc + '</div>' +
-        '</a>';
-      });
-      if (total > showPosts.length + showBooks.length) {
+      if (total > shown + Math.min(matchedBooks.length, 2)) {
         html += '<a href="#" class="hero-search-all" data-q="' + encodeURIComponent(q) + '">查看全部 ' + total + ' 条结果 →</a>';
       }
       container.innerHTML = html;
