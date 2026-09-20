@@ -59,12 +59,10 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
           <img src="/images/logo-header.png" alt="Logo" class="logo-img" />
           <span>像企业家一样写作</span>
         </a>
-        <div class="nav-links">
+        <div class="nav-links" id="nav-pill">
+          <span class="nav-slider" id="nav-slider"></span>
           <a href="/book">书籍</a>
           <a href="/columns">专栏</a>
-          <button id="nav-search-btn" class="nav-search-btn" aria-label="搜索" title="搜索（Ctrl/⌘ + K）">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
-          </button>
         </div>
       </div>
     </nav>
@@ -80,6 +78,41 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
       </div>
     </div>
 
+
+    <!-- 导航胶囊滑块（仿 iOS 相册 视频/照片 切换动态） -->
+    <script is:inline>
+      (function () {
+        var pill = document.getElementById('nav-pill');
+        var slider = document.getElementById('nav-slider');
+        if (!pill || !slider) return;
+        var links = Array.prototype.slice.call(pill.querySelectorAll('a'));
+        var path = window.location.pathname.replace(/\/+$/, '') || '/';
+        var activeIdx = -1;
+        links.forEach(function (a, i) {
+          var href = (a.getAttribute('href') || '').replace(/\/+$/, '');
+          if (href && (path === href || path.indexOf(href + '/') === 0)) activeIdx = i;
+        });
+        if (activeIdx < 0) { slider.style.opacity = '0'; return; }
+        links[activeIdx].classList.add('active');
+        function move(idx, animate) {
+          var a = links[idx];
+          if (!a) return;
+          if (!animate) slider.style.transition = 'none';
+          slider.style.width = a.offsetWidth + 'px';
+          slider.style.transform = 'translateX(' + a.offsetLeft + 'px)';
+          if (!animate) {
+            void slider.offsetWidth; /* 强制回流，让下一次位移产生过渡动画 */
+            slider.style.transition = '';
+          }
+        }
+        /* iOS 动态：先停在另一项上，再滑到当前项 */
+        move(activeIdx === 0 ? 1 : 0, false);
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () { move(activeIdx, true); });
+        });
+        window.addEventListener('resize', function () { move(activeIdx, false); });
+      })();
+    </script>
 
     <main>
       <slot />
@@ -535,10 +568,6 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
     });
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeSearch();
-      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-        e.preventDefault();
-        loadSearchIndex().then(() => openSearch());
-      }
     });
     });
   </script>

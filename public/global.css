@@ -72,18 +72,46 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
   border: 1.5px solid rgba(245, 80, 0, 0.15);
 }
+/* 导航胶囊分段控件（仿 iOS 相册 视频/照片 切换） */
 .nav-links {
-  display: flex;
-  gap: 32px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  background: #f0efed;
+  border-radius: 999px;
+  padding: 4px;
 }
 .nav-links a {
+  position: relative;
+  z-index: 1;
+  padding: 7px 22px;
+  border-radius: 999px;
   font-size: 14px;
   color: var(--color-text-secondary);
   text-decoration: none;
-  transition: color 0.2s;
+  transition: color 0.3s;
+  white-space: nowrap;
 }
 .nav-links a:hover {
+  color: var(--color-text);
+}
+.nav-links a.active {
   color: var(--color-accent);
+  font-weight: 600;
+}
+.nav-slider {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  width: 0;
+  height: calc(100% - 8px);
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1),
+              width 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+  will-change: transform;
+  pointer-events: none;
 }
 
 /* ========== Main ========== */
@@ -813,8 +841,8 @@ html { scroll-behavior: smooth; }
   .nav-inner {
     padding: 0 16px;
   }
-  .nav-links {
-    gap: 20px;
+  .nav-links a {
+    padding: 6px 16px;
   }
   .prose {
     padding: 0 16px;
@@ -859,10 +887,8 @@ html { scroll-behavior: smooth; }
     gap: 0;
     padding: 4px;
   }
-  .nav-links {
-    gap: 16px;
-  }
   .nav-links a {
+    padding: 5px 14px;
     font-size: 13px;
   }
   /* 兜底：极端窄屏允许横向滚动，绝不撑破 */
