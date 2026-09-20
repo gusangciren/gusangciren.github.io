@@ -52,8 +52,9 @@ if (chapterSize && chapters.length > 0) {
         <img src={book.data.cover} alt={book.data.title} class="book-cover-img" />
       </div>
       <div class="book-details">
-        <h1>《{book.data.title}》</h1>
-        {book.data.subtitle && <p class="tagline">{book.data.subtitle}</p>}
+        <h1>
+          《{book.data.title}{book.data.subtitle ? `：${book.data.subtitle}` : ''}》
+        </h1>
         {book.data.motto && <p class="motto">「{book.data.motto}」</p>}
         <p class="desc">{book.data.description}</p>
         <div class="book-stats">

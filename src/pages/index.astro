@@ -29,7 +29,8 @@ function getUnit(book) {
 }
 
 function titleWithBrackets(name) {
-  return /^[A-Za-z]/.test(name) ? name : `《${name}》`;
+  /* 只要含中文就加书名号（含 YC 创业课这类中英混排），纯英文书名才不加 */
+  return /[一-龥]/.test(name) ? `《${name}》` : name;
 }
 ---
 
@@ -71,7 +72,7 @@ function titleWithBrackets(name) {
                 <img src={book.data.cover} alt={book.data.title} />
               </div>
               <h3>{titleWithBrackets(title)}</h3>
-              {book.data.subtitle && <p class="book-card-hook">{book.data.subtitle}</p>}
+              {book.data.motto && <p class="book-card-hook">{book.data.motto}</p>}
               {chapterCount > 0 && (
                 <span class="book-card-cta">{chapterCount} {unit} · 开始阅读 →</span>
               )}
@@ -253,8 +254,10 @@ function titleWithBrackets(name) {
       line-height: 1.45;
     }
     .book-card-hook {
+      font-family: var(--font-serif);
       font-size: 13px;
-      color: var(--color-text-secondary);
+      font-style: italic;
+      color: var(--color-accent);
       margin-bottom: 14px;
       line-height: 1.55;
     }
