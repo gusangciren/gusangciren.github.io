@@ -879,13 +879,15 @@ html { scroll-behavior: smooth; }
     padding: 0 14px;
     gap: 8px;
   }
-  /* 窄屏只留 Logo 图标 + 站点名缩写，避免与链接挤压 */
+  /* 窄屏保留 Logo 图标 + 站点名，字号略收 */
   .logo span {
-    display: none;
+    display: inline;
+    font-size: 13px;
+    letter-spacing: 0.04em;
   }
   .logo {
-    gap: 0;
-    padding: 4px;
+    gap: 8px;
+    padding: 4px 6px;
   }
   .nav-links a {
     padding: 5px 14px;
