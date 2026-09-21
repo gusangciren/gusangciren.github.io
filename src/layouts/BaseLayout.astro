@@ -123,10 +123,45 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
       <div class="footer-inner">
         <p>© 2026 像企业家一样写作</p>
         <div class="footer-links">
-          <a href="https://mp.weixin.qq.com/" target="_blank">公众号：种一个梦</a>
+          <button type="button" class="footer-link-btn" id="wechat-qr-trigger">有任何问题，码上办，联系本人</button>
         </div>
       </div>
     </footer>
+
+    <!-- 微信名片二维码浮层 -->
+    <div id="wechat-qr-overlay" class="wechat-qr-overlay" aria-hidden="true">
+      <div class="wechat-qr-modal">
+        <button type="button" class="wechat-qr-close" id="wechat-qr-close" aria-label="关闭">✕</button>
+        <img src="/images/wechat-qr.png" alt="微信名片二维码" />
+        <p class="wechat-qr-cap">微信扫一扫，联系本人</p>
+      </div>
+    </div>
+
+  <script is:inline>
+    (function () {
+      var trigger = document.getElementById('wechat-qr-trigger');
+      var overlay = document.getElementById('wechat-qr-overlay');
+      var closeBtn = document.getElementById('wechat-qr-close');
+      if (!trigger || !overlay) return;
+      function openQr() {
+        overlay.classList.add('active');
+        overlay.setAttribute('aria-hidden', 'false');
+      }
+      function closeQr() {
+        overlay.classList.remove('active');
+        overlay.setAttribute('aria-hidden', 'true');
+      }
+      trigger.addEventListener('click', openQr);
+      if (closeBtn) closeBtn.addEventListener('click', closeQr);
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeQr();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeQr();
+      });
+    })();
+  </script>
+
   <style is:global>
     /* ===== 导航搜索图标 ===== */
     .nav-search-btn {
@@ -294,6 +329,83 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
       .search-modal { width: 96%; border-radius: 12px; }
       #search-input { padding: 16px 18px; font-size: 1rem; }
     }
+
+    /* ===== 页脚微信二维码入口 ===== */
+    .footer-links button.footer-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(245,80,0,.08);
+      border: 1.5px solid rgba(245,80,0,.18);
+      border-radius: 22px;
+      padding: 6px 14px;
+      margin: 0;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-accent);
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .footer-links button.footer-link-btn:hover {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      color: #fff;
+    }
+
+    .wechat-qr-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.5);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .wechat-qr-overlay.active { display: flex; }
+    .wechat-qr-modal {
+      position: relative;
+      background: #fff;
+      border-radius: 18px;
+      padding: 26px 26px 22px;
+      width: min(92vw, 320px);
+      text-align: center;
+      box-shadow: 0 24px 80px rgba(0,0,0,.3);
+      animation: qrPop .25s ease;
+    }
+    @keyframes qrPop {
+      from { opacity: 0; transform: translateY(-12px) scale(.96); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .wechat-qr-modal img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      display: block;
+    }
+    .wechat-qr-cap {
+      margin: 14px 0 0;
+      font-size: 14px;
+      color: #333;
+      font-weight: 600;
+    }
+    .wechat-qr-close {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      width: 30px;
+      height: 30px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(0,0,0,.06);
+      color: #666;
+      font-size: 14px;
+      cursor: pointer;
+      line-height: 1;
+      transition: background .2s, color .2s;
+    }
+    .wechat-qr-close:hover { background: rgba(245,80,0,.1); color: var(--color-accent); }
   </style>
 
   <script is:inline>
