@@ -3,6 +3,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import CTASection from '../../components/CTASection.astro';
 import { getCollection, render } from 'astro:content';
 
+function titleWithBrackets(name: string) {
+  return /[一-龥]/.test(name) ? `《${name}》` : name;
+}
+
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
   return posts.map((post) => ({
@@ -25,93 +29,128 @@ if (post.data.series && post.data.seriesOrder !== undefined) {
 
 const isSeries = seriesPosts.length > 0;
 
+// 取当前书籍的完整书名（含副标题），统一用书名号
+const allBooks = await getCollection('books');
+const currentBook = allBooks.find(b => b.data.seriesName === post.data.series);
+const bookDisplayTitle = currentBook
+  ? titleWithBrackets(
+      currentBook.data.subtitle
+        ? `${currentBook.data.title}：${currentBook.data.subtitle}`
+        : currentBook.data.title
+    )
+  : (post.data.series ? `《${post.data.series}》` : '');
+
 // 计算上一篇/下一篇
 const currentIndex = isSeries ? seriesPosts.findIndex(p => p.data.slug === post.data.slug) : -1;
 const prevPost = currentIndex > 0 ? seriesPosts[currentIndex - 1] : null;
 const nextPost = currentIndex >= 0 && currentIndex < seriesPosts.length - 1 ? seriesPosts[currentIndex + 1] : null;
+
+const seriesTotal = seriesPosts.length;
+const seriesOrder = currentIndex >= 0 ? currentIndex + 1 : 0;
+
+// 阅读时长估算（中文约 350 字/分钟）
+const rawLen = (post.body || '').length;
+const readingMin = Math.max(1, Math.round(rawLen / 350));
+
+function stripSeries(name: string) {
+  return name.replace(/^《?/, '《').replace(/》?$/, '》');
+}
+function cleanTitle(t: string, s: string) {
+  return t.replace(new RegExp(`^${s}[：:·\\s]*`), '').trim();
+}
 ---
 
 <BaseLayout title={`${post.data.title} — 像企业家一样写作`} description={post.data.description}>
-  <!-- 阅读进度条 -->
+  <!-- 阅读进度条（顶部细线，吸顶常驻） -->
   <div id="reading-progress" class="reading-progress"></div>
 
   {isSeries ? (
-    <!-- 书籍系列：左侧目录 + 右侧正文 -->
-    <div class="book-layout">
-      <!-- 左侧目录 -->
-      <aside class="book-toc">
-        <div class="book-toc-inner">
-          <div class="book-toc-header">
-            <span class="book-toc-series">{post.data.series}</span>
-            <span class="book-toc-count">目录</span>
-          </div>
-          <nav class="book-toc-nav">
-            {seriesPosts.map((p) => (
-              <div class={`book-toc-section ${p.data.slug === post.data.slug ? 'active' : ''}`}>
-                <a
-                  href={`/blog/${p.data.slug}`}
-                  class="book-toc-item"
-                >
-                  <span class="book-toc-order">{(p.data.seriesOrder as number)}</span>
-                  <span class="book-toc-title">{p.data.title.replace(new RegExp(`^${p.data.series}[：:·\\s]*`), '')}</span>
-                </a>
-                {p.data.slug === post.data.slug && post.data.subChapters && (
-                  <div class="book-toc-sub">
-                    {post.data.subChapters.map((ch: string) => (
-                      <a href={`/blog/${post.data.slug}#${ch.replace(/[：:？?!！\s·]/g, '').toLowerCase()}`} class="book-toc-sub-item">
-                        {ch}
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </nav>
-          <a href="/book" class="book-toc-back">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-            返回书架
-          </a>
-        </div>
-      </aside>
+    <!-- 书籍系列：杂志章节页（方案 C 优化版） -->
+    <div class="reader">
+      <!-- 吸顶极简条：滚过章首后出现 -->
+      <div class="reader-mini" id="reader-mini">
+        <a href="/book" class="reader-mini-back" aria-label="返回书架">←</a>
+        <span class="reader-mini-book">{post.data.series}</span>
+        <span class="reader-mini-sep">·</span>
+        <span class="reader-mini-chapter">{cleanTitle(post.data.title, post.data.series)}</span>
+        <span class="reader-mini-pct" id="mini-pct">0%</span>
+      </div>
 
-      <!-- 右侧正文 -->
-      <main class="book-main">
-        <article class="prose">
-          <header class="article-header">
-            <h1>{post.data.title}</h1>
-            <div class="article-meta">
-              <span class="article-series">{post.data.series}</span>
-              <time>
-                {new Date(post.data.date).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}
-              </time>
+      <!-- 章首大标题区：超大章节号 + 居左内容 -->
+      <header class="reader-hero">
+        <div class="reader-hero-inner">
+          <div class="reader-hero-num" aria-hidden="true">{String(seriesOrder).padStart(2, '0')}</div>
+          <div class="reader-hero-text">
+            <a href="/book" class="reader-hero-back">← 返回书架</a>
+            <div class="reader-hero-book">{bookDisplayTitle}</div>
+            <div class="reader-hero-chapter">第 {seriesOrder} 章 / 共 {seriesTotal} 章</div>
+            <h1 class="reader-hero-title">{cleanTitle(post.data.title, post.data.series)}</h1>
+            <div class="reader-hero-meta">
+              <time>{new Date(post.data.date).toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
+              <span class="reader-hero-dot">·</span>
+              <span>约 {readingMin} 分钟阅读</span>
             </div>
-          </header>
-          <Content />
-          <CTASection />
-          {(prevPost || nextPost) && (
-            <nav class="article-nav">
-              {prevPost ? (
-                <a href={`/blog/${prevPost.data.slug}`} class="article-nav-link article-nav-prev">
-                  <span class="article-nav-label">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-                    阅读上一篇
-                  </span>
-                  <span class="article-nav-title">{prevPost.data.title.replace(new RegExp(`^${prevPost.data.series}[：:·\\s]*`), '')}</span>
-                </a>
-              ) : <span />}
-              {nextPost ? (
-                <a href={`/blog/${nextPost.data.slug}`} class="article-nav-link article-nav-next">
-                  <span class="article-nav-label">
-                    阅读下一篇
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                  </span>
-                  <span class="article-nav-title">{nextPost.data.title.replace(new RegExp(`^${nextPost.data.series}[：:·\\s]*`), '')}</span>
-                </a>
-              ) : <span />}
+          </div>
+        </div>
+      </header>
+
+      <!-- 正文 + 时间线目录 -->
+      <div class="reader-body">
+        <aside class="reader-toc" id="reader-toc">
+          <div class="reader-toc-inner">
+            <div class="reader-toc-book">{bookDisplayTitle}</div>
+            <nav class="reader-toc-nav">
+              {seriesPosts.map((p, i) => (
+                <div class={`reader-toc-item-wrap ${p.data.slug === post.data.slug ? 'active' : ''} ${i < currentIndex ? 'done' : ''}`}>
+                  <a href={`/blog/${p.data.slug}`} class="reader-toc-item">
+                    <span class="reader-toc-title">{cleanTitle(p.data.title, p.data.series)}</span>
+                  </a>
+                  {p.data.slug === post.data.slug && post.data.subChapters && (
+                    <div class="reader-toc-sub">
+                      {post.data.subChapters.map((ch: string) => (
+                        <a href={`/blog/${post.data.slug}#${ch.replace(/[：:？?!！\s·]/g, '').toLowerCase()}`} class="reader-toc-sub-item">{ch}</a>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
             </nav>
-          )}
-        </article>
-      </main>
+          </div>
+        </aside>
+
+        <main class="reader-main">
+          <article class="prose reader-prose">
+            <Content />
+            <CTASection />
+          </article>
+
+          <!-- 底部导航 -->
+          <nav class="reader-footnav">
+            {prevPost ? (
+              <a href={`/blog/${prevPost.data.slug}`} class="reader-prev">
+                <span class="reader-foot-label">← 上一章</span>
+                <span class="reader-foot-title">{cleanTitle(prevPost.data.title, prevPost.data.series)}</span>
+              </a>
+            ) : <span class="reader-prev reader-prev-disabled"><span class="reader-foot-label">这是第一章</span></span>}
+
+            {nextPost ? (
+              <a href={`/blog/${nextPost.data.slug}`} class="reader-next">
+                <span class="reader-foot-label">继续阅读下一章 →</span>
+                <span class="reader-foot-title">{cleanTitle(nextPost.data.title, nextPost.data.series)}</span>
+              </a>
+            ) : (
+              <a href="/book" class="reader-next reader-next-done">
+                <span class="reader-foot-label">已读完 · 返回书架 →</span>
+                <span class="reader-foot-title">查看更多书籍</span>
+              </a>
+            )}
+          </nav>
+        </main>
+      </div>
+
+      <!-- 移动端目录抽屉 -->
+      <button class="reader-toc-toggle" id="reader-toc-toggle" aria-label="打开目录">目录</button>
+      <div class="reader-toc-scrim" id="reader-toc-scrim"></div>
     </div>
   ) : (
     <!-- 普通文章：单栏布局 -->
@@ -131,11 +170,10 @@ const nextPost = currentIndex >= 0 && currentIndex < seriesPosts.length - 1 ? se
 </BaseLayout>
 
 <style is:global>
-  /* 阅读进度条 */
+  /* 阅读进度条（顶部细线） */
   .reading-progress {
     position: fixed;
-    top: 0;
-    left: 0;
+    top: 0; left: 0;
     height: 3px;
     background: #f55000;
     width: 0%;
@@ -143,344 +181,303 @@ const nextPost = currentIndex >= 0 && currentIndex < seriesPosts.length - 1 ? se
     opacity: 0;
     transition: opacity 0.3s ease;
   }
-  .reading-progress.show {
-    opacity: 1;
-  }
+  .reading-progress.show { opacity: 1; }
 
-  /* ===== 书籍双栏布局 ===== */
-  .book-layout {
-    display: flex;
-    align-items: flex-start;
-    max-width: 1100px;
+  /* ===== 杂志章节页（方案 C 优化） ===== */
+  .reader {
+    position: relative;
+    max-width: 1040px;
     margin: 0 auto;
-    padding: 0 16px;
-    gap: 0;
+    padding: 0 20px;
   }
 
-  /* 左侧目录 */
-  .book-toc {
-    width: 260px;
-    flex-shrink: 0;
-    position: sticky;
-    top: 72px;
-    max-height: calc(100vh - 88px);
-    overflow-y: auto;
-    padding: 24px 0;
-    scrollbar-width: thin;
-    scrollbar-color: #e7e5e4 transparent;
-  }
-  .book-toc::-webkit-scrollbar {
-    width: 4px;
-  }
-  .book-toc::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .book-toc::-webkit-scrollbar-thumb {
-    background: #e7e5e4;
-    border-radius: 4px;
-  }
-
-  .book-toc-inner {
-    padding: 0 20px 0 0;
-    border-right: 1px solid #e7e5e4;
-  }
-
-  .book-toc-header {
+  /* 吸顶极简条 */
+  .reader-mini {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 50px;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid #e7e5e4;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #f0eeec;
-  }
-  .book-toc-series {
+    gap: 10px;
+    padding: 0 20px;
+    z-index: 9000;
     font-size: 13px;
+    transform: translateY(-100%);
+    opacity: 0;
+    transition: transform 0.28s ease, opacity 0.28s ease;
+  }
+  .reader-mini.show { transform: translateY(0); opacity: 1; }
+  .reader-mini-back {
+    text-decoration: none; color: #78716c; font-size: 16px; flex-shrink: 0;
+  }
+  .reader-mini-back:hover { color: var(--color-accent); }
+  .reader-mini-book { font-weight: 700; color: #1c1917; flex-shrink: 0; }
+  .reader-mini-sep { color: #d6d3d1; }
+  .reader-mini-chapter {
+    color: #57534e; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-width: 0;
+  }
+  .reader-mini-pct { color: var(--color-accent); font-weight: 700; flex-shrink: 0; margin-left: auto; }
+
+  /* 章首大标题区 */
+  .reader-hero {
+    padding: 56px 0 30px;
+    border-bottom: 1px solid #f0eeec;
+    margin-bottom: 32px;
+  }
+  .reader-hero-inner {
+    display: flex;
+    align-items: flex-start;
+    gap: 28px;
+  }
+  .reader-hero-back {
+    display: inline-block;
+    font-size: 12.5px;
+    color: #a8a29e;
+    text-decoration: none;
+    margin-bottom: 16px;
+    transition: color 0.15s;
+  }
+  .reader-hero-back:hover { color: var(--color-accent); }
+  .reader-hero-book {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
     font-weight: 700;
     color: #1c1917;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
+    margin-bottom: 12px;
+    line-height: 1.45;
   }
-  .book-toc-count {
-    font-size: 12px;
-    color: #fff;
-    background: #f55000;
-    padding: 4px 10px;
-    border-radius: 5px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
+  .reader-hero-chapter {
+    font-size: 12px; font-weight: 700; color: var(--color-accent); letter-spacing: 0.06em; margin-bottom: 12px;
+  }
+  .reader-hero-title {
+    font-family: var(--font-serif);
+    font-size: 2.1rem;
+    font-weight: 700;
+    line-height: 1.35;
+    margin: 0 0 14px;
+    color: #1c1917;
+  }
+  .reader-hero-meta {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: #78716c;
+  }
+  .reader-hero-dot { color: #d6d3d1; }
+
+  /* 超大章节号（V4 左对齐版） */
+  .reader-hero-num {
+    flex-shrink: 0;
+    font-family: var(--font-serif);
+    font-size: 7rem;
+    font-weight: 800;
+    line-height: 1;
+    color: rgba(245, 80, 0, 0.08);
+    user-select: none;
+    margin-top: -12px;
+    width: 100px;
+    text-align: right;
   }
 
-  .book-toc-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
+  /* 正文 + 时间线目录 */
+  .reader-body { display: flex; align-items: flex-start; gap: 40px; }
+
+  .reader-toc {
+    width: 220px; flex-shrink: 0;
+    position: sticky; top: 72px;
+    max-height: calc(100vh - 92px);
+    overflow-y: auto;
+    padding: 4px 0 20px;
+    scrollbar-width: thin; scrollbar-color: #e7e5e4 transparent;
   }
-  .book-toc-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    padding: 7px 10px;
-    border-radius: 8px;
+  .reader-toc::-webkit-scrollbar { width: 4px; }
+  .reader-toc::-webkit-scrollbar-thumb { background: #e7e5e4; border-radius: 4px; }
+
+  .reader-toc-book {
+    font-size: 12px; font-weight: 700; color: #a8a29e;
+    letter-spacing: 0.04em; margin-bottom: 16px;
+  }
+  .reader-toc-nav { position: relative; padding-left: 18px; }
+  .reader-toc-nav::before {
+    content: ''; position: absolute; left: 5px; top: 12px; bottom: 12px;
+    width: 2px; background: #e7e5e4;
+  }
+  .reader-toc-item-wrap { position: relative; }
+  .reader-toc-item {
+    display: block;
+    padding: 9px 8px;
     text-decoration: none;
-    border: none;
     color: #57534e;
     font-size: 13px;
     line-height: 1.5;
+    border-radius: 6px;
     transition: background 0.15s, color 0.15s;
   }
-  .book-toc-item:hover {
-    background: #f5f5f4;
-    color: #1c1917;
-    border: none;
+  .reader-toc-item:hover { background: #f5f5f4; color: #1c1917; }
+  .reader-toc-item-wrap::before {
+    content: ''; position: absolute; left: -13px; top: 15px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #fff; border: 2px solid #d6d3d1;
+    z-index: 1;
   }
-  .book-toc-section.active .book-toc-item {
-    background: rgba(245, 80, 0, 0.08);
-    color: #F55000;
-    font-weight: 600;
-    border-radius: 8px 8px 0 0;
+  .reader-toc-item-wrap.done::before { background: #d6d3d1; border-color: #d6d3d1; }
+  .reader-toc-item-wrap.active .reader-toc-item {
+    color: var(--color-accent); font-weight: 700; background: rgba(245,80,0,0.05);
   }
-  .book-toc-order {
-    flex-shrink: 0;
-    width: 18px;
-    height: 18px;
-    font-size: 11px;
-    line-height: 18px;
-    text-align: center;
-    border-radius: 4px;
-    background: #f0eeec;
-    color: #a8a29e;
-    margin-top: 1px;
+  .reader-toc-item-wrap.active::before {
+    background: var(--color-accent); border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(245,80,0,0.15);
   }
-  .book-toc-item.active .book-toc-order {
-    background: rgba(245, 80, 0, 0.15);
-    color: #F55000;
+  .reader-toc-sub {
+    display: flex; flex-direction: column; gap: 1px;
+    padding: 4px 0 8px 8px;
+    background: rgba(245,80,0,0.03);
+    border-radius: 0 0 6px 6px;
   }
-  .book-toc-section.active .book-toc-order {
-    background: rgba(245, 80, 0, 0.15);
-    color: #F55000;
-  }
-
-  /* 子标题目录 */
-  .book-toc-sub {
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-    padding: 4px 0 6px 36px;
-    border-radius: 0 0 8px 8px;
-    background: rgba(245, 80, 0, 0.04);
-  }
-  .book-toc-sub-item {
-    display: block;
-    padding: 5px 10px;
-    font-size: 12px;
-    line-height: 1.5;
-    color: #78716c;
-    text-decoration: none;
-    border: none;
-    border-radius: 5px;
-    transition: color 0.15s, background 0.15s;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .book-toc-sub-item:hover {
-    color: #F55000;
-    background: rgba(245, 80, 0, 0.06);
-  }
-  .book-toc-title {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .book-toc-back {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 20px;
-    padding: 8px 10px;
-    font-size: 12px;
-    color: #a8a29e;
-    text-decoration: none;
-    border: none;
-    border-radius: 6px;
+  .reader-toc-sub-item {
+    display: block; padding: 5px 10px; font-size: 12px; color: #78716c;
+    text-decoration: none; border-radius: 5px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     transition: color 0.15s, background 0.15s;
   }
-  .book-toc-back:hover {
-    color: #57534e;
-    background: #f5f5f4;
-    border: none;
-  }
+  .reader-toc-sub-item:hover { color: var(--color-accent); background: rgba(245,80,0,0.06); }
 
-  /* 文章底部上一篇/下一篇导航 */
-  .article-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: stretch;
-    gap: 16px;
-    margin-top: 48px;
-    padding-top: 32px;
+  .reader-main { flex: 1; min-width: 0; }
+  .reader-prose { max-width: 680px; margin: 0; padding: 0; }
+  .reader-prose .article-header { display: none; }
+
+  /* 底部导航 */
+  .reader-footnav {
+    display: flex; gap: 16px;
+    margin-top: 48px; padding-top: 32px;
     border-top: 1px solid #e7e5e4;
   }
-  .article-nav-link {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 14px 18px;
-    border-radius: 10px;
-    background: #fff;
-    border: 1px solid #e7e5e4;
+  .reader-prev, .reader-next {
+    display: flex; flex-direction: column; gap: 6px;
     text-decoration: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .reader-prev {
+    flex: 0 0 auto; max-width: 240px;
+    padding: 14px 18px;
+    border: 1px solid #e7e5e4; border-radius: 10px;
+    background: #fff; transition: border-color 0.2s;
+  }
+  .reader-prev:hover { border-color: #d6d3d1; }
+  .reader-prev-disabled { color: #d6d3d1; border-style: dashed; }
+  .reader-next {
     flex: 1;
-    max-width: 280px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    align-items: flex-end; text-align: right;
+    padding: 14px 22px;
+    border-radius: 12px;
+    background: var(--color-accent); color: #fff;
+    transition: background 0.2s, transform 0.15s;
   }
-  .article-nav-link:hover {
-    border-color: #f55000;
-    box-shadow: 0 4px 12px rgba(245,80,0,0.08);
-  }
-  .article-nav-prev {
-    align-items: flex-start;
-  }
-  .article-nav-next {
-    align-items: flex-end;
-    text-align: right;
-  }
-  .article-nav-label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
+  .reader-next:hover { background: #d94500; transform: translateY(-1px); }
+  .reader-next-done { background: #1c1917; }
+  .reader-next-done:hover { background: #000; }
+  .reader-foot-label {
+    display: block; font-size: 12px; font-weight: 500;
     color: #a8a29e;
-    font-weight: 500;
   }
-  .article-nav-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: #1c1917;
-    line-height: 1.4;
+  .reader-next .reader-foot-label { color: rgba(255,255,255,0.8); }
+  .reader-foot-title {
+    display: block; font-size: 14px; font-weight: 700; color: #1c1917; line-height: 1.4;
   }
-  .article-nav-link:hover .article-nav-title {
-    color: #f55000;
+  .reader-next .reader-foot-title { color: #fff; }
+
+  /* 移动端目录抽屉 */
+  .reader-toc-toggle {
+    display: none;
+    position: fixed; right: 18px; bottom: 22px;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--color-accent); color: #fff; border: none;
+    font-size: 13px; font-weight: 600;
+    box-shadow: 0 6px 18px rgba(245,80,0,0.32);
+    z-index: 60; cursor: pointer;
+  }
+  .reader-toc-scrim {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.4); z-index: 55;
+  }
+  body.toc-open .reader-toc-scrim { display: block; }
+  body.toc-open .reader-toc {
+    transform: translateX(0) !important;
   }
 
-  /* 右侧正文区 */
-  .book-main {
-    flex: 1;
-    min-width: 0;
-    padding-left: 40px;
-  }
-  .book-main .prose {
-    max-width: 680px;
-    margin: 0;
-    padding: 0;
-  }
+  @media (max-width: 860px) {
+    .reader { padding: 0 16px; }
+    .reader-hero { padding: 36px 0 22px; }
+    .reader-hero-title { font-size: 1.7rem; }
+    .reader-hero-inner { gap: 18px; }
+    .reader-hero-num { font-size: 5rem; width: 72px; margin-top: -8px; }
 
-  /* 移动端：折叠目录 */
-  @media (max-width: 768px) {
-    .book-layout {
-      flex-direction: column;
-      padding: 0;
+    .reader-body { flex-direction: column; gap: 0; }
+    .reader-toc {
+      position: fixed; top: 0; left: 0; bottom: 0;
+      width: 80%; max-width: 300px;
+      background: #fff; z-index: 58;
+      padding: 20px 16px;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      box-shadow: 4px 0 24px rgba(0,0,0,0.1);
     }
-    .book-toc {
-      width: 100%;
-      position: static;
-      max-height: none;
-      padding: 0;
-      border-bottom: none;
-      margin-bottom: 0;
-      background: #fafaf9;
-    }
-    .book-toc-inner {
-      padding: 0;
-      border-right: none;
-    }
-    .book-toc-nav {
-      display: none; /* 移动端默认折叠 */
-    }
-    .book-toc.expanded .book-toc-nav {
-      display: flex;
-      padding: 0 16px 16px;
-    }
-    .book-toc-header {
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px;
-      margin-bottom: 0;
-      border-bottom: 1px solid #e7e5e4;
-      background: #f5f5f4;
-      -webkit-tap-highlight-color: transparent;
-      min-height: 48px;
-    }
-    .book-toc-header::after {
-      content: '▾';
-      font-size: 16px;
-      color: #78716c;
-      transition: transform 0.2s;
-      flex-shrink: 0;
-      margin-left: 8px;
-    }
-    .book-toc.expanded .book-toc-header {
-      border-bottom: none;
-      padding: 16px;
-    }
-    .book-toc.expanded .book-toc-header::after {
-      transform: rotate(180deg);
-    }
-    .book-toc-item {
-      padding: 12px 10px;
-      font-size: 14px;
-      border-radius: 8px;
-      min-height: 44px;
-      align-items: center;
-    }
-    .book-toc-order {
-      width: 22px;
-      height: 22px;
-      font-size: 12px;
-      line-height: 22px;
-    }
-    .book-toc-back {
-      padding: 14px 16px;
-      margin-top: 0;
-      border-top: 1px solid #e7e5e4;
-      font-size: 13px;
-      min-height: 44px;
-      align-items: center;
-    }
-    .book-main {
-      padding: 0 16px;
-    }
-    .book-main .prose {
-      max-width: 100%;
-    }
+    .reader-toc-toggle { display: flex; align-items: center; justify-content: center; }
+    .reader-prose { max-width: 100%; }
+    .reader-footnav { flex-direction: column; }
+    .reader-prev { max-width: none; }
+    .reader-next { align-items: flex-start; text-align: left; }
   }
 </style>
 
 <script>
-  (function() {
-    // 阅读进度条
+  (function () {
     const bar = document.getElementById('reading-progress');
-    if (bar) {
-      function updateProgress() {
-        const scrollTop = window.scrollY || document.documentElement.scrollTop;
-        const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-        bar.style.width = progress + '%';
+    const mini = document.getElementById('reader-mini');
+    const miniPct = document.getElementById('mini-pct');
+    const hero = document.querySelector('.reader-hero');
+
+    function update() {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const pct = docHeight > 0 ? Math.min(100, Math.max(0, (scrollTop / docHeight) * 100)) : 0;
+      const pctR = Math.round(pct);
+
+      if (bar) {
+        bar.style.width = pct + '%';
         bar.classList.toggle('show', scrollTop > 50);
       }
-      window.addEventListener('scroll', updateProgress, { passive: true });
-      updateProgress();
+      if (miniPct) miniPct.textContent = pctR + '%';
+      if (mini && hero) {
+        mini.classList.toggle('show', scrollTop > hero.offsetHeight + 20);
+      }
     }
 
-    // 移动端：点击目录标题展开/折叠
-    const tocHeader = document.querySelector('.book-toc-header');
-    const toc = document.querySelector('.book-toc');
-    if (tocHeader && toc) {
-      tocHeader.addEventListener('click', function() {
-        toc.classList.toggle('expanded');
-      });
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+
+    // 移动端目录抽屉
+    const toggle = document.getElementById('reader-toc-toggle');
+    const scrim = document.getElementById('reader-toc-scrim');
+    const toc = document.getElementById('reader-toc');
+    function closeToc() { document.body.classList.remove('toc-open'); }
+    if (toggle) {
+      toggle.addEventListener('click', () => document.body.classList.toggle('toc-open'));
     }
+    if (scrim) scrim.addEventListener('click', closeToc);
+    if (toc) {
+      toc.querySelectorAll('a').forEach(a => a.addEventListener('click', closeToc));
+    }
+
+    // 键盘 ← / → 跳章
+    document.addEventListener('keydown', (e) => {
+      if (e.target && /^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
+      const prev = document.querySelector('.reader-prev[href]');
+      const next = document.querySelector('.reader-next[href]');
+      if (e.key === 'ArrowLeft' && prev) { window.location.href = prev.getAttribute('href'); }
+      if (e.key === 'ArrowRight' && next) { window.location.href = next.getAttribute('href'); }
+    });
   })();
 </script>
