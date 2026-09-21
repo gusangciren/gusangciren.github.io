@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeader from '../components/SectionHeader.astro';
+import ReaderLetter from '../components/ReaderLetter.astro';
 import { getCollection } from 'astro:content';
 import { columns } from '../data/columns';
 
@@ -113,6 +114,9 @@ function titleWithBrackets(name) {
       </div>
     </div>
   </section>
+
+  {/* ===== 致读者的一封信（拆信交互 · A2 悬念款） ===== */}
+  <ReaderLetter />
 
   <style is:global>
     /* ===== Hero 内联搜索（方案 B） ===== */

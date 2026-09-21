@@ -1,0 +1,226 @@
+---
+/**
+ * 读者信 · 航空信封拆信组件（A2 斜插露角 · 方案一：正式来信栏 + 米白全屏信纸）
+ * 放置于首页专栏区块下方。点击信封 → 全屏读信（Esc / ✕ / 点背景关闭）。
+ * 信内二维码复用页脚 wechat-qr 弹层；暗号与公众号二维码图片为占位。
+ * 2026-09-22：整体放大版（强存在感）。
+ */
+---
+
+<div class="rdl-wrap">
+  {/* ===== 引导栏：让读者一眼知道这是站长写的信 ===== */}
+  <div class="rdl-headbar">
+    <div class="rdl-ic">✉</div>
+    <h2 class="rdl-h2">《致读者的一封信》</h2>
+    <p class="rdl-sub">关于免费资料、AI 时代的用法，以及怎么找到我</p>
+  </div>
+
+  {/* ===== 信封 ===== */}
+  <div class="rdl-stage">
+    <div class="rdl-scene" id="rdl-scene">
+      <div class="rdl-env">
+        <div class="rdl-face">
+          <div class="rdl-back"></div>
+          <div class="rdl-lpeek">
+            <span class="rdl-lp-tag">✈ 致读者的一封信</span>
+            <div class="rdl-lp-title">“我”读完，就让 <em>AI</em> 读。<br />把资源变成资产。</div>
+            <span class="rdl-lp-hint">点 击 展 开 阅 读</span>
+          </div>
+          <div class="rdl-flap"></div>
+          <div class="rdl-pocket"></div>
+          <div class="rdl-wax">启</div>
+          <div class="rdl-qinqi">亲启</div>
+          <div class="rdl-addr"><em>TO · READER</em><i></i><i></i></div>
+          <div class="rdl-via">VIA AIR MAIL</div>
+        </div>
+      </div>
+    </div>
+    <div class="rdl-hint">— 点 击 拆 信 —</div>
+  </div>
+</div>
+
+{/* ===== 全屏读信 ===== */}
+<div class="rdl-ov" id="rdl-ov" role="dialog" aria-modal="true" aria-label="致读者的一封信">
+  <div class="rdl-shade" id="rdl-shade"></div>
+  <div class="rdl-sheet" id="rdl-sheet">
+    <button class="rdl-close" id="rdl-close" type="button" aria-label="关闭">✕</button>
+    <div class="rdl-sheet-top"><span>FROM · 像企业家一样写作</span><span>№ 001 · VIA AIR MAIL</span></div>
+    <div class="rdl-paper" id="rdl-paper"></div>
+  </div>
+</div>
+
+<template id="rdl-tpl">
+  <h3 class="rdl-title">“我”读完，就让 AI 读。<br />把资源变成资产。</h3>
+  <p class="rdl-p">亲爱的读者：网站上的所有内容，我都会为你准备两套版本——</p>
+  <ul class="rdl-list">
+    <li><b>精美 PDF 版</b>：适合深度阅读与收藏保存。</li>
+    <li><b>本地 Markdown 文件包</b>：这是 AI 时代真正属于你的<b>核心知识资产</b>。</li>
+  </ul>
+  <h4>资料拿到之后怎么用？</h4>
+  <p class="rdl-p"><b>① PDF：直接丢给你的 AI 助手</b>（豆包、元宝、ChatGPT 都行），或在微信读书、Kindle、平板上阅读。比如这样问它：</p>
+  <ul class="rdl-list rdl-tick">
+    <li>结合我的工作分析，哪些内容可以直接用？怎么用？</li>
+    <li>把这本书压缩成一张知识地图。</li>
+    <li>假设我是一个刚开始创业的人，哪些内容与我最相关？</li>
+  </ul>
+  <p class="rdl-p"><b>② Markdown：放进你自己的知识库</b>（比如 Obsidian），让 Agent 随时调用、编辑、二创——</p>
+  <p class="rdl-flow">阅读 → 编辑 → 拆解 → 二创 → 重组 → 调用</p>
+  <p class="rdl-p">甚至，把一本书拆成你的专属知识库、Prompt 提示词、自动化工作流、产品。因为——<b>文章即代码</b>。</p>
+  <p class="rdl-p">不只是「读书」，还要「写书」。我写完《写作并变现》，希望这些内容不只是被你「读过」，而是真正被你<b>拿走、重构、迭代、用起来</b>，变成你自己的资产。</p>
+  <p class="rdl-p">总之——没有限制，发挥你的想象力。<b>随意支持，随意改造。你不只是拥有阅读权限。</b></p>
+  <blockquote class="rdl-quote">如果你不把内容打包成产品，内容就不会自动变成「内容资产」，帮助你赚钱。</blockquote>
+  <h4>怎么拿？</h4>
+  <div class="rdl-claim">
+    <div class="rdl-claim-row">
+      <div class="rdl-qr"><i></i>微信二维码<br />点击弹出</div>
+      <div class="rdl-claim-txt"><b>快速拿完整版</b><br />微信号：<code>gusang211800</code>，也可扫码加我。<br />专栏为付费读者专属，凭<b>专属暗号</b>添加微信领取（暗号在本页最底部揭晓）。</div>
+    </div>
+    <div class="rdl-claim-row">
+      <div class="rdl-qr"><i></i>公众号二维码<br />点击弹出</div>
+      <div class="rdl-claim-txt"><b>「I 人」极速通道（无需加好友）</b><br />公众号后台回复：<b>闭环</b> / <b>选择改变命运</b> / <b>创业课</b>。<br />想打印纸质版，强烈推荐《闭环》《创业课》——排版与视觉已优化，纸质质感极佳。</div>
+    </div>
+  </div>
+  <div class="rdl-code">🔒 专栏读者专属暗号：<span>上线前揭晓 · 放在文章最底部</span></div>
+  <div class="rdl-sign">—— 写给你的，种一个梦</div>
+</template>
+
+<style is:global>
+/* ===== 读者信（rdl- 前缀防冲突）· 放大版 ===== */
+.rdl-wrap{max-width:1040px;margin:16px auto 0;}
+/* 引导栏 */
+.rdl-headbar{text-align:center;padding:0 20px;}
+.rdl-ic{font-size:26px;color:var(--color-accent);line-height:1;}
+.rdl-h2{font-family:var(--font-serif);font-size:2.3rem;font-weight:700;margin:8px 0 6px;color:var(--color-text);}
+.rdl-sub{font-size:15px;color:var(--color-text-secondary);}
+.rdl-stage{display:flex;flex-direction:column;align-items:center;padding-top:150px;}
+.rdl-hint{margin-top:18px;font-size:14px;color:var(--color-text-secondary);letter-spacing:.3em;}
+
+/* 信封 A2 · 放大 */
+.rdl-env{position:relative;width:min(560px,92vw);aspect-ratio:410/252;padding:9px;border-radius:12px;cursor:pointer;
+  background:repeating-linear-gradient(45deg,#b8433a 0 16px,#f6efdd 16px 32px,#31608f 32px 48px,#f6efdd 48px 64px);
+  box-shadow:0 26px 64px rgba(0,0,0,.18);transition:transform .4s;}
+.rdl-env:hover{transform:translateY(-7px) rotate(-.4deg);}
+.rdl-face{position:absolute;inset:9px;border-radius:6px;background:#f8f2e4;}
+.rdl-back{position:absolute;inset:0;border-radius:6px;background:#f3ecd9;}
+/* 信纸露角 */
+.rdl-lpeek{position:absolute;left:13%;right:13%;top:-30%;bottom:20%;background:#fffdf7;border-radius:8px;z-index:2;
+  box-shadow:0 6px 24px rgba(0,0,0,.17);padding:26px 28px 20px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  transform:rotate(-6deg);transition:transform .5s;}
+.rdl-env:hover .rdl-lpeek{transform:rotate(-6deg) translateY(-10px);}
+.rdl-lpeek::after{content:'';position:absolute;left:14px;right:14px;bottom:12px;height:1.5px;
+  background:repeating-linear-gradient(90deg,#ddd0b0 0 10px,transparent 10px 18px);}
+.rdl-lp-tag{font-size:13px;letter-spacing:.35em;color:#b8a37a;margin-bottom:14px;}
+.rdl-lp-title{font-family:var(--font-serif);font-weight:700;font-size:22px;line-height:1.7;text-align:center;color:var(--color-text);}
+.rdl-lp-title em{font-style:normal;color:var(--color-accent);}
+.rdl-lp-hint{margin-top:16px;font-size:13.5px;color:#a8a29e;letter-spacing:.3em;animation:rdlFloat 2.4s ease-in-out infinite;}
+@keyframes rdlFloat{0%,100%{transform:translateY(0);opacity:.6}50%{transform:translateY(3px);opacity:1}}
+.rdl-flap{position:absolute;top:0;left:0;right:0;height:55%;background:#f9f3e3;clip-path:polygon(0 0,100% 0,50% 97%);
+  transform-origin:top center;transform:rotateX(178deg);z-index:1;filter:drop-shadow(0 -2px 3px rgba(0,0,0,.05));}
+.rdl-pocket{position:absolute;inset:0;border-radius:6px;background:#f6f0e0;clip-path:polygon(0 0,50% 52%,100% 0,100% 100%,0 100%);z-index:3;}
+.rdl-pocket::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.03),transparent 40%);clip-path:inherit;}
+.rdl-via{position:absolute;right:6%;bottom:7%;font-size:12px;letter-spacing:.28em;color:#b8433a;font-weight:600;z-index:4;}
+.rdl-addr{position:absolute;left:9%;bottom:12%;width:32%;z-index:4;}
+.rdl-addr em{display:block;font-style:normal;font-size:12px;color:#a89873;letter-spacing:.25em;margin-bottom:7px;}
+.rdl-addr i{display:block;height:2.5px;background:#ddd0b0;margin:10px 0;border-radius:2px;}
+.rdl-wax{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);width:42px;height:42px;border-radius:50%;z-index:4;
+  background:radial-gradient(circle at 34% 30%,#f07a4b,#d94f2b 55%,#a83418);box-shadow:0 3px 9px rgba(0,0,0,.28),inset 0 0 0 3px rgba(255,255,255,.15);
+  display:grid;place-items:center;font-family:var(--font-serif);color:#fff7ef;font-size:17px;}
+.rdl-qinqi{position:absolute;right:4%;top:-30%;z-index:3;background:#b8433a;color:#fff7ef;font-family:var(--font-serif);font-size:14px;
+  padding:5px 12px;border-radius:5px;transform:rotate(8deg);letter-spacing:.2em;box-shadow:0 3px 8px rgba(0,0,0,.22);}
+
+/* ===== 全屏读信（米白信纸垫） ===== */
+.rdl-ov{position:fixed;inset:0;z-index:1200;display:none;align-items:center;justify-content:center;padding:4vh 16px;}
+.rdl-ov.show{display:flex;}
+.rdl-shade{position:absolute;inset:0;background:linear-gradient(180deg,#f6f1e6,#efe7d6);opacity:0;transition:opacity .35s;}
+.rdl-ov.in .rdl-shade{opacity:1;}
+.rdl-sheet{position:relative;width:min(760px,94vw);max-height:92vh;overflow-y:auto;background:#fffdf7;border-radius:14px;
+  padding:44px 46px 36px;box-shadow:0 30px 90px rgba(0,0,0,.16);opacity:0;transform:translateY(46px) scale(.97);
+  transition:transform .5s cubic-bezier(.2,.7,.3,1),opacity .4s;}
+.rdl-ov.in .rdl-sheet{opacity:1;transform:translateY(0) scale(1);}
+.rdl-close{position:sticky;top:0;float:right;width:36px;height:36px;border:none;border-radius:50%;background:rgba(28,25,23,.06);
+  color:#57534e;font-size:15px;cursor:pointer;z-index:5;transition:background .2s,color .2s;}
+.rdl-close:hover{background:rgba(245,80,0,.1);color:var(--color-accent);}
+.rdl-sheet-top{display:flex;justify-content:space-between;font-size:11px;letter-spacing:.18em;color:#b8a37a;
+  border-bottom:1px solid #eee2c8;padding-bottom:10px;margin-bottom:22px;}
+
+/* ===== 信内排版 ===== */
+.rdl-title{font-family:var(--font-serif);font-size:1.5rem;font-weight:700;line-height:1.5;text-align:center;margin:0 0 20px;}
+.rdl-p{font-size:15px;line-height:1.95;margin:12px 0;}
+.rdl-p b{color:var(--color-accent);}
+.rdl-list{list-style:none;margin:10px 0;padding:0;}
+.rdl-list li{position:relative;padding-left:20px;font-size:15px;line-height:1.9;margin:6px 0;}
+.rdl-list li::before{content:'·';position:absolute;left:4px;color:var(--color-accent);font-weight:700;}
+.rdl-tick li::before{content:'✓';font-size:12px;}
+.rdl-paper h4{font-family:var(--font-serif);font-size:1.12rem;font-weight:700;margin:26px 0 4px;padding-left:10px;border-left:3px solid var(--color-accent);}
+.rdl-flow{text-align:center;font-size:14.5px;letter-spacing:.06em;color:var(--color-accent);font-weight:600;margin:14px 0;}
+.rdl-quote{font-family:var(--font-serif);font-size:1.12rem;line-height:1.9;text-align:center;color:#5c4a32;background:rgba(245,80,0,.05);border-radius:10px;padding:20px 24px;margin:22px 0;}
+.rdl-claim{display:flex;flex-direction:column;gap:14px;margin-top:12px;}
+.rdl-claim-row{display:flex;gap:16px;align-items:flex-start;border:1px dashed #d9c9a8;border-radius:12px;padding:14px 16px;background:#fffef9;}
+.rdl-claim-txt{font-size:13.5px;line-height:1.85;color:#57534e;}
+.rdl-claim-txt b{color:var(--color-text);}
+.rdl-claim-txt code{background:#f5f0e4;border-radius:4px;padding:1px 6px;font-size:13px;}
+.rdl-qr{flex:none;width:80px;cursor:pointer;text-align:center;font-size:10px;color:#a8a29e;line-height:1.5;}
+.rdl-qr i{display:block;width:78px;height:78px;margin-bottom:6px;border:5px solid #fff;outline:1px solid #ddd;border-radius:4px;
+  background:conic-gradient(#26221e 25%,#fff 0 50%,#26221e 0 75%,#fff 0) 0 0/13px 13px;transition:transform .2s;}
+.rdl-qr:hover i{transform:scale(1.05);outline-color:var(--color-accent);}
+.rdl-code{margin-top:20px;text-align:center;font-size:13.5px;border:1px dashed rgba(245,80,0,.35);color:var(--color-accent);border-radius:999px;padding:9px 18px;width:fit-content;margin-left:auto;margin-right:auto;}
+.rdl-code span{color:var(--color-text-secondary);font-size:12px;}
+.rdl-sign{margin-top:22px;text-align:right;font-family:var(--font-serif);font-size:14.5px;color:#57534e;}
+
+body.rdl-locked{overflow:hidden;}
+
+@media(max-width:760px){
+  .rdl-h2{font-size:1.8rem;}
+  .rdl-stage{padding-top:120px;}
+  .rdl-lp-title{font-size:19px;}
+}
+@media(max-width:560px){
+  .rdl-stage{padding-top:96px;}
+  .rdl-h2{font-size:1.5rem;}
+  .rdl-sub{font-size:13.5px;}
+  .rdl-lp-title{font-size:16px;}
+  .rdl-lp-tag{font-size:11px;}
+  .rdl-lp-hint{font-size:11.5px;}
+  .rdl-sheet{padding:30px 20px 26px;}
+}
+</style>
+
+<script is:inline>
+(function () {
+  var scene = document.getElementById('rdl-scene');
+  var ov = document.getElementById('rdl-ov');
+  var paper = document.getElementById('rdl-paper');
+  if (!scene || !ov || !paper) return;
+  paper.appendChild(document.getElementById('rdl-tpl').content.cloneNode(true));
+
+  function open() {
+    ov.classList.add('show');
+    document.body.classList.add('rdl-locked');
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { ov.classList.add('in'); });
+    });
+  }
+  function close() {
+    ov.classList.remove('in');
+    setTimeout(function () {
+      ov.classList.remove('show');
+      document.body.classList.remove('rdl-locked');
+    }, 320);
+  }
+
+  scene.addEventListener('click', open);
+  document.getElementById('rdl-close').addEventListener('click', close);
+  document.getElementById('rdl-shade').addEventListener('click', close);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && ov.classList.contains('show')) close();
+  });
+
+  /* 信内二维码 → 复用页脚微信二维码弹层 */
+  Array.prototype.forEach.call(paper.querySelectorAll('.rdl-qr'), function (el) {
+    el.addEventListener('click', function () {
+      var t = document.getElementById('wechat-qr-trigger');
+      if (t) t.click();
+    });
+  });
+})();
+</script>
