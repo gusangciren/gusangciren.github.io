@@ -116,13 +116,6 @@ function titleWithBrackets(name) {
       shelf.addEventListener('scroll', sync, { passive: true });
       window.addEventListener('resize', sync);
       sync();
-
-      shelf.addEventListener('wheel', function (e) {
-        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-          e.preventDefault();
-          shelf.scrollBy({ left: e.deltaY * 0.1, behavior: 'auto' });
-        }
-      }, { passive: false });
     })();
   </script>
 
