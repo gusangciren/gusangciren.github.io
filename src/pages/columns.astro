@@ -27,9 +27,26 @@ function findIssue(column: (typeof columns)[number], n: number) {
           UAC 周刊 与《写作并变现：像企业家一样写作》打包在<b>同一个付费合集</b>里——一次购买，两个专栏全部解锁。
         </span>
       </div>
-      <a class="btn" href={columns.find((c) => c.albumUrl)?.albumUrl} target="_blank" rel="noopener noreferrer">
-        查看付费合集 ↗
-      </a>
+      <div class="bundle-actions">
+        <div class="intro-act">
+          <a class="btn" href="https://mp.weixin.qq.com/s/QnwuoIzN_dxPYM5W5hsWMA" target="_blank" rel="noopener noreferrer">
+            介绍信
+          </a>
+          <button type="button" class="intro-qr-btn" id="intro-qr-btn">（二维码）</button>
+        </div>
+        <a class="btn" href={columns.find((c) => c.albumUrl)?.albumUrl} target="_blank" rel="noopener noreferrer">
+          查看并订阅合集 ↗
+        </a>
+      </div>
+    </div>
+
+    {/* ===== 介绍信二维码浮层 ===== */}
+    <div class="intro-qr-overlay" id="intro-qr-overlay" aria-hidden="true">
+      <div class="intro-qr-modal">
+        <button type="button" class="intro-qr-close" id="intro-qr-close" aria-label="关闭">✕</button>
+        <img src="/images/intro-letter-qr.png" alt="介绍信二维码" />
+        <p class="intro-qr-cap">微信扫一扫，查看介绍信</p>
+      </div>
     </div>
 
     {/* ===== 双栏专栏详情 ===== */}
@@ -147,6 +164,76 @@ function findIssue(column: (typeof columns)[number], n: number) {
     border: 1px solid rgba(245,80,0,.18);
     border-radius: 16px;
     margin-bottom: 40px;
+  }
+  .bundle-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: flex-start;
+  }
+  .intro-act {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .intro-qr-btn {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    transition: color .15s;
+  }
+  .intro-qr-btn:hover { color: var(--color-accent); }
+
+  /* ===== 介绍信二维码浮层 ===== */
+  .intro-qr-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(28,25,23,.5);
+    padding: 20px;
+  }
+  .intro-qr-overlay.active { display: flex; }
+  .intro-qr-modal {
+    position: relative;
+    background: #fff;
+    border-radius: 14px;
+    padding: 18px 18px 14px;
+    box-shadow: 0 24px 60px rgba(0,0,0,.3);
+    text-align: center;
+  }
+  .intro-qr-modal img {
+    display: block;
+    width: 230px;
+    max-width: 70vw;
+    border-radius: 8px;
+  }
+  .intro-qr-cap {
+    margin: 10px 0 0;
+    font-size: 13px;
+    color: #57534e;
+  }
+  .intro-qr-close {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 50%;
+    background: #1c1917;
+    color: #fff;
+    font-size: 13px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,.25);
   }
   .bundle-txt {
     display: flex;
@@ -407,6 +494,10 @@ function findIssue(column: (typeof columns)[number], n: number) {
   @media (max-width: 640px) {
     .columns-page { padding: 80px 16px 60px; }
     .bundle-bar { grid-template-columns: 1fr; gap: 14px; padding: 16px 18px; }
+    .bundle-actions { flex-direction: column; align-items: stretch; }
+    .bundle-actions > .btn { flex: 1; text-align: center; }
+    .intro-act { width: 100%; }
+    .intro-act .btn { flex: 1; text-align: center; }
     .col-hero { padding: 24px 18px 20px; }
     .col-hero h2 { font-size: 1.3rem; }
     .col-hero-top { gap: 10px; margin-bottom: 8px; }
@@ -414,3 +505,20 @@ function findIssue(column: (typeof columns)[number], n: number) {
     .sec { padding: 20px 18px; }
   }
 </style>
+
+<script is:inline>
+(function () {
+  var btn = document.getElementById('intro-qr-btn');
+  var ov = document.getElementById('intro-qr-overlay');
+  var close = document.getElementById('intro-qr-close');
+  if (!btn || !ov) return;
+  function openQr() { ov.classList.add('active'); ov.setAttribute('aria-hidden', 'false'); }
+  function shutQr() { ov.classList.remove('active'); ov.setAttribute('aria-hidden', 'true'); }
+  btn.addEventListener('click', openQr);
+  if (close) close.addEventListener('click', shutQr);
+  ov.addEventListener('click', function (e) { if (e.target === ov) shutQr(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && ov.classList.contains('active')) shutQr();
+  });
+})();
+</script>
