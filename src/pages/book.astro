@@ -7,6 +7,10 @@ const posts = await getCollection('blog');
 
 books.sort((a, b) => a.data.order - b.data.order);
 
+/* 主打卡：frontmatter 标 featured: true 的书优先，否则取排序第一本；其余进小卡网格 */
+const featured = books.find((b) => b.data.featured) || books[0];
+const rest = featured ? books.filter((b) => b.id !== featured.id) : [];
+
 const firstChapterMap = new Map();
 const chapterCountMap = new Map();
 for (const book of books) {
@@ -34,21 +38,60 @@ function titleWithBrackets(name: string) {
 
 <BaseLayout
   title="书籍 — 像企业家一样写作"
-  description="三本免费在线读完的书：《选择改变命运》《闭环：在你睡觉时赚钱》《YC 创业课》——完整章节、金句摘录与实操方法，打开即读，无需注册。"
+  description="免费在线读完的书：完整章节、金句摘录与实操方法，打开即读，无需注册。"
 >
   <div class="book-page">
     <div class="books-header">
       <h1>书籍</h1>
-      <p>三本可以直接在站内读完的书。不用注册，不用付费，点开就能读。</p>
+      <p>{books.length} 本可以直接在站内读完的书。不用注册，不用付费，点开就能读。</p>
     </div>
 
+    {/* ===== 主打卡（新书 / featured） ===== */}
+    {featured && (() => {
+      const slug = featured.id.replace(/\.(md|mdx)$/i, '');
+      const firstChapter = firstChapterMap.get(featured.id);
+      const chapterCount = chapterCountMap.get(featured.id) || 0;
+      const unit = getUnit(featured);
+      const readHref = firstChapter ? `/blog/${firstChapter}` : `/book/${slug}`;
+      const title = titleWithBrackets(
+        featured.data.subtitle ? `${featured.data.title}：${featured.data.subtitle}` : featured.data.title
+      );
+      return (
+        <div class="book-feat">
+          {featured.data.ongoing && <span class="bf-ongoing">持续更新中···</span>}
+          <a class="bf-cover" href={`/book/${slug}`} aria-label={`查看《${featured.data.title}》完整目录`}>
+            {featured.data.isNew && <span class="bf-new">NEW</span>}
+            <img src={featured.data.cover} alt={featured.data.title} />
+          </a>
+          <div class="bf-body">
+            {featured.data.isNew && <span class="bf-kicker">新书 · 刚刚上线</span>}
+            <h2 class="bf-title">{title}</h2>
+            {featured.data.motto && <p class="bf-motto">「{featured.data.motto}」</p>}
+            <p class="bf-desc">{featured.data.description}</p>
+            {featured.data.benefits && featured.data.benefits.length > 0 && (
+              <ul class="bf-bnf">
+                {featured.data.benefits.map((b) => (
+                  <li>{b}</li>
+                ))}
+              </ul>
+            )}
+            <div class="bf-acts">
+              <a class="bf-btn" href={readHref}>开始阅读 →</a>
+              <a class="bf-btn ghost" href={`/book/${slug}`}>看完整目录</a>
+            </div>
+          </div>
+        </div>
+      );
+    })()}
+
+    {/* ===== 其余书籍：小卡网格 ===== */}
     <div class="book-grid">
-      {books.map((book) => {
+      {rest.map((book) => {
         const slug = book.id.replace(/\.(md|mdx)$/i, '');
         const firstChapter = firstChapterMap.get(book.id);
         const chapterCount = chapterCountMap.get(book.id) || 0;
         const unit = getUnit(book);
-        const href = firstChapter ? `/blog/${firstChapter}` : '#';
+        const href = firstChapter ? `/blog/${firstChapter}` : `/book/${slug}`;
         const title = titleWithBrackets(
           book.data.subtitle ? `${book.data.title}：${book.data.subtitle}` : book.data.title
         );
@@ -56,7 +99,12 @@ function titleWithBrackets(name: string) {
         return (
           <a class="book-card" href={href}>
             <div class="bc-cover">
-              <img src={book.data.cover} alt={book.data.title} />
+              {book.data.ongoing ? (
+                <span class="bc-ongoing">持续更新中···</span>
+              ) : book.data.isNew ? (
+                <span class="bc-new">NEW</span>
+              ) : null}
+              <img src={book.data.cover} alt={book.data.title} loading="lazy" />
             </div>
             <div class="bc-body">
               <h2 class="bc-title">{title}</h2>
@@ -94,10 +142,158 @@ function titleWithBrackets(name: string) {
     color: var(--color-text-secondary);
   }
 
-  /* ===== 三栏轻卡片网格 ===== */
+  /* ===== 主打卡（featured / 新书） ===== */
+  .book-feat {
+    position: relative;
+    display: flex;
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--color-card-bg, #fff);
+    margin-bottom: 26px;
+    transition: box-shadow .2s, transform .2s;
+  }
+  .book-feat:hover {
+    box-shadow: 0 16px 40px rgba(0,0,0,.08);
+    transform: translateY(-2px);
+  }
+  .bf-cover {
+    position: relative;
+    flex: 0 0 270px;
+    background: linear-gradient(180deg, #f8f7f5, #f1efec);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 36px 20px;
+    text-decoration: none;
+  }
+  .bf-cover img {
+    width: 172px;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 14px 32px rgba(0,0,0,.2);
+    transition: transform .25s;
+  }
+  .bf-cover:hover img { transform: translateY(-4px) scale(1.02); }
+  .bf-new {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: var(--color-accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    padding: 4px 11px;
+    border-radius: 999px;
+    box-shadow: 0 4px 10px rgba(245,80,0,.35);
+  }
+  .bf-ongoing {
+    position: absolute;
+    top: 22px;
+    right: -30px;
+    width: 120px;
+    text-align: center;
+    transform: rotate(45deg);
+    transform-origin: center center;
+    font-size: 11px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--color-accent);
+    letter-spacing: .04em;
+    padding: 5px 0;
+    box-shadow: 0 3px 8px rgba(0,0,0,.18);
+    z-index: 3;
+    pointer-events: none;
+  }
+  .bf-body {
+    flex: 1;
+    padding: 30px 34px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .bf-kicker {
+    display: inline-block;
+    font-size: 11.5px;
+    letter-spacing: .1em;
+    color: var(--color-accent);
+    background: rgba(245,80,0,.07);
+    border: 1px solid rgba(245,80,0,.22);
+    border-radius: 999px;
+    padding: 4px 12px;
+  }
+  .bf-title {
+    font-family: var(--font-serif);
+    font-size: 1.42rem;
+    font-weight: 700;
+    line-height: 1.45;
+    margin: 12px 0 2px;
+    width: 100%;
+    text-align: left;
+  }
+  .bf-motto {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--color-accent);
+    font-size: 15px;
+    margin: 4px 0 12px;
+  }
+  .bf-desc {
+    font-size: 14.5px;
+    line-height: 1.85;
+    color: #555;
+    margin: 0 0 14px;
+  }
+  .bf-bnf { list-style: none; margin: 0 0 18px; padding: 0; }
+  .bf-bnf li {
+    position: relative;
+    padding-left: 20px;
+    font-size: 13.5px;
+    line-height: 1.9;
+    color: #44403c;
+  }
+  .bf-bnf li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--color-accent);
+    font-size: 12px;
+  }
+  .bf-acts {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: auto;
+  }
+  .bf-btn {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--color-accent);
+    border: 1px solid var(--color-accent);
+    border-radius: 9px;
+    padding: 11px 22px;
+    text-decoration: none;
+    transition: transform .18s, box-shadow .18s;
+  }
+  .bf-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(245,80,0,.3);
+  }
+  .bf-btn.ghost {
+    background: #fff;
+    color: var(--color-accent);
+    border: 1px solid rgba(245,80,0,.35);
+  }
+  .bf-btn.ghost:hover { box-shadow: none; background: rgba(245,80,0,.06); }
+
+  /* ===== 其余书籍：小卡网格（auto-fit，数量自适应） ===== */
   .book-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 22px;
   }
   .book-card {
@@ -117,10 +313,42 @@ function titleWithBrackets(name: string) {
   }
 
   .bc-cover {
+    position: relative;
     background: #f7f6f4;
     padding: 22px 18px 0;
     display: flex;
     justify-content: center;
+  }
+  .bc-new {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--color-accent);
+    color: #fff;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    padding: 3px 9px;
+    border-radius: 999px;
+    box-shadow: 0 4px 10px rgba(245,80,0,.3);
+  }
+  .bc-ongoing {
+    position: absolute;
+    top: 16px;
+    right: -24px;
+    width: 100px;
+    text-align: center;
+    transform: rotate(45deg);
+    transform-origin: center center;
+    font-size: 10px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--color-accent);
+    letter-spacing: .04em;
+    padding: 4px 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,.15);
+    z-index: 3;
+    pointer-events: none;
   }
   .bc-cover img {
     width: 58%;
@@ -180,11 +408,20 @@ function titleWithBrackets(name: string) {
   }
 
   @media (max-width: 860px) {
-    .book-grid { grid-template-columns: repeat(2, 1fr); }
+    .bf-cover { flex-basis: 210px; padding: 26px 14px; }
+    .bf-cover img { width: 140px; }
+    .bf-body { padding: 22px 22px 24px; }
+    .bf-title { font-size: 1.2rem; }
   }
   @media (max-width: 600px) {
     .book-page { padding: 80px 16px 60px; }
     .book-grid { grid-template-columns: 1fr; max-width: 360px; margin: 0 auto; }
     .bc-cover img { width: 50%; }
+    .book-feat { flex-direction: column; }
+    .bf-cover { flex-basis: auto; padding: 28px 16px; }
+    .bf-cover img { width: 150px; }
+    .bf-body { padding: 20px 20px 24px; }
+    .bf-acts { width: 100%; }
+    .bf-btn { flex: 1; text-align: center; }
   }
 </style>

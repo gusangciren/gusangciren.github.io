@@ -27,6 +27,9 @@ const books = defineCollection({
     chapterSize: z.number().optional(),
     forWho: z.string().optional(),
     benefits: z.array(z.string()).optional(),
+    isNew: z.boolean().optional(),
+    featured: z.boolean().optional(),
+    ongoing: z.boolean().optional(),
   }),
 });
 
