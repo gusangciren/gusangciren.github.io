@@ -116,6 +116,13 @@ function titleWithBrackets(name) {
       shelf.addEventListener('scroll', sync, { passive: true });
       window.addEventListener('resize', sync);
       sync();
+
+      shelf.addEventListener('wheel', function (e) {
+        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+          e.preventDefault();
+          shelf.scrollBy({ left: e.deltaY * 0.1, behavior: 'auto' });
+        }
+      }, { passive: false });
     })();
   </script>
 
@@ -254,9 +261,10 @@ function titleWithBrackets(name) {
       scrollbar-width: thin;
       scrollbar-color: #d6d3d1 transparent;
     }
-    .books-shelf::-webkit-scrollbar { height: 6px; }
-    .books-shelf::-webkit-scrollbar-track { background: transparent; }
-    .books-shelf::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 999px; }
+    .books-shelf { scrollbar-width: auto; }
+    .books-shelf::-webkit-scrollbar { height: 10px; }
+    .books-shelf::-webkit-scrollbar-track { background: rgba(0,0,0,.04); border-radius: 999px; }
+    .books-shelf::-webkit-scrollbar-thumb { background: #c4c0bc; border-radius: 999px; }
     .shelf-card {
       flex: 0 0 340px;
       scroll-snap-align: start;
