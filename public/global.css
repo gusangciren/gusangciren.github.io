@@ -914,3 +914,37 @@ html { scroll-behavior: smooth; }
   max-width: 100%;
   overflow-x: auto;
 }
+
+/* ===== 选中文字「复制这句」气泡 ===== */
+.sel-bubble {
+  position: fixed;
+  z-index: 210;
+  transform: translate(-50%, -100%);
+  background: var(--color-accent);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  padding: 5px 11px;
+  border-radius: 7px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .22);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .15s ease;
+  white-space: nowrap;
+  user-select: none;
+}
+.sel-bubble.show { opacity: 1; visibility: visible; }
+.sel-bubble::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--color-accent);
+  border-bottom: 0;
+}
+.sel-bubble.copied { background: #2a9d3c; }
+.sel-bubble.copied::after { border-top-color: #2a9d3c; }

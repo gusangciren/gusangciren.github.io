@@ -371,11 +371,16 @@ function titleWithBrackets(name) {
       text-decoration: none;
       color: inherit;
       transition: box-shadow .2s, transform .2s, border-color .2s;
+      perspective: 900px;
     }
     .shelf-card:hover {
       box-shadow: 0 16px 36px rgba(245,80,0,.22);
       border-color: var(--color-accent);
       transform: translateY(-4px);
+    }
+    .shelf-card:hover .shelf-cover {
+      transform: rotateY(-16deg) scale(1.04);
+      box-shadow: 0 18px 42px rgba(0,0,0,.22);
     }
     .shelf-cover {
       position: relative;
@@ -386,6 +391,8 @@ function titleWithBrackets(name) {
       margin-bottom: 18px;
       box-shadow: 0 10px 28px rgba(0,0,0,0.16);
       flex-shrink: 0;
+      transition: transform .35s cubic-bezier(.2,.7,.3,1), box-shadow .2s;
+      transform-style: preserve-3d;
     }
     .shelf-cover img {
       position: absolute;

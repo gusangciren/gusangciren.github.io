@@ -791,4 +791,52 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
     })();
   </script>
 
+  <!-- 选中文字「复制这句」气泡 -->
+  <div class="sel-bubble" id="sel-bubble">复制这句</div>
+
+  <!-- 交互增强：阅读进度条 / 暗色模式 / 划词复制 -->
+  <script is:inline>
+    (function () {
+      // ===== 划词复制气泡 =====
+      var bubble = document.getElementById('sel-bubble');
+      if (bubble) {
+        var SKIP = 'input,textarea,pre,code,.search-overlay,.wechat-qr-overlay,.rdl-ov,button,a';
+        function hideBubble() { bubble.classList.remove('show'); }
+        document.addEventListener('mouseup', function () {
+          setTimeout(function () {
+            var sel = window.getSelection();
+            if (!sel || sel.isCollapsed) { hideBubble(); return; }
+            var text = sel.toString().trim();
+            var node = sel.anchorNode;
+            if (text.length < 2 || !node || !node.parentElement || node.parentElement.closest(SKIP)) { hideBubble(); return; }
+            var rect = sel.getRangeAt(0).getBoundingClientRect();
+            bubble.style.left = (rect.left + rect.width / 2) + 'px';
+            bubble.style.top = (rect.top - 6) + 'px';
+            bubble.dataset.text = text;
+            bubble.classList.add('show');
+          }, 10);
+        });
+        bubble.addEventListener('click', function () {
+          var t = bubble.dataset.text || '';
+          function ok() {
+            bubble.classList.add('copied');
+            bubble.textContent = '已复制 ✓';
+            setTimeout(function () { bubble.classList.remove('copied'); bubble.textContent = '复制这句'; hideBubble(); }, 1200);
+          }
+          function fallback() {
+            var i = document.createElement('textarea');
+            i.value = t; document.body.appendChild(i); i.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(i); ok();
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(t).then(ok).catch(fallback);
+          } else { fallback(); }
+        });
+        document.addEventListener('mousedown', function (e) { if (!bubble.contains(e.target)) hideBubble(); });
+        window.addEventListener('scroll', hideBubble, { passive: true });
+      }
+    })();
+  </script>
+
 </html>
