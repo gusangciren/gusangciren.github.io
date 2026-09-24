@@ -51,6 +51,10 @@ function titleWithBrackets(name) {
         <div id="hero-search-dropdown" class="hero-search-dropdown"></div>
       </div>
       <p class="mobile-tip">（我更希望你在电脑上打开我）</p>
+      <div class="site-url-box">
+        <span class="site-url-text">gusangciren.github.io</span>
+        <button class="site-url-btn" type="button" data-url="gusangciren.github.io">复制</button>
+      </div>
     </div>
   </section>
 
@@ -97,6 +101,41 @@ function titleWithBrackets(name) {
   </section>
 
   <script is:inline>
+    (function () {
+      document.querySelectorAll('.site-url-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var url = btn.dataset.url;
+          function done() {
+            btn.classList.add('copied');
+            btn.textContent = '已复制';
+            setTimeout(function () {
+              btn.classList.remove('copied');
+              btn.textContent = '复制';
+            }, 1500);
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url).then(done).catch(function () {
+              var input = document.createElement('input');
+              input.value = url;
+              document.body.appendChild(input);
+              input.select();
+              document.execCommand('copy');
+              document.body.removeChild(input);
+              done();
+            });
+          } else {
+            var input = document.createElement('input');
+            input.value = url;
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand('copy');
+            document.body.removeChild(input);
+            done();
+          }
+        });
+      });
+    })();
+
     (function () {
       var shelf = document.getElementById('books-shelf');
       var prev = document.getElementById('shelf-prev');
@@ -255,6 +294,50 @@ function titleWithBrackets(name) {
     @media (max-width: 768px) {
       .mobile-tip { display: block; }
     }
+
+    /* ===== 网站地址复制条 ===== */
+    .site-url-box {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      max-width: 360px;
+      margin: 14px auto 0;
+      padding: 5px 5px 5px 14px;
+      border: 1.5px solid var(--color-border);
+      border-radius: 10px;
+      background: #fff;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    @media (max-width: 768px) {
+      .site-url-box { display: flex; }
+    }
+    .site-url-box:hover {
+      border-color: rgba(245,80,0,.4);
+      box-shadow: 0 4px 14px rgba(245,80,0,.08);
+    }
+    .site-url-text {
+      flex: 1;
+      min-width: 0;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-text);
+      letter-spacing: 0.01em;
+      user-select: all;
+    }
+    .site-url-btn {
+      flex-shrink: 0;
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      background: var(--color-accent);
+      border: none;
+      border-radius: 7px;
+      padding: 7px 14px;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+    }
+    .site-url-btn:hover { background: #d94700; transform: translateY(-1px); }
+    .site-url-btn.copied { background: #2a9d3c; }
 
     /* ===== 首页书籍：书架横滑 · 书脊墙（方案 C） ===== */
     .section-books .section-inner { max-width: 1200px; }
@@ -497,6 +580,9 @@ function titleWithBrackets(name) {
       #hero-search-input { font-size: 1rem; padding: 12px 0; }
       .hero-search-go { width: 36px; height: 36px; }
       .hero-search-go svg { width: 16px; height: 16px; }
+      .site-url-box { max-width: 100%; padding: 5px 5px 5px 12px; }
+      .site-url-text { font-size: 13.5px; }
+      .site-url-btn { font-size: 12.5px; padding: 6px 12px; }
       .books-shelf { gap: 14px; }
       .shelf-card { flex-basis: 262px; padding: 22px 18px; }
       .shelf-cover { width: 104px; }
