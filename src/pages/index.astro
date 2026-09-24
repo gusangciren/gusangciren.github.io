@@ -50,6 +50,7 @@ function titleWithBrackets(name) {
         </div>
         <div id="hero-search-dropdown" class="hero-search-dropdown"></div>
       </div>
+      <p class="mobile-tip">（我更希望你在电脑上打开我）</p>
     </div>
   </section>
 
@@ -240,6 +241,20 @@ function titleWithBrackets(name) {
       background: rgba(245,80,0,0.03);
     }
     .hero-search-all:hover { background: rgba(245,80,0,0.08); }
+
+    /* ===== 移动端专属提醒（桌面隐藏） ===== */
+    .mobile-tip {
+      display: none;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-accent);
+      margin: 10px auto 0;
+      letter-spacing: 0.02em;
+    }
+    @media (max-width: 768px) {
+      .mobile-tip { display: block; }
+    }
 
     /* ===== 首页书籍：书架横滑 · 书脊墙（方案 C） ===== */
     .section-books .section-inner { max-width: 1200px; }
