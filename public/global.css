@@ -948,3 +948,137 @@ html { scroll-behavior: smooth; }
 }
 .sel-bubble.copied { background: #2a9d3c; }
 .sel-bubble.copied::after { border-top-color: #2a9d3c; }
+
+/* ========== 金句卡片分享 ========== */
+/* 划词气泡：复制 / 金句卡片 双动作 */
+.sel-bubble {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  overflow: hidden;
+}
+.sel-bubble .sb-act {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  padding: 7px 13px;
+  cursor: pointer;
+  user-select: none;
+  transition: background .15s;
+  white-space: nowrap;
+}
+.sel-bubble .sb-act:hover { background: rgba(255, 255, 255, 0.14); }
+.sel-bubble .sb-copy { background: var(--color-accent); }
+.sel-bubble .sb-sep { width: 1px; height: 16px; background: rgba(255, 255, 255, 0.35); }
+.sel-bubble .sb-card { background: #1c1917; }
+.sel-bubble.copied .sb-copy { background: #2a9d3c; }
+
+/* 弹层 */
+.qc-overlay {
+  position: fixed; inset: 0; z-index: 400;
+  background: rgba(28, 25, 23, 0.5);
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  display: none; align-items: center; justify-content: center; padding: 24px;
+}
+.qc-overlay.show { display: flex; }
+.qc-modal {
+  position: relative; background: var(--color-bg); border-radius: 18px;
+  max-width: 920px; width: 100%; max-height: 92vh; overflow: auto;
+  padding: 28px; display: grid; grid-template-columns: minmax(300px, 1fr) 320px; gap: 28px;
+}
+@media (max-width: 760px) { .qc-modal { grid-template-columns: 1fr; } }
+.qc-close {
+  position: absolute; top: 14px; right: 18px; font-size: 22px;
+  color: var(--color-text-secondary); background: none; border: none; cursor: pointer; line-height: 1;
+}
+.qc-stage { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.qc-tip { font-size: 12px; color: var(--color-text-secondary); }
+
+.qc-side h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 6px; }
+.qc-side .qc-sub { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 18px; }
+.qc-styles { display: flex; flex-direction: column; gap: 10px; margin-bottom: 22px; }
+.qc-style {
+  display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+  border: 1.5px solid var(--color-border); border-radius: 10px; cursor: pointer;
+  background: #fff; transition: .15s;
+}
+.qc-style:hover { border-color: rgba(245, 80, 0, 0.4); }
+.qc-style.active { border-color: var(--color-accent); background: rgba(245, 80, 0, 0.04); }
+.qc-style .sw { width: 34px; height: 42px; border-radius: 6px; flex: none; border: 1px solid var(--color-border); }
+.qc-style .sw.a { background: #fff; }
+.qc-style .sw.b { background: linear-gradient(135deg, #1c1917, #3a1a00); }
+.qc-style .sw.c { background: #f3ede1; }
+.qc-style .t { font-size: 14px; font-weight: 600; }
+.qc-style .d { font-size: 12px; color: var(--color-text-secondary); }
+.qc-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.qc-act {
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  padding: 11px; border-radius: 9px; font-size: 14px; font-weight: 500; cursor: pointer;
+  border: 1px solid var(--color-border); background: #fff; transition: .15s; font-family: var(--font-sans);
+}
+.qc-act:hover { border-color: var(--color-accent); color: var(--color-accent); }
+.qc-act.primary { background: var(--color-accent); color: #fff; border-color: var(--color-accent); }
+.qc-act.primary:hover { background: #d94700; color: #fff; }
+
+/* 金句卡片本体 */
+.qc {
+  width: min(360px, 78vw);
+  border-radius: 18px; padding: 36px 32px;
+  display: flex; flex-direction: column; position: relative; overflow: hidden;
+  box-shadow: 0 12px 40px rgba(28, 25, 23, 0.14); box-sizing: border-box;
+}
+.qc .qc-mark { font-family: Georgia, serif; line-height: .8; font-size: 84px; opacity: .16; height: 54px; }
+.qc .qc-quote {
+  font-family: var(--font-serif); font-size: 22px; line-height: 1.7; font-weight: 500;
+  flex: 1; display: flex; align-items: center; margin: 6px 0;
+}
+.qc .qc-foot { display: flex; align-items: center; gap: 10px; margin-top: 18px; padding-top: 16px; }
+.qc .qc-logo { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; flex: none; }
+.qc .qc-src { font-size: 12.5px; line-height: 1.4; }
+.qc .qc-src .qc-site { font-weight: 600; }
+.qc .qc-src .qc-from { opacity: .7; }
+
+/* A 极简暖白 */
+.qc.a { background: #fff; border: 1px solid var(--color-border); }
+.qc.a .qc-mark { color: var(--color-accent); }
+.qc.a .qc-quote { color: var(--color-text); border-left: 3px solid var(--color-accent); padding-left: 16px; }
+.qc.a .qc-foot { border-top: 1px solid var(--color-border); }
+.qc.a .qc-src { color: var(--color-text-secondary); }
+
+/* B 深色品牌 */
+.qc.b { background: linear-gradient(140deg, #1c1917 0%, #292524 55%, #3a1a00 100%); color: #fff; }
+.qc.b::before {
+  content: ''; position: absolute; top: -60px; right: -60px; width: 240px; height: 240px;
+  background: radial-gradient(circle, rgba(245, 80, 0, 0.28), transparent 70%);
+}
+.qc.b .qc-mark { color: #F55000; opacity: .5; }
+.qc.b .qc-quote { color: #fff; }
+.qc.b .qc-foot { border-top: 1px solid rgba(255, 255, 255, 0.14); }
+.qc.b .qc-src { color: rgba(255, 255, 255, 0.72); }
+.qc.b .qc-logo { box-shadow: 0 0 0 2px rgba(245, 80, 0, 0.4); }
+
+/* C 杂志书页 */
+.qc.c { background: #f3ede1; color: #2b2620; }
+.qc.c::after {
+  content: '“'; position: absolute; top: -14px; left: 14px; font-family: Georgia, serif;
+  font-size: 160px; color: var(--color-accent); opacity: .12; line-height: 1;
+}
+.qc.c .qc-mark { display: none; }
+.qc.c .qc-quote { font-size: 21px; justify-content: center; text-align: center; padding-top: 18px; }
+.qc.c .qc-foot { border-top: 1px solid rgba(43, 38, 32, 0.15); justify-content: center; }
+.qc.c .qc-src { color: #6b6258; text-align: center; }
+
+/* 微信分享大图浮层 */
+.qc-img-overlay {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(28, 25, 23, 0.82);
+  display: none; flex-direction: column; align-items: center; justify-content: center;
+  padding: 24px; gap: 16px;
+}
+.qc-img-overlay.show { display: flex; }
+.qc-img-overlay img { max-width: 82vw; max-height: 68vh; border-radius: 14px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); }
+.qc-img-overlay .qc-img-hint { color: #fff; font-size: 14px; text-align: center; }
+.qc-img-overlay .qc-img-close {
+  color: #fff; font-size: 14px; cursor: pointer; border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 8px 18px; border-radius: 9px; background: none; font-family: var(--font-sans);
+}
