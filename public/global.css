@@ -1023,6 +1023,7 @@ html { scroll-behavior: smooth; }
 /* 金句卡片本体 */
 .qc {
   width: min(360px, 78vw);
+  font-family: var(--font-serif);
   border-radius: 18px; padding: 36px 32px;
   display: flex; flex-direction: column; position: relative; overflow: hidden;
   box-shadow: 0 12px 40px rgba(28, 25, 23, 0.14); box-sizing: border-box;

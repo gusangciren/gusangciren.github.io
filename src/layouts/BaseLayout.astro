@@ -863,7 +863,12 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
       function hideBubble() { bubble.classList.remove('show'); }
       function getSource() {
         var h = document.querySelector('.article-header h1, .book-details h1, .prose h1, .community-hero h1');
-        return h ? h.textContent.trim() : document.title.trim();
+        var name = h ? h.textContent.trim() : document.title.trim();
+        try {
+          // 去掉标题尾部与站名重复的「— 像企业家一样写作」
+          name = name.replace(new RegExp('\\s*[—–-]\\s*' + getSite() + '\\s*$'), '');
+        } catch (e) {}
+        return name;
       }
       function getSite() {
         var m = document.querySelector('meta[property="og:site_name"]');
@@ -915,7 +920,9 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
         setStyle(saved);
         overlay.classList.add('show');
       }
+      var currentStyle = 'a';
       function setStyle(s) {
+        currentStyle = s;
         card.className = 'qc ' + s;
         document.querySelectorAll('.qc-style').forEach(function (o) { o.classList.toggle('active', o.dataset.s === s); });
         try { localStorage.setItem('qcStyle', s); } catch (e) {}
@@ -935,9 +942,36 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
         s.onerror = function () { alert('金句卡片图片组件加载失败，请检查网络后重试'); };
         document.head.appendChild(s);
       }
+      // 每套样式的底色：填满圆角外区域，避免相册把透明像素渲染成黑角
+      var QC_BG = { a: '#ffffff', b: '#1c1917', c: '#f3ede1' };
+      var fontCssPromise = null;
+      function getFontCss() {
+        if (!fontCssPromise) {
+          fontCssPromise = fetch('https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-webfont/1.7.0/lxgwwenkai-regular.css')
+            .then(function (r) { return r.ok ? r.text() : ''; })
+            .catch(function () { return ''; });
+        }
+        return fontCssPromise;
+      }
       function capture() {
         return document.fonts.ready.then(function () {
-          return html2canvas(card, { scale: 2, backgroundColor: null, useCORS: true, logging: false });
+          return getFontCss().then(function (css) {
+            return html2canvas(card, {
+              scale: 2,
+              backgroundColor: QC_BG[currentStyle] || '#ffffff',
+              useCORS: true,
+              logging: false,
+              onclone: function (doc) {
+                // 导出环境可能没等到文楷加载完，主动注入字体 CSS 兜底；
+                // 即使仍回退，整卡统一衬线栈（楷体），上下字体也一致
+                if (css) {
+                  var st = doc.createElement('style');
+                  st.textContent = css;
+                  doc.head.appendChild(st);
+                }
+              }
+            });
+          });
         });
       }
       function flash(btn, txt) { var o = btn.textContent; btn.textContent = txt; setTimeout(function () { btn.textContent = o; }, 1400); }
