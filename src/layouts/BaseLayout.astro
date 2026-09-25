@@ -813,6 +813,7 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
             <div class="qc-src">
               <div class="qc-site" id="qcSite">像企业家一样写作</div>
               <div class="qc-from" id="qcFrom">—— 选自正文</div>
+              <div class="qc-url">gusangciren.github.io</div>
             </div>
           </div>
         </div>
@@ -820,7 +821,7 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
       </div>
       <div class="qc-side">
         <h3>金句卡片</h3>
-        <p class="qc-sub">选好样式后下载或分享</p>
+        <p class="qc-sub">选好样式后下载或复制图片</p>
         <div class="qc-styles" id="qcStyles">
           <div class="qc-style active" data-s="a"><div class="sw a"></div><div><div class="t">A · 极简暖白</div><div class="d">站点默认，最协调</div></div></div>
           <div class="qc-style" data-s="b"><div class="sw b"></div><div><div class="t">B · 深色品牌</div><div class="d">信息流吸睛</div></div></div>
@@ -829,18 +830,9 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
         <div class="qc-actions">
           <div class="qc-act primary" data-act="download">⬇ 下载图片</div>
           <div class="qc-act" data-act="copyimg">📋 复制图片</div>
-          <div class="qc-act" data-act="wechat">💬 分享到微信</div>
-          <div class="qc-act" data-act="copytext">🔗 复制文案</div>
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- 微信分享大图浮层 -->
-  <div class="qc-img-overlay" id="qcImgOverlay">
-    <img id="qcImgEl" alt="金句卡片" />
-    <div class="qc-img-hint">长按上方图片 → 发送给朋友 / 分享到朋友圈</div>
-    <button class="qc-img-close" id="qcImgClose">关闭</button>
   </div>
 
   <!-- 交互增强：阅读进度条 / 暗色模式 / 划词复制 / 金句卡片 -->
@@ -856,8 +848,6 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
       var qSite = document.getElementById('qcSite');
       var qFrom = document.getElementById('qcFrom');
       var stylesBox = document.getElementById('qcStyles');
-      var imgOverlay = document.getElementById('qcImgOverlay');
-      var imgEl = document.getElementById('qcImgEl');
       var lastText = '';
 
       function hideBubble() { bubble.classList.remove('show'); }
@@ -913,6 +903,8 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
 
       function openCard(text) {
         qQuote.textContent = text || '先写完，再改清楚。';
+        var len = qQuote.textContent.length;
+        qQuote.style.fontSize = (len > 100 ? 18 : len > 60 ? 20 : 22) + 'px';
         qSite.textContent = getSite();
         qFrom.textContent = '—— 选自《' + getSource() + '》';
         var saved = 'a';
@@ -979,35 +971,19 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
       document.querySelectorAll('.qc-act').forEach(function (btn) {
         btn.addEventListener('click', function () {
           var act = btn.dataset.act;
-          if (act === 'copytext') {
-            var txt = qQuote.textContent + '\n—— ' + qSite.textContent + '《' + getSource() + '》';
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-              navigator.clipboard.writeText(txt).then(function () { flash(btn, '已复制 ✓'); });
-            }
-            return;
-          }
-          if (act === 'wechat') {
-            ensureH2C(function () {
-              capture().then(function (canvas) {
-                imgEl.src = canvas.toDataURL('image/png');
-                imgOverlay.classList.add('show');
-              });
-            });
-            return;
-          }
           ensureH2C(function () {
             capture().then(function (canvas) {
               if (act === 'download') {
-                var a = document.createElement('a'); a.download = '金句卡片.png';
+                var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png';
                 a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已下载 ✓');
               } else if (act === 'copyimg') {
                 canvas.toBlob(function (blob) {
                   if (blob && navigator.clipboard && window.ClipboardItem) {
                     navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
                       .then(function () { flash(btn, '已复制 ✓'); })
-                      .catch(function () { var a = document.createElement('a'); a.download = '金句卡片.png'; a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已保存 ✓'); });
+                      .catch(function () { var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png'; a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已保存 ✓'); });
                   } else {
-                    var a = document.createElement('a'); a.download = '金句卡片.png'; a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已保存 ✓');
+                    var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png'; a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已保存 ✓');
                   }
                 });
               }
@@ -1015,8 +991,6 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
           });
         });
       });
-      document.getElementById('qcImgClose').addEventListener('click', function () { imgOverlay.classList.remove('show'); });
-      imgOverlay.addEventListener('click', function (e) { if (e.target === imgOverlay) imgOverlay.classList.remove('show'); });
     })();
   </script>
 

@@ -1023,6 +1023,7 @@ html { scroll-behavior: smooth; }
 /* 金句卡片本体 */
 .qc {
   width: min(360px, 78vw);
+  aspect-ratio: 3 / 4;
   font-family: var(--font-serif);
   border-radius: 18px; padding: 36px 32px;
   display: flex; flex-direction: column; position: relative; overflow: hidden;
@@ -1038,6 +1039,7 @@ html { scroll-behavior: smooth; }
 .qc .qc-src { font-size: 12.5px; line-height: 1.4; }
 .qc .qc-src .qc-site { font-weight: 600; }
 .qc .qc-src .qc-from { opacity: .7; }
+.qc .qc-src .qc-url { font-size: 10.5px; opacity: .55; letter-spacing: .03em; margin-top: 1px; }
 
 /* A 极简暖白 */
 .qc.a { background: #fff; border: 1px solid var(--color-border); }
@@ -1058,28 +1060,9 @@ html { scroll-behavior: smooth; }
 .qc.b .qc-src { color: rgba(255, 255, 255, 0.72); }
 .qc.b .qc-logo { box-shadow: 0 0 0 2px rgba(245, 80, 0, 0.4); }
 
-/* C 杂志书页 */
+/* C 杂志书页（v2：统一居左；装饰引号复用 .qc-mark 元素，导出不再丢失） */
 .qc.c { background: #f3ede1; color: #2b2620; }
-.qc.c::after {
-  content: '“'; position: absolute; top: -14px; left: 14px; font-family: Georgia, serif;
-  font-size: 160px; color: var(--color-accent); opacity: .12; line-height: 1;
-}
-.qc.c .qc-mark { display: none; }
-.qc.c .qc-quote { font-size: 21px; justify-content: center; text-align: center; padding-top: 18px; }
-.qc.c .qc-foot { border-top: 1px solid rgba(43, 38, 32, 0.15); justify-content: center; }
-.qc.c .qc-src { color: #6b6258; text-align: center; }
-
-/* 微信分享大图浮层 */
-.qc-img-overlay {
-  position: fixed; inset: 0; z-index: 500;
-  background: rgba(28, 25, 23, 0.82);
-  display: none; flex-direction: column; align-items: center; justify-content: center;
-  padding: 24px; gap: 16px;
-}
-.qc-img-overlay.show { display: flex; }
-.qc-img-overlay img { max-width: 82vw; max-height: 68vh; border-radius: 14px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); }
-.qc-img-overlay .qc-img-hint { color: #fff; font-size: 14px; text-align: center; }
-.qc-img-overlay .qc-img-close {
-  color: #fff; font-size: 14px; cursor: pointer; border: 1px solid rgba(255, 255, 255, 0.4);
-  padding: 8px 18px; border-radius: 9px; background: none; font-family: var(--font-sans);
-}
+.qc.c .qc-mark { color: var(--color-accent); opacity: .18; }
+.qc.c .qc-quote { font-size: 21px; padding-top: 10px; }
+.qc.c .qc-foot { border-top: 1px solid rgba(43, 38, 32, 0.15); }
+.qc.c .qc-src { color: #6b6258; }
