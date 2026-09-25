@@ -25,14 +25,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
               <span class="pv-tag">头条 900 × 383 · 导出 2 倍像素</span>
             </div>
 
-            <div class="cv-wrap" id="wrap20"><!-- cover20 --></div>
-            <div class="pv-actions">
-              <button class="ex-btn copy" data-t="20">复制图片</button>
-              <button class="ex-btn dl" data-t="20">下载图片</button>
-              <span class="pv-tag">次条 200 × 200 · 预览按比例缩小</span>
-            </div>
-
-            <p class="pv-tip"><b>拿到图片：</b>点「下载图片」直接下高清图，公众号后台上传即可；或点「复制图片」后 Ctrl+V 粘贴。<br>头条文案支持 <b>**强调**</b> 橙红高亮（如 <b>**价值**</b>，是有效需求的满足。）；次条徽标会自动带出强调词，可改。</p>
+            <p class="pv-tip"><b>拿到图片：</b>点「下载图片」直接下高清图，公众号后台上传即可；或点「复制图片」后 Ctrl+V 粘贴。<br>头条文案支持 <b>**强调**</b> 橙红高亮（如 <b>**价值**</b>，是有效需求的满足。）。</p>
           </div>
 
           <!-- 设置列 -->
@@ -46,10 +39,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
               <div class="cmp-div"></div>
 
               <div class="cmp-row">
-                <div class="fld">
-                  <span class="fld-label">次条徽标（≤4 字）</span>
-                  <input id="f-badge" class="inp" type="text" maxlength="4" placeholder="自动带出强调词"/>
-                </div>
                 <div class="fld">
                   <span class="fld-label">边框颜色</span>
                   <div class="fr-dots" id="seg-frame">
@@ -86,42 +75,81 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <div id="export-stage"></div>
       </section>
 
-      <!-- 2) 金句卡片制作（独立工具） -->
+      <!-- 2) 金句卡片制作（推文截图风 · 三栏工作台） -->
       <section class="pane" id="pane-quote" hidden>
-        <div class="tool-editor">
-          <div class="te-preview">
-            <div class="qcard q-a" id="qCard">
-              <div class="q-mark">“</div>
-              <div class="q-text"></div>
-              <div class="q-foot">
-                <div class="q-src"></div>
-                <div class="q-brand">像企业家一样写作</div>
+        <div class="ws">
+          <!-- 左：样式库 -->
+          <aside class="lib">
+            <div class="lib-title">卡片样式</div>
+            <ul id="qc-lib"></ul>
+          </aside>
+
+          <!-- 中：画布 -->
+          <div class="canvas">
+            <div class="canvas-dot">
+              <div class="card-fit" id="qcFit">
+              <div class="tcard v-light r34" id="qcCard">
+                <div class="t-head" id="qcHead">
+                  <div class="t-ava" id="qcAva"><span class="ph">人</span></div>
+                  <div class="t-id">
+                    <div class="t-namerow">
+                      <span class="t-name" id="qcName">古思</span>
+                      <span class="t-check" id="qcCheck"><svg viewBox="0 0 24 24"><path d="M22.25 12c0-1.43-.88-2.67-2.19-3.34.46-1.39.2-2.9-.81-3.91s-2.52-1.27-3.91-.81C14.67 2.63 13.43 1.75 12 1.75s-2.67.88-3.33 2.19c-1.4-.46-2.91-.2-3.92.81S3.56 7.27 4.03 8.66C2.72 9.33 1.85 10.57 1.85 12s.87 2.67 2.18 3.34c-.47 1.39-.21 2.9.8 3.91s2.52 1.26 3.91.81c.67 1.31 1.91 2.19 3.34 2.19s2.68-.88 3.34-2.19c1.39.45 2.9.2 3.91-.81s1.27-2.52.81-3.91c1.31-.66 2.19-1.9 2.19-3.34zm-11.71 4.2L6.8 12.46l1.41-1.42 2.26 2.26 4.8-5.23 1.47 1.36-6.2 6.77z"/></svg></span>
+                    </div>
+                    <div class="t-handle" id="qcHandle">@Gusang</div>
+                  </div>
+                </div>
+                <div class="t-text" id="qcText">六个月的专注，可以修复过去五年的混乱。</div>
+              </div>
               </div>
             </div>
           </div>
 
-          <div class="te-form">
-            <div class="f-sec">
-              <label class="f-label">引言</label>
-              <textarea class="f-area" id="qText" rows="5">价值，就是需求的有效满足。把一件事做到极致，需求自会找上门来。</textarea>
-            </div>
-            <div class="f-sec">
-              <label class="f-label">出处（选填）</label>
-              <input class="f-input" id="qSrc" value="《如何获得创业灵感》" placeholder="如：出自《如何选择》" />
-            </div>
-            <div class="f-sec">
-              <label class="f-label">卡片样式</label>
-              <div class="thumbs" id="qThumbs"></div>
-            </div>
-            <div class="f-sec">
-              <label class="f-label">导出</label>
-              <div class="export-btns">
-                <button class="btn primary" id="qCopy">复制图片</button>
-                <button class="btn" id="qDown">下载图片</button>
+          <!-- 右：属性 -->
+          <aside class="props">
+            <div class="field">
+              <label class="fld-label">卡片尺寸</label>
+              <div class="seg" id="qcSize">
+                <button class="seg-btn on" data-r="r34">3:4 竖版</button>
+                <button class="seg-btn" data-r="r11">1:1 方形</button>
               </div>
             </div>
-          </div>
+            <div class="field">
+              <label class="fld-label">引言文字</label>
+              <textarea id="qcText-in" class="f-area" rows="5">六个月的专注，可以修复过去五年的混乱。</textarea>
+            </div>
+            <div class="field">
+              <label class="fld-label">头像</label>
+              <div class="ava-row">
+                <div class="ava-prev" id="qcAvaPrev"><span>人</span></div>
+                <div class="ava-btns">
+                  <button class="btn sm" id="qcAvaUp">上传头像</button>
+                  <button class="btn sm" id="qcAvaClr" style="display:none">移除</button>
+                </div>
+              </div>
+              <input type="file" id="qcAvaFile" accept="image/*" hidden />
+              <div class="cmp-hint">头像和名字自动记住，下次不用重传。</div>
+            </div>
+            <div class="field">
+              <label class="fld-label">名字</label>
+              <input type="text" id="qcName-in" class="f-input" value="古思" placeholder="显示名称" />
+            </div>
+            <div class="field">
+              <label class="fld-label">Handle</label>
+              <input type="text" id="qcHandle-in" class="f-input" value="@Gusang" placeholder="@username" />
+            </div>
+            <div class="field">
+              <label class="check-row"><input type="checkbox" id="qcCheck-in" checked /> 显示认证徽章</label>
+            </div>
+            <div class="export">
+              <button class="btn primary big" id="qcCopy">复制图片</button>
+              <button class="btn" id="qcDown">下载图片</button>
+              <div class="cmp-hint" id="qcDim">导出尺寸：1080 × 1440，可直接粘贴到公众号 / 朋友圈</div>
+            </div>
+          </aside>
         </div>
+        <div id="qc-stage"></div>
+        <div class="toast" id="qcToast"></div>
       </section>
     </main>
   </div>
@@ -135,100 +163,154 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           menu.querySelectorAll('li').forEach(function (x) { x.classList.remove('active'); });
           li.classList.add('active');
           document.querySelectorAll('.pane').forEach(function (p) { p.hidden = p.id !== li.dataset.pane; });
+          window.dispatchEvent(new Event('resize'));
         });
       });
-
-      // ===== 金句卡片工具 =====
-      var SCHEMES = [
-        { v: 'q-a', name: '品牌深色' },
-        { v: 'q-b', name: '暖白极简' },
-        { v: 'q-c', name: '杂志书页' },
-        { v: 'q-d', name: '横版引言' }
-      ];
-      var QC_BG = { 'q-a': '#1c1917', 'q-b': '#ffffff', 'q-c': '#f3ede1', 'q-d': '#fafaf9' };
-      var state = { text: '', src: '', scheme: 'q-a' };
-
-      var qText = document.getElementById('qText');
-      var qSrc = document.getElementById('qSrc');
-      var qThumbs = document.getElementById('qThumbs');
-
-      function qSize(t) {
-        var n = (t || '').length;
-        if (n <= 24) return 30; if (n <= 48) return 26; if (n <= 80) return 22; return 20;
-      }
-
-      function renderCards() {
-        var cards = document.querySelectorAll('.qcard');
-        cards.forEach(function (c) {
-          c.className = 'qcard ' + state.scheme;
-          c.querySelector('.q-text').textContent = state.text;
-          c.querySelector('.q-text').style.fontSize = (state.scheme === 'q-d' ? 30 : qSize(state.text)) + 'px';
-          var src = c.querySelector('.q-src');
-          src.textContent = state.src;
-          src.style.display = state.src ? 'block' : 'none';
-        });
-      }
-
-      function buildThumbs() {
-        qThumbs.innerHTML = SCHEMES.map(function (s) {
-          return '<button class="thumb' + (s.v === state.scheme ? ' on' : '') + '" data-v="' + s.v + '">' +
-            '<span class="t-card t-' + s.v[2] + '">' +
-              '<span class="t-text">价值，就是需求的有效满足。</span>' +
-              '<span class="t-foot"><span>《如何获得创业灵感》</span><b>像企业家一样写作</b></span>' +
-            '</span>' +
-            '<span class="t-label">' + s.name + '</span>' +
-          '</button>';
-        }).join('');
-        qThumbs.querySelectorAll('.thumb').forEach(function (b) {
-          b.addEventListener('click', function () {
-            state.scheme = b.dataset.v;
-            buildThumbs();
-            renderCards();
-          });
-        });
-      }
-
-      qText.addEventListener('input', function () { state.text = qText.value; renderCards(); });
-      qSrc.addEventListener('input', function () { state.src = qSrc.value; renderCards(); });
-
-      function exportCanvas(id) {
-        var el = document.getElementById(id);
-        if (!window.html2canvas) { alert('图片组件未加载，请稍候重试'); return Promise.reject(); }
-        return document.fonts.ready.then(function () {
-          return html2canvas(el, { backgroundColor: QC_BG[state.scheme] || '#ffffff', scale: 2, useCORS: true, logging: false });
-        });
-      }
-      function toast(m) {
-        var t = document.getElementById('toast');
-        if (!t) return;
-        t.textContent = m; t.classList.add('show');
-        clearTimeout(t._t); t._t = setTimeout(function () { t.classList.remove('show'); }, 1800);
-      }
-      document.getElementById('qCopy').addEventListener('click', function () {
-        exportCanvas('qCard').then(function (cv) {
-          cv.toBlob(function (blob) {
-            if (blob && navigator.clipboard && window.ClipboardItem) {
-              navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
-                .then(function () { toast('已复制图片到剪贴板'); })
-                .catch(function () { toast('复制失败，请用下载'); });
-            } else { toast('当前环境不支持复制图片，请用下载'); }
-          });
-        }).catch(function () {});
-      });
-      document.getElementById('qDown').addEventListener('click', function () {
-        exportCanvas('qCard').then(function (cv) {
-          var a = document.createElement('a');
-          a.download = '金句卡片.png';
-          a.href = cv.toDataURL('image/png');
-          a.click();
-        }).catch(function () {});
-      });
-
-      state.text = qText.value;
-      state.src = qSrc.value;
-      buildThumbs();
-      renderCards();
     })();
+
+      // ===== 金句卡片工具（推文截图风 · 三栏工作台） =====
+      (function () {
+        var SCHEMES = [
+          { v: 'v-light', name: '亮白', desc: '推特默认亮色' },
+          { v: 'v-dark',  name: '纯黑', desc: '推特暗黑模式' },
+          { v: 'v-paper', name: '暖纸', desc: '站点同源米白' }
+        ];
+        var BG = { 'v-light': '#ffffff', 'v-dark': '#000000', 'v-paper': '#f7f3ec' };
+        var DIM = { r34: '1080 × 1440', r11: '1080 × 1080' };
+        var state = { scheme: 'v-light', ratio: 'r34', text: '', name: '', handle: '', check: true, avatar: null };
+
+        var $ = function (s) { return document.querySelector(s); };
+        var card = document.getElementById('qcCard');
+        var textIn = document.getElementById('qcText-in');
+        var nameIn = document.getElementById('qcName-in');
+        var handleIn = document.getElementById('qcHandle-in');
+        var checkIn = document.getElementById('qcCheck-in');
+
+        function saveProfile() {
+          try { localStorage.setItem('tools.qc.profile', JSON.stringify({ name: state.name, handle: state.handle, avatar: state.avatar })); } catch (e) {}
+        }
+        try {
+          var p = JSON.parse(localStorage.getItem('tools.qc.profile') || 'null');
+          if (p) {
+            if (p.name) { state.name = p.name; nameIn.value = p.name; }
+            if (p.handle) { state.handle = p.handle; handleIn.value = p.handle; }
+            if (p.avatar) state.avatar = p.avatar;
+          }
+        } catch (e) {}
+
+        function buildLib() {
+          var ul = document.getElementById('qc-lib');
+          ul.innerHTML = SCHEMES.map(function (s) {
+            return '<li data-v="' + s.v + '"><div class="li-name">' + s.name + '</div><div class="li-desc">' + s.desc + '</div></li>';
+          }).join('');
+          ul.querySelectorAll('li').forEach(function (li) {
+            li.addEventListener('click', function () {
+              state.scheme = li.dataset.v;
+              ul.querySelectorAll('li').forEach(function (x) { x.classList.toggle('on', x === li); });
+              render();
+            });
+          });
+          ul.querySelectorAll('li').forEach(function (x) { x.classList.toggle('on', x.dataset.v === state.scheme); });
+        }
+
+        function render() {
+          card.className = 'tcard ' + state.scheme + ' ' + state.ratio;
+          $('#qcText').textContent = state.text || '在这里写下你的金句…';
+          $('#qcName').textContent = state.name || '名字';
+          $('#qcHandle').textContent = state.handle || '@handle';
+          $('#qcCheck').style.display = state.check ? 'flex' : 'none';
+          var ava = $('#qcAva');
+          ava.innerHTML = state.avatar ? '<img src="' + state.avatar + '">' : '<span class="ph">人</span>';
+          var prev = $('#qcAvaPrev');
+          prev.innerHTML = state.avatar ? '<img src="' + state.avatar + '">' : '<span>人</span>';
+          $('#qcAvaClr').style.display = state.avatar ? '' : 'none';
+          var len = (state.text || '').length;
+          var size = len <= 30 ? 40 : len <= 60 ? 34 : len <= 100 ? 28 : len <= 160 ? 24 : 20;
+          $('#qcText').style.fontSize = size + 'px';
+          $('#qcDim').textContent = '导出尺寸：' + DIM[state.ratio] + '，可直接粘贴到公众号 / 朋友圈';
+          fit();
+        }
+
+        /* 预览缩放：按中栏可用宽度把 540px 卡片等比缩小显示 */
+        function fit() {
+          var canvas = document.querySelector('#pane-quote .canvas');
+          var fitEl = document.getElementById('qcFit');
+          if (!canvas || !fitEl) return;
+          var cw = canvas.clientWidth;
+          if (cw < 60) return; /* 面板隐藏时跳过 */
+          var avail = cw - 48 - 104 - 4; /* canvas 左右 padding 48 + 点阵 padding 104 */
+          var s = Math.max(0.3, Math.min(1, avail / 540));
+          fitEl.style.setProperty('--qc-s', s);
+          fitEl.style.width = Math.round(540 * s) + 'px';
+          fitEl.style.height = Math.round((state.ratio === 'r11' ? 540 : 720) * s) + 'px';
+        }
+        window.addEventListener('resize', fit);
+
+        textIn.addEventListener('input', function () { state.text = textIn.value; render(); });
+        nameIn.addEventListener('input', function () { state.name = nameIn.value; render(); saveProfile(); });
+        handleIn.addEventListener('input', function () { state.handle = handleIn.value; render(); saveProfile(); });
+        checkIn.addEventListener('change', function () { state.check = checkIn.checked; render(); });
+
+        document.getElementById('qcAvaUp').addEventListener('click', function () { document.getElementById('qcAvaFile').click(); });
+        document.getElementById('qcAvaFile').addEventListener('change', function (e) {
+          var f = e.target.files && e.target.files[0]; if (!f) return;
+          var rd = new FileReader();
+          rd.onload = function () { state.avatar = rd.result; render(); saveProfile(); toast('头像已更新并记住'); };
+          rd.readAsDataURL(f); e.target.value = '';
+        });
+        document.getElementById('qcAvaClr').addEventListener('click', function () { state.avatar = null; render(); saveProfile(); toast('已移除头像'); });
+
+        document.querySelectorAll('#qcSize .seg-btn').forEach(function (b) {
+          b.addEventListener('click', function () {
+            state.ratio = b.dataset.r;
+            document.querySelectorAll('#qcSize .seg-btn').forEach(function (x) { x.classList.toggle('on', x === b); });
+            render();
+          });
+        });
+
+        function toast(m) {
+          var t = document.getElementById('qcToast'); if (!t) return;
+          t.textContent = m; t.classList.add('show'); clearTimeout(t._t);
+          t._t = setTimeout(function () { t.classList.remove('show'); }, 1800);
+        }
+        async function exportCanvas() {
+          if (!window.html2canvas) { alert('图片组件未加载，请稍候重试'); return null; }
+          var stage = document.getElementById('qc-stage');
+          var clone = card.cloneNode(true);
+          clone.style.transform = 'none';
+          stage.appendChild(clone);
+          try {
+            await document.fonts.ready;
+            return await html2canvas(clone, { backgroundColor: BG[state.scheme], scale: 2, useCORS: true, logging: false });
+          } finally {
+            if (clone.parentNode === stage) stage.removeChild(clone);
+          }
+        }
+        document.getElementById('qcCopy').addEventListener('click', function () {
+          exportCanvas().then(function (cv) {
+            if (!cv) return;
+            cv.toBlob(function (blob) {
+              if (blob && navigator.clipboard && window.ClipboardItem) {
+                navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
+                  .then(function () { toast('已复制图片，可直接粘贴'); })
+                  .catch(function () { toast('复制失败，请用下载'); });
+              } else { toast('当前环境不支持复制图片'); }
+            });
+          });
+        });
+        document.getElementById('qcDown').addEventListener('click', function () {
+          exportCanvas().then(function (cv) {
+            if (!cv) return;
+            var a = document.createElement('a');
+            a.download = '金句卡片.png'; a.href = cv.toDataURL('image/png');
+            document.body.appendChild(a); a.click(); a.remove(); toast('已下载图片');
+          });
+        });
+
+        state.text = textIn.value; state.name = nameIn.value; state.handle = handleIn.value;
+        buildLib();
+        render();
+      })();
 
     // ===== 公众号封面制作工具 =====
     (function () {
@@ -237,17 +319,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       var DEFAULT_NAME = '像企业家一样写作';
 
       var headlineEl = document.getElementById('f-headline');
-      var badgeEl = document.getElementById('f-badge');
       var nameEl = document.getElementById('f-name');
       var tgAvatar = document.getElementById('tg-avatar');
       var tgName = document.getElementById('tg-name');
       var avatarThumb = document.getElementById('avatar-thumb');
       var btnAvatar = document.getElementById('btn-avatar');
       var fileAvatar = document.getElementById('f-avatar');
-      var wrap90 = document.getElementById('wrap90'), wrap20 = document.getElementById('wrap20');
+      var wrap90 = document.getElementById('wrap90');
       var frameVal = '#F53F3F';
-      var avatar = DEFAULT_AVATAR;
-      var lastAuto = '';
+      var avatar = avatarThumb.src || DEFAULT_AVATAR;
 
       try {
         var savedA = localStorage.getItem('tools.cv.avatar');
@@ -262,9 +342,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         });
       }
       function cleanHL(raw) { return (raw || '').replace(/\*\*/g, ''); }
-      function extractHL(raw) { var m = (raw || '').match(/\*\*([^*]+)\*\*/); return m ? m[1] : ''; }
-      function titleSize(t) { var n = t.length; if (n <= 10) return 60; if (n <= 18) return 52; if (n <= 28) return 46; return 40; }
-      function badgeSize(t) { var n = t.length; if (n <= 2) return 60; if (n === 3) return 48; return Math.max(26, Math.min(40, 168 / n)); }
+      function titleSize(t) { var n = t.length; if (n <= 10) return 72; if (n <= 18) return 62; if (n <= 28) return 52; return 44; }
       function renderTitle(raw) {
         if (!raw) return '';
         if (raw.indexOf('**') !== -1) {
@@ -277,7 +355,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       function data() {
         return {
           headline: headlineEl.value,
-          badge: badgeEl.value,
           frameColor: frameVal,
           avatar: avatar,
           name: nameEl.value || DEFAULT_NAME,
@@ -300,24 +377,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           '<div class="cv-inner"><h1 class="ctitle" style="font-size:' + titleSize(cleanHL(raw).length) + 'px">' + renderTitle(raw) + '</h1>' + brand + '</div>';
         return el;
       }
-      function build20(d) {
-        var el = document.createElement('div'); el.className = 'cover20';
-        var frame = d.frameColor ? '<div class="frame" style="border-color:' + esc(d.frameColor) + '"></div>' : '';
-        var inner = d.badge
-          ? '<div class="cbadge" style="font-size:' + badgeSize(d.badge.length) + 'px">' + esc(d.badge) + '</div>'
-          : '<div class="bc-site">' + esc(d.name) + '</div>';
-        el.innerHTML = '<div class="glow"></div>' + frame + '<div class="ccenter">' + inner + '</div>';
-        return el;
-      }
       function render() {
         wrap90.innerHTML = ''; wrap90.appendChild(build90(data()));
-        wrap20.innerHTML = ''; wrap20.appendChild(build20(data()));
       }
       function fit() {
         var w = wrap90.parentElement.clientWidth || 900;
         var s = Math.max(0.32, Math.min(0.62, (w - 8) / 900));
         wrap90.style.setProperty('--s', s);
-        wrap20.style.setProperty('--s', s);
       }
       function exportEl(builder) {
         var stage = document.getElementById('export-stage');
@@ -327,9 +393,26 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         stage.appendChild(el);
         return { el: el, done: function () { stage.removeChild(el); } };
       }
+      var fontCssPromise = null;
+      function getFontCss() {
+        if (!fontCssPromise) {
+          fontCssPromise = fetch('https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-webfont/1.7.0/lxgwwenkai-regular.css')
+            .then(function (r) { return r.ok ? r.text() : ''; })
+            .catch(function () { return ''; });
+        }
+        return fontCssPromise;
+      }
       async function renderArt(el) {
         await document.fonts.ready;
-        return html2canvas(el, { backgroundColor: '#1c1917', scale: 2, useCORS: true, logging: false });
+        var css = await getFontCss();
+        return html2canvas(el, {
+          backgroundColor: '#1c1917', scale: 2, useCORS: true, logging: false,
+          onclone: function (doc) {
+            // 导出环境克隆 DOM 时可能还没等到文楷加载完，主动注入字体 CSS 兜底；
+            // 即使仍回退，封面统一用站点衬线栈（文楷），不会出现黑体不一致
+            if (css) { var st = doc.createElement('style'); st.textContent = css; doc.head.appendChild(st); }
+          }
+        });
       }
       async function copyArt(btn, builder) {
         var t = btn.textContent; btn.disabled = true; btn.textContent = '生成中…';
@@ -352,17 +435,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         setTimeout(function () { btn.textContent = t; btn.disabled = false; }, 1800);
       }
 
-      function onHL() {
-        var h = extractHL(headlineEl.value);
-        if (h && (badgeEl.value === '' || badgeEl.value === lastAuto)) { badgeEl.value = h; lastAuto = h; }
-        else if (!h) { lastAuto = ''; }
-        render();
-      }
-      headlineEl.addEventListener('input', onHL);
-      badgeEl.addEventListener('input', function () {
-        lastAuto = (badgeEl.value === extractHL(headlineEl.value)) ? badgeEl.value : '';
-        render();
-      });
+      headlineEl.addEventListener('input', render);
       document.querySelectorAll('#seg-frame .fr-dot').forEach(function (b) {
         b.addEventListener('click', function () {
           document.querySelectorAll('#seg-frame .fr-dot').forEach(function (x) { x.classList.remove('on'); });
@@ -402,15 +475,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       });
       document.querySelectorAll('.ex-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
-          var t = btn.dataset.t;
-          var builder = t === '90' ? build90 : build20;
-          if (btn.classList.contains('copy')) copyArt(btn, builder);
-          else downloadArt(btn, builder, t === '90' ? '封面-头条' : '封面-次条');
+          if (btn.classList.contains('copy')) copyArt(btn, build90);
+          else downloadArt(btn, build90, '封面-头条');
         });
       });
       window.addEventListener('resize', fit);
       fit();
-      onHL(); // 初始化：徽标自动带出 + 首次渲染
+      render(); // 首次渲染
     })();
   </script>
 
@@ -435,19 +506,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     #pane-cover .cv-wrap { --s: .5; position: relative; overflow: hidden; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,.18); background: transparent; }
     #pane-cover #wrap90 { width: calc(900px * var(--s)); max-width: 100%; height: calc(383px * var(--s)); }
-    #pane-cover #wrap20 { width: calc(200px * var(--s)); max-width: 100%; height: calc(200px * var(--s)); margin-top: 22px; }
     #pane-cover .pv-actions { display: flex; align-items: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
     #pane-cover .pv-tag { font-size: 12px; color: #a8a29e; margin-left: auto; }
     #pane-cover .pv-tip { font-size: 12.5px; line-height: 1.7; color: #57534e; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 12px 14px; margin-top: 20px; }
     #pane-cover .pv-tip b { color: #c2410c; }
 
     /* 封面画板（与站点品牌一致） */
-    #pane-cover .cover90, #pane-cover .cover20 { position: absolute; top: 0; left: 0; overflow: hidden;
+    #pane-cover .cover90 { position: absolute; top: 0; left: 0; overflow: hidden; width: 900px; height: 383px;
       background: linear-gradient(140deg, #1c1917 0%, #292524 55%, #3a1a00 100%); color: #fff;
       font-family: var(--font-serif); transform: scale(var(--s, .5)); transform-origin: top left; }
-    #pane-cover .cover90 { width: 900px; height: 383px; }
-    #pane-cover .cover20 { width: 200px; height: 200px; }
-    #pane-cover .cv-inner, #pane-cover .ccenter { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; }
+    #pane-cover .cv-inner { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; }
     #pane-cover .cv-inner { justify-content: center; padding: 0 48px 0 84px; }
     #pane-cover .ctitle { font-weight: 700; line-height: 1.32; color: #fff; margin: 0; max-width: 760px; }
     #pane-cover .ctitle em { font-style: normal; color: #F55000; }
@@ -455,14 +523,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     #pane-cover .clogo { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex: none; box-shadow: 0 0 0 2px rgba(245,80,0,.4); }
     #pane-cover .bn { font-weight: 700; font-size: 15px; color: #fff; }
     #pane-cover .bu { font-size: 12.5px; color: rgba(255,255,255,.66); margin-top: 1px; }
-    #pane-cover .ccenter { align-items: center; justify-content: center; gap: 10px; }
-    #pane-cover .cbadge { font-weight: 700; color: #fff; letter-spacing: .04em; white-space: nowrap; }
-    #pane-cover .cbadge em { font-style: normal; color: #F55000; }
-    #pane-cover .bc-site { font-weight: 700; font-size: 20px; color: #fff; text-align: center; line-height: 1.4; padding: 0 10px; }
     #pane-cover .glow { position: absolute; right: -90px; bottom: -90px; width: 340px; height: 340px; z-index: 1;
       background: radial-gradient(circle, rgba(245,80,0,.20), transparent 70%); pointer-events: none; }
     #pane-cover .frame { position: absolute; inset: 0; border: 10px solid #F53F3F; pointer-events: none; z-index: 6; }
-    #pane-cover .cover20 .frame { border-width: 8px; }
 
     /* ===== 设置卡（变体 1 · 整洁行式） ===== */
     #pane-cover .set-group { background: var(--color-card-bg); border: 1px solid var(--color-border, #ececea); border-radius: 14px; padding: 18px 18px 20px; }
@@ -479,7 +542,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     #pane-cover .inp { border: 1px solid var(--color-border, #e5e3df); border-radius: 10px; padding: 9px 12px;
       font-family: var(--font-serif); font-size: 14px; color: var(--color-text); background: #fff; outline: none; transition: border-color .2s; box-sizing: border-box; }
     #pane-cover .inp:focus { border-color: var(--color-accent); }
-    #pane-cover #f-badge { width: 150px; }
     #pane-cover .fr-dots { display: flex; gap: 9px; align-items: center; height: 38px; }
     #pane-cover .fr-dot { width: 26px; height: 26px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; padding: 0; font-family: inherit; }
     #pane-cover .fr-dot.c-red { background: #F53F3F; }
@@ -513,64 +575,89 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     #pane-cover .ex-btn:disabled { opacity: .5; cursor: default; }
     #pane-cover #export-stage { position: absolute; left: -10000px; top: 0; width: 900px; height: 383px; }
 
-    /* ===== 金句卡工具编辑器 ===== */
-    .tool-editor { display: flex; gap: 28px; align-items: flex-start; }
-    .te-preview { flex: 1; min-width: 0; display: flex; justify-content: center; background: var(--soft, #f5f4f2); border-radius: 16px; padding: 30px; }
-    .te-form { width: 340px; flex: none; display: flex; flex-direction: column; gap: 20px; }
-    .f-sec { display: flex; flex-direction: column; }
-    .f-label { display: block; font-size: 13px; color: var(--color-text-secondary); margin-bottom: 7px; }
-    .f-input, .f-area { width: 100%; padding: 12px 14px; border: 1px solid var(--color-border, #e7e5e4); border-radius: 12px; font-family: inherit; font-size: 15px; color: var(--color-text); background: #fff; outline: none; transition: border-color .2s; }
-    .f-input:focus, .f-area:focus { border-color: var(--color-accent); }
-    .f-area { resize: vertical; line-height: 1.7; }
-    .export-btns { display: flex; gap: 10px; }
+    /* ============================================================
+       金句卡片制作工具（推文截图风 · 三栏工作台）—— 全部收在
+       #pane-quote 作用域内，不泄漏到站点头部 / 其他页面。
+       ============================================================ */
     .btn { border: 1px solid var(--color-border, #e7e5e4); background: #fff; font-family: inherit; font-size: 14px; color: var(--color-text); padding: 11px 16px; border-radius: 11px; cursor: pointer; transition: all .2s; }
     .btn:hover { border-color: var(--color-accent); color: var(--color-accent); }
     .btn.primary { background: var(--color-accent); color: #fff; border-color: var(--color-accent); }
     .btn.primary:hover { filter: brightness(1.06); color: #fff; }
 
-    /* ===== 卡片（与站点金句卡同源的 4 套样式） ===== */
-    .qcard { position: relative; width: 480px; border-radius: 20px; padding: 46px 44px; font-family: var(--font-serif); overflow: hidden; display: flex; flex-direction: column; }
-    .q-text { position: relative; z-index: 2; line-height: 1.6; font-weight: 700; overflow-wrap: anywhere; }
-    .q-foot { position: relative; z-index: 2; margin-top: auto; padding-top: 28px; display: flex; flex-direction: column; gap: 6px; }
-    .q-src { font-size: 14px; opacity: .85; }
-    .q-brand { font-size: 13px; opacity: .7; letter-spacing: 1px; }
-    .qcard.q-a { background: linear-gradient(140deg, #1c1917 0%, #292524 58%, #3a1a00 100%); color: #fff; }
-    .qcard.q-a::after { content: ""; position: absolute; right: -70px; bottom: -70px; width: 260px; height: 260px; background: radial-gradient(circle, rgba(245,80,0,.38), transparent 70%); border-radius: 50%; z-index: 1; }
-    .qcard.q-a .q-brand { color: #F55000; opacity: 1; }
-    .qcard.q-b { background: #fff; color: #1c1917; border: 1px solid var(--color-border, #e7e5e4); }
-    .qcard.q-b::before { content: ""; position: absolute; left: 0; top: 46px; bottom: 46px; width: 5px; background: var(--color-accent); border-radius: 0 4px 4px 0; }
-    .qcard.q-b .q-brand { color: var(--color-text-secondary); }
-    .qcard.q-c { background: #f3ede1; color: #2b2620; }
-    .qcard.q-c .q-mark { display: block; position: absolute; top: 6px; left: 30px; font-family: Georgia, serif; font-size: 150px; line-height: 1; color: var(--color-accent); opacity: .16; z-index: 1; }
-    .qcard.q-c .q-brand { color: #8a7f6d; }
-    .q-mark { display: none; }
-    .qcard.q-d { height: 320px; background: linear-gradient(135deg, #fafaf9, #f1ece4); color: #1c1917; border: 1px solid var(--color-border, #e7e5e4); }
-    .qcard.q-d .q-text { font-size: 30px; }
-    .qcard.q-d .q-foot { flex-direction: row; align-items: baseline; justify-content: space-between; }
-    .qcard.q-d .q-brand { color: var(--color-accent); opacity: 1; }
+    #pane-quote .ws { display: flex; align-items: stretch; border: 1px solid var(--color-border, #e7e5e4); border-radius: 16px; overflow: hidden; background: #fff; }
+    #pane-quote .lib { width: 200px; flex: none; background: var(--soft, #f5f4f2); border-right: 1px solid var(--color-border, #e7e5e4); padding: 20px 14px; }
+    #pane-quote .lib-title { font-size: 12px; color: var(--color-text-secondary); letter-spacing: 2px; margin: 0 0 14px 4px; }
+    #pane-quote .lib ul { list-style: none; margin: 0; padding: 0; }
+    #pane-quote .lib li { border: 2px solid transparent; border-radius: 14px; padding: 14px 16px; margin-bottom: 12px; cursor: pointer; transition: .15s; background: #fff; }
+    #pane-quote .lib li:hover { border-color: #d6d3d1; }
+    #pane-quote .lib li.on { border-color: var(--color-accent); background: #fffdfb; }
+    #pane-quote .lib .li-name { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+    #pane-quote .lib .li-desc { font-size: 12px; color: var(--color-text-secondary); }
 
-    /* ===== 样式缩略图选择器 ===== */
-    .thumbs { display: flex; flex-wrap: wrap; gap: 10px; }
-    .thumb { border: 1px solid var(--color-border, #e7e5e4); border-radius: 14px; background: #fff; padding: 9px; cursor: pointer; text-align: center; transition: all .15s; width: calc(50% - 5px); font-family: inherit; }
-    .thumb:hover { border-color: #d6d3d1; }
-    .thumb.on { border-color: var(--color-accent); box-shadow: 0 0 0 3px rgba(245,80,0,.14); }
-    .t-card { display: flex; flex-direction: column; justify-content: space-between; border-radius: 9px; padding: 12px; height: 128px; width: 100%; font-size: 10px; line-height: 1.55; text-align: left; position: relative; overflow: hidden; }
-    .t-text { font-weight: 700; position: relative; z-index: 2; }
-    .t-foot { font-size: 8px; opacity: .75; position: relative; z-index: 2; }
-    .t-a { background: linear-gradient(140deg, #1c1917, #292524 58%, #3a1a00); color: #fff; }
-    .t-a .t-foot { color: #F55000; opacity: 1; }
-    .t-a::after { content: ""; position: absolute; right: -16px; bottom: -16px; width: 56px; height: 56px; background: radial-gradient(circle, rgba(245,80,0,.4), transparent 70%); border-radius: 50%; }
-    .t-b { background: #fff; color: #1c1917; border: 1px solid var(--color-border, #e7e5e4); }
-    .t-b::before { content: ""; position: absolute; left: 0; top: 12px; bottom: 12px; width: 3px; background: var(--color-accent); }
-    .t-b .t-foot { color: #78716c; }
-    .t-c { background: #f3ede1; color: #2b2620; }
-    .t-c::before { content: "“"; position: absolute; top: -8px; left: 8px; font-family: Georgia, serif; font-size: 52px; line-height: 1; color: var(--color-accent); opacity: .18; }
-    .t-c .t-foot { color: #8a7f6d; }
-    .t-d { height: 86px; background: linear-gradient(135deg, #fafaf9, #f1ece4); border: 1px solid var(--color-border, #e7e5e4); color: #1c1917; justify-content: center; }
-    .t-d .t-foot { display: flex; justify-content: space-between; color: #1c1917; }
-    .t-d .t-foot b { color: var(--color-accent); font-weight: 400; }
-    .t-label { display: block; font-size: 12px; margin-top: 8px; color: var(--color-text-secondary); }
-    .thumb.on .t-label { color: var(--color-text); font-weight: 700; }
+    #pane-quote .canvas { flex: 1; min-width: 0; overflow: auto; display: flex; align-items: flex-start; justify-content: center; padding: 40px 24px; background: #faf9f7; }
+    #pane-quote .canvas-dot { background-image: radial-gradient(#dedad4 1px, transparent 1px); background-size: 22px 22px; padding: 44px 52px; border-radius: 18px; }
+
+    /* 预览缩放：外层量好尺寸，内层卡片原尺寸 transform 缩放（导出走离屏原尺寸克隆，不经缩放） */
+    #pane-quote .card-fit { position: relative; overflow: hidden; border-radius: 10px; box-shadow: 0 20px 50px -18px rgba(28,25,23,.30); }
+    #pane-quote .card-fit .tcard { transform: scale(var(--qc-s, 1)); transform-origin: top left; box-shadow: none; }
+    #pane-quote #qc-stage { position: absolute; left: -10000px; top: 0; }
+    #pane-quote #qc-stage .tcard { transform: none; }
+
+    #pane-quote .props { width: 300px; flex: none; background: #fff; border-left: 1px solid var(--color-border, #e7e5e4); padding: 22px 18px; overflow-y: auto; }
+    #pane-quote .field { margin-bottom: 16px; }
+    #pane-quote .fld-label { display: block; font-size: 13px; color: var(--color-text-secondary); margin-bottom: 7px; }
+    #pane-quote .f-input, #pane-quote .f-area { width: 100%; padding: 11px 13px; border: 1px solid var(--color-border, #e7e5e4); border-radius: 11px; font-family: var(--font-serif); font-size: 14px; color: var(--color-text); background: #fff; outline: none; transition: border-color .2s; box-sizing: border-box; }
+    #pane-quote .f-input:focus, #pane-quote .f-area:focus { border-color: var(--color-accent); }
+    #pane-quote .f-area { resize: vertical; line-height: 1.7; }
+    #pane-quote .ava-row { display: flex; align-items: center; gap: 12px; }
+    #pane-quote .ava-prev { width: 54px; height: 54px; border-radius: 50%; overflow: hidden; flex: none; border: 1px dashed #d6d3d1; background: var(--soft, #f5f4f2); display: flex; align-items: center; justify-content: center; color: var(--color-text-secondary); font-size: 18px; }
+    #pane-quote .ava-prev img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    #pane-quote .ava-btns { display: flex; flex-direction: column; gap: 6px; }
+    #pane-quote .btn.sm { font-size: 12px; padding: 6px 12px; border-radius: 9px; }
+    #pane-quote .check-row { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; user-select: none; }
+    #pane-quote .check-row input { width: 16px; height: 16px; accent-color: var(--color-accent); }
+    #pane-quote .export { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--color-border, #e7e5e4); }
+    #pane-quote .export .btn { width: 100%; margin-bottom: 10px; }
+    #pane-quote .btn.big { font-size: 15px; font-weight: 700; padding: 13px 0; box-shadow: 0 6px 16px -6px rgba(245,80,0,.45); }
+    #pane-quote .cmp-hint { font-size: 11.5px; color: #a8a29e; line-height: 1.6; margin-top: 4px; }
+
+    #pane-quote .seg { display: flex; border: 1px solid var(--color-border, #e7e5e4); border-radius: 11px; overflow: hidden; }
+    #pane-quote .seg-btn { flex: 1; font-family: inherit; font-size: 13px; padding: 9px 0; border: none; background: var(--soft, #f5f4f2); color: var(--color-text-secondary); cursor: pointer; transition: .15s; }
+    #pane-quote .seg-btn + .seg-btn { border-left: 1px solid var(--color-border, #e7e5e4); }
+    #pane-quote .seg-btn.on { background: var(--color-accent); color: #fff; font-weight: 700; }
+
+    /* 卡片（推文截图风） */
+    #pane-quote .tcard { width: 540px; border-radius: 0; padding: 64px 56px; font-family: var(--font-serif); display: flex; flex-direction: column; justify-content: center; gap: 44px; box-sizing: border-box; }
+    #pane-quote .r34 { aspect-ratio: 3/4; }
+    #pane-quote .r11 { aspect-ratio: 1/1; padding: 56px 52px; gap: 36px; }
+    #pane-quote .t-head { display: flex; align-items: center; gap: 18px; }
+    #pane-quote .t-ava { width: 96px; height: 96px; border-radius: 50%; flex: none; overflow: hidden; background: #d6d3d1; display: flex; align-items: center; justify-content: center; }
+    #pane-quote .t-ava img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    #pane-quote .t-ava .ph { font-size: 34px; opacity: .5; }
+    #pane-quote .t-id { min-width: 0; }
+    #pane-quote .t-namerow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    #pane-quote .t-name { font-size: 34px; font-weight: 800; line-height: 1.2; }
+    #pane-quote .t-check { width: 30px; height: 30px; flex: none; display: flex; }
+    #pane-quote .t-check svg { width: 100%; height: 100%; fill: #1d9bf0; display: block; }
+    #pane-quote .t-handle { font-size: 22px; line-height: 1.3; margin-top: 6px; }
+    #pane-quote .t-text { line-height: 1.62; font-weight: 500; word-break: break-word; white-space: pre-wrap; }
+    #pane-quote .v-light { background: #fff; color: #0f1419; }
+    #pane-quote .v-light .t-handle { color: #536471; }
+    #pane-quote .v-dark { background: #000; color: #e7e9ea; }
+    #pane-quote .v-dark .t-handle { color: #71767b; }
+    #pane-quote .v-paper { background: #f7f3ec; color: #26221d; }
+    #pane-quote .v-paper .t-handle { color: #8a8378; }
+
+    #pane-quote .toast { position: fixed; left: 50%; bottom: 34px; transform: translateX(-50%) translateY(20px); background: #1c1917; color: #fff; font-size: 13px; padding: 10px 22px; border-radius: 999px; opacity: 0; pointer-events: none; transition: .25s; z-index: 99; font-family: var(--font-serif); }
+    #pane-quote .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 980px) {
+      #pane-quote .ws { flex-direction: column; }
+      #pane-quote .lib { width: 100%; border-right: none; border-bottom: 1px solid var(--color-border, #e7e5e4); }
+      #pane-quote .lib ul { display: flex; gap: 12px; }
+      #pane-quote .lib li { margin-bottom: 0; flex: 1; }
+      #pane-quote .props { width: 100%; border-left: none; border-top: 1px solid var(--color-border, #e7e5e4); }
+    }
 
     @media (max-width: 860px) {
       .cover-editor, .tool-editor { flex-direction: column; }
