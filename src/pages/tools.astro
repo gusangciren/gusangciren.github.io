@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="工具箱 · 像企业家一样写作">
+  <div class="tools-layout">
+    <aside class="side">
+      <div class="side-title">工具箱</div>
+      <ul id="side-menu">
+        <li data-pane="pane-cover" class="active"><span class="num">1)</span><span>公众号封面制作</span></li>
+        <li data-pane="pane-quote"><span class="num">2)</span><span>金句卡片制作</span></li>
+      </ul>
+    </aside>
+
+    <main class="workspace">
+      <!-- 1) 公众号封面制作 -->
+      <section class="pane" id="pane-cover">
+        <div class="pane-card">
+          <div class="pane-head">
+            <svg class="pane-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+            <h1>公众号封面制作</h1>
+            <span class="pane-tag">建设中</span>
+          </div>
+          <p class="pane-desc">输入一句话，自动生成品牌深色封面（头条 900×383 + 次条 200×200），支持 <strong>**强调**</strong> 橙红高亮与红色描边框，一键复制图片。</p>
+        </div>
+      </section>
+
+      <!-- 2) 金句卡片制作 -->
+      <section class="pane" id="pane-quote" hidden>
+        <div class="pane-card">
+          <div class="pane-head">
+            <svg class="pane-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 10h8"/><path d="M8 14h5"/></svg>
+            <h1>金句卡片制作</h1>
+            <span class="pane-tag">建设中</span>
+          </div>
+          <p class="pane-desc">把句子做成可分享的金句卡片，品牌深色 / 暖白极简 / 杂志书页 / 横版引言多套样式，适合朋友圈与公众号。</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script is:inline>
+    (function () {
+      var items = document.querySelectorAll('#side-menu li');
+      items.forEach(function (li) {
+        li.addEventListener('click', function () {
+          items.forEach(function (x) { x.classList.remove('active'); });
+          li.classList.add('active');
+          document.querySelectorAll('.pane').forEach(function (p) { p.hidden = p.id !== li.dataset.pane; });
+        });
+      });
+    })();
+  </script>
+
+  <style is:global>
+    .tools-layout { max-width: 1100px; margin: 0 auto; display: flex; align-items: flex-start; padding: 0 20px; }
+    .side { width: 208px; flex: none; padding: 34px 0; position: sticky; top: 56px; align-self: flex-start; }
+    .side-title { font-size: 13px; color: var(--color-text-secondary); letter-spacing: 2px; padding: 0 14px 12px; }
+    .side ul { list-style: none; margin: 0; padding: 0; }
+    .side li { display: flex; align-items: center; gap: 10px; padding: 13px 14px; border-radius: 12px; cursor: pointer; color: var(--color-text-secondary); font-size: 15px; transition: background .2s, color .2s; margin-bottom: 4px; }
+    .side li .num { font-variant-numeric: tabular-nums; color: var(--color-accent); font-weight: 700; width: 18px; flex: none; }
+    .side li:hover { background: var(--soft, #f5f4f2); }
+    .side li.active { background: var(--color-card-bg, #fff); color: var(--color-text, #1c1917); box-shadow: 0 1px 3px rgba(0,0,0,.06); font-weight: 700; }
+    .workspace { flex: 1; min-width: 0; padding: 34px 0 60px; }
+    .pane-card { background: var(--color-card-bg); border: 2px solid rgba(245,80,0,.5); border-radius: 16px; padding: 30px 28px; }
+    .pane-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+    .pane-ic { width: 34px; height: 34px; color: var(--color-accent); flex: none; }
+    .pane-head h1 { font-family: var(--font-serif); font-size: 1.4rem; font-weight: 700; margin: 0; }
+    .pane-tag { font-size: 12px; color: var(--color-accent); background: rgba(245,80,0,.08); border: 1px solid rgba(245,80,0,.25); border-radius: 999px; padding: 5px 12px; font-weight: 600; }
+    .pane-desc { font-size: 14.5px; color: var(--color-text-secondary); line-height: 1.8; margin: 0; }
+    .pane-desc strong { color: var(--color-accent); font-weight: 700; }
+    @media (max-width: 640px) {
+      .tools-layout { flex-direction: column; }
+      .side { width: 100%; position: static; padding: 24px 0 0; }
+      .workspace { padding-top: 20px; }
+    }
+  </style>
+</BaseLayout>
