@@ -15,25 +15,112 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <main class="workspace">
       <!-- 1) 公众号封面制作 -->
       <section class="pane" id="pane-cover">
-        <div class="pane-card">
-          <div class="pane-head">
-            <svg class="pane-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-            <h1>公众号封面制作</h1>
-            <span class="pane-tag">建设中</span>
+        <div class="cover-editor">
+          <!-- 预览列 -->
+          <div class="pv-col">
+            <div class="cv-wrap" id="wrap90"><!-- cover90 --></div>
+            <div class="pv-actions">
+              <button class="ex-btn copy" data-t="90">复制图片</button>
+              <button class="ex-btn dl" data-t="90">下载图片</button>
+              <span class="pv-tag">头条 900 × 383 · 导出 2 倍像素</span>
+            </div>
+
+            <div class="cv-wrap" id="wrap20"><!-- cover20 --></div>
+            <div class="pv-actions">
+              <button class="ex-btn copy" data-t="20">复制图片</button>
+              <button class="ex-btn dl" data-t="20">下载图片</button>
+              <span class="pv-tag">次条 200 × 200 · 预览按比例缩小</span>
+            </div>
+
+            <p class="pv-tip"><b>拿到图片：</b>点「下载图片」直接下高清图，公众号后台上传即可；或点「复制图片」后 Ctrl+V 粘贴。<br>头条文案支持 <b>**强调**</b> 橙红高亮（如 <b>**价值**</b>，是有效需求的满足。）；次条徽标会自动带出强调词，可改。</p>
           </div>
-          <p class="pane-desc">输入一句话，自动生成品牌深色封面（头条 900×383 + 次条 200×200），支持 <strong>**强调**</strong> 橙红高亮与红色描边框，一键复制图片。</p>
+
+          <!-- 设置列 -->
+          <div class="set-col">
+            <div class="set-group composer">
+              <span class="fld-label">头条文案（支持 <b>**强调**</b>）</span>
+              <div class="ta-box">
+                <textarea id="f-headline" rows="3">**价值**，是有效需求的满足。</textarea>
+              </div>
+
+              <div class="cmp-div"></div>
+
+              <div class="cmp-row">
+                <div class="fld">
+                  <span class="fld-label">次条徽标（≤4 字）</span>
+                  <input id="f-badge" class="inp" type="text" maxlength="4" placeholder="自动带出强调词"/>
+                </div>
+                <div class="fld">
+                  <span class="fld-label">边框颜色</span>
+                  <div class="fr-dots" id="seg-frame">
+                    <button class="fr-dot c-red on" data-v="#F53F3F" title="红" aria-label="红"></button>
+                    <button class="fr-dot c-ora" data-v="#F55000" title="橙" aria-label="橙"></button>
+                    <button class="fr-dot c-none" data-v="" title="无">无</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="cmp-div"></div>
+
+              <div class="brand-block">
+                <span class="fld-label">品牌行</span>
+                <div class="brand-line">
+                  <label class="tg"><input type="checkbox" id="tg-avatar" checked/><span class="sw"></span><span class="tl">头像</span></label>
+                  <button id="btn-avatar" class="avatar-btn" title="上传头像图片">
+                    <img id="avatar-thumb" src="/images/logo-180x180.png" alt="头像"/>
+                    <span>上传头像</span>
+                  </button>
+                  <input type="file" id="f-avatar" accept="image/*" hidden/>
+                </div>
+                <div class="brand-line">
+                  <label class="tg"><input type="checkbox" id="tg-name" checked/><span class="sw"></span><span class="tl">名称</span></label>
+                  <input id="f-name" class="inp name-inp" type="text" maxlength="14" value="像企业家一样写作"/>
+                </div>
+                <div class="cmp-hint">头像 / 名称全关时，品牌行整体收起；上传的头像本机记住，下次不用重传。</div>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- 离屏导出舞台（原生尺寸，避免缩放干扰 html2canvas；放在 pane 内以复用作用域样式） -->
+        <div id="export-stage"></div>
       </section>
 
-      <!-- 2) 金句卡片制作 -->
+      <!-- 2) 金句卡片制作（独立工具） -->
       <section class="pane" id="pane-quote" hidden>
-        <div class="pane-card">
-          <div class="pane-head">
-            <svg class="pane-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 10h8"/><path d="M8 14h5"/></svg>
-            <h1>金句卡片制作</h1>
-            <span class="pane-tag">建设中</span>
+        <div class="tool-editor">
+          <div class="te-preview">
+            <div class="qcard q-a" id="qCard">
+              <div class="q-mark">“</div>
+              <div class="q-text"></div>
+              <div class="q-foot">
+                <div class="q-src"></div>
+                <div class="q-brand">像企业家一样写作</div>
+              </div>
+            </div>
           </div>
-          <p class="pane-desc">把句子做成可分享的金句卡片，品牌深色 / 暖白极简 / 杂志书页 / 横版引言多套样式，适合朋友圈与公众号。</p>
+
+          <div class="te-form">
+            <div class="f-sec">
+              <label class="f-label">引言</label>
+              <textarea class="f-area" id="qText" rows="5">价值，就是需求的有效满足。把一件事做到极致，需求自会找上门来。</textarea>
+            </div>
+            <div class="f-sec">
+              <label class="f-label">出处（选填）</label>
+              <input class="f-input" id="qSrc" value="《如何获得创业灵感》" placeholder="如：出自《如何选择》" />
+            </div>
+            <div class="f-sec">
+              <label class="f-label">卡片样式</label>
+              <div class="thumbs" id="qThumbs"></div>
+            </div>
+            <div class="f-sec">
+              <label class="f-label">导出</label>
+              <div class="export-btns">
+                <button class="btn primary" id="qCopy">复制图片</button>
+                <button class="btn" id="qDown">下载图片</button>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </main>
@@ -41,14 +128,289 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   <script is:inline>
     (function () {
-      var items = document.querySelectorAll('#side-menu li');
-      items.forEach(function (li) {
+      // ===== 侧边栏切换 =====
+      var menu = document.getElementById('side-menu');
+      menu.querySelectorAll('li').forEach(function (li) {
         li.addEventListener('click', function () {
-          items.forEach(function (x) { x.classList.remove('active'); });
+          menu.querySelectorAll('li').forEach(function (x) { x.classList.remove('active'); });
           li.classList.add('active');
           document.querySelectorAll('.pane').forEach(function (p) { p.hidden = p.id !== li.dataset.pane; });
         });
       });
+
+      // ===== 金句卡片工具 =====
+      var SCHEMES = [
+        { v: 'q-a', name: '品牌深色' },
+        { v: 'q-b', name: '暖白极简' },
+        { v: 'q-c', name: '杂志书页' },
+        { v: 'q-d', name: '横版引言' }
+      ];
+      var QC_BG = { 'q-a': '#1c1917', 'q-b': '#ffffff', 'q-c': '#f3ede1', 'q-d': '#fafaf9' };
+      var state = { text: '', src: '', scheme: 'q-a' };
+
+      var qText = document.getElementById('qText');
+      var qSrc = document.getElementById('qSrc');
+      var qThumbs = document.getElementById('qThumbs');
+
+      function qSize(t) {
+        var n = (t || '').length;
+        if (n <= 24) return 30; if (n <= 48) return 26; if (n <= 80) return 22; return 20;
+      }
+
+      function renderCards() {
+        var cards = document.querySelectorAll('.qcard');
+        cards.forEach(function (c) {
+          c.className = 'qcard ' + state.scheme;
+          c.querySelector('.q-text').textContent = state.text;
+          c.querySelector('.q-text').style.fontSize = (state.scheme === 'q-d' ? 30 : qSize(state.text)) + 'px';
+          var src = c.querySelector('.q-src');
+          src.textContent = state.src;
+          src.style.display = state.src ? 'block' : 'none';
+        });
+      }
+
+      function buildThumbs() {
+        qThumbs.innerHTML = SCHEMES.map(function (s) {
+          return '<button class="thumb' + (s.v === state.scheme ? ' on' : '') + '" data-v="' + s.v + '">' +
+            '<span class="t-card t-' + s.v[2] + '">' +
+              '<span class="t-text">价值，就是需求的有效满足。</span>' +
+              '<span class="t-foot"><span>《如何获得创业灵感》</span><b>像企业家一样写作</b></span>' +
+            '</span>' +
+            '<span class="t-label">' + s.name + '</span>' +
+          '</button>';
+        }).join('');
+        qThumbs.querySelectorAll('.thumb').forEach(function (b) {
+          b.addEventListener('click', function () {
+            state.scheme = b.dataset.v;
+            buildThumbs();
+            renderCards();
+          });
+        });
+      }
+
+      qText.addEventListener('input', function () { state.text = qText.value; renderCards(); });
+      qSrc.addEventListener('input', function () { state.src = qSrc.value; renderCards(); });
+
+      function exportCanvas(id) {
+        var el = document.getElementById(id);
+        if (!window.html2canvas) { alert('图片组件未加载，请稍候重试'); return Promise.reject(); }
+        return document.fonts.ready.then(function () {
+          return html2canvas(el, { backgroundColor: QC_BG[state.scheme] || '#ffffff', scale: 2, useCORS: true, logging: false });
+        });
+      }
+      function toast(m) {
+        var t = document.getElementById('toast');
+        if (!t) return;
+        t.textContent = m; t.classList.add('show');
+        clearTimeout(t._t); t._t = setTimeout(function () { t.classList.remove('show'); }, 1800);
+      }
+      document.getElementById('qCopy').addEventListener('click', function () {
+        exportCanvas('qCard').then(function (cv) {
+          cv.toBlob(function (blob) {
+            if (blob && navigator.clipboard && window.ClipboardItem) {
+              navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
+                .then(function () { toast('已复制图片到剪贴板'); })
+                .catch(function () { toast('复制失败，请用下载'); });
+            } else { toast('当前环境不支持复制图片，请用下载'); }
+          });
+        }).catch(function () {});
+      });
+      document.getElementById('qDown').addEventListener('click', function () {
+        exportCanvas('qCard').then(function (cv) {
+          var a = document.createElement('a');
+          a.download = '金句卡片.png';
+          a.href = cv.toDataURL('image/png');
+          a.click();
+        }).catch(function () {});
+      });
+
+      state.text = qText.value;
+      state.src = qSrc.value;
+      buildThumbs();
+      renderCards();
+    })();
+
+    // ===== 公众号封面制作工具 =====
+    (function () {
+      var SITE_URL = 'gusangciren.github.io';
+      var DEFAULT_AVATAR = '/images/logo-180x180.png';
+      var DEFAULT_NAME = '像企业家一样写作';
+
+      var headlineEl = document.getElementById('f-headline');
+      var badgeEl = document.getElementById('f-badge');
+      var nameEl = document.getElementById('f-name');
+      var tgAvatar = document.getElementById('tg-avatar');
+      var tgName = document.getElementById('tg-name');
+      var avatarThumb = document.getElementById('avatar-thumb');
+      var btnAvatar = document.getElementById('btn-avatar');
+      var fileAvatar = document.getElementById('f-avatar');
+      var wrap90 = document.getElementById('wrap90'), wrap20 = document.getElementById('wrap20');
+      var frameVal = '#F53F3F';
+      var avatar = DEFAULT_AVATAR;
+      var lastAuto = '';
+
+      try {
+        var savedA = localStorage.getItem('tools.cv.avatar');
+        if (savedA) { avatar = savedA; avatarThumb.src = savedA; }
+        var savedN = localStorage.getItem('tools.cv.name');
+        if (savedN) { nameEl.value = savedN; }
+      } catch (e) {}
+
+      function esc(s) {
+        return String(s).replace(/[&<>"]/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+        });
+      }
+      function cleanHL(raw) { return (raw || '').replace(/\*\*/g, ''); }
+      function extractHL(raw) { var m = (raw || '').match(/\*\*([^*]+)\*\*/); return m ? m[1] : ''; }
+      function titleSize(t) { var n = t.length; if (n <= 10) return 60; if (n <= 18) return 52; if (n <= 28) return 46; return 40; }
+      function badgeSize(t) { var n = t.length; if (n <= 2) return 60; if (n === 3) return 48; return Math.max(26, Math.min(40, 168 / n)); }
+      function renderTitle(raw) {
+        if (!raw) return '';
+        if (raw.indexOf('**') !== -1) {
+          return raw.split(/(\*\*[^*]+\*\*)/g).map(function (p) {
+            return /^\*\*[^*]+\*\*$/.test(p) ? '<em>' + esc(p.slice(2, -2)) + '</em>' : esc(p);
+          }).join('');
+        }
+        return esc(raw);
+      }
+      function data() {
+        return {
+          headline: headlineEl.value,
+          badge: badgeEl.value,
+          frameColor: frameVal,
+          avatar: avatar,
+          name: nameEl.value || DEFAULT_NAME,
+          showAvatar: tgAvatar.checked,
+          showName: tgName.checked
+        };
+      }
+      function build90(d) {
+        var raw = d.headline || '';
+        var el = document.createElement('div'); el.className = 'cover90';
+        var frame = d.frameColor ? '<div class="frame" style="border-color:' + esc(d.frameColor) + '"></div>' : '';
+        var brand = '';
+        if (d.showAvatar || d.showName) {
+          brand = '<div class="brandrow">';
+          if (d.showAvatar) brand += '<img class="clogo" src="' + esc(d.avatar) + '" alt="logo"/>';
+          if (d.showName) brand += '<div class="bt"><div class="bn">' + esc(d.name) + '</div><div class="bu">' + SITE_URL + '</div></div>';
+          brand += '</div>';
+        }
+        el.innerHTML = '<div class="glow"></div>' + frame +
+          '<div class="cv-inner"><h1 class="ctitle" style="font-size:' + titleSize(cleanHL(raw).length) + 'px">' + renderTitle(raw) + '</h1>' + brand + '</div>';
+        return el;
+      }
+      function build20(d) {
+        var el = document.createElement('div'); el.className = 'cover20';
+        var frame = d.frameColor ? '<div class="frame" style="border-color:' + esc(d.frameColor) + '"></div>' : '';
+        var inner = d.badge
+          ? '<div class="cbadge" style="font-size:' + badgeSize(d.badge.length) + 'px">' + esc(d.badge) + '</div>'
+          : '<div class="bc-site">' + esc(d.name) + '</div>';
+        el.innerHTML = '<div class="glow"></div>' + frame + '<div class="ccenter">' + inner + '</div>';
+        return el;
+      }
+      function render() {
+        wrap90.innerHTML = ''; wrap90.appendChild(build90(data()));
+        wrap20.innerHTML = ''; wrap20.appendChild(build20(data()));
+      }
+      function fit() {
+        var w = wrap90.parentElement.clientWidth || 900;
+        var s = Math.max(0.32, Math.min(0.62, (w - 8) / 900));
+        wrap90.style.setProperty('--s', s);
+        wrap20.style.setProperty('--s', s);
+      }
+      function exportEl(builder) {
+        var stage = document.getElementById('export-stage');
+        var el = builder(data());
+        el.style.transform = 'none';
+        el.style.position = 'static';
+        stage.appendChild(el);
+        return { el: el, done: function () { stage.removeChild(el); } };
+      }
+      async function renderArt(el) {
+        await document.fonts.ready;
+        return html2canvas(el, { backgroundColor: '#1c1917', scale: 2, useCORS: true, logging: false });
+      }
+      async function copyArt(btn, builder) {
+        var t = btn.textContent; btn.disabled = true; btn.textContent = '生成中…';
+        try {
+          var x = exportEl(builder); var c = await renderArt(x.el); x.done();
+          var blob = await new Promise(function (r) { c.toBlob(r, 'image/png'); });
+          await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+          btn.textContent = '已复制 ✓';
+        } catch (e) { console.error(e); btn.textContent = '复制失败'; }
+        setTimeout(function () { btn.textContent = t; btn.disabled = false; }, 1800);
+      }
+      async function downloadArt(btn, builder, name) {
+        var t = btn.textContent; btn.disabled = true; btn.textContent = '生成中…';
+        try {
+          var x = exportEl(builder); var c = await renderArt(x.el); x.done();
+          var a = document.createElement('a'); a.href = c.toDataURL('image/png'); a.download = name + '.png';
+          document.body.appendChild(a); a.click(); a.remove();
+          btn.textContent = '已下载 ✓';
+        } catch (e) { console.error(e); btn.textContent = '下载失败'; }
+        setTimeout(function () { btn.textContent = t; btn.disabled = false; }, 1800);
+      }
+
+      function onHL() {
+        var h = extractHL(headlineEl.value);
+        if (h && (badgeEl.value === '' || badgeEl.value === lastAuto)) { badgeEl.value = h; lastAuto = h; }
+        else if (!h) { lastAuto = ''; }
+        render();
+      }
+      headlineEl.addEventListener('input', onHL);
+      badgeEl.addEventListener('input', function () {
+        lastAuto = (badgeEl.value === extractHL(headlineEl.value)) ? badgeEl.value : '';
+        render();
+      });
+      document.querySelectorAll('#seg-frame .fr-dot').forEach(function (b) {
+        b.addEventListener('click', function () {
+          document.querySelectorAll('#seg-frame .fr-dot').forEach(function (x) { x.classList.remove('on'); });
+          b.classList.add('on');
+          frameVal = b.dataset.v || '';
+          render();
+        });
+      });
+      tgAvatar.addEventListener('change', render);
+      tgName.addEventListener('change', render);
+      nameEl.addEventListener('input', function () {
+        try { localStorage.setItem('tools.cv.name', nameEl.value); } catch (e) {}
+        render();
+      });
+      btnAvatar.addEventListener('click', function () { fileAvatar.click(); });
+      fileAvatar.addEventListener('change', function () {
+        var f = fileAvatar.files && fileAvatar.files[0];
+        if (!f) return;
+        var rd = new FileReader();
+        rd.onload = function () {
+          var img = new Image();
+          img.onload = function () {
+            var max = 256, w = img.width, h = img.height;
+            var k = Math.min(1, max / Math.max(w, h));
+            var cv = document.createElement('canvas');
+            cv.width = Math.round(w * k); cv.height = Math.round(h * k);
+            cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+            avatar = cv.toDataURL('image/png');
+            avatarThumb.src = avatar;
+            try { localStorage.setItem('tools.cv.avatar', avatar); } catch (e) {}
+            render();
+          };
+          img.src = rd.result;
+        };
+        rd.readAsDataURL(f);
+        fileAvatar.value = '';
+      });
+      document.querySelectorAll('.ex-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var t = btn.dataset.t;
+          var builder = t === '90' ? build90 : build20;
+          if (btn.classList.contains('copy')) copyArt(btn, builder);
+          else downloadArt(btn, builder, t === '90' ? '封面-头条' : '封面-次条');
+        });
+      });
+      window.addEventListener('resize', fit);
+      fit();
+      onHL(); // 初始化：徽标自动带出 + 首次渲染
     })();
   </script>
 
@@ -62,13 +424,159 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     .side li:hover { background: var(--soft, #f5f4f2); }
     .side li.active { background: var(--color-card-bg, #fff); color: var(--color-text, #1c1917); box-shadow: 0 1px 3px rgba(0,0,0,.06); font-weight: 700; }
     .workspace { flex: 1; min-width: 0; padding: 34px 0 60px; }
-    .pane-card { background: var(--color-card-bg); border: 2px solid rgba(245,80,0,.5); border-radius: 16px; padding: 30px 28px; }
-    .pane-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
-    .pane-ic { width: 34px; height: 34px; color: var(--color-accent); flex: none; }
-    .pane-head h1 { font-family: var(--font-serif); font-size: 1.4rem; font-weight: 700; margin: 0; }
-    .pane-tag { font-size: 12px; color: var(--color-accent); background: rgba(245,80,0,.08); border: 1px solid rgba(245,80,0,.25); border-radius: 999px; padding: 5px 12px; font-weight: 600; }
-    .pane-desc { font-size: 14.5px; color: var(--color-text-secondary); line-height: 1.8; margin: 0; }
-    .pane-desc strong { color: var(--color-accent); font-weight: 700; }
+
+    /* ============================================================
+       公众号封面制作工具——全部样式收在 #pane-cover 作用域内，
+       不泄漏到站点头部/其他页面（.logo 等类名与站点头部撞名）。
+       ============================================================ */
+    #pane-cover .cover-editor { display: flex; gap: 28px; align-items: flex-start; }
+    #pane-cover .pv-col { flex: 1; min-width: 0; position: sticky; top: 80px; }
+    #pane-cover .set-col { width: 360px; flex: none; display: flex; flex-direction: column; gap: 16px; }
+
+    #pane-cover .cv-wrap { --s: .5; position: relative; overflow: hidden; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,.18); background: transparent; }
+    #pane-cover #wrap90 { width: calc(900px * var(--s)); max-width: 100%; height: calc(383px * var(--s)); }
+    #pane-cover #wrap20 { width: calc(200px * var(--s)); max-width: 100%; height: calc(200px * var(--s)); margin-top: 22px; }
+    #pane-cover .pv-actions { display: flex; align-items: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+    #pane-cover .pv-tag { font-size: 12px; color: #a8a29e; margin-left: auto; }
+    #pane-cover .pv-tip { font-size: 12.5px; line-height: 1.7; color: #57534e; background: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 12px 14px; margin-top: 20px; }
+    #pane-cover .pv-tip b { color: #c2410c; }
+
+    /* 封面画板（与站点品牌一致） */
+    #pane-cover .cover90, #pane-cover .cover20 { position: absolute; top: 0; left: 0; overflow: hidden;
+      background: linear-gradient(140deg, #1c1917 0%, #292524 55%, #3a1a00 100%); color: #fff;
+      font-family: var(--font-serif); transform: scale(var(--s, .5)); transform-origin: top left; }
+    #pane-cover .cover90 { width: 900px; height: 383px; }
+    #pane-cover .cover20 { width: 200px; height: 200px; }
+    #pane-cover .cv-inner, #pane-cover .ccenter { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; }
+    #pane-cover .cv-inner { justify-content: center; padding: 0 48px 0 84px; }
+    #pane-cover .ctitle { font-weight: 700; line-height: 1.32; color: #fff; margin: 0; max-width: 760px; }
+    #pane-cover .ctitle em { font-style: normal; color: #F55000; }
+    #pane-cover .brandrow { display: flex; align-items: center; gap: 12px; margin-top: 30px; }
+    #pane-cover .clogo { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex: none; box-shadow: 0 0 0 2px rgba(245,80,0,.4); }
+    #pane-cover .bn { font-weight: 700; font-size: 15px; color: #fff; }
+    #pane-cover .bu { font-size: 12.5px; color: rgba(255,255,255,.66); margin-top: 1px; }
+    #pane-cover .ccenter { align-items: center; justify-content: center; gap: 10px; }
+    #pane-cover .cbadge { font-weight: 700; color: #fff; letter-spacing: .04em; white-space: nowrap; }
+    #pane-cover .cbadge em { font-style: normal; color: #F55000; }
+    #pane-cover .bc-site { font-weight: 700; font-size: 20px; color: #fff; text-align: center; line-height: 1.4; padding: 0 10px; }
+    #pane-cover .glow { position: absolute; right: -90px; bottom: -90px; width: 340px; height: 340px; z-index: 1;
+      background: radial-gradient(circle, rgba(245,80,0,.20), transparent 70%); pointer-events: none; }
+    #pane-cover .frame { position: absolute; inset: 0; border: 10px solid #F53F3F; pointer-events: none; z-index: 6; }
+    #pane-cover .cover20 .frame { border-width: 8px; }
+
+    /* ===== 设置卡（变体 1 · 整洁行式） ===== */
+    #pane-cover .set-group { background: var(--color-card-bg); border: 1px solid var(--color-border, #ececea); border-radius: 14px; padding: 18px 18px 20px; }
+    #pane-cover .composer { background: #fdfcfa; }
+    #pane-cover .fld-label { display: block; font-size: 13px; color: var(--color-text-secondary); margin-bottom: 7px; }
+    #pane-cover .fld-label b { color: var(--color-accent); }
+    #pane-cover .ta-box { background: rgba(245,80,0,.035); border: 1px solid rgba(245,80,0,.14); border-radius: 12px; padding: 4px; transition: border-color .2s; }
+    #pane-cover .ta-box:focus-within { border-color: rgba(245,80,0,.45); }
+    #pane-cover .ta-box textarea { width: 100%; border: none; background: transparent; border-radius: 9px; padding: 10px 12px;
+      font-family: var(--font-serif); font-size: 16px; color: var(--color-text); outline: none; resize: vertical; line-height: 1.6; box-sizing: border-box; }
+    #pane-cover .cmp-div { height: 1px; background: #efece8; margin: 16px -18px; }
+    #pane-cover .cmp-row { display: flex; gap: 20px; align-items: flex-end; flex-wrap: wrap; }
+    #pane-cover .cmp-row .fld { flex: none; }
+    #pane-cover .inp { border: 1px solid var(--color-border, #e5e3df); border-radius: 10px; padding: 9px 12px;
+      font-family: var(--font-serif); font-size: 14px; color: var(--color-text); background: #fff; outline: none; transition: border-color .2s; box-sizing: border-box; }
+    #pane-cover .inp:focus { border-color: var(--color-accent); }
+    #pane-cover #f-badge { width: 150px; }
+    #pane-cover .fr-dots { display: flex; gap: 9px; align-items: center; height: 38px; }
+    #pane-cover .fr-dot { width: 26px; height: 26px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; padding: 0; font-family: inherit; }
+    #pane-cover .fr-dot.c-red { background: #F53F3F; }
+    #pane-cover .fr-dot.c-ora { background: #F55000; }
+    #pane-cover .fr-dot.c-none { background: #fff; border-color: var(--color-border, #e5e3df); color: var(--color-text-secondary); font-size: 12px; }
+    #pane-cover .fr-dot.on { border-color: #1c1917; }
+
+    /* 品牌行设置（头像/名称开关 + 上传 + 改名） */
+    #pane-cover .brand-line { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+    #pane-cover .tg { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; }
+    #pane-cover .tg input { display: none; }
+    #pane-cover .tg .sw { width: 38px; height: 21px; border-radius: 999px; background: #d6d3d1; position: relative; transition: background .18s; flex: none; }
+    #pane-cover .tg .sw::after { content: ''; position: absolute; top: 2.5px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: left .18s; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+    #pane-cover .tg input:checked + .sw { background: var(--color-accent); }
+    #pane-cover .tg input:checked + .sw::after { left: 19px; }
+    #pane-cover .tg .tl { font-size: 13px; color: var(--color-text-secondary); }
+    #pane-cover .avatar-btn { display: inline-flex; align-items: center; gap: 7px; border: 1px dashed #d6d3d1; border-radius: 999px;
+      background: #fff; padding: 4px 12px 4px 5px; font-family: inherit; font-size: 13px; color: var(--color-text-secondary); cursor: pointer; }
+    #pane-cover .avatar-btn:hover { border-color: var(--color-accent); color: var(--color-accent); }
+    #pane-cover .avatar-btn img { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 2px rgba(245,80,0,.4); }
+    #pane-cover .name-inp { flex: 1; min-width: 0; }
+    #pane-cover .cmp-hint { font-size: 12px; color: #a8a29e; margin-top: 6px; }
+
+    /* 导出按钮（文艺简约：细边幽灵款，衬线字，去加粗） */
+    #pane-cover .ex-btn { border: 1px solid #ddd9d3; border-radius: 999px; padding: 7px 18px;
+      font-family: var(--font-serif); font-size: 13px; font-weight: 400; letter-spacing: .02em;
+      color: #44403c; background: transparent; cursor: pointer; transition: all .18s; }
+    #pane-cover .ex-btn.copy { color: #F55000; border-color: rgba(245,80,0,.4); background: rgba(245,80,0,.04); }
+    #pane-cover .ex-btn.copy:hover { background: #F55000; border-color: #F55000; color: #fff; }
+    #pane-cover .ex-btn.dl:hover { border-color: #1c1917; color: #1c1917; }
+    #pane-cover .ex-btn:disabled { opacity: .5; cursor: default; }
+    #pane-cover #export-stage { position: absolute; left: -10000px; top: 0; width: 900px; height: 383px; }
+
+    /* ===== 金句卡工具编辑器 ===== */
+    .tool-editor { display: flex; gap: 28px; align-items: flex-start; }
+    .te-preview { flex: 1; min-width: 0; display: flex; justify-content: center; background: var(--soft, #f5f4f2); border-radius: 16px; padding: 30px; }
+    .te-form { width: 340px; flex: none; display: flex; flex-direction: column; gap: 20px; }
+    .f-sec { display: flex; flex-direction: column; }
+    .f-label { display: block; font-size: 13px; color: var(--color-text-secondary); margin-bottom: 7px; }
+    .f-input, .f-area { width: 100%; padding: 12px 14px; border: 1px solid var(--color-border, #e7e5e4); border-radius: 12px; font-family: inherit; font-size: 15px; color: var(--color-text); background: #fff; outline: none; transition: border-color .2s; }
+    .f-input:focus, .f-area:focus { border-color: var(--color-accent); }
+    .f-area { resize: vertical; line-height: 1.7; }
+    .export-btns { display: flex; gap: 10px; }
+    .btn { border: 1px solid var(--color-border, #e7e5e4); background: #fff; font-family: inherit; font-size: 14px; color: var(--color-text); padding: 11px 16px; border-radius: 11px; cursor: pointer; transition: all .2s; }
+    .btn:hover { border-color: var(--color-accent); color: var(--color-accent); }
+    .btn.primary { background: var(--color-accent); color: #fff; border-color: var(--color-accent); }
+    .btn.primary:hover { filter: brightness(1.06); color: #fff; }
+
+    /* ===== 卡片（与站点金句卡同源的 4 套样式） ===== */
+    .qcard { position: relative; width: 480px; border-radius: 20px; padding: 46px 44px; font-family: var(--font-serif); overflow: hidden; display: flex; flex-direction: column; }
+    .q-text { position: relative; z-index: 2; line-height: 1.6; font-weight: 700; overflow-wrap: anywhere; }
+    .q-foot { position: relative; z-index: 2; margin-top: auto; padding-top: 28px; display: flex; flex-direction: column; gap: 6px; }
+    .q-src { font-size: 14px; opacity: .85; }
+    .q-brand { font-size: 13px; opacity: .7; letter-spacing: 1px; }
+    .qcard.q-a { background: linear-gradient(140deg, #1c1917 0%, #292524 58%, #3a1a00 100%); color: #fff; }
+    .qcard.q-a::after { content: ""; position: absolute; right: -70px; bottom: -70px; width: 260px; height: 260px; background: radial-gradient(circle, rgba(245,80,0,.38), transparent 70%); border-radius: 50%; z-index: 1; }
+    .qcard.q-a .q-brand { color: #F55000; opacity: 1; }
+    .qcard.q-b { background: #fff; color: #1c1917; border: 1px solid var(--color-border, #e7e5e4); }
+    .qcard.q-b::before { content: ""; position: absolute; left: 0; top: 46px; bottom: 46px; width: 5px; background: var(--color-accent); border-radius: 0 4px 4px 0; }
+    .qcard.q-b .q-brand { color: var(--color-text-secondary); }
+    .qcard.q-c { background: #f3ede1; color: #2b2620; }
+    .qcard.q-c .q-mark { display: block; position: absolute; top: 6px; left: 30px; font-family: Georgia, serif; font-size: 150px; line-height: 1; color: var(--color-accent); opacity: .16; z-index: 1; }
+    .qcard.q-c .q-brand { color: #8a7f6d; }
+    .q-mark { display: none; }
+    .qcard.q-d { height: 320px; background: linear-gradient(135deg, #fafaf9, #f1ece4); color: #1c1917; border: 1px solid var(--color-border, #e7e5e4); }
+    .qcard.q-d .q-text { font-size: 30px; }
+    .qcard.q-d .q-foot { flex-direction: row; align-items: baseline; justify-content: space-between; }
+    .qcard.q-d .q-brand { color: var(--color-accent); opacity: 1; }
+
+    /* ===== 样式缩略图选择器 ===== */
+    .thumbs { display: flex; flex-wrap: wrap; gap: 10px; }
+    .thumb { border: 1px solid var(--color-border, #e7e5e4); border-radius: 14px; background: #fff; padding: 9px; cursor: pointer; text-align: center; transition: all .15s; width: calc(50% - 5px); font-family: inherit; }
+    .thumb:hover { border-color: #d6d3d1; }
+    .thumb.on { border-color: var(--color-accent); box-shadow: 0 0 0 3px rgba(245,80,0,.14); }
+    .t-card { display: flex; flex-direction: column; justify-content: space-between; border-radius: 9px; padding: 12px; height: 128px; width: 100%; font-size: 10px; line-height: 1.55; text-align: left; position: relative; overflow: hidden; }
+    .t-text { font-weight: 700; position: relative; z-index: 2; }
+    .t-foot { font-size: 8px; opacity: .75; position: relative; z-index: 2; }
+    .t-a { background: linear-gradient(140deg, #1c1917, #292524 58%, #3a1a00); color: #fff; }
+    .t-a .t-foot { color: #F55000; opacity: 1; }
+    .t-a::after { content: ""; position: absolute; right: -16px; bottom: -16px; width: 56px; height: 56px; background: radial-gradient(circle, rgba(245,80,0,.4), transparent 70%); border-radius: 50%; }
+    .t-b { background: #fff; color: #1c1917; border: 1px solid var(--color-border, #e7e5e4); }
+    .t-b::before { content: ""; position: absolute; left: 0; top: 12px; bottom: 12px; width: 3px; background: var(--color-accent); }
+    .t-b .t-foot { color: #78716c; }
+    .t-c { background: #f3ede1; color: #2b2620; }
+    .t-c::before { content: "“"; position: absolute; top: -8px; left: 8px; font-family: Georgia, serif; font-size: 52px; line-height: 1; color: var(--color-accent); opacity: .18; }
+    .t-c .t-foot { color: #8a7f6d; }
+    .t-d { height: 86px; background: linear-gradient(135deg, #fafaf9, #f1ece4); border: 1px solid var(--color-border, #e7e5e4); color: #1c1917; justify-content: center; }
+    .t-d .t-foot { display: flex; justify-content: space-between; color: #1c1917; }
+    .t-d .t-foot b { color: var(--color-accent); font-weight: 400; }
+    .t-label { display: block; font-size: 12px; margin-top: 8px; color: var(--color-text-secondary); }
+    .thumb.on .t-label { color: var(--color-text); font-weight: 700; }
+
+    @media (max-width: 860px) {
+      .cover-editor, .tool-editor { flex-direction: column; }
+      #pane-cover .pv-col { position: static; }
+      .set-col, .te-form { width: 100%; }
+    }
     @media (max-width: 640px) {
       .tools-layout { flex-direction: column; }
       .side { width: 100%; position: static; padding: 24px 0 0; }
