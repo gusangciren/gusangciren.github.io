@@ -1,0 +1,635 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="AI时代注意力稀缺，能获取信任的人与不能的人差距越来越大。写作不仅是自媒体工具，更是捕获注意力、建立信任的核心方式。"><link rel="canonical" href="https://gusangciren.github.io/blog/content-irreplaceable/"><title>内容不可替代 — 像企业家一样写作</title><!-- 社交分享卡片（微信 / 微博 / X 等抓取标题、描述与缩略图） --><meta property="og:type" content="website"><meta property="og:site_name" content="像企业家一样写作"><meta property="og:title" content="内容不可替代 — 像企业家一样写作"><meta property="og:description" content="AI时代注意力稀缺，能获取信任的人与不能的人差距越来越大。写作不仅是自媒体工具，更是捕获注意力、建立信任的核心方式。"><meta property="og:image" content="https://gusangciren.github.io/images/logo-180x180.png"><meta property="og:url" content="https://gusangciren.github.io/blog/content-irreplaceable/"><meta property="og:locale" content="zh_CN"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="内容不可替代 — 像企业家一样写作"><meta name="twitter:description" content="AI时代注意力稀缺，能获取信任的人与不能的人差距越来越大。写作不仅是自媒体工具，更是捕获注意力、建立信任的核心方式。"><meta name="twitter:image" content="https://gusangciren.github.io/images/logo-180x180.png"><link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml"><link rel="sitemap" type="application/xml" href="/sitemap-index.xml"><!-- Static CSS — no build hash, safe for incremental deploys --><link rel="stylesheet" href="/global.css"><!-- 金句卡片导出为图片（同 origin，无 CORS 风险） --><script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script><!-- 中文字体：经 BootCDN 加载（国内可访问，不走被墙的 Google Fonts）。
+         用 preload + onload 切换，去掉 @import 的渲染阻塞；字体未到位时先用系统衬线字体（等同 font-display:swap） --><link rel="preload" as="style" href="/fonts/fonts.css" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/fonts/fonts.css"></noscript><link rel="stylesheet" href="/_astro/BaseLayout.Bu4xGSCj.css">
+<link rel="stylesheet" href="/_astro/_..CAPVM_Sv.css"></head> <body> <nav class="navbar"> <div class="nav-inner"> <a href="/" class="logo"> <img src="/images/logo-header.png" alt="Logo" class="logo-img"> <span>像企业家一样写作</span> </a> <div class="nav-links" id="nav-pill"> <span class="nav-slider" id="nav-slider"></span> <a href="/book">书籍</a> <a href="/columns">专栏</a> <a href="/tools">工具</a> </div> </div> </nav> <!-- 搜索浮窗 --> <div id="search-overlay" class="search-overlay"> <div class="search-modal"> <div class="search-header"> <input id="search-input" type="text" placeholder="搜索书籍、章节或关键词…" autocomplete="off"> <button id="search-close" class="search-close-btn" aria-label="关闭搜索">✕</button> </div> <div id="search-results" class="search-results"></div> </div> </div> <!-- 导航胶囊滑块（仿 iOS 相册 视频/照片 切换动态） --> <script>
+      (function () {
+        var pill = document.getElementById('nav-pill');
+        var slider = document.getElementById('nav-slider');
+        if (!pill || !slider) return;
+        var links = Array.prototype.slice.call(pill.querySelectorAll('a'));
+        var path = window.location.pathname.replace(/\/+$/, '') || '/';
+        var activeIdx = -1;
+        links.forEach(function (a, i) {
+          var href = (a.getAttribute('href') || '').replace(/\/+$/, '') || '/';
+          var match = (href === '/') ? (path === '/') : (path === href || path.indexOf(href + '/') === 0);
+          if (match) activeIdx = i;
+        });
+        if (activeIdx < 0) { slider.style.opacity = '0'; return; }
+        links[activeIdx].classList.add('active');
+        function move(idx, animate) {
+          var a = links[idx];
+          if (!a) return;
+          if (!animate) slider.style.transition = 'none';
+          slider.style.width = a.offsetWidth + 'px';
+          slider.style.transform = 'translateX(' + a.offsetLeft + 'px)';
+          if (!animate) {
+            void slider.offsetWidth; /* 强制回流，让下一次位移产生过渡动画 */
+            slider.style.transition = '';
+          }
+        }
+        /* iOS 动态：先停在另一项上，再滑到当前项 */
+        move(activeIdx === 0 ? 1 : 0, false);
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () { move(activeIdx, true); });
+        });
+        window.addEventListener('resize', function () { move(activeIdx, false); });
+      })();
+    </script> <main>   <div id="reading-progress" class="reading-progress"></div> <!-- 普通文章：单栏布局 -->
+    <article class="prose"> <header class="article-header"> <h1>内容不可替代</h1> <div class="article-meta"> <time> 2026年5月10日 </time> </div> </header> <p>现在的AI可以做很多事情，然后我发现未来有一件事情将变得越来越困难，那就是吸引别人的注意力，更准确地说是——信任。</p>
+<p>「能够获取注意力和信任的人」和「不能获取注意力和信任」的人之间会产生越来越大的差距。</p>
+<p>AI 的反复刺激下，我认为未来最重要的事情只剩下它了。</p>
+<p>最近，我做了许多之前一直很想做，但种种原因无法让我实现的事情。</p>
+<ul>
+<li>我把自己公众号 400 多篇文章全部爬了下来。</li>
+</ul>
+<p>之前我专注一个平台，文章只发布在一个平台，但当我想同步的时候，我没有备份，所以就放弃了。现在，我又把文章全部爬了下来。</p>
+<ul>
+<li>
+<p>把 400 多篇文章全部喂给 AI，让它学习我的写作风格。</p>
+</li>
+<li>
+<p>把 400 多篇文章全部翻译成英文。</p>
+</li>
+</ul>
+<p>还有一件我一直很想做的事情，那就是把 Paul 的所有的博客文章全部翻译成中文。所以，</p>
+<ul>
+<li>我把其网站上所有的文章全部翻译成了中文。正在校对和完善——同时这也是又一次的重新阅读。</li>
+<li>我给《写作并变现：像企业家一样》在 GitHub 上写了一个网站。更准确地说，是为付费读者服务的网站。</li>
+</ul>
+<p>我几乎在 30 分钟从无到有全部完成。这不仅让我想起，当初我复刻李笑来的个人网站来做自己的网站时候的样子——太苦了。</p>
+<p>其次，我还玩了许多的事情。比如：</p>
+<ul>
+<li>写浏览器插件。</li>
+<li>写小程序。</li>
+<li>用 Ai 提效内容生成。</li>
+</ul>
+<p>我好像能够完成许多以前不能完成的事情。这让我感受到了 AI 的强大，同时，这也让我了解了另一件事情的重要性——注意力和信任。</p>
+<p>当 AI 越来越真的时候，当「有图有真相」的时代彻底结束的时候，信任越来越难。</p>
+<p>AI 如此牛逼的时代，放在以前每个人都可以拍视频，但现在，每台机器都可以创作，每一台机器都是一个非常恐怖的创作者。那现在真正稀缺的就是注意力，以及由注意力产生的信任，这是最难解决的。</p>
+<p>所以我更加笃定，做内容一定是未来的出路。你可以有最棒的软件和产品，但没有用户，那就只能”自嗨”。</p>
+<p>许多创业者可能正在面临一个问题：你完全可以用 AI 来完成之前不能完成的”伟大”创举——<strong>但你没有用户。</strong></p>
+<p>而在互联网上获取客户，最佳的方法就是创作内容。但，写文章不一定就叫创作内容，一组图片不一定是内容，，这就是为什么我正在连载的书籍叫做：「像企业家一样写作」。</p>
+<p>有的内容自带变现能力，而有的内容「被看见」的机会都没有。而且认为《写作并变现：像企业家一样写作》这本书的价值被大家低估了。</p>
+<p>放在以前，我们缺乏一些实现想法的工具，比如我可能想要一本书，或者想要一个APP、一个小程序、一些资源上的东西。现在那些都已经唾手可得，但是人们的注意力变得非常稀缺。</p>
+<p>缺的是内容，本质上所有的「一人公司」都缺用户，所以需要内容。</p>
+<p>我以前经常说写作就是产品，我把每一个文章当做一个产品对待，所以我有了产品思维。而现在，在 AI 的辅助下，实现产品思维的手段突然被放大了无数倍——我可以用代码去完成。</p>
+<p>最简单的例子就是——我正在用claude 来写 skill，然后把《写作并变现》创作流程变成一个 skill。（目前我正在测试和迭代，后期我一定会给付费读者开源出来。）</p>
+<p>我认为，未来我可以把书本变成一个软件。一个笔记+创作集合的软件，都是没有任何问题。</p>
+<p>我的书籍就是一个伪代码，未来，在更强大的 AI 帮助下，把它换成真代码就可以。所以，写作就是一个很好的开始。</p>
+<p>你可以在半天、一天之内就有一个想法，然后能够在 48 小时之内构建出来——但你没有用户。你要去把它销售出去、把它营销出去，这是一个非常困难的事情。</p>
+<p>所以我并不认为创作的时代结束了，反而真正的创作的时代来临。</p>
+<p>写作就是营销、写作就是销售。你可以在 5 分钟之内拥有一个非常棒的产品——但你没有用户。</p>
+<p>为什么更加要重视写作呢？因为写作不仅可以捕获注意力，还可以带来更多的信任。短视频表达，就像一个电梯里的快速演讲，但是阅读一个人的某一篇长篇文章，就像一次很长时间的长谈，你能够对对方产生更多的信任。</p> <div class="cta-box"> <p>觉得有用？继续阅读</p> <div class="cta-buttons"> <a href="/book" class="cta-btn cta-btn-primary">查看书籍</a>  </div> </div> </article> </main> <footer> <div class="footer-inner"> <p>© 2026 像企业家一样写作</p> <div class="footer-links"> <button type="button" class="footer-link-btn" id="wechat-qr-trigger">网站有bug，“码”上办，联系本人。</button> </div> </div> </footer> <!-- 微信名片二维码浮层 --> <div id="wechat-qr-overlay" class="wechat-qr-overlay" aria-hidden="true"> <div class="wechat-qr-modal"> <button type="button" class="wechat-qr-close" id="wechat-qr-close" aria-label="关闭">✕</button> <img src="/images/wechat-qr.png" alt="微信名片二维码"> <p class="wechat-qr-cap">微信扫一扫，联系本人</p> </div> </div> <script>
+    (function () {
+      var trigger = document.getElementById('wechat-qr-trigger');
+      var overlay = document.getElementById('wechat-qr-overlay');
+      var closeBtn = document.getElementById('wechat-qr-close');
+      if (!trigger || !overlay) return;
+      function openQr() {
+        overlay.classList.add('active');
+        overlay.setAttribute('aria-hidden', 'false');
+      }
+      function closeQr() {
+        overlay.classList.remove('active');
+        overlay.setAttribute('aria-hidden', 'true');
+      }
+      trigger.addEventListener('click', openQr);
+      if (closeBtn) closeBtn.addEventListener('click', closeQr);
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeQr();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeQr();
+      });
+    })();
+  </script>  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    let _searchIndex = null;
+
+    async function loadSearchIndex() {
+      if (_searchIndex) return _searchIndex;
+      try {
+        const resp = await fetch('/search.json?t=' + Date.now());
+        _searchIndex = await resp.json();
+      } catch (e) {
+        console.warn('search.json load failed', e);
+        _searchIndex = { posts: [], books: [] };
+      }
+      return _searchIndex;
+    }
+
+    function openSearch(initialQuery) {
+      const overlay = document.getElementById('search-overlay');
+      const input = document.getElementById('search-input');
+      overlay.classList.add('active');
+      input.value = initialQuery || '';
+      input.focus();
+      renderResults(input.value);
+    }
+
+    function closeSearch() {
+      document.getElementById('search-overlay').classList.remove('active');
+    }
+
+    function getSnippet(text, keyword, radius) {
+      radius = radius || 30;
+      if (!text) return '';
+      const idx = text.toLowerCase().indexOf(keyword.toLowerCase());
+      if (idx === -1) return text.substring(0, 80);
+      const start = Math.max(0, idx - radius);
+      const end = Math.min(text.length, idx + keyword.length + radius);
+      let s = text.substring(start, end);
+      if (start > 0) s = '…' + s;
+      if (end < text.length) s = s + '…';
+      return s;
+    }
+
+    function escapeHtml(s) {
+      return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    function escapeReg(s) {
+      return (s || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+    function highlight(text, q) {
+      const safe = escapeHtml(text);
+      if (!q) return safe;
+      try {
+        const re = new RegExp('(' + escapeReg(q) + ')', 'gi');
+        return safe.replace(re, '<mark>$1</mark>');
+      } catch (e) { return safe; }
+    }
+    function matchScore(item, q) {
+      const t = (item.title || '').toLowerCase();
+      const d = (item.desc || '').toLowerCase();
+      const c = (item.content || '').toLowerCase();
+      if (t.includes(q)) return 3;
+      if (d.includes(q)) return 2;
+      if (c.includes(q)) return 1;
+      return 0;
+    }
+    function resultItemHtml(item, q, href, isBook) {
+      const snippet = getSnippet(item.content || '', q, 40);
+      const contentHit = (item.content || '').toLowerCase().includes(q);
+      const desc = (contentHit && snippet) ? snippet : (item.desc || snippet || '');
+      return '<a href="' + href + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+        '<div class="search-result-title"><span class="search-result-type' + (isBook ? ' book' : '') + '">' + (isBook ? '书籍' : '章节') + '</span>' + highlight(item.title, q) + '</div>' +
+        '<div class="search-result-desc">' + highlight(desc, q) + '</div>' +
+      '</a>';
+    }
+
+    // 专栏条目：外链到微信公众号（不加 ?q=）
+    function columnItemHtml(col, q) {
+      return '<a href="' + escapeHtml(col.url) + '" target="_blank" rel="noopener noreferrer" class="search-result-item">' +
+        '<div class="search-result-title"><span class="search-result-type column">专栏</span>' + highlight(col.title, q) + '</div>' +
+        '<div class="search-result-desc">' + highlight(col.desc || col.columnName, q) + '</div>' +
+      '</a>';
+    }
+
+    function renderResults(query) {
+      const container = document.getElementById('search-results');
+      if (!query.trim()) {
+        container.innerHTML = '<div class="search-empty">输入关键词搜索书籍、章节与专栏…</div>';
+        return;
+      }
+      const q = query.toLowerCase();
+      const index = _searchIndex || { posts: [], books: [], columns: [] };
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      const matchedColumns = (index.columns || []).filter(c =>
+        c.title.toLowerCase().includes(q) ||
+        c.columnName.toLowerCase().includes(q) ||
+        c.rawTitle.toLowerCase().includes(q) ||
+        String(c.issue).includes(q)
+      );
+      if (matchedPosts.length === 0 && matchedBooks.length === 0 && matchedColumns.length === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        return;
+      }
+      const bookBySeries = {};
+      index.books.forEach(b => { if (b.series) bookBySeries[b.series] = b.title; });
+
+      let html = '';
+      // 书籍命中 → 单独作为「书籍」结果
+      if (matchedBooks.length) {
+        matchedBooks.sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        matchedBooks.forEach(b => { html += resultItemHtml(b, q, '/book/' + b.slug, true); });
+      }
+      // 章节按书籍分组
+      const groups = {};
+      matchedPosts.forEach(p => { const k = p.series || ''; (groups[k] = groups[k] || []).push(p); });
+      Object.keys(groups).forEach(series => {
+        const title = bookBySeries[series] || series || '其他';
+        groups[series].sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(title) + '》</div>';
+        groups[series].forEach(p => { html += resultItemHtml(p, q, '/blog/' + p.slug, false); });
+        html += '</div>';
+      });
+      // 专栏按专栏名分组（外链到微信）
+      const colGroups = {};
+      matchedColumns.forEach(c => { const k = c.columnName || ''; (colGroups[k] = colGroups[k] || []).push(c); });
+      Object.keys(colGroups).forEach(name => {
+        colGroups[name].sort((a, b) => a.issue - b.issue);
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(name) + '》· 专栏</div>';
+        colGroups[name].forEach(c => { html += columnItemHtml(c, q); });
+        html += '</div>';
+      });
+      container.innerHTML = html;
+    }
+
+    // ===== Hero 内联搜索（方案 B） =====
+    function closeHeroSearch() {
+      const dropdown = document.getElementById('hero-search-dropdown');
+      if (dropdown) { dropdown.classList.remove('show'); dropdown.innerHTML = ''; }
+    }
+
+    async function renderHeroResults(query) {
+      const container = document.getElementById('hero-search-dropdown');
+      if (!container) return;
+      if (!query.trim()) { closeHeroSearch(); return; }
+      const index = await loadSearchIndex();
+      const q = query.toLowerCase();
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      const matchedColumns = (index.columns || []).filter(c =>
+        c.title.toLowerCase().includes(q) ||
+        c.columnName.toLowerCase().includes(q) ||
+        c.rawTitle.toLowerCase().includes(q) ||
+        String(c.issue).includes(q)
+      );
+      const total = matchedPosts.length + matchedBooks.length + matchedColumns.length;
+      if (total === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        container.classList.add('show');
+        return;
+      }
+      const bookBySeries = {};
+      index.books.forEach(b => { if (b.series) bookBySeries[b.series] = b.title; });
+      let html = '';
+      if (matchedBooks.length) {
+        matchedBooks.slice(0, 2).sort((a, b) => matchScore(b, q) - matchScore(a, q)).forEach(b => {
+          html += resultItemHtml(b, q, '/book/' + b.slug, true);
+        });
+      }
+      const groups = {};
+      matchedPosts.forEach(p => { const k = p.series || ''; (groups[k] = groups[k] || []).push(p); });
+      let shown = 0;
+      Object.keys(groups).slice(0, 3).forEach(series => {
+        const title = bookBySeries[series] || series || '其他';
+        groups[series].sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(title) + '》</div>';
+        groups[series].slice(0, 3).forEach(p => { html += resultItemHtml(p, q, '/blog/' + p.slug, false); shown++; });
+        html += '</div>';
+      });
+      // 专栏命中（外链到微信）
+      const colGroups = {};
+      matchedColumns.forEach(c => { const k = c.columnName || ''; (colGroups[k] = colGroups[k] || []).push(c); });
+      Object.keys(colGroups).slice(0, 2).forEach(name => {
+        colGroups[name].sort((a, b) => a.issue - b.issue);
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(name) + '》· 专栏</div>';
+        colGroups[name].slice(0, 3).forEach(c => { html += columnItemHtml(c, q); shown++; });
+        html += '</div>';
+      });
+      if (total > shown + Math.min(matchedBooks.length, 2)) {
+        html += '<a href="#" class="hero-search-all" data-q="' + encodeURIComponent(q) + '">查看全部 ' + total + ' 条结果 →</a>';
+      }
+      container.innerHTML = html;
+      container.classList.add('show');
+    }
+
+    function initHeroSearch() {
+      const input = document.getElementById('hero-search-input');
+      const dropdown = document.getElementById('hero-search-dropdown');
+      const goBtn = document.getElementById('hero-search-go');
+      if (!input || !dropdown) return;
+
+      let inputTimeout;
+      input.addEventListener('input', () => {
+        clearTimeout(inputTimeout);
+        inputTimeout = setTimeout(() => renderHeroResults(input.value), 120);
+      });
+      input.addEventListener('focus', () => { if (input.value.trim()) renderHeroResults(input.value); });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(input.value); });
+        }
+        if (e.key === 'Escape') { closeHeroSearch(); input.blur(); }
+      });
+
+      if (goBtn) {
+        goBtn.addEventListener('click', () => {
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(input.value); });
+        });
+      }
+
+      dropdown.addEventListener('click', (e) => {
+        const all = e.target.closest('.hero-search-all');
+        if (all) {
+          e.preventDefault();
+          const q = decodeURIComponent(all.getAttribute('data-q') || '');
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(q); });
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.hero-search')) closeHeroSearch();
+      });
+    }
+
+    initHeroSearch();
+
+    // ===== 导航搜索图标（全站兜底入口） =====
+    const navSearchBtn = document.getElementById('nav-search-btn');
+    if (navSearchBtn) {
+      navSearchBtn.addEventListener('click', () => {
+        loadSearchIndex().then(() => openSearch());
+      });
+    }
+
+    document.getElementById('search-close').addEventListener('click', closeSearch);
+    document.getElementById('search-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeSearch();
+    });
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      renderResults(e.target.value);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+    });
+    });
+  </script> <!-- 页面关键词高亮（从搜索结果跳转过来时） --> <script>
+    (function() {
+      function getQueryParam(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name) || '';
+      }
+
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function highlightKeyword(keyword) {
+        if (!keyword.trim()) return;
+        const main = document.querySelector('main');
+        if (!main) return;
+
+        const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, null, false);
+        const nodesToReplace = [];
+        const regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
+
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node.parentElement && node.parentElement.tagName === 'MARK') continue;
+          if (regex.test(node.textContent)) {
+            nodesToReplace.push(node);
+          }
+        }
+
+        let firstMark = null;
+        nodesToReplace.forEach(textNode => {
+          const span = document.createElement('span');
+          span.innerHTML = textNode.textContent.replace(regex, '<mark class="search-highlight">$1</mark>');
+          const marks = span.querySelectorAll('mark');
+          if (marks.length > 0 && !firstMark) {
+            firstMark = marks[0];
+          }
+          const fragment = document.createDocumentFragment();
+          while (span.firstChild) {
+            fragment.appendChild(span.firstChild);
+          }
+          textNode.parentNode.replaceChild(fragment, textNode);
+        });
+
+        if (firstMark) {
+          firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(function() {
+            const marks = main.querySelectorAll('mark.search-highlight');
+            marks.forEach(function(m) {
+              const parent = m.parentNode;
+              parent.replaceChild(document.createTextNode(m.textContent), m);
+              parent.normalize();
+            });
+          }, 6000);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          highlightKeyword(getQueryParam('q'));
+        });
+      } else {
+        highlightKeyword(getQueryParam('q'));
+      }
+    })();
+  </script> <!-- 代码块复制按钮 --> <script>
+    (function() {
+      function initCopyButtons() {
+        document.querySelectorAll('.prose pre').forEach(function(pre) {
+          if (pre.querySelector('.copy-btn')) return;
+          var btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.textContent = '复制';
+          btn.setAttribute('aria-label', '复制代码');
+          btn.addEventListener('click', function() {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+              btn.textContent = '已复制';
+              btn.classList.add('copied');
+              setTimeout(function() {
+                btn.textContent = '复制';
+                btn.classList.remove('copied');
+              }, 2000);
+            }).catch(function() {
+              btn.textContent = '失败';
+              setTimeout(function() { btn.textContent = '复制'; }, 2000);
+            });
+          });
+          pre.style.position = 'relative';
+          pre.appendChild(btn);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCopyButtons);
+      } else {
+        initCopyButtons();
+      }
+    })();
+  </script> <!-- 选中文字：复制 / 生成金句卡片 --> <div class="sel-bubble" id="sel-bubble"> <span class="sb-act sb-copy" id="sbCopy">复制</span> <span class="sb-sep"></span> <span class="sb-act sb-card" id="sbCard">金句卡片</span> </div> <!-- 金句卡片弹层 --> <div class="qc-overlay" id="qcOverlay"> <div class="qc-modal"> <button class="qc-close" id="qcClose" aria-label="关闭">×</button> <div class="qc-stage"> <div class="qc a" id="qcCard"> <div class="qc-mark">“</div> <div class="qc-quote" id="qcQuote">先写完，再改清楚。</div> <div class="qc-foot"> <img class="qc-logo" src="/images/logo-180x180.png" alt="logo"> <div class="qc-src"> <div class="qc-site" id="qcSite">像企业家一样写作</div> <div class="qc-from" id="qcFrom">—— 选自正文</div> <div class="qc-url">gusangciren.github.io</div> </div> </div> </div> <div class="qc-tip">样式会记住你上次的选择</div> </div> <div class="qc-side"> <h3>金句卡片</h3> <p class="qc-sub">选好样式后下载或复制图片</p> <div class="qc-styles" id="qcStyles"> <div class="qc-style active" data-s="a"><div class="sw a"></div><div><div class="t">A · 极简暖白</div><div class="d">站点默认，最协调</div></div></div> <div class="qc-style" data-s="b"><div class="sw b"></div><div><div class="t">B · 深色品牌</div><div class="d">信息流吸睛</div></div></div> <div class="qc-style" data-s="c"><div class="sw c"></div><div><div class="t">C · 杂志书页</div><div class="d">书卷气</div></div></div> </div> <div class="qc-actions"> <div class="qc-act primary" data-act="download">⬇ 下载图片</div> <div class="qc-act" data-act="copyimg">📋 复制图片</div> </div> </div> </div> </div> <!-- 交互增强：阅读进度条 / 暗色模式 / 划词复制 / 金句卡片 --> <script>
+    (function () {
+      // ===== 划词气泡：复制 / 金句卡片 =====
+      var bubble = document.getElementById('sel-bubble');
+      var sbCopy = document.getElementById('sbCopy');
+      var sbCard = document.getElementById('sbCard');
+      var overlay = document.getElementById('qcOverlay');
+      var card = document.getElementById('qcCard');
+      var qQuote = document.getElementById('qcQuote');
+      var qSite = document.getElementById('qcSite');
+      var qFrom = document.getElementById('qcFrom');
+      var stylesBox = document.getElementById('qcStyles');
+      var lastText = '';
+
+      function hideBubble() { bubble.classList.remove('show'); }
+      function getSource() {
+        var h = document.querySelector('.article-header h1, .book-details h1, .prose h1, .community-hero h1');
+        var name = h ? h.textContent.trim() : document.title.trim();
+        try {
+          // 去掉标题尾部与站名重复的「— 像企业家一样写作」
+          name = name.replace(new RegExp('\\s*[—–-]\\s*' + getSite() + '\\s*$'), '');
+        } catch (e) {}
+        return name;
+      }
+      function getSite() {
+        var m = document.querySelector('meta[property="og:site_name"]');
+        return m ? m.content : '像企业家一样写作';
+      }
+
+      if (bubble) {
+        var SKIP = 'input,textarea,pre,code,.search-overlay,.wechat-qr-overlay,.rdl-ov,button,a,img';
+        document.addEventListener('mouseup', function () {
+          setTimeout(function () {
+            var sel = window.getSelection();
+            if (!sel || sel.isCollapsed) { hideBubble(); return; }
+            var text = sel.toString().trim();
+            var node = sel.anchorNode;
+            if (text.length < 2 || !node || !node.parentElement || node.parentElement.closest(SKIP)) { hideBubble(); return; }
+            var rect = sel.getRangeAt(0).getBoundingClientRect();
+            bubble.style.left = (rect.left + rect.width / 2) + 'px';
+            bubble.style.top = (rect.top - 6) + 'px';
+            lastText = text;
+            bubble.classList.add('show');
+          }, 10);
+        });
+        document.addEventListener('mousedown', function (e) { if (!bubble.contains(e.target)) hideBubble(); });
+        window.addEventListener('scroll', hideBubble, { passive: true });
+
+        sbCopy.addEventListener('click', function (ev) {
+          ev.stopPropagation();
+          var t = lastText;
+          function ok() {
+            sbCopy.textContent = '已复制 ✓'; sbCopy.classList.add('copied');
+            setTimeout(function () { sbCopy.textContent = '复制'; sbCopy.classList.remove('copied'); hideBubble(); }, 1200);
+          }
+          function fb() {
+            var i = document.createElement('textarea'); i.value = t; document.body.appendChild(i); i.select();
+            try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(i); ok();
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).then(ok).catch(fb); }
+          else { fb(); }
+        });
+        sbCard.addEventListener('click', function (ev) { ev.stopPropagation(); openCard(lastText); });
+      }
+
+      function openCard(text) {
+        qQuote.textContent = text || '先写完，再改清楚。';
+        var len = qQuote.textContent.length;
+        qQuote.style.fontSize = (len > 100 ? 18 : len > 60 ? 20 : 22) + 'px';
+        qSite.textContent = getSite();
+        qFrom.textContent = '—— 选自《' + getSource() + '》';
+        var saved = 'a';
+        try { saved = localStorage.getItem('qcStyle') || 'a'; } catch (e) {}
+        setStyle(saved);
+        overlay.classList.add('show');
+      }
+      var currentStyle = 'a';
+      function setStyle(s) {
+        currentStyle = s;
+        card.className = 'qc ' + s;
+        document.querySelectorAll('.qc-style').forEach(function (o) { o.classList.toggle('active', o.dataset.s === s); });
+        try { localStorage.setItem('qcStyle', s); } catch (e) {}
+      }
+      stylesBox.addEventListener('click', function (e) {
+        var o = e.target.closest('.qc-style'); if (o) setStyle(o.dataset.s);
+      });
+      document.getElementById('qcClose').addEventListener('click', function () { overlay.classList.remove('show'); });
+      overlay.addEventListener('click', function (e) { if (e.target === overlay) overlay.classList.remove('show'); });
+
+      // ===== 导出为图片（html2canvas） =====
+      function ensureH2C(cb) {
+        if (window.html2canvas) { cb(); return; }
+        var s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+        s.onload = cb;
+        s.onerror = function () { alert('金句卡片图片组件加载失败，请检查网络后重试'); };
+        document.head.appendChild(s);
+      }
+      // 每套样式的底色：填满圆角外区域，避免相册把透明像素渲染成黑角
+      var QC_BG = { a: '#ffffff', b: '#1c1917', c: '#f3ede1' };
+      var fontCssPromise = null;
+      function getFontCss() {
+        if (!fontCssPromise) {
+          fontCssPromise = fetch('https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-webfont/1.7.0/lxgwwenkai-regular.css')
+            .then(function (r) { return r.ok ? r.text() : ''; })
+            .catch(function () { return ''; });
+        }
+        return fontCssPromise;
+      }
+      function capture() {
+        return document.fonts.ready.then(function () {
+          return getFontCss().then(function (css) {
+            return html2canvas(card, {
+              scale: 2,
+              backgroundColor: QC_BG[currentStyle] || '#ffffff',
+              useCORS: true,
+              logging: false,
+              onclone: function (doc) {
+                // 导出环境可能没等到文楷加载完，主动注入字体 CSS 兜底；
+                // 即使仍回退，整卡统一衬线栈（楷体），上下字体也一致
+                if (css) {
+                  var st = doc.createElement('style');
+                  st.textContent = css;
+                  doc.head.appendChild(st);
+                }
+              }
+            });
+          });
+        });
+      }
+      function flash(btn, txt) { var o = btn.textContent; btn.textContent = txt; setTimeout(function () { btn.textContent = o; }, 1400); }
+
+      document.querySelectorAll('.qc-act').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var act = btn.dataset.act;
+          ensureH2C(function () {
+            capture().then(function (canvas) {
+              if (act === 'download') {
+                var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png';
+                a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已下载 ✓');
+              } else if (act === 'copyimg') {
+                canvas.toBlob(function (blob) {
+                  if (blob && navigator.clipboard && window.ClipboardItem) {
+                    navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
+                      .then(function () { flash(btn, '已复制 ✓'); })
+                      .catch(function () { var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png'; a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已保存 ✓'); });
+                  } else {
+                    var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png'; a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已保存 ✓');
+                  }
+                });
+              }
+            });
+          });
+        });
+      });
+    })();
+  </script> </body></html>  <script type="module">(function(){const n=document.getElementById("reading-progress"),r=document.getElementById("reader-mini"),d=document.getElementById("mini-pct"),i=document.querySelector(".reader-hero");function c(){const e=window.scrollY||document.documentElement.scrollTop,t=document.documentElement.scrollHeight-document.documentElement.clientHeight,o=t>0?Math.min(100,Math.max(0,e/t*100)):0,u=Math.round(o);n&&(n.style.width=o+"%",n.classList.toggle("show",e>50)),d&&(d.textContent=u+"%"),r&&i&&r.classList.toggle("show",e>i.offsetHeight+20)}window.addEventListener("scroll",c,{passive:!0}),window.addEventListener("resize",c),c();const s=document.getElementById("reader-toc-toggle"),l=document.getElementById("reader-toc-scrim"),m=document.getElementById("reader-toc");function a(){document.body.classList.remove("toc-open")}s&&s.addEventListener("click",()=>document.body.classList.toggle("toc-open")),l&&l.addEventListener("click",a),m&&m.querySelectorAll("a").forEach(e=>e.addEventListener("click",a)),document.addEventListener("keydown",e=>{if(e.target&&/^(INPUT|TEXTAREA)$/.test(e.target.tagName))return;const t=document.querySelector(".reader-prev[href]"),o=document.querySelector(".reader-next[href]");e.key==="ArrowLeft"&&t&&(window.location.href=t.getAttribute("href")),e.key==="ArrowRight"&&o&&(window.location.href=o.getAttribute("href"))})})();</script>

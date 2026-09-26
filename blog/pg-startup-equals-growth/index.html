@@ -1,0 +1,736 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="新成立本身不能让一家公司成为创业公司，唯一本质的东西是增长。"><link rel="canonical" href="https://gusangciren.github.io/blog/pg-startup-equals-growth/"><title>创业公司 = 增长 — 像企业家一样写作</title><!-- 社交分享卡片（微信 / 微博 / X 等抓取标题、描述与缩略图） --><meta property="og:type" content="website"><meta property="og:site_name" content="像企业家一样写作"><meta property="og:title" content="创业公司 = 增长 — 像企业家一样写作"><meta property="og:description" content="新成立本身不能让一家公司成为创业公司，唯一本质的东西是增长。"><meta property="og:image" content="https://gusangciren.github.io/images/logo-180x180.png"><meta property="og:url" content="https://gusangciren.github.io/blog/pg-startup-equals-growth/"><meta property="og:locale" content="zh_CN"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="创业公司 = 增长 — 像企业家一样写作"><meta name="twitter:description" content="新成立本身不能让一家公司成为创业公司，唯一本质的东西是增长。"><meta name="twitter:image" content="https://gusangciren.github.io/images/logo-180x180.png"><link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml"><link rel="sitemap" type="application/xml" href="/sitemap-index.xml"><!-- Static CSS — no build hash, safe for incremental deploys --><link rel="stylesheet" href="/global.css"><!-- 金句卡片导出为图片（同 origin，无 CORS 风险） --><script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script><!-- 中文字体：经 BootCDN 加载（国内可访问，不走被墙的 Google Fonts）。
+         用 preload + onload 切换，去掉 @import 的渲染阻塞；字体未到位时先用系统衬线字体（等同 font-display:swap） --><link rel="preload" as="style" href="/fonts/fonts.css" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/fonts/fonts.css"></noscript><link rel="stylesheet" href="/_astro/BaseLayout.Bu4xGSCj.css">
+<link rel="stylesheet" href="/_astro/_..CAPVM_Sv.css"></head> <body> <nav class="navbar"> <div class="nav-inner"> <a href="/" class="logo"> <img src="/images/logo-header.png" alt="Logo" class="logo-img"> <span>像企业家一样写作</span> </a> <div class="nav-links" id="nav-pill"> <span class="nav-slider" id="nav-slider"></span> <a href="/book">书籍</a> <a href="/columns">专栏</a> <a href="/tools">工具</a> </div> </div> </nav> <!-- 搜索浮窗 --> <div id="search-overlay" class="search-overlay"> <div class="search-modal"> <div class="search-header"> <input id="search-input" type="text" placeholder="搜索书籍、章节或关键词…" autocomplete="off"> <button id="search-close" class="search-close-btn" aria-label="关闭搜索">✕</button> </div> <div id="search-results" class="search-results"></div> </div> </div> <!-- 导航胶囊滑块（仿 iOS 相册 视频/照片 切换动态） --> <script>
+      (function () {
+        var pill = document.getElementById('nav-pill');
+        var slider = document.getElementById('nav-slider');
+        if (!pill || !slider) return;
+        var links = Array.prototype.slice.call(pill.querySelectorAll('a'));
+        var path = window.location.pathname.replace(/\/+$/, '') || '/';
+        var activeIdx = -1;
+        links.forEach(function (a, i) {
+          var href = (a.getAttribute('href') || '').replace(/\/+$/, '') || '/';
+          var match = (href === '/') ? (path === '/') : (path === href || path.indexOf(href + '/') === 0);
+          if (match) activeIdx = i;
+        });
+        if (activeIdx < 0) { slider.style.opacity = '0'; return; }
+        links[activeIdx].classList.add('active');
+        function move(idx, animate) {
+          var a = links[idx];
+          if (!a) return;
+          if (!animate) slider.style.transition = 'none';
+          slider.style.width = a.offsetWidth + 'px';
+          slider.style.transform = 'translateX(' + a.offsetLeft + 'px)';
+          if (!animate) {
+            void slider.offsetWidth; /* 强制回流，让下一次位移产生过渡动画 */
+            slider.style.transition = '';
+          }
+        }
+        /* iOS 动态：先停在另一项上，再滑到当前项 */
+        move(activeIdx === 0 ? 1 : 0, false);
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () { move(activeIdx, true); });
+        });
+        window.addEventListener('resize', function () { move(activeIdx, false); });
+      })();
+    </script> <main>   <div id="reading-progress" class="reading-progress"></div> <!-- 书籍系列：杂志章节页（方案 C 优化版） -->
+    <div class="reader"> <!-- 吸顶极简条：滚过章首后出现 --> <div class="reader-mini" id="reader-mini"> <a href="/book" class="reader-mini-back" aria-label="返回书架">←</a> <span class="reader-mini-book">保罗·格雷厄姆</span> <span class="reader-mini-sep">·</span> <span class="reader-mini-chapter">创业公司 = 增长</span> <span class="reader-mini-pct" id="mini-pct">0%</span> </div> <!-- 章首大标题区：超大章节号 + 居左内容 --> <header class="reader-hero"> <div class="reader-hero-inner"> <div class="reader-hero-num" aria-hidden="true">03</div> <div class="reader-hero-text"> <a href="/book" class="reader-hero-back">← 返回书架</a> <div class="reader-hero-book">《保罗·格雷厄姆文集：创业与财富》</div> <div class="reader-hero-chapter">第 3 章 / 共 3 章</div> <h1 class="reader-hero-title">创业公司 = 增长</h1> <div class="reader-hero-meta"> <time>2026年9月23日</time> <span class="reader-hero-dot">·</span> <span>约 30 分钟阅读</span> </div> </div> </div> </header> <!-- 正文 + 时间线目录 --> <div class="reader-body"> <aside class="reader-toc" id="reader-toc"> <div class="reader-toc-inner"> <div class="reader-toc-book">《保罗·格雷厄姆文集：创业与财富》</div> <nav class="reader-toc-nav"> <div class="reader-toc-item-wrap  done"> <a href="/blog/pg-how-people-get-rich-now" class="reader-toc-item"> <span class="reader-toc-title">人们现在如何致富</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/pg-how-to-get-startup-ideas" class="reader-toc-item"> <span class="reader-toc-title">如何获得创业灵感</span> </a>  </div><div class="reader-toc-item-wrap active "> <a href="/blog/pg-startup-equals-growth" class="reader-toc-item"> <span class="reader-toc-title">创业公司 = 增长</span> </a>  </div> </nav> </div> </aside> <main class="reader-main"> <article class="prose reader-prose"> <p><strong>创业公司（startup）是一家为快速增长而设计的公司</strong>。</p>
+<p>新成立本身并不能让一家公司成为创业公司；创业公司也不一定要做技术、拿风险投资、或者有什么「退出」。唯一本质的东西是增长。（The only essential thing is growth.）我们联想到创业公司的一切，都是从增长派生出来的。</p>
+<p>如果你想创办一家，理解这一点很重要。创业太难了，你不可能偏安一隅还指望成功。你必须知道，增长才是你要追求的东西。好消息是：只要拿到了增长，其他一切往往会随之各就其位。这意味着，你几乎可以用增长当指南针，来替你做面临的每一个决定。</p>
+<p><strong>红杉</strong></p>
+<p>从一个本该显而易见、却常常被忽视的区分说起：不是每家新成立的公司都是创业公司。美国每年有数百万家公司成立，其中只有极小一部分是创业公司。</p>
+<p>大多数是服务业生意——餐馆、理发店、水管工，诸如此类。除了少数例外，这些都不是创业公司。理发店生来不是为了快速增长；而搜索引擎，比如说，就是。</p>
+<p>我说创业公司「为快速增长而设计」，是在两层意义上说的。一部分是「意图上」的设计，因为大多数创业公司都会失败。但我也是在说：创业公司天性不同——就像红杉幼苗和豆芽，命运生来不同。</p>
+<p>「创业公司」之所以配得上一个专门的词，就是因为世上存在着为快速增长而设计的公司。如果所有公司本质上都相似，只是有些靠着运气或创始人的努力最终长得飞快，我们就不需要单独一个词了——直接说「特别成功的公司」和「没那么成功的公司」就行。</p>
+<p>但事实上，创业公司确实有着和其他生意不同的一类 DNA。谷歌不是一家「创始人运气格外好、格外勤奋」的理发店。谷歌从一开始就不同。</p>
+<p>要快速增长，你需要做出能卖给一个大市场的东西。这就是谷歌和理发店的区别：理发店没法规模化（scale）。</p>
+<p><strong>一家公司要长到非常大，必须：(a) 做出很多人想要的东西；(b) 触达并服务到所有这些人</strong>。</p>
+<p>理发店在 (a) 上没问题——几乎每个人都要理发。理发店的问题，和所有零售业态一样，出在 (b)。理发店要面对面服务客人，而很少有客人愿意跑很远去理个发；就算愿意，理发店也接待不过来。[1]</p>
+<p>写软件是解决 (b) 的绝佳途径，但你可能仍然被 (a) 卡住。如果你写一个教匈牙利人学藏语的软件，你能触达几乎所有想要它的人——但这种人不多。而如果你做一个教中国人学英语的软件，你就踏进创业公司的领地了。</p>
+<p><strong>大多数生意都在 (a) 或 (b) 上被牢牢卡住。成功创业公司的独特之处，就在于它们没有被卡住</strong>。</p>
+<p><strong>点子</strong></p>
+<p>看起来似乎无论如何都该创业，而不是做一门普通生意：既然要开公司，为什么不选潜力最大的那种？问题在于，这是一个（相当）有效的市场。</p>
+<p>你写教匈牙利人藏语的软件，<strong>不会有太多竞争</strong>；你写教中国人英语的软件，就得面对凶猛的竞争——<strong>恰恰因为它是一块大得多的奖赏</strong>。[2]</p>
+<p><strong>限制普通公司的那些约束，同时也在保护它们。这就是权衡（tradeoff）。开一家理发店，你只需要跟附近的同行竞争；做搜索引擎，你是在跟全世界竞争</strong>。</p>
+<p>不过，普通生意的约束保护它免受的最重要东西，还不是竞争，而是「想出新点子」的困难。如果你在某个街区开一家酒吧，这个地理位置的约束既限制了你的潜力、又替你挡住了竞争者，同时也帮助定义了你的公司。</p>
+<p>「酒吧 + 街区」对一门小生意来说就是一个够用的点子。被 (a) 约束的公司同理。你的利基（niche）既保护你，也定义你。</p>
+<p>而如果你想创业，你多半就得想出相当新颖的东西。创业公司必须做出能交付给大市场的东西，而这类点子太值钱了，所有显而易见的都早被占光了。</p>
+<p>这片点子的空间已经被翻检得如此彻底，以至于创业公司通常只能做别人都忽视的东西。我本想写：人必须有意识地努力去找别人忽视的点子。但大多数创业公司不是这么起步的。成功的创业公司之所以发生，是因为创始人和其他人足够不同，以至于别人看不见的点子在他们眼里显而易见。也许后来他们会退后一步，发现自己找到了一个落在所有人盲区里的点子，并从那一刻起有意识地努力待在那里。[3] <strong>但在成功创业公司起步的那个时刻，很多创新是无意识的</strong>。</p>
+<p>成功创始人的不同之处，在于他们能看见不同的问题。<strong>既擅长技术、又面对着恰好能被技术解决的问题，是一个特别好的组合——因为技术变化太快，昨天的坏点子常常在无人察觉中变成好点子</strong>。史蒂夫·沃兹尼亚克（Steve Wozniak）的问题是他想要一台自己的电脑。在 1975 年，这是一个罕见的问题。但技术变革即将让它变成一个常见问题。因为他既想要电脑、又懂得怎么造电脑，沃兹尼亚克能给自己造一台。他为自己解决的问题，成了苹果在随后几年里为数百万人解决的问题。而等到普通人也看出这是个大市场时，苹果已经站稳了脚跟。</p>
+<p>谷歌的起源类似。拉里·佩奇（Larry Page）和谢尔盖·布林（Sergey Brin）想搜索网络。但和大多数人不同，他们既有足够的技术能力，能看出当时的搜索引擎不如它们应有的那么好，也知道该怎么改进。接下来几年，随着网络长到不必是挑剔的搜索专家也能发现旧算法不够好，<strong>他们的问题变成了所有人的问题</strong>。但和苹果一样，等到所有人都意识到搜索有多重要时，谷歌已经站稳了。</p>
+<p><strong>这是创业点子与技术的一种连接：一个领域的快速变化，会在其他领域揭开巨大而可解的问题</strong>。有时变化是进步，它改变的是「可解性」。催生苹果的就是这类变化——芯片技术的进步，终于让沃兹尼亚克能设计出一台他买得起的电脑。而在谷歌的例子里，最重要的变化是网络的生长。那里改变的不是可解性，而是规模。</p>
+<p>创业公司与技术的另一种连接是：创业公司创造新的做事方式，而新的做事方式，在广义上就是新技术。当一家创业公司既始于一个由技术变化暴露出来的点子，又做出一个由狭义技术（旧称「高科技」）构成的产品时，这两种连接很容易被混为一谈。但它们是两回事。原则上，你完全可以创办一家既不被技术变化驱动、产品也不含狭义技术的创业公司（广义技术除外）。[4]</p>
+<p><strong>增长率</strong></p>
+<p>一家公司要长多快才算创业公司？这个问题没有精确答案。「创业公司」是一个极点（pole），不是一道门槛（threshold）。</p>
+<p>起步创业，起初不过是对自己野心的一次宣告：你不只是承诺开一家公司，而是承诺开一家快速成长的公司，因此也承诺去寻找此类罕见的点子。但起初你拥有的只有承诺。在这一点上，创业像做演员。「演员」同样是一个极点而非门槛。在他职业生涯的开端，演员就是一个去参加试镜的服务员。拿到角色让他成为成功的演员，但他并不是在成功的那一刻才成为演员。</p>
+<p>所以真正的问题不是「多快的增长让一家公司成为创业公司」，而是「成功的创业公司通常增长多快」。对创始人来说这远不止是理论问题，因为它等价于问：你们走的路对不对？</p>
+<p>一家成功的创业公司的增长通常有三个阶段：</p>
+<ol>
+<li>
+<p>起初是一段缓慢或零增长的时期，创业公司还在摸索自己在做什么。</p>
+</li>
+<li>
+<p><strong>当创业公司想明白如何做出很多人想要的东西、如何触达这些人时，会有一段快速增长期</strong>。</p>
+</li>
+<li>
+<p>最终，成功的创业公司会长成一家大公司。增长会放缓，一半是因为内部极限，一半是因为公司开始撞上它所服务市场的天花板。[5]</p>
+</li>
+</ol>
+<p>这三个阶段合起来画出一条 S 曲线。定义创业公司的，是第二阶段——那段陡升。它的长度和斜率决定这家公司能有多大。</p>
+<p>斜率就是公司的增长率。如果每个创始人都该时刻记住一个数字，那就是公司的增长率。它是创业公司的度量衡。不知道这个数字，你甚至不知道自己做得好还是糟。</p>
+<p>我第一次见创始人、问增长率是多少时，有时他们回答「我们每个月大概新增一百个客户」。那不是率。重要的不是新增客户的绝对数，而是新增客户与存量客户之比。如果你每个月真的只带来固定数量的新客户，那你麻烦了——因为那意味着你的增长率在下降。</p>
+<p>在 Y Combinator 里我们按周测量增长率。一部分原因是离演示日（Demo Day）时间太少，<strong>另一部分原因是早期的创业公司需要从用户那里频繁获得反馈，来调整自己正在做的事</strong>。[6]</p>
+<p>YC 期间好的增长率是每周 5–7%。能做到每周 10%，你干得极其出色。只能做到 1%，则说明你还没想明白自己在干什么。</p>
+<p>最值得测量增长率的东西是收入。次优选择——对那些初期不收费的创业公司——是活跃用户。这是收入增长的合理代理指标，因为创业公司一旦开始赚钱，收入多半会是活跃用户的某个固定倍数。[7]</p>
+<p><strong>指南针</strong></p>
+<p>我们通常建议创业公司选一个自认为够得着的增长率，然后每周都去够到它。这里的关键词是「就只是」。如果他们决定每周增长 7%，并且做到了这个数，那这一周就是成功的。不需要再做什么。但如果没做到，他们就在唯一重要的事情上失败了，理应相应地警觉起来。</p>
+<p>程序员会认出我们在干什么：我们把创业变成了一个优化问题。任何优化过代码的人都知道，这种狭窄的聚焦威力有多神奇。优化代码，是拿一个现成的程序，改到更省某种东西——通常是时间或内存。你不必考虑程序该做什么，只管让它跑得更快。对大多数程序员来说这是非常过瘾的工作：狭窄的聚焦让它像一个谜题，而且你往往会惊讶于自己解得多快。</p>
+<p>聚焦于够到增长率，把创业这个原本千头万绪的问题，压缩成单一的一个问题。<strong>你可以让目标增长率替你做所有决定：凡能带来所需增长的，本身就是对的</strong>。要不要花两天去参加一个会议？要不要再招一个程序员？要不要更侧重市场？要不要花时间讨好一个大客户？要不要加上某个功能？——凡是能让你够到目标增长率的。[8]</p>
+<p>按周增长评判自己，不意味着你只能往前看一周。一旦你体验过某一周没够到目标的痛（那是唯一重要的事，而你失败了），你就会对任何能让未来免于这种痛的东西产生兴趣。所以你会愿意，比如，再招一个程序员——他对这周的增长没有贡献，但也许一个月后会做出某个新功能，给你带来更多用户。但前提是：(a) 招人的分心不会让你短期掉数字；(b) 你足够担心，不招人的话自己能不能继续够到数字。</p>
+<p>不是不考虑未来，而是只在必要的时候考虑。</p>
+<p>理论上，这种爬山法（hill-climbing）可能把创业公司带进沟里：它们可能停在局部最优（local maximum）上。但实际上这从不发生。每周必须够到增长数字，逼着创始人去行动，而行动与不行动，是成功与否的最高位。十有八九，坐而论道只是拖延的一种形式。（Nine times out of ten, sitting around strategizing is just a form of procrastination.）</p>
+<p>何况创始人对该爬哪座山的直觉，通常比他们自己以为的更准。再加上创业点子空间里的极值并不是尖峰孤岛：<strong>大多数相当好的点子旁边，就挨着更好的</strong>。</p>
+<p>以增长为优化目标，最迷人的地方在于它真的能发现创业点子。你可以把对增长的需要当作一种进化压力。如果你带着某个初始计划出发，为了保住每周 10% 的增长而不断修改它，最后你得到的公司可能和当初想创办的完全不同。但任何能持续每周 10% 增长的东西，几乎必然是比你最初那个更好的点子。</p>
+<p>这里和小生意有一层平行关系。正如「位于某个街区」的约束帮助定义一家酒吧，「以某个速度增长」的约束也能帮助定义一家创业公司。</p>
+<p>通常你最好让这个约束带着你走，而不是被某个初始愿景牵着——就像科学家最好让真相带着走，而不是被「希望成真的样子」牵着。</p>
+<p>理查德·费曼（Richard Feynman）说，自然的想象力比人的想象力更伟大，他的意思是：只要你一路追随真相，你终将发现比你凭空编造更酷的东西。对创业公司来说，增长就是一个类似真相的约束。每一家成功的创业公司，至少部分地是「增长的想象力」的产物。[9]</p>
+<p><strong>价值</strong></p>
+<p><strong>要找到一个能持续以每周百分之几增长的东西很难</strong>。但一旦找到，你可能就找到了一个价值惊人的东西。往前推演一下就知道为什么。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>周增长</th><th>年增长</th></tr></thead><tbody><tr><td>1%</td><td>1.7 倍</td></tr><tr><td>2%</td><td>2.8 倍</td></tr><tr><td>5%</td><td>12.6 倍</td></tr><tr><td>7%</td><td>33.7 倍</td></tr><tr><td>10%</td><td>142 倍</td></tr></tbody></table>
+<p>每周增长 1% 的公司一年长 1.7 倍，每周 5% 的公司一年长 12.6 倍。一家每月赚 1000 美元（YC 早期的典型数字）、每周增长 1% 的公司，四年后月入 7900 美元——还比不上硅谷一个优秀程序员的月薪。而每周增长 5% 的创业公司，四年后月入 2500 万美元。[10]</p>
+<p>我们的祖先一定极少遇到指数增长的案例，因为在这里直觉毫无用处。快速增长的创业公司身上发生的事，常常连创始人自己都吃惊。</p>
+<p>增长率上的微小差异，会产生性质截然不同的结果。这就是「创业公司」有专门一个词的原因，也是创业公司会做普通公司不做的事——融资、被收购——的原因。说来也怪，这也是它们如此频繁失败的原因。</p>
+<p>想想一家成功的创业公司能变得多有价值，任何一个熟悉期望值（expected value）概念的人，如果失败率不高，反而会觉得奇怪。如果一家成功的创业公司能让创始人赚 1 亿美元，那么哪怕成功率只有 1%，创业的期望值也有 100 万美元。而一群足够聪明、足够坚决的创始人，成功到那个量级的概率可能显著高于 1%。对合适的人——比如年轻的比尔·盖茨（Bill Gates）——概率可能是 20% 甚至 50%。所以这么多人想试一把并不奇怪。在一个有效市场里，失败的创业公司数量应当与成功的规模相称。而后者如此巨大，前者也理应如此。[11]</p>
+<p>这意味着，在任何一个时点，绝大多数创业公司都在做一些永远不会有什么结果的事，却用「创业公司」这个响亮的头衔，给这些注定失败的努力镀金。</p>
+<p>这并不困扰我。这和其他高贝塔（high-beta）职业一样，比如当演员、当小说家。我早就习惯了。但它似乎困扰很多人，尤其是那些开普通生意的人。许多人气愤于这些所谓的创业公司抢走了所有关注，而它们几乎没几个能成气候。</p>
+<p>如果他们退后一步看全局，也许就不会那么愤慨。他们犯的错误是：凭道听途说的个案下判断，实际上是在按中位数而不是平均值做评判。如果按中位数的创业公司来评判，整个创业公司概念就像一场骗局——你得发明一个「泡沫」来解释为什么创始人想创、投资人想投。</p>
+<p>但在差异如此之大的领域里用中位数是错误的。看平均值而不是中位数，你就能理解投资人为什么喜欢它们，以及为什么——只要他们不是中位数的人——创始人是理性选择。</p>
+<p><strong>交易</strong></p>
+<p>投资人为什么这么喜欢创业公司？为什么热衷于投图片分享应用（ins)，而不是踏实赚钱的生意？原因不止是明面上那个。</p>
+<p>任何投资的检验标准是回报与风险之比。创业公司通过这个检验：尽管风险骇人，成功的回报也高得惊人。但这不是投资人喜欢创业公司的唯一原因。一门增长较慢的普通生意，回报风险之比可能同样好——如果两者都更低的话。</p>
+<p>那 VC 为什么只对高增长公司感兴趣？原因是他们靠收回资本来赚钱——最理想是在创业公司 IPO 时，退而求其次是它被收购时。</p>
+<p>从投资中获得回报的另一种方式是分红。那为什么没有一个平行的 VC 行业，专门投普通公司、换取利润分成？因为对一家私人公司的控制者来说，把收入转移给自己（比如从自己控制的供应商那里高价采购）同时让公司账面看起来没多少利润，实在太容易了。任何为了分红而投私人公司的人，都得紧盯账本。</p>
+<p>VC 喜欢投创业公司，原因不只是回报，还有这种投资太好监督了：创始人无法只肥自己而不肥投资人。[12]</p>
+<p>创始人为什么要拿 VC 的钱？又是增长。好点子与增长之间的约束是双向的。不只是你需要一个可规模化的点子才能增长——如果你有这样一个点子却长得不够快，竞争对手会。在网络效应（network effects）的生意里长得太慢尤其危险，而最好的创业公司通常多少都有网络效应。</p>
+<p>几乎每家公司都需要一点启动资金。但创业公司常常在已经盈利、或可以盈利的情况下仍然融资。以低于你心中未来价值的价格卖出盈利公司的股份，看起来像傻子——但这和买保险一样不傻。从根本上说，最成功的创业公司就是这样看待融资的：靠自身收入也能增长，但 VC 提供的额外金钱和帮助，能让它们长得更快。融资让你能_选择_自己的增长率。</p>
+<p>更快增长的钱，永远听命于最成功的创业公司，因为 VC 对它们的需要，超过它们对 VC 的需要。一家盈利的创业公司如果想靠自己的收入增长，完全可以。长得慢一点也许有点危险，但多半死不了。而 VC 必须投创业公司——尤其是最成功的那些——否则自己就要歇业。这意味着，任何足够有前途的创业公司都会收到一份拒绝才是发疯的报价。但由于创业行业成功的规模如此之大，VC 靠这样的投资仍然能赚钱。你得是个疯子才会相信自己的公司真能长到高增长率所能造就的价值——但确实有人信。</p>
+<p>几乎每家成功的创业公司也都会收到收购要约。为什么？创业公司身上到底有什么，让其他公司想买下它们？[13]</p>
+<p>根本上，和所有人都想持有成功创业公司股份是同一个原因：快速增长的公司有价值。比如，eBay 买下 PayPal 是好事——PayPal 现在贡献了 eBay 43% 的销售额，可能还有更高的增长占比。</p>
+<p>但收购方还有一层额外的理由。快速增长的公司不仅有价值，而且危险。如果它继续扩张，可能扩张进收购方自己的地盘。大多数产品型收购都含有几分恐惧的成分。即使收购方不觉得这家创业公司本身有威胁，一想到竞争对手拿它能干什么，也会心惊。正因为创业公司对收购方有这种双重价值，收购方出价常常高于普通投资人。[14]</p>
+<p><strong>理解</strong></p>
+<p>创始人、投资人、收购方，三者构成了一个自然生态系统。它运转得如此顺滑，以至于不理解它的人被迫发明阴谋论来解释事情为何如此圆满——正如我们的祖先面对自然界那些「过于精巧」的运转。但没有什么秘密小集团在幕后操盘。</p>
+<p>如果你从一个错误假设出发——Instagram 一文不值——那你就得发明一个幕后大老板，逼马克·扎克伯格买下它。对任何了解扎克伯格的人来说，这就是那个初始假设的归谬。他买 Instagram 的原因是：它既有价值，又危险；而让它如此的，是增长。</p>
+<p>如果你想理解创业公司，就去理解增长。（If you want to understand startups, understand growth.）增长驱动着这个世界里的一切。</p>
+<p><strong>增长是创业公司通常做技术的原因——因为能让公司快速增长的点子太稀少，发现新点子的最好办法是找到那些刚被变化变成可行的东西，而技术是快速变化最好的来源</strong>。</p>
+<p>增长是这么多创始人在经济上理性选择创业的原因：增长让成功的公司如此有价值，以至于哪怕风险同样高，期望值仍然很高。增长是 VC 想投创业公司的原因：不只是回报高，还因为从资本利得（capital gains）中产生回报，比从分红中产生回报更容易管理。</p>
+<p>增长解释了为什么最成功的创业公司即使不需要也拿 VC 的钱：这让它们能选择自己的增长率。增长也解释了为什么成功的创业公司几乎无一例外会收到收购要约。对收购方来说，快速增长的公司不仅有价值，而且危险。</p>
+<p>还不只是「想在一个领域成功，就必须理解驱动它的力量」这么简单。理解增长，就是创业这件事本身的构成。当你创办一家创业公司时，你真正在做的事（让某些观察者沮丧的是，你全部在做的事）是：承诺去解一道比普通生意更难的题。</p>
+<p>你承诺去寻找一个能产生快速增长的罕见点子。因为这类点子太有价值，找到它很难。创业公司就是你迄今为止的发现的具体化身。因此，<strong>创业非常像决定成为一个科研科学家：你并未承诺去解任何一道具体的题；你不知道哪些题一定可解；但你承诺去发现一些前人不知道的东西</strong>。</p>
+<p>创业创始人，本质上是一名经济领域的科研科学家。大多数人没有发现什么了不起的东西，但有些人发现了相对论。（Most don’t discover anything that remarkable, but some discover relativity.）</p>
+<p><strong>注释</strong></p>
+<p>[1] 严格说来，你需要的不是很多客户，而是一个大市场——即「客户数 × 客单价」的乘积要高。但哪怕客户付钱很多，客户太少也是危险的，否则单个客户对你的支配力会把你不自觉地变成一家事实上的咨询公司。所以无论你处在哪个市场，通常最好的做法是宁可把产品做得更大众一些。</p>
+<p>[2] 有一年的 Startup School 上，David Heinemeier Hansson 鼓励想创业的程序员以餐馆为榜样。我想他的意思是：开一家在 (a) 上受约束的软件公司，就像餐馆在 (b) 上受约束一样，无可厚非。我同意。大多数人本来就不该去创业。</p>
+<p>[3] 那种「退后一步」，正是我们在 Y Combinator 重点做的事情之一。创始人凭直觉发现了某样东西、却没完全理解它的含义，这很常见。任何领域最重大的发现，恐怕大多如此。</p>
+<p>[4] 我在《如何创造财富》（How to Make Wealth）里说创业公司是一家挑战硬技术难题的小公司，说错了。那是最常见的配方，但不是唯一的。</p>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>https://paulgraham.com/wealth.html</span></span></code></pre>
+<p>[5] 原则上公司并不受制于所服务市场的规模，因为它们可以扩张进新市场。但大公司这么做的能力似乎有限。这意味着，撞上自家市场天花板带来的放缓，归根结底只是内部极限的另一种表达方式。</p>
+<p>其中某些极限，也许可以通过改变组织的形状来突破——具体说，把它分片（sharding）。</p>
+<p>[6] 显然，这只适用于已经上线、或能在 YC 期间上线的创业公司。做新数据库的创业公司多半做不到。但话说回来，「先上线一个小东西、再把增长率当进化压力」是一种价值极高的技术，任何能这么起步的公司大概都该这么干。</p>
+<p>[7] 如果创业公司走的是 Facebook/Twitter 路线——做一个希望大受欢迎、但还没有明确赚钱计划的东西——增长率就得更高，哪怕它只是收入增长的代理指标，因为这类公司必须积累起海量用户才算成功。</p>
+<p>还要提防一个边缘情形：传播很快、流失率（churn）也很高，于是净增长一直不错，直到把所有潜在用户耗尽的那一刻，突然归零。</p>
+<p>[8] 在 YC 内部，当我们说「凡能带来增长的就是对的」时，言下之意排除了各种把戏：花超过用户终身价值的钱买用户、把不活跃的用户算成活跃、以稳定递增的节奏放邀请码来造出一条漂亮增长曲线，等等。就算这些把戏能骗过投资人，最终伤害的是你自己——因为你亲手掰歪了自己的指南针。</p>
+<p>[9] 正因如此，「成功的创业公司不过是某个光辉初始点子的化身」是一种危险的误判。<strong>你起初要找的与其说是一个伟大点子，不如说是一个有可能进化成伟大点子的点子</strong>。危险在于，有前途的点子并不只是伟大点子的模糊版本——它们常常在性质上不同，因为你据以进化的早期采用者，和其余市场的需求并不相同。比如，最终进化成 Facebook 的那个点子，并不是 Facebook 的一个子集；它是「哈佛本科生的一个网站」。</p>
+<p>[10] 那如果一家公司以每年 1.7 倍的速度长了非常久呢？难道不能长到和成功的创业公司一样大？原则上当然可以。我们那家月入 1000 美元的假想公司，如果每周增长 1% 持续 19 年，也能长到每周 5% 增长 4 年的公司的规模。但这样的轨迹在房地产开发之类的行业里也许常见，在科技行业里却很少见。在科技行业，长得慢的公司往往长不大。</p>
+<p>[11] 任何期望值计算都因人而异，取决于每个人对钱的效用函数（utility function）。也就是说，对大多数人来说，第一个一百万比后续的一百万更值钱。值钱多少因人而异。对更年轻或更有野心的创始人，效用函数更平。这大概也是为什么最成功的那些创业公司的创始人，往往偏年轻。</p>
+<p>[12] 更准确地说，这是最大的赢家的情况——所有回报都来自它们。创业公司创始人也可以玩同样的把戏肥己损司，比如卖给公司高价配件。但谷歌的创始人干这个不值得。会受此诱惑的只有失败的创业公司的创始人，而从 VC 的角度看，那些本来就是核销（writeoff）。</p>
+<p>[13] 收购分两类：收购方想要生意的，和只想要员工的。后者有时被称为「HR 收购」（HR acquisition）。虽然名义上也是收购、有时金额大到足以显著影响潜在创始人的期望值计算，但收购方把 HR 收购看得更像一笔签约奖金。</p>
+<p>[14] 我曾向几位刚从俄罗斯来的创始人解释这一点。他们觉得新鲜：威胁了一家公司，对方居然会出溢价买你。「在俄罗斯，他们直接杀了你。」他们半开玩笑地说。从经济学上看，成熟公司不能简单地消灭新竞争对手，这可能是法治最有价值的方面之一。所以，每当我们看到在位者用监管或专利诉讼打压竞争对手，我们都该担忧——不是因为这违背了法治本身，而是因为它背离了法治所要抵达的东西。</p>
+<p>感谢 Sam Altman、Marc Andreessen、Paul Buchheit、Patrick Collison、Jessica Livingston、Geoff Ralston 和 Harj Taggar 阅读本文草稿。</p>
+<hr>
+<blockquote>
+<p>原文：Startup = Growth | Paul Graham | paulgraham.com</p>
+</blockquote>
+<pre class="astro-code github-light" style="background-color:#fff;color:#24292e; overflow-x: auto;" tabindex="0" data-language="plaintext"><code><span class="line"><span>https://paulgraham.com/growth.html</span></span></code></pre> <div class="cta-box"> <p>觉得有用？继续阅读</p> <div class="cta-buttons"> <a href="/book" class="cta-btn cta-btn-primary">查看书籍</a>  </div> </div> </article> <!-- 底部导航 --> <nav class="reader-footnav"> <a href="/blog/pg-how-to-get-startup-ideas" class="reader-prev"> <span class="reader-foot-label">← 上一章</span> <span class="reader-foot-title">如何获得创业灵感</span> </a> <a href="/book" class="reader-next reader-next-done"> <span class="reader-foot-label">已读完 · 返回书架 →</span> <span class="reader-foot-title">查看更多书籍</span> </a> </nav> </main> </div> <!-- 移动端目录抽屉 --> <button class="reader-toc-toggle" id="reader-toc-toggle" aria-label="打开目录">目录</button> <div class="reader-toc-scrim" id="reader-toc-scrim"></div> </div> </main> <footer> <div class="footer-inner"> <p>© 2026 像企业家一样写作</p> <div class="footer-links"> <button type="button" class="footer-link-btn" id="wechat-qr-trigger">网站有bug，“码”上办，联系本人。</button> </div> </div> </footer> <!-- 微信名片二维码浮层 --> <div id="wechat-qr-overlay" class="wechat-qr-overlay" aria-hidden="true"> <div class="wechat-qr-modal"> <button type="button" class="wechat-qr-close" id="wechat-qr-close" aria-label="关闭">✕</button> <img src="/images/wechat-qr.png" alt="微信名片二维码"> <p class="wechat-qr-cap">微信扫一扫，联系本人</p> </div> </div> <script>
+    (function () {
+      var trigger = document.getElementById('wechat-qr-trigger');
+      var overlay = document.getElementById('wechat-qr-overlay');
+      var closeBtn = document.getElementById('wechat-qr-close');
+      if (!trigger || !overlay) return;
+      function openQr() {
+        overlay.classList.add('active');
+        overlay.setAttribute('aria-hidden', 'false');
+      }
+      function closeQr() {
+        overlay.classList.remove('active');
+        overlay.setAttribute('aria-hidden', 'true');
+      }
+      trigger.addEventListener('click', openQr);
+      if (closeBtn) closeBtn.addEventListener('click', closeQr);
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeQr();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeQr();
+      });
+    })();
+  </script>  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    let _searchIndex = null;
+
+    async function loadSearchIndex() {
+      if (_searchIndex) return _searchIndex;
+      try {
+        const resp = await fetch('/search.json?t=' + Date.now());
+        _searchIndex = await resp.json();
+      } catch (e) {
+        console.warn('search.json load failed', e);
+        _searchIndex = { posts: [], books: [] };
+      }
+      return _searchIndex;
+    }
+
+    function openSearch(initialQuery) {
+      const overlay = document.getElementById('search-overlay');
+      const input = document.getElementById('search-input');
+      overlay.classList.add('active');
+      input.value = initialQuery || '';
+      input.focus();
+      renderResults(input.value);
+    }
+
+    function closeSearch() {
+      document.getElementById('search-overlay').classList.remove('active');
+    }
+
+    function getSnippet(text, keyword, radius) {
+      radius = radius || 30;
+      if (!text) return '';
+      const idx = text.toLowerCase().indexOf(keyword.toLowerCase());
+      if (idx === -1) return text.substring(0, 80);
+      const start = Math.max(0, idx - radius);
+      const end = Math.min(text.length, idx + keyword.length + radius);
+      let s = text.substring(start, end);
+      if (start > 0) s = '…' + s;
+      if (end < text.length) s = s + '…';
+      return s;
+    }
+
+    function escapeHtml(s) {
+      return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    function escapeReg(s) {
+      return (s || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+    function highlight(text, q) {
+      const safe = escapeHtml(text);
+      if (!q) return safe;
+      try {
+        const re = new RegExp('(' + escapeReg(q) + ')', 'gi');
+        return safe.replace(re, '<mark>$1</mark>');
+      } catch (e) { return safe; }
+    }
+    function matchScore(item, q) {
+      const t = (item.title || '').toLowerCase();
+      const d = (item.desc || '').toLowerCase();
+      const c = (item.content || '').toLowerCase();
+      if (t.includes(q)) return 3;
+      if (d.includes(q)) return 2;
+      if (c.includes(q)) return 1;
+      return 0;
+    }
+    function resultItemHtml(item, q, href, isBook) {
+      const snippet = getSnippet(item.content || '', q, 40);
+      const contentHit = (item.content || '').toLowerCase().includes(q);
+      const desc = (contentHit && snippet) ? snippet : (item.desc || snippet || '');
+      return '<a href="' + href + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+        '<div class="search-result-title"><span class="search-result-type' + (isBook ? ' book' : '') + '">' + (isBook ? '书籍' : '章节') + '</span>' + highlight(item.title, q) + '</div>' +
+        '<div class="search-result-desc">' + highlight(desc, q) + '</div>' +
+      '</a>';
+    }
+
+    // 专栏条目：外链到微信公众号（不加 ?q=）
+    function columnItemHtml(col, q) {
+      return '<a href="' + escapeHtml(col.url) + '" target="_blank" rel="noopener noreferrer" class="search-result-item">' +
+        '<div class="search-result-title"><span class="search-result-type column">专栏</span>' + highlight(col.title, q) + '</div>' +
+        '<div class="search-result-desc">' + highlight(col.desc || col.columnName, q) + '</div>' +
+      '</a>';
+    }
+
+    function renderResults(query) {
+      const container = document.getElementById('search-results');
+      if (!query.trim()) {
+        container.innerHTML = '<div class="search-empty">输入关键词搜索书籍、章节与专栏…</div>';
+        return;
+      }
+      const q = query.toLowerCase();
+      const index = _searchIndex || { posts: [], books: [], columns: [] };
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      const matchedColumns = (index.columns || []).filter(c =>
+        c.title.toLowerCase().includes(q) ||
+        c.columnName.toLowerCase().includes(q) ||
+        c.rawTitle.toLowerCase().includes(q) ||
+        String(c.issue).includes(q)
+      );
+      if (matchedPosts.length === 0 && matchedBooks.length === 0 && matchedColumns.length === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        return;
+      }
+      const bookBySeries = {};
+      index.books.forEach(b => { if (b.series) bookBySeries[b.series] = b.title; });
+
+      let html = '';
+      // 书籍命中 → 单独作为「书籍」结果
+      if (matchedBooks.length) {
+        matchedBooks.sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        matchedBooks.forEach(b => { html += resultItemHtml(b, q, '/book/' + b.slug, true); });
+      }
+      // 章节按书籍分组
+      const groups = {};
+      matchedPosts.forEach(p => { const k = p.series || ''; (groups[k] = groups[k] || []).push(p); });
+      Object.keys(groups).forEach(series => {
+        const title = bookBySeries[series] || series || '其他';
+        groups[series].sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(title) + '》</div>';
+        groups[series].forEach(p => { html += resultItemHtml(p, q, '/blog/' + p.slug, false); });
+        html += '</div>';
+      });
+      // 专栏按专栏名分组（外链到微信）
+      const colGroups = {};
+      matchedColumns.forEach(c => { const k = c.columnName || ''; (colGroups[k] = colGroups[k] || []).push(c); });
+      Object.keys(colGroups).forEach(name => {
+        colGroups[name].sort((a, b) => a.issue - b.issue);
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(name) + '》· 专栏</div>';
+        colGroups[name].forEach(c => { html += columnItemHtml(c, q); });
+        html += '</div>';
+      });
+      container.innerHTML = html;
+    }
+
+    // ===== Hero 内联搜索（方案 B） =====
+    function closeHeroSearch() {
+      const dropdown = document.getElementById('hero-search-dropdown');
+      if (dropdown) { dropdown.classList.remove('show'); dropdown.innerHTML = ''; }
+    }
+
+    async function renderHeroResults(query) {
+      const container = document.getElementById('hero-search-dropdown');
+      if (!container) return;
+      if (!query.trim()) { closeHeroSearch(); return; }
+      const index = await loadSearchIndex();
+      const q = query.toLowerCase();
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      const matchedColumns = (index.columns || []).filter(c =>
+        c.title.toLowerCase().includes(q) ||
+        c.columnName.toLowerCase().includes(q) ||
+        c.rawTitle.toLowerCase().includes(q) ||
+        String(c.issue).includes(q)
+      );
+      const total = matchedPosts.length + matchedBooks.length + matchedColumns.length;
+      if (total === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        container.classList.add('show');
+        return;
+      }
+      const bookBySeries = {};
+      index.books.forEach(b => { if (b.series) bookBySeries[b.series] = b.title; });
+      let html = '';
+      if (matchedBooks.length) {
+        matchedBooks.slice(0, 2).sort((a, b) => matchScore(b, q) - matchScore(a, q)).forEach(b => {
+          html += resultItemHtml(b, q, '/book/' + b.slug, true);
+        });
+      }
+      const groups = {};
+      matchedPosts.forEach(p => { const k = p.series || ''; (groups[k] = groups[k] || []).push(p); });
+      let shown = 0;
+      Object.keys(groups).slice(0, 3).forEach(series => {
+        const title = bookBySeries[series] || series || '其他';
+        groups[series].sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(title) + '》</div>';
+        groups[series].slice(0, 3).forEach(p => { html += resultItemHtml(p, q, '/blog/' + p.slug, false); shown++; });
+        html += '</div>';
+      });
+      // 专栏命中（外链到微信）
+      const colGroups = {};
+      matchedColumns.forEach(c => { const k = c.columnName || ''; (colGroups[k] = colGroups[k] || []).push(c); });
+      Object.keys(colGroups).slice(0, 2).forEach(name => {
+        colGroups[name].sort((a, b) => a.issue - b.issue);
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(name) + '》· 专栏</div>';
+        colGroups[name].slice(0, 3).forEach(c => { html += columnItemHtml(c, q); shown++; });
+        html += '</div>';
+      });
+      if (total > shown + Math.min(matchedBooks.length, 2)) {
+        html += '<a href="#" class="hero-search-all" data-q="' + encodeURIComponent(q) + '">查看全部 ' + total + ' 条结果 →</a>';
+      }
+      container.innerHTML = html;
+      container.classList.add('show');
+    }
+
+    function initHeroSearch() {
+      const input = document.getElementById('hero-search-input');
+      const dropdown = document.getElementById('hero-search-dropdown');
+      const goBtn = document.getElementById('hero-search-go');
+      if (!input || !dropdown) return;
+
+      let inputTimeout;
+      input.addEventListener('input', () => {
+        clearTimeout(inputTimeout);
+        inputTimeout = setTimeout(() => renderHeroResults(input.value), 120);
+      });
+      input.addEventListener('focus', () => { if (input.value.trim()) renderHeroResults(input.value); });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(input.value); });
+        }
+        if (e.key === 'Escape') { closeHeroSearch(); input.blur(); }
+      });
+
+      if (goBtn) {
+        goBtn.addEventListener('click', () => {
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(input.value); });
+        });
+      }
+
+      dropdown.addEventListener('click', (e) => {
+        const all = e.target.closest('.hero-search-all');
+        if (all) {
+          e.preventDefault();
+          const q = decodeURIComponent(all.getAttribute('data-q') || '');
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(q); });
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.hero-search')) closeHeroSearch();
+      });
+    }
+
+    initHeroSearch();
+
+    // ===== 导航搜索图标（全站兜底入口） =====
+    const navSearchBtn = document.getElementById('nav-search-btn');
+    if (navSearchBtn) {
+      navSearchBtn.addEventListener('click', () => {
+        loadSearchIndex().then(() => openSearch());
+      });
+    }
+
+    document.getElementById('search-close').addEventListener('click', closeSearch);
+    document.getElementById('search-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeSearch();
+    });
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      renderResults(e.target.value);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+    });
+    });
+  </script> <!-- 页面关键词高亮（从搜索结果跳转过来时） --> <script>
+    (function() {
+      function getQueryParam(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name) || '';
+      }
+
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function highlightKeyword(keyword) {
+        if (!keyword.trim()) return;
+        const main = document.querySelector('main');
+        if (!main) return;
+
+        const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, null, false);
+        const nodesToReplace = [];
+        const regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
+
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node.parentElement && node.parentElement.tagName === 'MARK') continue;
+          if (regex.test(node.textContent)) {
+            nodesToReplace.push(node);
+          }
+        }
+
+        let firstMark = null;
+        nodesToReplace.forEach(textNode => {
+          const span = document.createElement('span');
+          span.innerHTML = textNode.textContent.replace(regex, '<mark class="search-highlight">$1</mark>');
+          const marks = span.querySelectorAll('mark');
+          if (marks.length > 0 && !firstMark) {
+            firstMark = marks[0];
+          }
+          const fragment = document.createDocumentFragment();
+          while (span.firstChild) {
+            fragment.appendChild(span.firstChild);
+          }
+          textNode.parentNode.replaceChild(fragment, textNode);
+        });
+
+        if (firstMark) {
+          firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(function() {
+            const marks = main.querySelectorAll('mark.search-highlight');
+            marks.forEach(function(m) {
+              const parent = m.parentNode;
+              parent.replaceChild(document.createTextNode(m.textContent), m);
+              parent.normalize();
+            });
+          }, 6000);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          highlightKeyword(getQueryParam('q'));
+        });
+      } else {
+        highlightKeyword(getQueryParam('q'));
+      }
+    })();
+  </script> <!-- 代码块复制按钮 --> <script>
+    (function() {
+      function initCopyButtons() {
+        document.querySelectorAll('.prose pre').forEach(function(pre) {
+          if (pre.querySelector('.copy-btn')) return;
+          var btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.textContent = '复制';
+          btn.setAttribute('aria-label', '复制代码');
+          btn.addEventListener('click', function() {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+              btn.textContent = '已复制';
+              btn.classList.add('copied');
+              setTimeout(function() {
+                btn.textContent = '复制';
+                btn.classList.remove('copied');
+              }, 2000);
+            }).catch(function() {
+              btn.textContent = '失败';
+              setTimeout(function() { btn.textContent = '复制'; }, 2000);
+            });
+          });
+          pre.style.position = 'relative';
+          pre.appendChild(btn);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCopyButtons);
+      } else {
+        initCopyButtons();
+      }
+    })();
+  </script> <!-- 选中文字：复制 / 生成金句卡片 --> <div class="sel-bubble" id="sel-bubble"> <span class="sb-act sb-copy" id="sbCopy">复制</span> <span class="sb-sep"></span> <span class="sb-act sb-card" id="sbCard">金句卡片</span> </div> <!-- 金句卡片弹层 --> <div class="qc-overlay" id="qcOverlay"> <div class="qc-modal"> <button class="qc-close" id="qcClose" aria-label="关闭">×</button> <div class="qc-stage"> <div class="qc a" id="qcCard"> <div class="qc-mark">“</div> <div class="qc-quote" id="qcQuote">先写完，再改清楚。</div> <div class="qc-foot"> <img class="qc-logo" src="/images/logo-180x180.png" alt="logo"> <div class="qc-src"> <div class="qc-site" id="qcSite">像企业家一样写作</div> <div class="qc-from" id="qcFrom">—— 选自正文</div> <div class="qc-url">gusangciren.github.io</div> </div> </div> </div> <div class="qc-tip">样式会记住你上次的选择</div> </div> <div class="qc-side"> <h3>金句卡片</h3> <p class="qc-sub">选好样式后下载或复制图片</p> <div class="qc-styles" id="qcStyles"> <div class="qc-style active" data-s="a"><div class="sw a"></div><div><div class="t">A · 极简暖白</div><div class="d">站点默认，最协调</div></div></div> <div class="qc-style" data-s="b"><div class="sw b"></div><div><div class="t">B · 深色品牌</div><div class="d">信息流吸睛</div></div></div> <div class="qc-style" data-s="c"><div class="sw c"></div><div><div class="t">C · 杂志书页</div><div class="d">书卷气</div></div></div> </div> <div class="qc-actions"> <div class="qc-act primary" data-act="download">⬇ 下载图片</div> <div class="qc-act" data-act="copyimg">📋 复制图片</div> </div> </div> </div> </div> <!-- 交互增强：阅读进度条 / 暗色模式 / 划词复制 / 金句卡片 --> <script>
+    (function () {
+      // ===== 划词气泡：复制 / 金句卡片 =====
+      var bubble = document.getElementById('sel-bubble');
+      var sbCopy = document.getElementById('sbCopy');
+      var sbCard = document.getElementById('sbCard');
+      var overlay = document.getElementById('qcOverlay');
+      var card = document.getElementById('qcCard');
+      var qQuote = document.getElementById('qcQuote');
+      var qSite = document.getElementById('qcSite');
+      var qFrom = document.getElementById('qcFrom');
+      var stylesBox = document.getElementById('qcStyles');
+      var lastText = '';
+
+      function hideBubble() { bubble.classList.remove('show'); }
+      function getSource() {
+        var h = document.querySelector('.article-header h1, .book-details h1, .prose h1, .community-hero h1');
+        var name = h ? h.textContent.trim() : document.title.trim();
+        try {
+          // 去掉标题尾部与站名重复的「— 像企业家一样写作」
+          name = name.replace(new RegExp('\\s*[—–-]\\s*' + getSite() + '\\s*$'), '');
+        } catch (e) {}
+        return name;
+      }
+      function getSite() {
+        var m = document.querySelector('meta[property="og:site_name"]');
+        return m ? m.content : '像企业家一样写作';
+      }
+
+      if (bubble) {
+        var SKIP = 'input,textarea,pre,code,.search-overlay,.wechat-qr-overlay,.rdl-ov,button,a,img';
+        document.addEventListener('mouseup', function () {
+          setTimeout(function () {
+            var sel = window.getSelection();
+            if (!sel || sel.isCollapsed) { hideBubble(); return; }
+            var text = sel.toString().trim();
+            var node = sel.anchorNode;
+            if (text.length < 2 || !node || !node.parentElement || node.parentElement.closest(SKIP)) { hideBubble(); return; }
+            var rect = sel.getRangeAt(0).getBoundingClientRect();
+            bubble.style.left = (rect.left + rect.width / 2) + 'px';
+            bubble.style.top = (rect.top - 6) + 'px';
+            lastText = text;
+            bubble.classList.add('show');
+          }, 10);
+        });
+        document.addEventListener('mousedown', function (e) { if (!bubble.contains(e.target)) hideBubble(); });
+        window.addEventListener('scroll', hideBubble, { passive: true });
+
+        sbCopy.addEventListener('click', function (ev) {
+          ev.stopPropagation();
+          var t = lastText;
+          function ok() {
+            sbCopy.textContent = '已复制 ✓'; sbCopy.classList.add('copied');
+            setTimeout(function () { sbCopy.textContent = '复制'; sbCopy.classList.remove('copied'); hideBubble(); }, 1200);
+          }
+          function fb() {
+            var i = document.createElement('textarea'); i.value = t; document.body.appendChild(i); i.select();
+            try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(i); ok();
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).then(ok).catch(fb); }
+          else { fb(); }
+        });
+        sbCard.addEventListener('click', function (ev) { ev.stopPropagation(); openCard(lastText); });
+      }
+
+      function openCard(text) {
+        qQuote.textContent = text || '先写完，再改清楚。';
+        var len = qQuote.textContent.length;
+        qQuote.style.fontSize = (len > 100 ? 18 : len > 60 ? 20 : 22) + 'px';
+        qSite.textContent = getSite();
+        qFrom.textContent = '—— 选自《' + getSource() + '》';
+        var saved = 'a';
+        try { saved = localStorage.getItem('qcStyle') || 'a'; } catch (e) {}
+        setStyle(saved);
+        overlay.classList.add('show');
+      }
+      var currentStyle = 'a';
+      function setStyle(s) {
+        currentStyle = s;
+        card.className = 'qc ' + s;
+        document.querySelectorAll('.qc-style').forEach(function (o) { o.classList.toggle('active', o.dataset.s === s); });
+        try { localStorage.setItem('qcStyle', s); } catch (e) {}
+      }
+      stylesBox.addEventListener('click', function (e) {
+        var o = e.target.closest('.qc-style'); if (o) setStyle(o.dataset.s);
+      });
+      document.getElementById('qcClose').addEventListener('click', function () { overlay.classList.remove('show'); });
+      overlay.addEventListener('click', function (e) { if (e.target === overlay) overlay.classList.remove('show'); });
+
+      // ===== 导出为图片（html2canvas） =====
+      function ensureH2C(cb) {
+        if (window.html2canvas) { cb(); return; }
+        var s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+        s.onload = cb;
+        s.onerror = function () { alert('金句卡片图片组件加载失败，请检查网络后重试'); };
+        document.head.appendChild(s);
+      }
+      // 每套样式的底色：填满圆角外区域，避免相册把透明像素渲染成黑角
+      var QC_BG = { a: '#ffffff', b: '#1c1917', c: '#f3ede1' };
+      var fontCssPromise = null;
+      function getFontCss() {
+        if (!fontCssPromise) {
+          fontCssPromise = fetch('https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-webfont/1.7.0/lxgwwenkai-regular.css')
+            .then(function (r) { return r.ok ? r.text() : ''; })
+            .catch(function () { return ''; });
+        }
+        return fontCssPromise;
+      }
+      function capture() {
+        return document.fonts.ready.then(function () {
+          return getFontCss().then(function (css) {
+            return html2canvas(card, {
+              scale: 2,
+              backgroundColor: QC_BG[currentStyle] || '#ffffff',
+              useCORS: true,
+              logging: false,
+              onclone: function (doc) {
+                // 导出环境可能没等到文楷加载完，主动注入字体 CSS 兜底；
+                // 即使仍回退，整卡统一衬线栈（楷体），上下字体也一致
+                if (css) {
+                  var st = doc.createElement('style');
+                  st.textContent = css;
+                  doc.head.appendChild(st);
+                }
+              }
+            });
+          });
+        });
+      }
+      function flash(btn, txt) { var o = btn.textContent; btn.textContent = txt; setTimeout(function () { btn.textContent = o; }, 1400); }
+
+      document.querySelectorAll('.qc-act').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var act = btn.dataset.act;
+          ensureH2C(function () {
+            capture().then(function (canvas) {
+              if (act === 'download') {
+                var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png';
+                a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已下载 ✓');
+              } else if (act === 'copyimg') {
+                canvas.toBlob(function (blob) {
+                  if (blob && navigator.clipboard && window.ClipboardItem) {
+                    navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
+                      .then(function () { flash(btn, '已复制 ✓'); })
+                      .catch(function () { var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png'; a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已保存 ✓'); });
+                  } else {
+                    var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png'; a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已保存 ✓');
+                  }
+                });
+              }
+            });
+          });
+        });
+      });
+    })();
+  </script> </body></html>  <script type="module">(function(){const n=document.getElementById("reading-progress"),r=document.getElementById("reader-mini"),d=document.getElementById("mini-pct"),i=document.querySelector(".reader-hero");function c(){const e=window.scrollY||document.documentElement.scrollTop,t=document.documentElement.scrollHeight-document.documentElement.clientHeight,o=t>0?Math.min(100,Math.max(0,e/t*100)):0,u=Math.round(o);n&&(n.style.width=o+"%",n.classList.toggle("show",e>50)),d&&(d.textContent=u+"%"),r&&i&&r.classList.toggle("show",e>i.offsetHeight+20)}window.addEventListener("scroll",c,{passive:!0}),window.addEventListener("resize",c),c();const s=document.getElementById("reader-toc-toggle"),l=document.getElementById("reader-toc-scrim"),m=document.getElementById("reader-toc");function a(){document.body.classList.remove("toc-open")}s&&s.addEventListener("click",()=>document.body.classList.toggle("toc-open")),l&&l.addEventListener("click",a),m&&m.querySelectorAll("a").forEach(e=>e.addEventListener("click",a)),document.addEventListener("keydown",e=>{if(e.target&&/^(INPUT|TEXTAREA)$/.test(e.target.tagName))return;const t=document.querySelector(".reader-prev[href]"),o=document.querySelector(".reader-next[href]");e.key==="ArrowLeft"&&t&&(window.location.href=t.getAttribute("href")),e.key==="ArrowRight"&&o&&(window.location.href=o.getAttribute("href"))})})();</script>
