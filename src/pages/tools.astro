@@ -75,20 +75,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <div id="export-stage"></div>
       </section>
 
-      <!-- 2) 金句卡片制作（推文截图风 · 三栏工作台） -->
+      <!-- 2) 金句卡片制作（推文截图风 · 双栏工作台） -->
       <section class="pane" id="pane-quote" hidden>
         <div class="ws">
-          <!-- 左：样式库 -->
-          <aside class="lib">
-            <div class="lib-title">卡片样式</div>
-            <ul id="qc-lib"></ul>
-          </aside>
-
-          <!-- 中：画布 -->
+          <!-- 左：画布（预览区） -->
           <div class="canvas">
             <div class="canvas-dot">
               <div class="card-fit" id="qcFit">
               <div class="tcard v-light r34" id="qcCard">
+                <span class="t-glow" aria-hidden="true"></span>
                 <div class="t-head" id="qcHead">
                   <div class="t-ava" id="qcAva"><span class="ph">人</span></div>
                   <div class="t-id">
@@ -99,7 +94,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                     <div class="t-handle" id="qcHandle">@Gusang</div>
                   </div>
                 </div>
-                <div class="t-text" id="qcText">六个月的专注，可以修复过去五年的混乱。</div>
+                <div class="t-text" id="qcText" contenteditable="true" spellcheck="false" data-ph="今天想分享什么？在这里输入···">六个月的专注，可以修复过去五年的混乱。</div>
               </div>
               </div>
             </div>
@@ -115,8 +110,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
               </div>
             </div>
             <div class="field">
-              <label class="fld-label">引言文字</label>
-              <textarea id="qcText-in" class="f-area" rows="5">六个月的专注，可以修复过去五年的混乱。</textarea>
+              <label class="fld-label">风格</label>
+              <div class="seg" id="qcStyle">
+                <button class="seg-btn on" data-v="v-light">亮白</button>
+                <button class="seg-btn" data-v="v-dark">纯黑</button>
+                <button class="seg-btn" data-v="v-paper">暖纸</button>
+                <button class="seg-btn" data-v="v-brand">深色</button>
+              </div>
             </div>
             <div class="field">
               <label class="fld-label">头像</label>
@@ -168,20 +168,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       });
     })();
 
-      // ===== 金句卡片工具（推文截图风 · 三栏工作台） =====
+      // ===== 金句卡片工具（推文截图风 · 双栏工作台） =====
       (function () {
-        var SCHEMES = [
-          { v: 'v-light', name: '亮白', desc: '推特默认亮色' },
-          { v: 'v-dark',  name: '纯黑', desc: '推特暗黑模式' },
-          { v: 'v-paper', name: '暖纸', desc: '站点同源米白' }
-        ];
-        var BG = { 'v-light': '#ffffff', 'v-dark': '#000000', 'v-paper': '#f7f3ec' };
+        var BG = { 'v-light': '#ffffff', 'v-dark': '#000000', 'v-paper': '#f7f3ec', 'v-brand': '#1c1917' };
         var DIM = { r34: '1080 × 1440', r11: '1080 × 1080' };
         var state = { scheme: 'v-light', ratio: 'r34', text: '', name: '', handle: '', check: true, avatar: null };
 
         var $ = function (s) { return document.querySelector(s); };
         var card = document.getElementById('qcCard');
-        var textIn = document.getElementById('qcText-in');
+        var textEl = document.getElementById('qcText');
         var nameIn = document.getElementById('qcName-in');
         var handleIn = document.getElementById('qcHandle-in');
         var checkIn = document.getElementById('qcCheck-in');
@@ -198,24 +193,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           }
         } catch (e) {}
 
-        function buildLib() {
-          var ul = document.getElementById('qc-lib');
-          ul.innerHTML = SCHEMES.map(function (s) {
-            return '<li data-v="' + s.v + '"><div class="li-name">' + s.name + '</div><div class="li-desc">' + s.desc + '</div></li>';
-          }).join('');
-          ul.querySelectorAll('li').forEach(function (li) {
-            li.addEventListener('click', function () {
-              state.scheme = li.dataset.v;
-              ul.querySelectorAll('li').forEach(function (x) { x.classList.toggle('on', x === li); });
-              render();
-            });
-          });
-          ul.querySelectorAll('li').forEach(function (x) { x.classList.toggle('on', x.dataset.v === state.scheme); });
-        }
+        function textSize(len) { return len <= 30 ? 40 : len <= 60 ? 34 : len <= 100 ? 28 : len <= 160 ? 24 : 20; }
 
         function render() {
           card.className = 'tcard ' + state.scheme + ' ' + state.ratio;
-          $('#qcText').textContent = state.text || '在这里写下你的金句…';
+          if (document.activeElement !== textEl) textEl.textContent = state.text || '';
           $('#qcName').textContent = state.name || '名字';
           $('#qcHandle').textContent = state.handle || '@handle';
           $('#qcCheck').style.display = state.check ? 'flex' : 'none';
@@ -224,9 +206,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           var prev = $('#qcAvaPrev');
           prev.innerHTML = state.avatar ? '<img src="' + state.avatar + '">' : '<span>人</span>';
           $('#qcAvaClr').style.display = state.avatar ? '' : 'none';
-          var len = (state.text || '').length;
-          var size = len <= 30 ? 40 : len <= 60 ? 34 : len <= 100 ? 28 : len <= 160 ? 24 : 20;
-          $('#qcText').style.fontSize = size + 'px';
+          textEl.style.fontSize = textSize((state.text || '').length) + 'px';
           $('#qcDim').textContent = '导出尺寸：' + DIM[state.ratio] + '，可直接粘贴到公众号 / 朋友圈';
           fit();
         }
@@ -238,7 +218,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           if (!canvas || !fitEl) return;
           var cw = canvas.clientWidth;
           if (cw < 60) return; /* 面板隐藏时跳过 */
-          var avail = cw - 48 - 104 - 4; /* canvas 左右 padding 48 + 点阵 padding 104 */
+          var avail = cw - 32 - 80 - 4; /* canvas 左右 padding 32 + 点阵 padding 80 */
           var s = Math.max(0.3, Math.min(1, avail / 540));
           fitEl.style.setProperty('--qc-s', s);
           fitEl.style.width = Math.round(540 * s) + 'px';
@@ -246,7 +226,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         }
         window.addEventListener('resize', fit);
 
-        textIn.addEventListener('input', function () { state.text = textIn.value; render(); });
+        // 直接在卡片上编辑（所见即所得）：同步状态，但不整卡重渲染以保住光标
+        textEl.addEventListener('input', function () {
+          var raw = textEl.innerText.replace(/\n$/, '');
+          state.text = /\S/.test(raw) ? raw : '';
+          textEl.style.fontSize = textSize(state.text.length) + 'px';
+        });
         nameIn.addEventListener('input', function () { state.name = nameIn.value; render(); saveProfile(); });
         handleIn.addEventListener('input', function () { state.handle = handleIn.value; render(); saveProfile(); });
         checkIn.addEventListener('change', function () { state.check = checkIn.checked; render(); });
@@ -264,6 +249,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           b.addEventListener('click', function () {
             state.ratio = b.dataset.r;
             document.querySelectorAll('#qcSize .seg-btn').forEach(function (x) { x.classList.toggle('on', x === b); });
+            render();
+          });
+        });
+        document.querySelectorAll('#qcStyle .seg-btn').forEach(function (b) {
+          b.addEventListener('click', function () {
+            state.scheme = b.dataset.v;
+            document.querySelectorAll('#qcStyle .seg-btn').forEach(function (x) { x.classList.toggle('on', x === b); });
             render();
           });
         });
@@ -307,8 +299,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           });
         });
 
-        state.text = textIn.value; state.name = nameIn.value; state.handle = handleIn.value;
-        buildLib();
+        state.text = textEl.textContent;
+        state.name = nameIn.value; state.handle = handleIn.value;
         render();
       })();
 
@@ -576,7 +568,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     #pane-cover #export-stage { position: absolute; left: -10000px; top: 0; width: 900px; height: 383px; }
 
     /* ============================================================
-       金句卡片制作工具（推文截图风 · 三栏工作台）—— 全部收在
+       金句卡片制作工具（推文截图风 · 双栏工作台）—— 全部收在
        #pane-quote 作用域内，不泄漏到站点头部 / 其他页面。
        ============================================================ */
     .btn { border: 1px solid var(--color-border, #e7e5e4); background: #fff; font-family: inherit; font-size: 14px; color: var(--color-text); padding: 11px 16px; border-radius: 11px; cursor: pointer; transition: all .2s; }
@@ -585,17 +577,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     .btn.primary:hover { filter: brightness(1.06); color: #fff; }
 
     #pane-quote .ws { display: flex; align-items: stretch; border: 1px solid var(--color-border, #e7e5e4); border-radius: 16px; overflow: hidden; background: #fff; }
-    #pane-quote .lib { width: 200px; flex: none; background: var(--soft, #f5f4f2); border-right: 1px solid var(--color-border, #e7e5e4); padding: 20px 14px; }
-    #pane-quote .lib-title { font-size: 12px; color: var(--color-text-secondary); letter-spacing: 2px; margin: 0 0 14px 4px; }
-    #pane-quote .lib ul { list-style: none; margin: 0; padding: 0; }
-    #pane-quote .lib li { border: 2px solid transparent; border-radius: 14px; padding: 14px 16px; margin-bottom: 12px; cursor: pointer; transition: .15s; background: #fff; }
-    #pane-quote .lib li:hover { border-color: #d6d3d1; }
-    #pane-quote .lib li.on { border-color: var(--color-accent); background: #fffdfb; }
-    #pane-quote .lib .li-name { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
-    #pane-quote .lib .li-desc { font-size: 12px; color: var(--color-text-secondary); }
 
-    #pane-quote .canvas { flex: 1; min-width: 0; overflow: auto; display: flex; align-items: flex-start; justify-content: center; padding: 40px 24px; background: #faf9f7; }
-    #pane-quote .canvas-dot { background-image: radial-gradient(#dedad4 1px, transparent 1px); background-size: 22px 22px; padding: 44px 52px; border-radius: 18px; }
+    #pane-quote .canvas { flex: 1; min-width: 0; overflow: auto; display: flex; align-items: flex-start; justify-content: center; padding: 34px 16px; background: #faf9f7; }
+    #pane-quote .canvas-dot { padding: 38px 40px; border-radius: 18px; }
 
     /* 预览缩放：外层量好尺寸，内层卡片原尺寸 transform 缩放（导出走离屏原尺寸克隆，不经缩放） */
     #pane-quote .card-fit { position: relative; overflow: hidden; border-radius: 10px; box-shadow: 0 20px 50px -18px rgba(28,25,23,.30); }
@@ -627,7 +611,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     #pane-quote .seg-btn.on { background: var(--color-accent); color: #fff; font-weight: 700; }
 
     /* 卡片（推文截图风） */
-    #pane-quote .tcard { width: 540px; border-radius: 0; padding: 64px 56px; font-family: var(--font-serif); display: flex; flex-direction: column; justify-content: center; gap: 44px; box-sizing: border-box; }
+    #pane-quote .tcard { width: 540px; border-radius: 0; padding: 40px 56px 64px; font-family: var(--font-serif); display: flex; flex-direction: column; justify-content: center; gap: 44px; box-sizing: border-box; }
     #pane-quote .r34 { aspect-ratio: 3/4; }
     #pane-quote .r11 { aspect-ratio: 1/1; padding: 56px 52px; gap: 36px; }
     #pane-quote .t-head { display: flex; align-items: center; gap: 18px; }
@@ -640,22 +624,29 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     #pane-quote .t-check { width: 30px; height: 30px; flex: none; display: flex; }
     #pane-quote .t-check svg { width: 100%; height: 100%; fill: #1d9bf0; display: block; }
     #pane-quote .t-handle { font-size: 22px; line-height: 1.3; margin-top: 6px; }
-    #pane-quote .t-text { line-height: 1.62; font-weight: 500; word-break: break-word; white-space: pre-wrap; }
+    #pane-quote .t-text { line-height: 1.62; font-weight: 500; word-break: break-word; white-space: pre-wrap; outline: none; cursor: text; }
+    #pane-quote .t-text:empty::before { content: attr(data-ph); opacity: .3; }
+    #pane-quote .t-text:empty::after { content: '|'; margin-left: 4px; opacity: .5; font-weight: 400; animation: qc-blink 1.1s steps(1) infinite; }
+    @keyframes qc-blink { 0%, 55% { opacity: .5; } 56%, 100% { opacity: 0; } }
+    /* 导出时隐藏占位提示与光标，不进图片 */
+    #pane-quote #qc-stage .t-text:empty::before, #pane-quote #qc-stage .t-text:empty::after { content: none; }
     #pane-quote .v-light { background: #fff; color: #0f1419; }
     #pane-quote .v-light .t-handle { color: #536471; }
     #pane-quote .v-dark { background: #000; color: #e7e9ea; }
     #pane-quote .v-dark .t-handle { color: #71767b; }
     #pane-quote .v-paper { background: #f7f3ec; color: #26221d; }
     #pane-quote .v-paper .t-handle { color: #8a8378; }
+    /* 深色品牌：与划线生成金句卡 B 款同源（暖黑渐变 + 右上橙光晕） */
+    #pane-quote .v-brand { background: linear-gradient(140deg, #1c1917 0%, #292524 55%, #3a1a00 100%); color: #fff; position: relative; overflow: hidden; }
+    #pane-quote .v-brand .t-handle { color: rgba(255, 255, 255, 0.72); }
+    #pane-quote .t-glow { display: none; }
+    #pane-quote .v-brand .t-glow { display: block; position: absolute; top: -80px; right: -80px; width: 340px; height: 340px; background: radial-gradient(circle, rgba(245, 80, 0, 0.28), transparent 70%); pointer-events: none; }
 
     #pane-quote .toast { position: fixed; left: 50%; bottom: 34px; transform: translateX(-50%) translateY(20px); background: #1c1917; color: #fff; font-size: 13px; padding: 10px 22px; border-radius: 999px; opacity: 0; pointer-events: none; transition: .25s; z-index: 99; font-family: var(--font-serif); }
     #pane-quote .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     @media (max-width: 980px) {
       #pane-quote .ws { flex-direction: column; }
-      #pane-quote .lib { width: 100%; border-right: none; border-bottom: 1px solid var(--color-border, #e7e5e4); }
-      #pane-quote .lib ul { display: flex; gap: 12px; }
-      #pane-quote .lib li { margin-bottom: 0; flex: 1; }
       #pane-quote .props { width: 100%; border-left: none; border-top: 1px solid var(--color-border, #e7e5e4); }
     }
 
