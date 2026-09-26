@@ -9,10 +9,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <ul id="side-menu">
         <li data-pane="pane-cover" class="active"><span class="num">1)</span><span>公众号封面制作</span></li>
         <li data-pane="pane-quote"><span class="num">2)</span><span>金句卡片制作</span></li>
+        <li data-pane="pane-write"><span class="num">3)</span><span>书写伙伴</span></li>
       </ul>
     </aside>
 
     <main class="workspace">
+      <button class="side-toggle" id="sideToggle" title="收起侧边栏（Ctrl+G）" aria-label="收起或展开侧边栏">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+          <line x1="2.5" y1="3.5" x2="13.5" y2="3.5"/><line x1="2.5" y1="8" x2="13.5" y2="8"/><line x1="2.5" y1="12.5" x2="13.5" y2="12.5"/>
+        </svg>
+      </button>
       <!-- 1) 公众号封面制作 -->
       <section class="pane" id="pane-cover">
         <div class="cover-editor">
@@ -140,6 +146,50 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <div id="qc-stage"></div>
         <div class="toast" id="qcToast"></div>
       </section>
+
+      <!-- 3) 书写伙伴（白噪音 + 专注时间 + 即时排版） -->
+      <section class="pane" id="pane-write" hidden>
+        <div class="wp-wrap">
+          <div class="wp-head"><span class="wp-brand">书写<em>伙伴</em></span></div>
+
+          <div class="wp-hero" id="wpPlayer">
+            <div class="wp-row1">
+              <button class="wp-play" id="wpPlay">▶</button>
+              <div class="wp-title" id="wpTitle">耀斑 · 25 分钟专注</div>
+              <svg class="wp-clock" viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="10" fill="none" stroke="rgba(245,234,217,.35)" stroke-width="2"/>
+                <line id="wpHand" x1="12" y1="12" x2="12" y2="4.5" stroke="#F55000" stroke-width="2.4" stroke-linecap="round" transform="rotate(0 12 12)"/>
+              </svg>
+              <span class="wp-durbox" id="wpDur">25 分钟</span>
+              <b class="wp-remain" id="wpRemain">25:00</b>
+            </div>
+            <div class="wp-bar"><i id="wpFill"></i></div>
+            <div class="wp-row2">
+              <span id="wpSoundSeg">
+                <button class="wp-chip on" data-sound="forest">耀斑</button>
+                <button class="wp-chip" data-sound="rain">静默之重</button>
+                <button class="wp-chip" data-sound="music">吉他二重奏</button>
+              </span>
+              <span class="wp-sep"></span>
+              <span id="wpDurSeg">
+                <button class="wp-chip on" data-dur="25">25 分钟</button>
+                <button class="wp-chip" data-dur="50">50 分钟</button>
+              </span>
+              <button class="wp-reset" id="wpReset">↺ 重置</button>
+            </div>
+          </div>
+
+          <div class="wp-paper">
+            <div id="wpEditor"></div>
+            <div class="wp-foot">
+              <button class="wp-copymd ghost" id="wpCopyHtml">复制 HTML</button>
+              <button class="wp-copymd solid" id="wpCopyMd">复制 Markdown</button>
+              <span class="wp-wc" id="wpWc">0 字</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </main>
   </div>
 
@@ -495,6 +545,343 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       fit();
       render(); // 首次渲染
     })();
+
+    // ===== 侧边栏收起/展开（flomo 式隐藏栏 · Ctrl+G · 记忆状态） =====
+    (function () {
+      var layout = document.querySelector('.tools-layout');
+      var btn = document.getElementById('sideToggle');
+      if (!layout || !btn) return;
+      var KEY = 'toolsSideHidden';
+      function apply(hid) {
+        layout.classList.toggle('side-hidden', hid);
+        btn.title = hid ? '展开侧边栏（Ctrl+G）' : '收起侧边栏（Ctrl+G）';
+      }
+      btn.addEventListener('click', function () {
+        var hid = !layout.classList.contains('side-hidden');
+        try { localStorage.setItem(KEY, hid ? '1' : '0'); } catch (e) {}
+        apply(hid);
+      });
+      document.addEventListener('keydown', function (ev) {
+        var tg = ev.target;
+        if (tg && (tg.tagName === 'TEXTAREA' || tg.tagName === 'INPUT')) return;
+        if ((ev.ctrlKey || ev.metaKey) && (ev.key === 'g' || ev.key === 'G')) {
+          ev.preventDefault();
+          btn.click();
+        }
+      });
+      var saved = '0';
+      try { saved = localStorage.getItem(KEY) || '0'; } catch (e) {}
+      apply(saved === '1');
+    })();
+
+    // ===== 书写伙伴（白噪音 + 专注时间 + 即时排版） =====
+    (function () {
+      // 声音引擎：真实音频优先（/audio/xx.mp3），缺文件自动回退合成
+      var AC = window.AudioContext || window.webkitAudioContext;
+      var ctx = null, master = null, whiteBuf = null;
+      function ensure() {
+        if (ctx) { if (ctx.state === 'suspended') ctx.resume(); return true; }
+        if (!AC) return false;
+        ctx = new AC(); master = ctx.createGain(); master.gain.value = 0.9; master.connect(ctx.destination);
+        var len = ctx.sampleRate * 2; whiteBuf = ctx.createBuffer(1, len, ctx.sampleRate);
+        var d = whiteBuf.getChannelData(0); for (var i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+        return true;
+      }
+      function cont(ftype, freq, q) {
+        var s = ctx.createBufferSource(); s.buffer = whiteBuf; s.loop = true;
+        var f = ctx.createBiquadFilter(); f.type = ftype; f.frequency.value = freq; if (q) f.Q.value = q;
+        var g = ctx.createGain(); g.gain.value = 0; s.connect(f); f.connect(g); g.connect(master); s.start();
+        return g;
+      }
+      var synthG = null, chirpTimer = null;
+      function stopSynth() {
+        if (chirpTimer) { clearTimeout(chirpTimer); chirpTimer = null; }
+        if (synthG && ctx) { var g = synthG; synthG = null; try { g.gain.cancelScheduledValues(ctx.currentTime); g.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.4); } catch (e) {} }
+        else synthG = null;
+      }
+      function startSynth(kind) {
+        if (!ensure()) return;
+        stopSynth();
+        synthG = kind === 'rain' ? cont('highpass', 600) : kind === 'forest' ? cont('bandpass', 420, 0.8) : cont('lowpass', 220);
+        synthG.gain.linearRampToValueAtTime(kind === 'rain' ? 0.5 : 0.32, ctx.currentTime + 0.8);
+        if (kind === 'forest') {
+          (function chirp() {
+            chirpTimer = setTimeout(function () {
+              if (!ctx || !synthG) return;
+              var t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain();
+              o.type = 'sine'; o.frequency.setValueAtTime(2100 + Math.random() * 900, t);
+              o.frequency.linearRampToValueAtTime(3000 + Math.random() * 900, t + 0.09);
+              g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.045, t + 0.02); g.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+              o.connect(g); g.connect(master); o.start(t); o.stop(t + 0.22);
+              chirp();
+            }, 900 + Math.random() * 2600);
+          })();
+        }
+      }
+      var audioEl = null, usingFile = false;
+      function tryFile(url) {
+        return new Promise(function (res) {
+          var a = new Audio(); var done = false;
+          var fin = function (ok) { if (done) return; done = true; a.oncanplaythrough = null; a.onerror = null; res(ok); };
+          a.oncanplaythrough = function () { fin(true); };
+          a.onerror = function () { fin(false); };
+          a.preload = 'auto'; a.src = url; a.load();
+          setTimeout(function () { fin(false); }, 5000);
+        });
+      }
+      function applySound(name) {
+        if (audioEl) { audioEl.pause(); audioEl = null; }
+        stopSynth(); usingFile = false;
+        tryFile('/audio/' + name + '.mp3').then(function (ok) {
+          if (ok) {
+            usingFile = true;
+            audioEl = new Audio('/audio/' + name + '.mp3'); audioEl.loop = true; audioEl.volume = 0.85;
+            if (sessionOn) audioEl.play();
+          } else if (sessionOn) {
+            startSynth(name);
+          }
+          updateTitle();
+        });
+      }
+      function pauseSound() { if (audioEl) audioEl.pause(); stopSynth(); }
+      function resumeSound() { if (usingFile && audioEl) { audioEl.play(); } else { startSynth(curSound); } }
+      function keyclick() {
+        if (!ensure()) return;
+        var t = ctx.currentTime;
+        var o1 = ctx.createOscillator(); o1.type = 'triangle'; o1.frequency.value = 1850;
+        var g1 = ctx.createGain(); g1.gain.setValueAtTime(0, t); g1.gain.linearRampToValueAtTime(0.12, t + 0.003); g1.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
+        o1.connect(g1); g1.connect(master); o1.start(t); o1.stop(t + 0.05);
+        var o2 = ctx.createOscillator(); o2.type = 'triangle'; o2.frequency.value = 210;
+        var g2 = ctx.createGain(); g2.gain.setValueAtTime(0, t); g2.gain.linearRampToValueAtTime(0.10, t + 0.004); g2.gain.exponentialRampToValueAtTime(0.001, t + 0.07);
+        o2.connect(g2); g2.connect(master); o2.start(t); o2.stop(t + 0.08);
+      }
+
+      var wpPlay = document.getElementById('wpPlay'), wpTitle = document.getElementById('wpTitle'),
+          wpFill = document.getElementById('wpFill'), wpDur = document.getElementById('wpDur'),
+          wpRemain = document.getElementById('wpRemain'), wpHand = document.getElementById('wpHand');
+      var SOUND_NAME = { rain: '静默之重', forest: '耀斑', music: '吉他二重奏' };
+      var curSound = 'forest', durMin = 25, totalSec = durMin * 60, remainSec = totalSec;
+      var sessionOn = false, timerId = null, endAt = 0, FAST = false;
+      function fmt(s) { s = Math.max(0, Math.round(s)); var m = Math.floor(s / 60); return (m < 10 ? '0' : '') + m + ':' + ((s % 60) < 10 ? '0' : '') + (s % 60); }
+      function updateTitle() {
+        var fileTag = usingFile ? '' : '（合成演示 · 待上传真实音频）';
+        var fastTag = FAST ? ' ⏩' : '';
+        if (sessionOn) { wpTitle.textContent = SOUND_NAME[curSound] + ' · 专注中' + fileTag + fastTag; }
+        else if (remainSec <= 0) { wpTitle.textContent = '专注完成 · ' + durMin + ' 分钟 ✓'; }
+        else { wpTitle.textContent = SOUND_NAME[curSound] + ' · ' + durMin + ' 分钟专注' + fileTag + fastTag; }
+      }
+      function paint() {
+        wpDur.textContent = durMin + ' 分钟';
+        wpRemain.textContent = fmt(remainSec);
+        var p = totalSec ? (1 - remainSec / totalSec) : 0;
+        wpFill.style.width = (p * 100) + '%';
+        wpHand.setAttribute('transform', 'rotate(' + (p * 360) + ' 12 12)');
+      }
+      function tick() {
+        var rate = FAST ? 60 : 1;
+        remainSec = (endAt - Date.now()) / 1000 * rate;
+        if (remainSec <= 0) { remainSec = 0; paint(); finish(); return; }
+        paint();
+      }
+      function startPlay() {
+        if (!ensure()) return;
+        sessionOn = true;
+        resumeSound();
+        var rate = FAST ? 60 : 1;
+        endAt = Date.now() + remainSec / rate * 1000;
+        timerId = setInterval(tick, 200);
+        wpPlay.textContent = '❚❚';
+        updateTitle();
+      }
+      function pausePlay() {
+        sessionOn = false;
+        if (timerId) { clearInterval(timerId); timerId = null; }
+        var rate = FAST ? 60 : 1;
+        remainSec = Math.max(0, (endAt - Date.now()) / 1000 * rate);
+        pauseSound();
+        wpPlay.textContent = '▶';
+        updateTitle(); paint();
+      }
+      function finish() {
+        sessionOn = false;
+        if (timerId) { clearInterval(timerId); timerId = null; }
+        pauseSound();
+        wpPlay.textContent = '▶';
+        updateTitle();
+      }
+      function resetSession() {
+        sessionOn = false;
+        if (timerId) { clearInterval(timerId); timerId = null; }
+        pauseSound();
+        totalSec = durMin * 60; remainSec = totalSec;
+        wpPlay.textContent = '▶';
+        updateTitle(); paint();
+      }
+      wpPlay.addEventListener('click', function () {
+        if (sessionOn) { pausePlay(); return; }
+        if (remainSec <= 0) resetSession();
+        startPlay();
+      });
+      document.getElementById('wpReset').addEventListener('click', resetSession);
+      var wpSoundSeg = document.getElementById('wpSoundSeg');
+      wpSoundSeg.querySelectorAll('button').forEach(function (b) {
+        b.addEventListener('click', function () {
+          wpSoundSeg.querySelectorAll('button').forEach(function (x) { x.classList.remove('on'); });
+          b.classList.add('on');
+          curSound = b.dataset.sound;
+          applySound(curSound);
+          if (!sessionOn) updateTitle();
+        });
+      });
+      var wpDurSeg = document.getElementById('wpDurSeg');
+      wpDurSeg.querySelectorAll('button').forEach(function (b) {
+        b.addEventListener('click', function () {
+          wpDurSeg.querySelectorAll('button').forEach(function (x) { x.classList.remove('on'); });
+          b.classList.add('on');
+          durMin = parseInt(b.dataset.dur, 10);
+          resetSession();
+        });
+      });
+      document.addEventListener('keydown', function (ev) {
+        var tg = ev.target;
+        if (tg && (tg.tagName === 'TEXTAREA' || tg.tagName === 'INPUT')) return;
+        if (ev.key === 't' || ev.key === 'T') {
+          FAST = !FAST;
+          if (sessionOn) { endAt = Date.now() + remainSec / (FAST ? 60 : 1) * 1000; }
+          updateTitle();
+        }
+      });
+      updateTitle(); paint();
+
+      // Markdown 解析
+      function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+      function inline(t) {
+        t = esc(t);
+        t = t.replace(/`([^`]+)`/g, '<code>$1</code>');
+        t = t.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+        t = t.replace(/(^|[^*\w])\*([^*\n]+)\*/g, '$1<em>$2</em>');
+        t = t.replace(/~~([^~]+)~~/g, '<del>$1</del>');
+        t = t.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+        return t;
+      }
+      function parse(md) {
+        var lines = md.split('\n'), html = '', i = 0;
+        while (i < lines.length) {
+          var line = lines[i];
+          if (/^```/.test(line)) { var buf = []; i++; while (i < lines.length && !/^```/.test(lines[i])) { buf.push(lines[i]); i++; } i++; html += '<pre><code>' + esc(buf.join('\n')) + '</code></pre>'; continue; }
+          if (/^\s*---+\s*$/.test(line)) { html += '<hr>'; i++; continue; }
+          var h = line.match(/^(#{1,6})\s+(.*)$/); if (h) { var lv = h[1].length; html += '<h' + lv + '>' + inline(h[2]) + '</h' + lv + '>'; i++; continue; }
+          if (/^\s*>\s?/.test(line)) { var q = []; while (i < lines.length && /^\s*>\s?/.test(lines[i])) { q.push(lines[i].replace(/^\s*>\s?/, '')); i++; } html += '<blockquote>' + inline(q.join('<br>')) + '</blockquote>'; continue; }
+          if (/^\s*[-*]\s+/.test(line)) { var ul = []; while (i < lines.length && /^\s*[-*]\s+/.test(lines[i])) { ul.push('<li>' + inline(lines[i].replace(/^\s*[-*]\s+/, '')) + '</li>'); i++; } html += '<ul>' + ul.join('') + '</ul>'; continue; }
+          if (/^\s*\d+\.\s+/.test(line)) { var ol = []; while (i < lines.length && /^\s*\d+\.\s+/.test(lines[i])) { ol.push('<li>' + inline(lines[i].replace(/^\s*\d+\.\s+/, '')) + '</li>'); i++; } html += '<ol>' + ol.join('') + '</ol>'; continue; }
+          if (line.trim() === '') { i++; continue; }
+          var p = [];
+          while (i < lines.length && lines[i].trim() !== '' && !/^(#{1,6})\s/.test(lines[i]) && !/^\s*>\s?/.test(lines[i]) && !/^\s*[-*]\s+/.test(lines[i]) && !/^\s*\d+\.\s+/.test(lines[i]) && !/^```/.test(lines[i]) && !/^\s*---+\s*$/.test(lines[i])) { p.push(inline(lines[i])); i++; }
+          if (p.length) html += '<p>' + p.join('<br>') + '</p>';
+        }
+        return html || '<p class="ph">写点什么…（点此编辑）</p>';
+      }
+
+      // 块编辑器
+      var wpEditor = document.getElementById('wpEditor'), wpWc = document.getElementById('wpWc');
+      function fit(ta) { ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'; }
+      function countWords() { var n = 0; wpEditor.querySelectorAll('.blk').forEach(function (b) { n += (b.dataset.md || '').replace(/\s/g, '').length; }); wpWc.textContent = n + ' 字'; }
+      function renderBlock(b) {
+        var md = b.dataset.md || '';
+        b.querySelector('.rendered').innerHTML = md.trim() === '' ? '<p class="ph">写点什么…（点此编辑）</p>' : parse(md);
+        b.classList.remove('editing');
+        countWords();
+      }
+      function enterEdit(b) {
+        var ta = b.querySelector('.src'); ta.value = b.dataset.md || '';
+        b.classList.add('editing'); fit(ta); ta.focus();
+        var v = ta.value; ta.setSelectionRange(v.length, v.length);
+      }
+      function commit(b) { b.dataset.md = b.querySelector('.src').value; renderBlock(b); }
+      function newBlock(after) {
+        var b = makeBlock('');
+        after.parentNode.insertBefore(b, after.nextSibling);
+        enterEdit(b);
+      }
+      function makeBlock(md) {
+        var b = document.createElement('div'); b.className = 'blk'; b.dataset.md = md || '';
+        b.innerHTML = '<div class="rendered"></div><textarea class="src" rows="1"></textarea>';
+        b.querySelector('.rendered').addEventListener('click', function () { enterEdit(b); });
+        var ta = b.querySelector('.src');
+        ta.addEventListener('input', function () { b.dataset.md = ta.value; fit(ta); countWords(); });
+        ta.addEventListener('blur', function () { commit(b); });
+        ta.addEventListener('keydown', function (ev) {
+          if (ev.key === 'Enter' && !ev.shiftKey) {
+            ev.preventDefault();
+            if (ta.value.trim() === '') return;
+            commit(b); newBlock(b);
+          } else if (ev.key === 'Backspace' && ta.selectionStart === 0 && ta.selectionEnd === 0) {
+            var prev = b.previousElementSibling;
+            if (prev && prev.classList.contains('blk')) { ev.preventDefault(); b.remove(); enterEdit(prev); }
+          }
+        });
+        return b;
+      }
+
+      var seed = [
+        '# 白噪音+专注时间+排版',
+        '### 这是一个集三者一起的工具。',
+        '你可以在这里写作、听白噪音、专注写作25分钟。',
+        '* 它支持Markdown格式',
+        '- 写完就排版完。Markdown教程以及，读一读：[《工具箱 2：AI时代，写作就是编程。》](https://mp.weixin.qq.com/s/82u-7l75Z04l7ohQzQTQLg)',
+        '比如引用',
+        '> 我是一个引用',
+        '我是**加粗**过的',
+        '还有列表、代码块等等。然后换行要Shift+Enter，支持基本的编辑快捷键。',
+        '你可以复制`Markdown`格式，也可以复制`HTML`直接插入到公众号文章中。',
+        '对了，有任何bug，通过首页底部的联系方式告诉我。**让我们一起做好创作**。',
+        ''
+      ];
+      seed.forEach(function (md) { wpEditor.appendChild(makeBlock(md)); });
+      wpEditor.querySelectorAll('.blk').forEach(function (b) { renderBlock(b); });
+      var wpLast = wpEditor.lastElementChild; if (wpLast && (wpLast.dataset.md || '').trim() === '') enterEdit(wpLast);
+
+      wpEditor.addEventListener('keydown', function (ev) {
+        if (ev.target && ev.target.classList && ev.target.classList.contains('src')) {
+          if (ev.key.length === 1 || ev.key === 'Enter' || ev.key === 'Backspace') keyclick();
+        }
+      });
+
+      // 复制 Markdown / 复制 HTML
+      function copyText(text, btn, label) {
+        function ok() { btn.textContent = '已复制 ✓'; setTimeout(function () { btn.textContent = label; }, 1600); }
+        function legacy() {
+          var ta = document.createElement('textarea'); ta.value = text;
+          ta.style.position = 'fixed'; ta.style.opacity = '0';
+          document.body.appendChild(ta); ta.select();
+          try { document.execCommand('copy'); ok(); } catch (e) {}
+          document.body.removeChild(ta);
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(ok, legacy); }
+        else legacy();
+      }
+      function collectMd() {
+        var parts = [];
+        wpEditor.querySelectorAll('.blk').forEach(function (b) {
+          var v = (b.dataset.md || '').replace(/\s+$/, '');
+          if (v.trim() !== '') parts.push(v);
+        });
+        return parts.join('\n\n');
+      }
+      function collectHtml() {
+        var parts = [];
+        wpEditor.querySelectorAll('.blk').forEach(function (b) {
+          if ((b.dataset.md || '').trim() === '') return;
+          parts.push(b.querySelector('.rendered').innerHTML);
+        });
+        return parts.join('\n');
+      }
+      var wpCopyMd = document.getElementById('wpCopyMd');
+      wpCopyMd.addEventListener('click', function () { copyText(collectMd(), wpCopyMd, '复制 Markdown'); });
+      var wpCopyHtml = document.getElementById('wpCopyHtml');
+      wpCopyHtml.addEventListener('click', function () { copyText(collectHtml(), wpCopyHtml, '复制 HTML'); });
+    })();
+
   </script>
 
   <style is:global>
@@ -506,7 +893,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     .side li .num { font-variant-numeric: tabular-nums; color: var(--color-accent); font-weight: 700; width: 18px; flex: none; }
     .side li:hover { background: var(--soft, #f5f4f2); }
     .side li.active { background: var(--color-card-bg, #fff); color: var(--color-text, #1c1917); box-shadow: 0 1px 3px rgba(0,0,0,.06); font-weight: 700; }
-    .workspace { flex: 1; min-width: 0; padding: 34px 0 60px; }
+    .workspace { flex: 1; min-width: 0; padding: 34px 0 60px; position: relative; }
+
+    /* 侧边栏收起/展开（flomo 式隐藏栏） */
+    .side { overflow: hidden; transition: width .28s ease, opacity .2s ease; }
+    .side-title, .side li { white-space: nowrap; }
+    .tools-layout.side-hidden .side { width: 0; opacity: 0; pointer-events: none; }
+    .side-toggle { position: absolute; top: 0; left: 0; width: 30px; height: 30px; border-radius: 9px; padding: 0;
+      border: 1px solid var(--color-border, #e7e5e4); background: var(--color-card-bg, #fff); color: var(--color-text-secondary, #57534e);
+      display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 5;
+      transition: color .2s, border-color .2s, background .2s; }
+    .side-toggle:hover { color: var(--color-accent); border-color: rgba(245,80,0,.45); background: #fff7f2; }
 
     /* ============================================================
        公众号封面制作工具——全部样式收在 #pane-cover 作用域内，
@@ -669,6 +1066,71 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     #pane-quote .toast { position: fixed; left: 50%; bottom: 34px; transform: translateX(-50%) translateY(20px); background: #1c1917; color: #fff; font-size: 13px; padding: 10px 22px; border-radius: 999px; opacity: 0; pointer-events: none; transition: .25s; z-index: 99; font-family: var(--font-serif); }
     #pane-quote .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+    /* ============================================================
+       书写伙伴（白噪音 + 专注时间 + 即时排版）—— 收在 #pane-write 作用域
+       ============================================================ */
+    #pane-write .wp-wrap { max-width: 760px; margin: 0 auto; }
+    #pane-write .wp-head { margin-bottom: 16px; }
+    #pane-write .wp-brand { display: inline-block; font-size: 21px; font-weight: 700; letter-spacing: 1px;
+      background: linear-gradient(transparent 58%, rgba(245,80,0,.32) 58%); padding: 0 4px 1px; }
+    #pane-write .wp-brand em { font-style: normal; color: var(--color-accent); }
+
+    /* 英雄播放卡（方案 4） */
+    #pane-write .wp-hero { background: linear-gradient(140deg,#33261a,#211913); border-radius: 16px; padding: 18px 20px 16px; margin-bottom: 18px;
+      box-shadow: 0 12px 30px -16px rgba(28,25,23,.55); }
+    #pane-write .wp-row1 { display: flex; align-items: center; gap: 13px; margin-bottom: 14px; }
+    #pane-write .wp-play { width: 46px; height: 46px; border-radius: 50%; border: none; background: var(--color-accent); color: #fff; font-size: 15px; cursor: pointer; flex: none; font-family: inherit; }
+    #pane-write .wp-play:hover { background: #e04a00; }
+    #pane-write .wp-title { color: #f3e8d7; font-size: 15px; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #pane-write .wp-clock { width: 30px; height: 30px; flex: none; }
+    #pane-write .wp-durbox { border: 1.5px solid rgba(243,232,215,.5); color: #f3e8d7; font-size: 13px; font-weight: 700; padding: 5px 12px; border-radius: 9px; white-space: nowrap; }
+    #pane-write .wp-remain { color: #f3e8d7; font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; min-width: 52px; text-align: right; }
+    #pane-write .wp-bar { height: 5px; border-radius: 3px; background: rgba(255,255,255,.16); overflow: hidden; }
+    #pane-write .wp-bar i { display: block; height: 100%; width: 0; background: var(--color-accent); border-radius: 3px; transition: width .25s linear; }
+    #pane-write .wp-row2 { display: flex; align-items: center; gap: 7px; margin-top: 14px; flex-wrap: wrap; }
+    #pane-write #wpSoundSeg, #pane-write #wpDurSeg { display: flex; gap: 7px; }
+    #pane-write .wp-chip { font-family: inherit; font-size: 12.5px; padding: 6px 13px; border-radius: 999px; border: none; background: rgba(255,255,255,.12); color: #f3e8d7; cursor: pointer; transition: .15s; white-space: nowrap; }
+    #pane-write .wp-chip:hover { background: rgba(255,255,255,.22); }
+    #pane-write .wp-chip.on { background: var(--color-accent); color: #fff; font-weight: 700; }
+    #pane-write .wp-sep { width: 1px; height: 18px; background: rgba(255,255,255,.2); margin: 0 5px; }
+    #pane-write .wp-reset { font-family: inherit; font-size: 12.5px; font-weight: 700; padding: 6px 13px; border-radius: 999px; border: 1px solid rgba(243,232,217,.45); background: transparent; color: #f3e8d7; cursor: pointer; margin-left: auto; }
+    #pane-write .wp-reset:hover { background: rgba(255,255,255,.12); }
+    #pane-write .wp-copymd { font-family: inherit; font-size: 13.5px; font-weight: 700; padding: 9px 18px; border-radius: 11px; cursor: pointer; transition: .15s; }
+    #pane-write .wp-copymd.ghost { border: 1.5px solid var(--color-accent); color: var(--color-accent); background: #fff; }
+    #pane-write .wp-copymd.ghost:hover { background: #fff3e8; }
+    #pane-write .wp-copymd.solid { border: 1.5px solid var(--color-accent); background: var(--color-accent); color: #fff; box-shadow: 0 4px 12px -4px rgba(245,80,0,.5); }
+    #pane-write .wp-copymd.solid:hover { background: #e04a00; border-color: #e04a00; }
+
+    #pane-write .wp-paper { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 16px; padding: 30px 34px 40px; box-shadow: 0 10px 30px -16px rgba(28,25,23,.18); }
+    #pane-write #wpEditor { font-size: 18px; line-height: 1.85; }
+    #pane-write .blk { margin: 0 0 2px; }
+    #pane-write .blk .rendered { cursor: text; padding: 1px 2px; border-radius: 6px; transition: background .15s; }
+    #pane-write .blk .rendered:hover { background: rgba(245,80,0,.05); }
+    #pane-write .blk .src { display: none; width: 100%; border: none; outline: none; background: transparent; resize: none; overflow: hidden;
+      font-family: inherit; font-size: 18px; line-height: 1.85; color: var(--color-text); caret-color: var(--color-accent); padding: 1px 2px; }
+    #pane-write .blk.editing .src { display: block; }
+    #pane-write .blk.editing .rendered { display: none; }
+
+    /* 渲染样式（与站点品牌一致） */
+    #pane-write #wpEditor h1 { font-size: 26px; font-weight: 700; line-height: 1.4; text-align: center; margin: 18px 0 12px; }
+    #pane-write #wpEditor h2 { font-size: 22px; font-weight: 700; line-height: 1.35; margin: 14px 0 8px; }
+    #pane-write #wpEditor h3 { font-size: 19px; font-weight: 700; margin: 12px 0 6px; }
+    #pane-write #wpEditor h4, #pane-write #wpEditor h5, #pane-write #wpEditor h6 { font-weight: 700; margin: 8px 0 4px; }
+    #pane-write #wpEditor p { margin: 6px 0; }
+    #pane-write #wpEditor strong { color: var(--color-accent); font-weight: 700; }
+    #pane-write #wpEditor em { font-style: italic; }
+    #pane-write #wpEditor del { opacity: .6; }
+    #pane-write #wpEditor a { color: var(--color-accent); text-decoration: none; border-bottom: 1px solid rgba(245,80,0,.4); }
+    #pane-write #wpEditor blockquote { margin: 12px 0; padding: 2px 0 2px 16px; border-left: 3px solid #d6d3d1; background: none; border-radius: 0; color: #44403c; }
+    #pane-write #wpEditor ul, #pane-write #wpEditor ol { margin: 8px 0; padding-left: 26px; }
+    #pane-write #wpEditor li { margin: 3px 0; }
+    #pane-write #wpEditor code { font-family: var(--font-mono, ui-monospace,SFMono-Regular,Menlo,Consolas,monospace); font-size: 14px; background: #f3efe9; padding: 2px 6px; border-radius: 6px; }
+    #pane-write #wpEditor pre { background: #f3efe9; border-radius: 10px; padding: 14px 16px; overflow: auto; }
+    #pane-write #wpEditor pre code { background: none; padding: 0; font-size: 14px; }
+    #pane-write #wpEditor hr { border: none; border-top: 1px solid var(--color-border); margin: 16px 0; }
+    #pane-write #wpEditor .ph { color: #b8b2aa; font-style: normal; }
+    #pane-write .wp-foot { margin-top: 18px; display: flex; align-items: center; gap: 8px; }
+    #pane-write .wp-wc { margin-left: auto; font-size: 12.5px; color: var(--color-text-secondary); }
     @media (max-width: 980px) {
       #pane-quote .ws { flex-direction: column; }
       #pane-quote .props { width: 100%; border-left: none; border-top: 1px solid var(--color-border, #e7e5e4); }
@@ -682,6 +1144,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
     @media (max-width: 640px) {
       .tools-layout { flex-direction: column; }
+      .tools-layout.side-hidden .side { display: none; }
       .side { width: 100%; position: static; padding: 24px 0 0; }
       .workspace { padding-top: 20px; }
     }
