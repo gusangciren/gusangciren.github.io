@@ -25,16 +25,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
               <span class="pv-tag">头条 900 × 383 · 导出 2 倍像素</span>
             </div>
 
-            <p class="pv-tip"><b>拿到图片：</b>点「下载图片」直接下高清图，公众号后台上传即可；或点「复制图片」后 Ctrl+V 粘贴。<br>头条文案支持 <b>**强调**</b> 橙红高亮（如 <b>**价值**</b>，是有效需求的满足。）。</p>
+            <p class="pv-tip"><b>拿到图片：</b>点「下载图片」直接下高清图，公众号后台上传即可；或点「复制图片」后 Ctrl+V 粘贴。<br>封面文案<b>直接在卡片上写</b>；想让某词橙红加粗，用 <b>**文字**</b> 包住（如 <b>**价值**</b>），写完后点一下别处高亮即生效。</p>
           </div>
 
           <!-- 设置列 -->
           <div class="set-col">
             <div class="set-group composer">
-              <span class="fld-label">头条文案（支持 <b>**强调**</b>）</span>
-              <div class="ta-box">
-                <textarea id="f-headline" rows="3">**价值**，是有效需求的满足。</textarea>
-              </div>
+              <span class="fld-label">在左侧卡片上直接写文案</span>
+              <div class="cmp-hint tip-em">✍️ 点左侧封面卡片即可直接打字。想让某词<b>橙红加粗</b>，用两个星号包住，例如 <b>**价值**</b> → 橙红强调。空卡片有占位提示，写完后点一下别处高亮即生效。</div>
 
               <div class="cmp-div"></div>
 
@@ -94,7 +92,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                     <div class="t-handle" id="qcHandle">@Gusang</div>
                   </div>
                 </div>
-                <div class="t-text" id="qcText" contenteditable="true" spellcheck="false" data-ph="今天想分享什么？在这里输入···">六个月的专注，可以修复过去五年的混乱。</div>
+                <div class="t-text" id="qcText" contenteditable="true" spellcheck="false" data-ph="今天想分享什么？"></div>
               </div>
               </div>
             </div>
@@ -197,7 +195,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
         function render() {
           card.className = 'tcard ' + state.scheme + ' ' + state.ratio;
-          if (document.activeElement !== textEl) textEl.textContent = state.text || '';
+          if (document.activeElement !== textEl) {
+            textEl.textContent = state.text || '';
+            textEl.classList.toggle('is-empty', !/\S/.test(state.text || ''));
+          }
           $('#qcName').textContent = state.name || '名字';
           $('#qcHandle').textContent = state.handle || '@handle';
           $('#qcCheck').style.display = state.check ? 'flex' : 'none';
@@ -230,6 +231,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         textEl.addEventListener('input', function () {
           var raw = textEl.innerText.replace(/\n$/, '');
           state.text = /\S/.test(raw) ? raw : '';
+          textEl.classList.toggle('is-empty', !/\S/.test(textEl.textContent));
           textEl.style.fontSize = textSize(state.text.length) + 'px';
         });
         nameIn.addEventListener('input', function () { state.name = nameIn.value; render(); saveProfile(); });
@@ -310,7 +312,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       var DEFAULT_AVATAR = '/images/logo-180x180.png';
       var DEFAULT_NAME = '像企业家一样写作';
 
-      var headlineEl = document.getElementById('f-headline');
+      var headlineRaw = '';
       var nameEl = document.getElementById('f-name');
       var tgAvatar = document.getElementById('tg-avatar');
       var tgName = document.getElementById('tg-name');
@@ -346,7 +348,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       }
       function data() {
         return {
-          headline: headlineEl.value,
+          headline: headlineRaw,
           frameColor: frameVal,
           avatar: avatar,
           name: nameEl.value || DEFAULT_NAME,
@@ -366,11 +368,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           brand += '</div>';
         }
         el.innerHTML = '<div class="glow"></div>' + frame +
-          '<div class="cv-inner"><h1 class="ctitle" style="font-size:' + titleSize(cleanHL(raw).length) + 'px">' + renderTitle(raw) + '</h1>' + brand + '</div>';
+          '<div class="cv-inner"><h1 class="ctitle" id="ctitle90" contenteditable="true" spellcheck="false" data-ph="我的**标题**····" style="font-size:' + titleSize(cleanHL(raw).length) + 'px">' + renderTitle(raw) + '</h1>' + brand + '</div>';
         return el;
       }
       function render() {
-        wrap90.innerHTML = ''; wrap90.appendChild(build90(data()));
+        var ae = document.activeElement;
+        if (ae && ae.classList && ae.classList.contains('ctitle')) return; // 卡片聚焦时不覆盖，保光标
+        wrap90.innerHTML = ''; var el = build90(data()); wrap90.appendChild(el);
+        if (!headlineRaw.trim()) { var ct = el.querySelector('.ctitle'); if (ct) ct.classList.add('is-empty'); }
       }
       function fit() {
         var w = wrap90.parentElement.clientWidth || 900;
@@ -427,7 +432,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         setTimeout(function () { btn.textContent = t; btn.disabled = false; }, 1800);
       }
 
-      headlineEl.addEventListener('input', render);
+      wrap90.addEventListener('input', function (e) {
+        if (e.target && e.target.classList && e.target.classList.contains('ctitle')) {
+          headlineRaw = e.target.textContent;
+          e.target.classList.toggle('is-empty', headlineRaw.trim().length === 0);
+        }
+      });
+      wrap90.addEventListener('focusout', function (e) {
+        if (e.target && e.target.classList && e.target.classList.contains('ctitle')) {
+          headlineRaw = e.target.textContent; render(); // 失焦后把 **强调** 渲染成橙红 <em>
+        }
+      });
       document.querySelectorAll('#seg-frame .fr-dot').forEach(function (b) {
         b.addEventListener('click', function () {
           document.querySelectorAll('#seg-frame .fr-dot').forEach(function (x) { x.classList.remove('on'); });
@@ -511,6 +526,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     #pane-cover .cv-inner { justify-content: center; padding: 0 48px 0 84px; }
     #pane-cover .ctitle { font-weight: 700; line-height: 1.32; color: #fff; margin: 0; max-width: 760px; }
     #pane-cover .ctitle em { font-style: normal; color: #F55000; }
+    #pane-cover .ctitle { cursor: text; outline: none; }
+    #pane-cover .ctitle.is-empty::before { content: attr(data-ph); color: rgba(255,255,255,.42); font-weight: 400; }
+    #pane-cover .ctitle.is-empty::after { content: '|'; margin-left: 2px; color: rgba(255,255,255,.7); font-weight: 400; animation: cv-blink 1.1s steps(1) infinite; }
+    @keyframes cv-blink { 0%, 55% { opacity: .7; } 56%, 100% { opacity: 0; } }
+    #pane-cover .tip-em { background: rgba(245,80,0,.05); border: 1px solid rgba(245,80,0,.14); border-radius: 10px; padding: 10px 12px; }
+    #pane-cover .tip-em b { color: var(--color-accent); }
     #pane-cover .brandrow { display: flex; align-items: center; gap: 12px; margin-top: 30px; }
     #pane-cover .clogo { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex: none; box-shadow: 0 0 0 2px rgba(245,80,0,.4); }
     #pane-cover .bn { font-weight: 700; font-size: 15px; color: #fff; }
@@ -625,11 +646,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     #pane-quote .t-check svg { width: 100%; height: 100%; fill: #1d9bf0; display: block; }
     #pane-quote .t-handle { font-size: 22px; line-height: 1.3; margin-top: 6px; }
     #pane-quote .t-text { line-height: 1.62; font-weight: 500; word-break: break-word; white-space: pre-wrap; outline: none; cursor: text; }
-    #pane-quote .t-text:empty::before { content: attr(data-ph); opacity: .3; }
-    #pane-quote .t-text:empty::after { content: '|'; margin-left: 4px; opacity: .5; font-weight: 400; animation: qc-blink 1.1s steps(1) infinite; }
+    #pane-quote .t-text:empty::before, #pane-quote .t-text.is-empty::before { content: attr(data-ph); opacity: .3; }
+    #pane-quote .t-text:empty::after, #pane-quote .t-text.is-empty::after { content: '|'; margin-left: 4px; opacity: .5; font-weight: 400; animation: qc-blink 1.1s steps(1) infinite; }
     @keyframes qc-blink { 0%, 55% { opacity: .5; } 56%, 100% { opacity: 0; } }
     /* 导出时隐藏占位提示与光标，不进图片 */
-    #pane-quote #qc-stage .t-text:empty::before, #pane-quote #qc-stage .t-text:empty::after { content: none; }
+    #pane-quote #qc-stage .t-text:empty::before, #pane-quote #qc-stage .t-text:empty::after,
+    #pane-quote #qc-stage .t-text.is-empty::before, #pane-quote #qc-stage .t-text.is-empty::after { content: none; }
     #pane-quote .v-light { background: #fff; color: #0f1419; }
     #pane-quote .v-light .t-handle { color: #536471; }
     #pane-quote .v-dark { background: #000; color: #e7e9ea; }

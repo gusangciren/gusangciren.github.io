@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeader from '../components/SectionHeader.astro';
 import { getCollection } from 'astro:content';
 
 const books = await getCollection('books');
@@ -37,12 +38,12 @@ function titleWithBrackets(name: string) {
 ---
 
 <BaseLayout
-  title="书籍 — 像企业家一样写作"
+  title="书籍作品 — 像企业家一样写作"
   description="免费在线读完的书：完整章节、金句摘录与实操方法，打开即读，无需注册。"
 >
   <div class="book-page">
     <div class="books-header">
-      <h1>书籍</h1>
+      <SectionHeader title="书籍作品" icon="book" />
       <p>{books.length} 本可以直接在站内读完的书。不用注册，不用付费，点开就能读。</p>
     </div>
 
@@ -131,10 +132,7 @@ function titleWithBrackets(name: string) {
     text-align: center;
     margin-bottom: 44px;
   }
-  .books-header h1 {
-    font-family: var(--font-serif);
-    font-size: 1.8rem;
-    font-weight: 700;
+  .books-header :global(.section-header) {
     margin-bottom: 6px;
   }
   .books-header p {
