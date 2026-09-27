@@ -14,10 +14,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </aside>
 
     <main class="workspace">
-      <button class="side-toggle" id="sideToggle" title="收起侧边栏（Ctrl+G）" aria-label="收起或展开侧边栏">
-        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
-          <line x1="2.5" y1="3.5" x2="13.5" y2="3.5"/><line x1="2.5" y1="8" x2="13.5" y2="8"/><line x1="2.5" y1="12.5" x2="13.5" y2="12.5"/>
+      <button class="side-handle" id="sideToggle" type="button" aria-label="收起侧边栏" aria-expanded="true" title="收起侧边栏（Ctrl+G）" data-tip="收起侧边栏 · Ctrl+G">
+        <svg class="chev" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="10 3 4 8 10 13"></polyline>
         </svg>
+        <span class="lbl">工具箱</span>
       </button>
       <!-- 1) 公众号封面制作 -->
       <section class="pane" id="pane-cover">
@@ -557,7 +558,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       render(); // 首次渲染
     })();
 
-    // ===== 侧边栏收起/展开（flomo 式隐藏栏 · Ctrl+G · 记忆状态） =====
+    // ===== 侧边栏收起/展开（边界抽屉把手 · Ctrl+G · 记忆状态） =====
     (function () {
       var layout = document.querySelector('.tools-layout');
       var btn = document.getElementById('sideToggle');
@@ -565,7 +566,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       var KEY = 'toolsSideHidden';
       function apply(hid) {
         layout.classList.toggle('side-hidden', hid);
-        btn.title = hid ? '展开侧边栏（Ctrl+G）' : '收起侧边栏（Ctrl+G）';
+        btn.setAttribute('aria-expanded', hid ? 'false' : 'true');
+        btn.setAttribute('aria-label', hid ? '展开侧边栏' : '收起侧边栏');
+        btn.title = hid ? '展开侧边栏 · Ctrl+G' : '收起侧边栏 · Ctrl+G';
+        btn.setAttribute('data-tip', hid ? '展开侧边栏 · Ctrl+G' : '收起侧边栏 · Ctrl+G');
       }
       btn.addEventListener('click', function () {
         var hid = !layout.classList.contains('side-hidden');
@@ -574,7 +578,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       });
       document.addEventListener('keydown', function (ev) {
         var tg = ev.target;
-        if (tg && (tg.tagName === 'TEXTAREA' || tg.tagName === 'INPUT')) return;
+        if (tg && (tg.tagName === 'TEXTAREA' || tg.tagName === 'INPUT' || tg.isContentEditable)) return;
         if ((ev.ctrlKey || ev.metaKey) && (ev.key === 'g' || ev.key === 'G')) {
           ev.preventDefault();
           btn.click();
@@ -904,17 +908,31 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     .side li .num { font-variant-numeric: tabular-nums; color: var(--color-accent); font-weight: 700; width: 18px; flex: none; }
     .side li:hover { background: var(--soft, #f5f4f2); }
     .side li.active { background: var(--color-card-bg, #fff); color: var(--color-text, #1c1917); box-shadow: 0 1px 3px rgba(0,0,0,.06); font-weight: 700; }
-    .workspace { flex: 1; min-width: 0; padding: 34px 0 60px; position: relative; }
+    .workspace { flex: 1; min-width: 0; padding: 34px 0 60px 24px; position: relative; }
 
     /* 侧边栏收起/展开（flomo 式隐藏栏） */
     .side { overflow: hidden; transition: width .28s ease, opacity .2s ease; }
     .side-title, .side li { white-space: nowrap; }
     .tools-layout.side-hidden .side { width: 0; opacity: 0; pointer-events: none; }
-    .side-toggle { position: absolute; top: 0; left: 0; width: 30px; height: 30px; border-radius: 9px; padding: 0;
-      border: 1px solid var(--color-border, #e7e5e4); background: var(--color-card-bg, #fff); color: var(--color-text-secondary, #57534e);
-      display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 5;
-      transition: color .2s, border-color .2s, background .2s; }
-    .side-toggle:hover { color: var(--color-accent); border-color: rgba(245,80,0,.45); background: #fff7f2; }
+    /* 常驻双向把手：开/合同一个控件，永远在侧栏与内容区的边界上（优化版） */
+    .side-handle { position: absolute; left: 0; top: 18px; width: 24px; padding: 10px 0;
+      border: 1px solid var(--color-border, #e7e5e4); border-left: none; background: var(--color-card-bg, #fff);
+      color: var(--color-text-secondary, #57534e); border-radius: 0 12px 12px 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px;
+      cursor: pointer; z-index: 6; box-shadow: 2px 0 8px rgba(0,0,0,.06);
+      transition: color .2s, border-color .2s, background .2s, box-shadow .2s; font-family: var(--font-serif, serif); }
+    .side-handle:hover { color: #fff; background: var(--color-accent, #F55000); border-color: var(--color-accent, #F55000); box-shadow: 2px 0 14px rgba(245,80,0,.32); }
+    .side-handle .chev { width: 15px; height: 15px; flex: none; transition: transform .25s ease; }
+    .tools-layout.side-hidden .side-handle .chev { transform: rotate(180deg); }
+    /* 收起态：竖排「工具箱」标签，明确告知点它能展开工具箱 */
+    .side-handle .lbl { display: none; writing-mode: vertical-rl; letter-spacing: 3px; font-size: 12px; font-weight: 700; line-height: 1; }
+    .tools-layout.side-hidden .side-handle .lbl { display: block; }
+    /* 悬浮气泡提示 */
+    .side-handle::after { content: attr(data-tip); position: absolute; left: calc(100% + 13px); top: 50%; transform: translateY(-50%) translateX(-6px);
+      background: #1c1917; color: #f5f3f0; font-size: 12px; white-space: nowrap; padding: 7px 11px; border-radius: 9px;
+      opacity: 0; pointer-events: none; transition: opacity .18s, transform .18s; z-index: 30; box-shadow: 0 6px 18px rgba(0,0,0,.22); font-family: var(--font-serif, serif); }
+    .side-handle::before { content: ''; position: absolute; left: calc(100% + 7px); top: 50%; transform: translateY(-50%) translateX(-6px);
+      border: 6px solid transparent; border-right-color: #1c1917; opacity: 0; transition: opacity .18s, transform .18s; z-index: 30; pointer-events: none; }
+    .side-handle:hover::after, .side-handle:hover::before { opacity: 1; transform: translateY(-50%) translateX(0); }
     /* 收起侧栏时：封面内容居中收束成「专注视图」，预览/提示/设置三块同宽对齐 */
     .tools-layout.side-hidden .workspace { padding-left: 40px; padding-right: 40px; }
     .tools-layout.side-hidden #pane-cover .cover-editor { max-width: 760px; width: 100%; margin: 0 auto; }
