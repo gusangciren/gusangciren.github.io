@@ -1,5 +1,36 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+/* 随机金句库：构建时从已发布的 blog 文章与 books 书集里自动抽句，发文越多库越大 */
+let diceQuotes = [];
+try {
+  const posts = await getCollection('blog');
+  const chapters = await getCollection('books');
+  const pool = new Set();
+  const pick = (body) => {
+    if (!body) return;
+    const text = String(body)
+      .replace(/^---[\s\S]*?---/, '')
+      .replace(/```[\s\S]*?```/g, ' ')
+      .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
+      .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+      .replace(/[`>*#_~|]/g, '');
+    text.split(/[。！？\n]/).forEach((raw) => {
+      const s = raw.trim().replace(/^["'「『《（(【\s]+/, '').replace(/["'」』》》）)】\s]+$/, '');
+      if (s.length >= 8 && s.length <= 42 && /[\u4e00-\u9fa5]/.test(s) && !/https?:|@|\/\/|^\d+$/.test(s)) pool.add(s);
+    });
+  };
+  posts.forEach((p) => pick(p.body));
+  chapters.forEach((c) => pick(c.body));
+  diceQuotes = [...pool];
+  /* 控制体积：全站可抽出上万句，随机取 260 句嵌入页面（每次构建换一批，像换新句库） */
+  for (let i = diceQuotes.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [diceQuotes[i], diceQuotes[j]] = [diceQuotes[j], diceQuotes[i]];
+  }
+  diceQuotes = diceQuotes.slice(0, 260);
+} catch (e) { diceQuotes = []; }
 ---
 
 <BaseLayout title="工具箱 · 像企业家一样写作">
@@ -14,10 +45,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </aside>
 
     <main class="workspace">
-      <div class="tools-intro">
-        <h1 class="ti-title">创作工具箱</h1>
-        <p class="ti-sub">三个工具，一条创作流 —— 先写、再做成卡片、最后产出公众号封面。点左侧切换，或按 Ctrl+G 收起侧栏。</p>
-      </div>
       <button class="side-handle" id="sideToggle" type="button" aria-label="收起侧边栏" aria-expanded="true" title="收起侧边栏（Ctrl+G）" data-tip="收起侧边栏 · Ctrl+G">
         <svg class="chev" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <polyline points="10 3 4 8 10 13"></polyline>
@@ -43,6 +70,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                   <button class="fr-dot c-red on" data-v="#F53F3F" title="红" aria-label="红"></button>
                   <button class="fr-dot c-ora" data-v="#F55000" title="橙" aria-label="橙"></button>
                   <button class="fr-dot c-none" data-v="" title="无">无</button>
+                </div>
+                <span class="fld-label" style="margin-top:14px">版式 · 一键换排版</span>
+                <div class="lay-seg" id="seg-layout">
+                  <button class="lay-btn on" data-l="a" title="经典：大字居左、垂直居中">经典</button>
+                  <button class="lay-btn" data-l="b" title="居中：标题与落款全部居中">居中</button>
                 </div>
                 <div class="cv-ex-row">
                   <button class="ex-btn copy" data-t="90">复制图片</button>
@@ -122,6 +154,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
               </div>
             </div>
             <div class="field">
+              <label class="fld-label">灵感</label>
+              <button class="btn sm" id="qcDice" style="width:100%" data-quotes={JSON.stringify(diceQuotes)}>🎲 随机一句</button>
+              <div class="cmp-hint">点一下随机挑一句——内置句库 + 你已发布的文章和书，发文越多句子越多。</div>
+            </div>
+            <div class="field">
               <label class="fld-label">头像</label>
               <div class="ava-row">
                 <div class="ava-prev" id="qcAvaPrev"><span>人</span></div>
@@ -159,8 +196,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <!-- 3) 书写伙伴（白噪音 + 专注时间 + 即时排版） -->
       <section class="pane" id="pane-write" hidden>
         <div class="wp-wrap">
-          <div class="wp-head"><span class="wp-brand">书写<em>伙伴</em></span></div>
-
           <div class="wp-hero" id="wpPlayer">
             <div class="wp-row1">
               <div class="wp-left">
@@ -323,6 +358,50 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         handleIn.addEventListener('input', function () { state.handle = handleIn.value; render(); saveProfile(); });
         checkIn.addEventListener('change', function () { state.check = checkIn.checked; render(); });
 
+        /* 随机金句：内置句库 + 构建时从已发布文章/书集抽取的句子（data-quotes），合并去重 */
+        var QUOTES = (function () {
+          var base = [
+          '写作，是把混乱的想法一个字一个字排好队。',
+          '你不需要灵感，你需要坐下来。',
+          '每天写一点，比偶尔写一篇更有力量。',
+          '写完，比写得好更重要。',
+          '别人买的不是你的文字，是你看世界的方式。',
+          '先把故事讲清楚，再谈技巧。',
+          '真正的专业，是把简单的事重复做。',
+          '你的经历，就是你最深的护城河。',
+          '别等准备好，边做边准备。',
+          '写作是思考的显影液。',
+          '一句话能说清的事，不要用一段话。',
+          '慢就是快，少就是多。',
+          '作品会替你说话，在你不在场的时候。',
+          '把注意力放在一件事上，你就已经赢了一半。',
+          '公开写作，是给自己的思考装上一个截止日期。',
+          '你写的每一篇，都在为下一篇铺路。',
+          '好文章是改出来的，不是等出来的。',
+          '真诚比技巧更难，也更值钱。',
+          '别追热点，去追那些十年后还有人在意的问题。',
+          '先写给自己，再写给世界。',
+          '一个人能持续做下去的事，才叫事业。',
+          '复杂是敌人，清楚是善意。',
+          '你今天写下的字，是明天别人的路标。',
+          '想法不值钱，做完才值钱。'
+          ];
+          var extra = [];
+          try { extra = JSON.parse(document.getElementById('qcDice').getAttribute('data-quotes') || '[]') || []; } catch (e) {}
+          return base.concat(extra.filter(function (q) { return base.indexOf(q) === -1; }));
+        })();
+        var lastQ = -1;
+        document.getElementById('qcDice').addEventListener('click', function () {
+          var i = lastQ;
+          if (QUOTES.length > 1) { while (i === lastQ) { i = Math.floor(Math.random() * QUOTES.length); } }
+          else { i = 0; }
+          lastQ = i;
+          if (document.activeElement === textEl) textEl.blur();
+          state.text = QUOTES[i];
+          render();
+          toast('换了一句 · 可继续点，或直接在卡片上改');
+        });
+
         document.getElementById('qcAvaUp').addEventListener('click', function () { document.getElementById('qcAvaFile').click(); });
         document.getElementById('qcAvaFile').addEventListener('change', function (e) {
           var f = e.target.files && e.target.files[0]; if (!f) return;
@@ -410,6 +489,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       var fileAvatar = document.getElementById('f-avatar');
       var wrap90 = document.getElementById('wrap90');
       var frameVal = '#F53F3F';
+      var layoutVal = 'a';
       var avatar = avatarThumb.src || DEFAULT_AVATAR;
 
       try {
@@ -445,12 +525,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           name: nameEl.value || DEFAULT_NAME,
           url: urlEl.value.trim(),
           showAvatar: tgAvatar.checked,
-          showName: tgName.checked
+          showName: tgName.checked,
+          layout: layoutVal
         };
       }
       function build90(d) {
         var raw = d.headline || '';
-        var el = document.createElement('div'); el.className = 'cover90';
+        var el = document.createElement('div'); el.className = 'cover90 lay-' + (d.layout || 'a');
         var frame = d.frameColor ? '<div class="frame" style="border-color:' + esc(d.frameColor) + '"></div>' : '';
         var brand = '';
         if (d.showAvatar || d.showName) {
@@ -530,6 +611,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           document.querySelectorAll('#seg-frame .fr-dot').forEach(function (x) { x.classList.remove('on'); });
           b.classList.add('on');
           frameVal = b.dataset.v || '';
+          render();
+        });
+      });
+      document.querySelectorAll('#seg-layout .lay-btn').forEach(function (b) {
+        b.addEventListener('click', function () {
+          document.querySelectorAll('#seg-layout .lay-btn').forEach(function (x) { x.classList.remove('on'); });
+          b.classList.add('on');
+          layoutVal = b.dataset.l || 'a';
           render();
         });
       });
@@ -680,14 +769,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       function pauseSound() { if (audioEl) audioEl.pause(); stopSynth(); }
       function resumeSound() { if (usingFile && audioEl) { audioEl.play(); } else { startSynth(curSound); } }
       function keyclick() {
-        if (!ensure()) return;
-        var t = ctx.currentTime;
-        var o1 = ctx.createOscillator(); o1.type = 'triangle'; o1.frequency.value = 1850;
-        var g1 = ctx.createGain(); g1.gain.setValueAtTime(0, t); g1.gain.linearRampToValueAtTime(0.12, t + 0.003); g1.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
-        o1.connect(g1); g1.connect(master); o1.start(t); o1.stop(t + 0.05);
-        var o2 = ctx.createOscillator(); o2.type = 'triangle'; o2.frequency.value = 210;
-        var g2 = ctx.createGain(); g2.gain.setValueAtTime(0, t); g2.gain.linearRampToValueAtTime(0.10, t + 0.004); g2.gain.exponentialRampToValueAtTime(0.001, t + 0.07);
-        o2.connect(g2); g2.connect(master); o2.start(t); o2.stop(t + 0.08);
+        /* 打字音已按需求整体关闭 */
       }
 
       var wpPlay = document.getElementById('wpPlay'), wpTitle = document.getElementById('wpTitle'),
@@ -738,6 +820,35 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         wpPlay.classList.remove('playing');
         updateTitle(); paint();
       }
+      /* 专注全程不被打断 → 礼炮：从屏幕左右下角喷出彩纸（横幅已按需求去掉） */
+      function celebrate(min) {
+        var layer = document.createElement('div');
+        layer.className = 'wp-confetti';
+        document.body.appendChild(layer);
+        var colors = ['#F55000', '#ff8a3d', '#ffd166', '#ffffff', '#ffb703', '#ff5c5c', '#ffd9b3'];
+        var canAnim = typeof Element.prototype.animate === 'function';
+        if (canAnim) {
+          for (var i = 0; i < 120; i++) {
+            var p = document.createElement('i');
+            p.className = 'cf-piece';
+            var fromLeft = i % 2 === 0;
+            p.style.background = colors[(Math.random() * colors.length) | 0];
+            p.style.left = (fromLeft ? (1 + Math.random() * 6) : (93 + Math.random() * 6)) + '%';
+            p.style.width = (6 + Math.random() * 6) + 'px';
+            p.style.height = (10 + Math.random() * 10) + 'px';
+            layer.appendChild(p);
+            var dx = (fromLeft ? 1 : -1) * (140 + Math.random() * 300);
+            var dy = -(300 + Math.random() * 340);
+            var rot = Math.random() * 900 - 450;
+            p.animate([
+              { transform: 'translate(0,0) rotate(0deg)', opacity: 1 },
+              { transform: 'translate(' + dx + 'px,' + dy + 'px) rotate(' + rot + 'deg)', opacity: 1, offset: .5 },
+              { transform: 'translate(' + (dx * 1.2) + 'px,' + (dy + 520) + 'px) rotate(' + (rot * 1.7) + 'deg)', opacity: 0 }
+            ], { duration: 1500 + Math.random() * 1100, delay: Math.random() * 320, easing: 'cubic-bezier(.15,.7,.3,1)', fill: 'forwards' });
+          }
+        }
+        setTimeout(function () { if (layer.parentNode) layer.parentNode.removeChild(layer); }, 3400);
+      }
       function finish() {
         sessionOn = false;
         if (timerId) { clearInterval(timerId); timerId = null; }
@@ -745,6 +856,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         wpPlay.textContent = '▶';
         wpPlay.classList.remove('playing');
         updateTitle();
+        celebrate(durMin);
       }
       function resetSession() {
         sessionOn = false;
@@ -828,8 +940,29 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
       // Markdown 解析
       function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-      function inline(t) {
+      /* 公众号专用：全部内联样式（公众号会剥掉 <style> 与外部 class，只认 style 属性） */
+      var WX = {
+        p: 'margin:0 0 20px;font-size:16px;line-height:1.8;color:#3f3f3f;letter-spacing:.03em;text-align:justify;word-break:break-word;',
+        h: 'font-weight:700;color:#1a1a1a;line-height:1.45;margin:32px 0 16px;letter-spacing:.02em;',
+        bq: 'border-left:3px solid #F55000;background:#faf7f5;padding:14px 16px;margin:0 0 20px;color:#6b6b6b;font-size:15px;line-height:1.8;border-radius:0 6px 6px 0;',
+        ul: 'margin:0 0 20px;padding-left:24px;color:#3f3f3f;font-size:16px;line-height:1.85;',
+        li: 'margin:0 0 8px;',
+        pre: 'background:#1f1b18;color:#ece5de;padding:15px 16px;border-radius:8px;font-size:13px;line-height:1.75;white-space:pre-wrap;word-break:break-all;margin:0 0 20px;font-family:Menlo,Consolas,monospace;',
+        code: 'background:#f4f0ec;padding:2px 6px;border-radius:4px;font-size:14px;color:#b1541f;',
+        hr: 'height:1px;background:#ebe5df;margin:30px 0;font-size:0;line-height:0;',
+        a: 'color:#F55000;text-decoration:none;border-bottom:1px solid rgba(245,80,0,.45);',
+        strong: 'font-weight:700;color:#1a1a1a;'
+      };
+      function inline(t, wx) {
         t = esc(t);
+        if (wx) {
+          t = t.replace(/`([^`]+)`/g, '<span style="' + WX.code + '">$1</span>');
+          t = t.replace(/\*\*([^*]+)\*\*/g, '<strong style="' + WX.strong + '">$1</strong>');
+          t = t.replace(/(^|[^*\w])\*([^*\n]+)\*/g, '$1<em style="font-style:italic;">$2</em>');
+          t = t.replace(/~~([^~]+)~~/g, '<span style="text-decoration:line-through;color:#999;">$1</span>');
+          t = t.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" style="' + WX.a + '">$1</a>');
+          return t;
+        }
         t = t.replace(/`([^`]+)`/g, '<code>$1</code>');
         t = t.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
         t = t.replace(/(^|[^*\w])\*([^*\n]+)\*/g, '$1<em>$2</em>');
@@ -837,20 +970,57 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         t = t.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
         return t;
       }
-      function parse(md) {
+      function parse(md, wx) {
         var lines = md.split('\n'), html = '', i = 0;
         while (i < lines.length) {
           var line = lines[i];
-          if (/^```/.test(line)) { var buf = []; i++; while (i < lines.length && !/^```/.test(lines[i])) { buf.push(lines[i]); i++; } i++; html += '<pre><code>' + esc(buf.join('\n')) + '</code></pre>'; continue; }
-          if (/^\s*---+\s*$/.test(line)) { html += '<hr>'; i++; continue; }
-          var h = line.match(/^(#{1,6})\s+(.*)$/); if (h) { var lv = h[1].length; html += '<h' + lv + '>' + inline(h[2]) + '</h' + lv + '>'; i++; continue; }
-          if (/^\s*>\s?/.test(line)) { var q = []; while (i < lines.length && /^\s*>\s?/.test(lines[i])) { q.push(lines[i].replace(/^\s*>\s?/, '')); i++; } html += '<blockquote>' + inline(q.join('<br>')) + '</blockquote>'; continue; }
-          if (/^\s*[-*]\s+/.test(line)) { var ul = []; while (i < lines.length && /^\s*[-*]\s+/.test(lines[i])) { ul.push('<li>' + inline(lines[i].replace(/^\s*[-*]\s+/, '')) + '</li>'); i++; } html += '<ul>' + ul.join('') + '</ul>'; continue; }
-          if (/^\s*\d+\.\s+/.test(line)) { var ol = []; while (i < lines.length && /^\s*\d+\.\s+/.test(lines[i])) { ol.push('<li>' + inline(lines[i].replace(/^\s*\d+\.\s+/, '')) + '</li>'); i++; } html += '<ol>' + ol.join('') + '</ol>'; continue; }
+          if (/^```/.test(line)) {
+            var buf = []; i++;
+            while (i < lines.length && !/^```/.test(lines[i])) { buf.push(lines[i]); i++; }
+            i++;
+            html += wx
+              ? '<section style="' + WX.pre + '">' + esc(buf.join('\n')).replace(/\n/g, '<br>') + '</section>'
+              : '<pre><code>' + esc(buf.join('\n')) + '</code></pre>';
+            continue;
+          }
+          if (/^\s*---+\s*$/.test(line)) { html += wx ? '<section style="' + WX.hr + '"></section>' : '<hr>'; i++; continue; }
+          var h = line.match(/^(#{1,6})\s+(.*)$/);
+          if (h) {
+            var lv = h[1].length;
+            var hs = [26, 22, 19, 17, 16, 16][lv - 1];
+            html += wx
+              ? '<section style="font-size:' + hs + 'px;' + WX.h + '">' + inline(h[2], true) + '</section>'
+              : '<h' + lv + '>' + inline(h[2]) + '</h' + lv + '>';
+            i++; continue;
+          }
+          if (/^\s*>\s?/.test(line)) {
+            var q = [];
+            while (i < lines.length && /^\s*>\s?/.test(lines[i])) { q.push(lines[i].replace(/^\s*>\s?/, '')); i++; }
+            html += wx
+              ? '<section style="' + WX.bq + '">' + inline(q.join('<br>'), true) + '</section>'
+              : '<blockquote>' + inline(q.join('<br>')) + '</blockquote>';
+            continue;
+          }
+          if (/^\s*[-*]\s+/.test(line)) {
+            var ul = [];
+            while (i < lines.length && /^\s*[-*]\s+/.test(lines[i])) { ul.push(inline(lines[i].replace(/^\s*[-*]\s+/, ''), wx)); i++; }
+            html += wx
+              ? '<ul style="' + WX.ul + '">' + ul.map(function (x) { return '<li style="' + WX.li + '">' + x + '</li>'; }).join('') + '</ul>'
+              : '<ul>' + ul.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul>';
+            continue;
+          }
+          if (/^\s*\d+\.\s+/.test(line)) {
+            var ol = [];
+            while (i < lines.length && /^\s*\d+\.\s+/.test(lines[i])) { ol.push(inline(lines[i].replace(/^\s*\d+\.\s+/, ''), wx)); i++; }
+            html += wx
+              ? '<ol style="' + WX.ul + '">' + ol.map(function (x) { return '<li style="' + WX.li + '">' + x + '</li>'; }).join('') + '</ol>'
+              : '<ol>' + ol.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ol>';
+            continue;
+          }
           if (line.trim() === '') { i++; continue; }
           var p = [];
-          while (i < lines.length && lines[i].trim() !== '' && !/^(#{1,6})\s/.test(lines[i]) && !/^\s*>\s?/.test(lines[i]) && !/^\s*[-*]\s+/.test(lines[i]) && !/^\s*\d+\.\s+/.test(lines[i]) && !/^```/.test(lines[i]) && !/^\s*---+\s*$/.test(lines[i])) { p.push(inline(lines[i])); i++; }
-          if (p.length) html += '<p>' + p.join('<br>') + '</p>';
+          while (i < lines.length && lines[i].trim() !== '' && !/^(#{1,6})\s/.test(lines[i]) && !/^\s*>\s?/.test(lines[i]) && !/^\s*[-*]\s+/.test(lines[i]) && !/^\s*\d+\.\s+/.test(lines[i]) && !/^```/.test(lines[i]) && !/^\s*---+\s*$/.test(lines[i])) { p.push(inline(lines[i], wx)); i++; }
+          if (p.length) html += wx ? '<section style="' + WX.p + '">' + p.join('<br>') + '</section>' : '<p>' + p.join('<br>') + '</p>';
         }
         return html || '<p class="ph">写点什么…（点此编辑）</p>';
       }
@@ -937,8 +1107,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       });
 
       // 复制 Markdown / 复制 HTML
-      function copyText(text, btn, label) {
-        function ok() { btn.textContent = '已复制 ✓'; gToast('已复制到剪贴板'); setTimeout(function () { btn.textContent = label; }, 1600); }
+      function copyText(text, btn, label, toastMsg) {
+        function ok() { btn.textContent = '已复制 ✓'; gToast(toastMsg || '已复制到剪贴板'); setTimeout(function () { btn.textContent = label; }, 1600); }
         function legacy() {
           var ta = document.createElement('textarea'); ta.value = text;
           ta.style.position = 'fixed'; ta.style.opacity = '0';
@@ -967,8 +1137,51 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       }
       var wpCopyMd = document.getElementById('wpCopyMd');
       wpCopyMd.addEventListener('click', function () { copyText(collectMd(), wpCopyMd, '复制 Markdown'); });
+      /* 公众号专用 HTML：全部内联样式，粘进公众号后台不丢排版 */
+      function collectWxHtml() {
+        var parts = [];
+        wpEditor.querySelectorAll('.blk').forEach(function (b) {
+          var md = b.dataset.md || '';
+          if (md.trim() === '') return;
+          parts.push(parse(md, true));
+        });
+        return parts.join('\n');
+      }
       var wpCopyHtml = document.getElementById('wpCopyHtml');
-      wpCopyHtml.addEventListener('click', function () { copyText(collectHtml(), wpCopyHtml, '复制 HTML'); });
+      /* 公众号粘贴专用：必须把 HTML 以 text/html 写入剪贴板——
+         只写 text/plain 时，公众号编辑器会把 <section> 标签当纯文本原样显示（即"乱码"）。
+         首选 ClipboardItem 双格式；降级用隐藏 contenteditable 选中 + execCommand('copy')（公众号排版工具的标准做法）。 */
+      function copyRichHtml(html, btn, label) {
+        function ok() { btn.textContent = '已复制 ✓'; gToast('已复制公众号排版，去公众号正文 Ctrl+V 粘贴'); setTimeout(function () { btn.textContent = label; }, 1600); }
+        function legacy() {
+          var box = document.createElement('div');
+          box.contentEditable = 'true';
+          box.style.cssText = 'position:fixed;left:-9999px;top:0;opacity:0;';
+          box.innerHTML = html;
+          document.body.appendChild(box);
+          var range = document.createRange();
+          range.selectNodeContents(box);
+          var sel = window.getSelection();
+          sel.removeAllRanges(); sel.addRange(range);
+          var done = false;
+          try { done = document.execCommand('copy'); } catch (e) {}
+          sel.removeAllRanges();
+          document.body.removeChild(box);
+          if (done) ok(); else btn.textContent = '复制失败';
+        }
+        if (window.ClipboardItem && navigator.clipboard && navigator.clipboard.write) {
+          try {
+            var item = new ClipboardItem({
+              'text/html': new Blob([html], { type: 'text/html' }),
+              'text/plain': new Blob([html], { type: 'text/plain' })
+            });
+            navigator.clipboard.write([item]).then(ok, legacy);
+            return;
+          } catch (e) { /* 走降级 */ }
+        }
+        legacy();
+      }
+      wpCopyHtml.addEventListener('click', function () { copyRichHtml(collectWxHtml(), wpCopyHtml, '复制 HTML'); });
       /* 马上写一篇：一键清空全部示例占位语，只剩「我要记录···」，开始打字自动覆盖 */
       var wpStart = document.getElementById('wpStart');
       wpStart.addEventListener('click', function () {
@@ -1058,6 +1271,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     #pane-cover .glow { position: absolute; right: -90px; bottom: -90px; width: 340px; height: 340px; z-index: 1;
       background: radial-gradient(circle, rgba(245,80,0,.20), transparent 70%); pointer-events: none; }
     #pane-cover .frame { position: absolute; inset: 0; border: 10px solid #F53F3F; pointer-events: none; z-index: 6; }
+    /* 版式切换按钮 */
+    #pane-cover .lay-seg { display: flex; gap: 7px; flex-wrap: wrap; }
+    #pane-cover .lay-btn { border: 1px solid var(--color-border, #e7e5e4); background: #fff; color: var(--color-text); font-family: inherit; font-size: 12.5px; padding: 7px 12px; border-radius: 9px; cursor: pointer; transition: all .18s; }
+    #pane-cover .lay-btn:hover { border-color: var(--color-accent); color: var(--color-accent); }
+    #pane-cover .lay-btn.on { background: var(--color-accent); border-color: var(--color-accent); color: #fff; font-weight: 700; }
+    /* 版式 A 经典（默认） */
+    #pane-cover .cover90.lay-a .cv-inner { justify-content: center; padding: 0 48px 0 84px; }
+    /* 版式 B 居中 */
+    #pane-cover .cover90.lay-b .cv-inner { justify-content: center; padding: 0 80px; align-items: center; }
+    #pane-cover .cover90.lay-b .ctitle { text-align: center; }
+    #pane-cover .cover90.lay-b .brandrow { justify-content: center; }
 
     /* ===== 设置卡（变体 1 · 整洁行式） ===== */
     #pane-cover .set-group { background: var(--color-card-bg); border: 1px solid var(--color-border, #ececea); border-radius: 14px; padding: 18px 18px 20px; }
@@ -1247,6 +1471,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       font-family: inherit; font-size: 18px; line-height: 1.85; color: var(--color-text); caret-color: var(--color-accent); padding: 1px 2px; }
     #pane-write .blk.editing .src { display: block; }
     #pane-write .blk.editing .rendered { display: none; }
+    /* 专注完成礼炮（元素挂在 body 上，故用全局类名） */
+    .wp-confetti { position: fixed; inset: 0; z-index: 9999; pointer-events: none; overflow: hidden; }
+    .wp-confetti .cf-piece { position: absolute; bottom: 0; border-radius: 2px; will-change: transform, opacity; }
 
     /* 渲染样式（与站点品牌一致） */
     #pane-write #wpEditor h1 { font-size: 26px; font-weight: 700; line-height: 1.4; text-align: center; margin: 18px 0 12px; }
@@ -1303,11 +1530,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     /* 工具切换淡入（交互反馈） */
     #pane-cover, #pane-quote, #pane-write { animation: paneIn .34s cubic-bezier(.32,.72,0,1) both; }
     @keyframes paneIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-    /* 工作区引导语（品牌 + 信息架构叙事） */
-    .tools-intro { margin-bottom: 24px; }
-    .ti-title { font-family: var(--font-serif); font-size: 27px; font-weight: 700; line-height: 1.3; letter-spacing: .5px; }
-    .ti-title::after { content: ''; display: block; width: 42px; height: 3px; border-radius: 3px; background: var(--t-accent); margin-top: 10px; }
-    .ti-sub { color: var(--t-sub); font-size: 14px; margin-top: 10px; max-width: 640px; line-height: 1.7; }
     /* 统一焦点环（情感化 / 一致性） */
     #pane-cover .inp:focus, #pane-cover .ta-box:focus-within,
     #pane-quote .f-input:focus, #pane-quote .f-area:focus,
@@ -1344,7 +1566,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       .side li.active::before { display: none; }
       .side-handle { display: none; }
       .workspace { padding-top: 18px; padding-left: 0; }
-      .tools-intro { display: none; }
       /* 点击区 ≥44px（移动端触控） */
       #pane-write .wp-chip, #pane-write .wp-focus, #pane-write .wp-reset { min-height: 38px; padding: 8px 15px; }
       #pane-write .wp-copymd { min-height: 42px; }

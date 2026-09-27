@@ -823,13 +823,13 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
         <h3>金句卡片</h3>
         <p class="qc-sub">选好样式后下载或复制图片</p>
         <div class="qc-styles" id="qcStyles">
-          <div class="qc-style active" data-s="a"><div class="sw a"></div><div><div class="t">A · 极简暖白</div><div class="d">站点默认，最协调</div></div></div>
-          <div class="qc-style" data-s="b"><div class="sw b"></div><div><div class="t">B · 深色品牌</div><div class="d">信息流吸睛</div></div></div>
+          <div class="qc-style active" data-s="b"><div class="sw b"></div><div><div class="t">A · 深色品牌</div><div class="d">信息流吸睛</div></div></div>
+          <div class="qc-style" data-s="a"><div class="sw a"></div><div><div class="t">B · 极简暖白</div><div class="d">站点默认，最协调</div></div></div>
           <div class="qc-style" data-s="c"><div class="sw c"></div><div><div class="t">C · 杂志书页</div><div class="d">书卷气</div></div></div>
         </div>
         <div class="qc-actions">
-          <div class="qc-act primary" data-act="download">⬇ 下载图片</div>
-          <div class="qc-act" data-act="copyimg">📋 复制图片</div>
+          <div class="qc-act primary" data-act="copyimg">复制图片</div>
+          <div class="qc-act" data-act="download">下载图片</div>
         </div>
       </div>
     </div>
@@ -907,8 +907,8 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
         qQuote.style.fontSize = (len > 100 ? 18 : len > 60 ? 20 : 22) + 'px';
         qSite.textContent = getSite();
         qFrom.textContent = '—— 选自《' + getSource() + '》';
-        var saved = 'a';
-        try { saved = localStorage.getItem('qcStyle') || 'a'; } catch (e) {}
+        var saved = 'b';
+        try { saved = localStorage.getItem('qcStyle') || 'b'; } catch (e) {}
         setStyle(saved);
         overlay.classList.add('show');
       }
