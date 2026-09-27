@@ -7,13 +7,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <aside class="side">
       <div class="side-title">工具箱</div>
       <ul id="side-menu">
-        <li data-pane="pane-cover" class="active"><span class="num">1)</span><span>公众号封面制作</span></li>
-        <li data-pane="pane-quote"><span class="num">2)</span><span>金句卡片制作</span></li>
-        <li data-pane="pane-write"><span class="num">3)</span><span>书写伙伴</span></li>
+        <li data-pane="pane-write"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span><span class="lab">书写伙伴</span></li>
+        <li data-pane="pane-cover" class="active"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></span><span class="lab">公众号封面</span></li>
+        <li data-pane="pane-quote"><span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 7h5v6H8.5C8.5 16 11 18 14 18v2c-5 0-9-3-9-9Zm9 0h5v6h-3.5C17.5 16 20 18 23 18v2c-5 0-9-3-9-9Z"/></svg></span><span class="lab">句子卡片</span></li>
       </ul>
     </aside>
 
     <main class="workspace">
+      <div class="tools-intro">
+        <h1 class="ti-title">创作工具箱</h1>
+        <p class="ti-sub">三个工具，一条创作流 —— 先写、再做成卡片、最后产出公众号封面。点左侧切换，或按 Ctrl+G 收起侧栏。</p>
+      </div>
       <button class="side-handle" id="sideToggle" type="button" aria-label="收起侧边栏" aria-expanded="true" title="收起侧边栏（Ctrl+G）" data-tip="收起侧边栏 · Ctrl+G">
         <svg class="chev" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <polyline points="10 3 4 8 10 13"></polyline>
@@ -74,7 +78,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <div id="export-stage"></div>
       </section>
 
-      <!-- 2) 金句卡片制作（推文截图风 · 双栏工作台） -->
+      <!-- 2) 句子卡片制作（推文截图风 · 双栏工作台） -->
       <section class="pane" id="pane-quote" hidden>
         <div class="ws">
           <!-- 左：画布（预览区） -->
@@ -163,15 +167,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                 <button class="wp-play" id="wpPlay">▶</button>
                 <div class="wp-title" id="wpTitle">耀斑 · 25 分钟专注</div>
               </div>
+              <b class="wp-remain" id="wpRemain">25:00</b>
               <div class="wp-timer">
                 <svg class="wp-clock" viewBox="0 0 24 24" aria-hidden="true">
                   <circle cx="12" cy="12" r="10" fill="none" stroke="rgba(245,234,217,.35)" stroke-width="2"/>
                   <line id="wpHand" x1="12" y1="12" x2="12" y2="4.5" stroke="#F55000" stroke-width="2.4" stroke-linecap="round" transform="rotate(0 12 12)"/>
                 </svg>
                 <span class="wp-durbox" id="wpDur">25 分钟</span>
-                <b class="wp-remain" id="wpRemain">25:00</b>
               </div>
-              <div class="wp-spacer" aria-hidden="true"></div>
             </div>
             <div class="wp-bar"><i id="wpFill"></i></div>
             <div class="wp-row2">
@@ -202,6 +205,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </div>
       </section>
 
+      <div class="tools-toast" id="toolsToast"></div>
+
     </main>
   </div>
 
@@ -209,15 +214,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     (function () {
       // ===== 侧边栏切换 =====
       var menu = document.getElementById('side-menu');
-      menu.querySelectorAll('li').forEach(function (li) {
+      menu.querySelectorAll('li[data-pane]').forEach(function (li) {
         li.addEventListener('click', function () {
-          menu.querySelectorAll('li').forEach(function (x) { x.classList.remove('active'); });
+          menu.querySelectorAll('li[data-pane]').forEach(function (x) { x.classList.remove('active'); });
           li.classList.add('active');
           document.querySelectorAll('.pane').forEach(function (p) { p.hidden = p.id !== li.dataset.pane; });
           window.dispatchEvent(new Event('resize'));
         });
       });
     })();
+
+      // ===== 全局轻提示（toast）：复制 / 导出 / 保存等反馈统一走这里 =====
+      function gToast(msg) {
+        var t = document.getElementById('toolsToast'); if (!t) return;
+        t.textContent = msg; t.classList.add('show'); clearTimeout(t._t);
+        t._t = setTimeout(function () { t.classList.remove('show'); }, 1900);
+      }
 
       // ===== 导出字体（金句 + 封面共用）：全字库子集文楷 → data URI 注入。
       // html2canvas 克隆 iframe 里的网络字体有渲染竞态（导出偶发变黑体），
@@ -241,7 +253,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         return exportFontCssPromise;
       }
 
-      // ===== 金句卡片工具（推文截图风 · 双栏工作台） =====
+      // ===== 句子卡片工具（推文截图风 · 双栏工作台） =====
       (function () {
         var BG = { 'v-light': '#ffffff', 'v-dark': '#000000', 'v-paper': '#f7f3ec', 'v-brand': '#1c1917' };
         var state = { scheme: 'v-light', ratio: 'r34', text: '', name: '', handle: '', check: true, avatar: '/images/logo-180x180.png' };
@@ -373,7 +385,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           exportCanvas().then(function (cv) {
             if (!cv) return;
             var a = document.createElement('a');
-            a.download = '金句卡片.png'; a.href = cv.toDataURL('image/png');
+            a.download = '句子卡片.png'; a.href = cv.toDataURL('image/png');
             document.body.appendChild(a); a.click(); a.remove(); toast('已下载图片');
           });
         });
@@ -487,7 +499,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           var x = exportEl(builder); var c = await renderArt(x.el); x.done();
           var blob = await new Promise(function (r) { c.toBlob(r, 'image/png'); });
           await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-          btn.textContent = '已复制 ✓';
+          btn.textContent = '已复制 ✓'; gToast('封面已复制到剪贴板');
         } catch (e) { console.error(e); btn.textContent = '复制失败'; }
         setTimeout(function () { btn.textContent = t; btn.disabled = false; }, 1800);
       }
@@ -497,7 +509,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           var x = exportEl(builder); var c = await renderArt(x.el); x.done();
           var a = document.createElement('a'); a.href = c.toDataURL('image/png'); a.download = name + '.png';
           document.body.appendChild(a); a.click(); a.remove();
-          btn.textContent = '已下载 ✓';
+          btn.textContent = '已下载 ✓'; gToast('封面图片已开始下载');
         } catch (e) { console.error(e); btn.textContent = '下载失败'; }
         setTimeout(function () { btn.textContent = t; btn.disabled = false; }, 1800);
       }
@@ -713,6 +725,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         endAt = Date.now() + remainSec / rate * 1000;
         timerId = setInterval(tick, 200);
         wpPlay.textContent = '❚❚';
+        wpPlay.classList.add('playing');
         updateTitle();
       }
       function pausePlay() {
@@ -722,6 +735,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         remainSec = Math.max(0, (endAt - Date.now()) / 1000 * rate);
         pauseSound();
         wpPlay.textContent = '▶';
+        wpPlay.classList.remove('playing');
         updateTitle(); paint();
       }
       function finish() {
@@ -729,6 +743,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         if (timerId) { clearInterval(timerId); timerId = null; }
         pauseSound();
         wpPlay.textContent = '▶';
+        wpPlay.classList.remove('playing');
         updateTitle();
       }
       function resetSession() {
@@ -737,6 +752,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         pauseSound();
         totalSec = durMin * 60; remainSec = totalSec;
         wpPlay.textContent = '▶';
+        wpPlay.classList.remove('playing');
         updateTitle(); paint();
       }
       wpPlay.addEventListener('click', function () {
@@ -922,7 +938,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
       // 复制 Markdown / 复制 HTML
       function copyText(text, btn, label) {
-        function ok() { btn.textContent = '已复制 ✓'; setTimeout(function () { btn.textContent = label; }, 1600); }
+        function ok() { btn.textContent = '已复制 ✓'; gToast('已复制到剪贴板'); setTimeout(function () { btn.textContent = label; }, 1600); }
         function legacy() {
           var ta = document.createElement('textarea'); ta.value = text;
           ta.style.position = 'fixed'; ta.style.opacity = '0';
@@ -1089,7 +1105,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     #pane-cover #export-stage { position: absolute; left: -10000px; top: 0; width: 900px; height: 383px; }
 
     /* ============================================================
-       金句卡片制作工具（推文截图风 · 双栏工作台）—— 全部收在
+       句子卡片制作工具（推文截图风 · 双栏工作台）—— 全部收在
        #pane-quote 作用域内，不泄漏到站点头部 / 其他页面。
        ============================================================ */
     .btn { border: 1px solid var(--color-border, #e7e5e4); background: #fff; font-family: inherit; font-size: 14px; color: var(--color-text); padding: 11px 16px; border-radius: 11px; cursor: pointer; transition: all .2s; }
@@ -1183,14 +1199,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       box-shadow: 0 12px 30px -16px rgba(28,25,23,.55); }
     #pane-write .wp-row1 { display: flex; align-items: center; gap: 13px; margin-bottom: 14px; }
     #pane-write .wp-left { display: flex; align-items: center; gap: 13px; flex: 1; min-width: 0; }
-    #pane-write .wp-timer { display: flex; align-items: center; gap: 10px; flex: none; }
-    #pane-write .wp-spacer { flex: 1; min-width: 0; }
+    #pane-write .wp-timer { display: flex; align-items: center; gap: 10px; flex: 1; justify-content: flex-end; min-width: 0; }
     #pane-write .wp-play { width: 46px; height: 46px; border-radius: 50%; border: none; background: var(--color-accent); color: #fff; font-size: 15px; cursor: pointer; flex: none; font-family: inherit; }
     #pane-write .wp-play:hover { background: #e04a00; }
     #pane-write .wp-title { color: #f3e8d7; font-size: 15px; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     #pane-write .wp-clock { width: 30px; height: 30px; flex: none; }
     #pane-write .wp-durbox { border: 1.5px solid rgba(243,232,215,.5); color: #f3e8d7; font-size: 13px; font-weight: 700; padding: 5px 12px; border-radius: 9px; white-space: nowrap; }
-    #pane-write .wp-remain { color: #f3e8d7; font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; min-width: 52px; text-align: right; }
+    #pane-write .wp-remain { color: #fff; font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; min-width: 96px; text-align: center; letter-spacing: .02em; flex: none; text-shadow: 0 0 22px rgba(245,80,0,.45); }
     #pane-write .wp-bar { height: 5px; border-radius: 3px; background: rgba(255,255,255,.16); overflow: hidden; }
     #pane-write .wp-bar i { display: block; height: 100%; width: 0; background: var(--color-accent); border-radius: 3px; transition: width .25s linear; }
     #pane-write .wp-row2 { display: flex; align-items: center; gap: 7px; margin-top: 14px; flex-wrap: wrap; }
@@ -1264,14 +1279,81 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       .set-col, .te-form { width: 100%; }
       #pane-cover .set-group.composer { grid-template-columns: 1fr; gap: 16px; }
     }
+
+    /* ============================================================
+       统一优化（视觉 / 信息架构 / 交互 / 一致性 / 移动 / 情感化）
+       全部收在 .tools-layout 作用域，不泄漏到站点其他页面。
+       ============================================================ */
+    .tools-layout {
+      --t-bg:#fafaf9; --t-card:#fff; --t-border:#e7e5e4; --t-text:#1c1917; --t-sub:#78716c;
+      --t-accent:#F55000; --t-accent-d:#d94700; --t-soft:#f5f4f2;
+      --t-radius:14px; --t-radius-sm:11px; --t-radius-pill:999px;
+      --t-shadow:0 8px 24px -12px rgba(28,25,23,.18); --t-shadow-lg:0 18px 44px -18px rgba(28,25,23,.34);
+      --t-ring:0 0 0 3px rgba(245,80,0,.22);
+    }
+    /* 侧栏：分组标签 + 图标 + 选中态（左橙条 + 字标色） */
+    .side-title { font-family: var(--font-serif); font-size: 15px; font-weight: 700; letter-spacing: 1px; color: var(--t-text); border-left: 3px solid var(--t-accent); padding: 0 0 0 12px; margin-bottom: 16px; }
+    .side li { position: relative; }
+    .side li .ic { width: 20px; height: 20px; flex: none; color: var(--t-sub); display: flex; align-items: center; justify-content: center; transition: color .2s; }
+    .side li .ic svg { width: 18px; height: 18px; }
+    .side li .lab { flex: 1; }
+    .side li.active { background: #fff; color: var(--t-text); box-shadow: var(--t-shadow); font-weight: 700; }
+    .side li.active::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 3px; height: 18px; border-radius: 0 3px 3px 0; background: var(--t-accent); }
+    .side li.active .ic { color: var(--t-accent); }
+    /* 工具切换淡入（交互反馈） */
+    #pane-cover, #pane-quote, #pane-write { animation: paneIn .34s cubic-bezier(.32,.72,0,1) both; }
+    @keyframes paneIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    /* 工作区引导语（品牌 + 信息架构叙事） */
+    .tools-intro { margin-bottom: 24px; }
+    .ti-title { font-family: var(--font-serif); font-size: 27px; font-weight: 700; line-height: 1.3; letter-spacing: .5px; }
+    .ti-title::after { content: ''; display: block; width: 42px; height: 3px; border-radius: 3px; background: var(--t-accent); margin-top: 10px; }
+    .ti-sub { color: var(--t-sub); font-size: 14px; margin-top: 10px; max-width: 640px; line-height: 1.7; }
+    /* 统一焦点环（情感化 / 一致性） */
+    #pane-cover .inp:focus, #pane-cover .ta-box:focus-within,
+    #pane-quote .f-input:focus, #pane-quote .f-area:focus,
+    #pane-write .blk .src:focus { box-shadow: var(--t-ring); border-color: var(--t-accent); }
+    /* 按钮按压反馈（情感化） */
+    .btn:active, #pane-cover .ex-btn:active, #pane-write .wp-copymd:active,
+    #pane-write .wp-chip:active, #pane-write .wp-play:active, #pane-write .wp-focus:active,
+    #pane-write .wp-reset:active, .side li:active { transform: translateY(1px) scale(.985); }
+    /* 播放中呼吸光晕（情感化·轻量动效） */
+    #pane-write .wp-play.playing { animation: wpPulse 1.8s ease-out infinite; }
+    @keyframes wpPulse {
+      0% { box-shadow: 0 0 0 0 rgba(245,80,0,.65); transform: scale(1); }
+      70% { box-shadow: 0 0 0 14px rgba(245,80,0,0); transform: scale(1.07); }
+      100% { box-shadow: 0 0 0 0 rgba(245,80,0,0); transform: scale(1); }
+    }
+    /* 全局轻提示 toast */
+    .tools-toast { position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%) translateY(20px);
+      background: #1c1917; color: #fff; font-size: 13px; padding: 11px 22px; border-radius: 999px;
+      opacity: 0; pointer-events: none; transition: .28s; z-index: 200; font-family: var(--font-serif);
+      box-shadow: 0 10px 30px -10px rgba(0,0,0,.5); }
+    .tools-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
     @media (max-width: 640px) {
       .tools-layout { flex-direction: column; }
       .tools-layout.side-hidden .side { display: none; }
-      .side { width: 100%; position: static; padding: 24px 0 0; }
-      .workspace { padding-top: 20px; }
-      #pane-write .wp-spacer { display: none; }
-      #pane-write .wp-timer { margin-left: auto; }
+      /* 移动端：侧栏变顶部 sticky 切换条（信息架构·移动） */
+      .side { width: 100%; position: sticky; top: 56px; z-index: 50; padding: 8px 0; background: var(--t-bg, #fafaf9);
+        border-bottom: 1px solid var(--t-border, #e7e5e4); overflow-x: auto; display: flex; flex-direction: row; align-items: center; gap: 8px; }
+      .side-title { display: none; }
+      .side ul { display: flex; gap: 8px; padding: 0; }
+      .side li[data-pane] { white-space: nowrap; margin-bottom: 0; padding: 11px 18px; border-radius: 999px; }
+      .side li.active { box-shadow: none; background: var(--t-accent); color: #fff; }
+      .side li.active .ic { color: #fff; }
+      .side li.active::before { display: none; }
+      .side-handle { display: none; }
+      .workspace { padding-top: 18px; padding-left: 0; }
+      .tools-intro { display: none; }
+      /* 点击区 ≥44px（移动端触控） */
+      #pane-write .wp-chip, #pane-write .wp-focus, #pane-write .wp-reset { min-height: 38px; padding: 8px 15px; }
+      #pane-write .wp-copymd { min-height: 42px; }
+      #pane-cover .ex-btn { min-height: 44px; }
+      #pane-quote .btn { min-height: 44px; }
       #pane-write .wp-foot { flex-wrap: wrap; }
+      /* 金句卡移动放大（移动端体验） */
+      #pane-quote .canvas { padding: 24px 8px; }
+      #pane-quote .canvas-dot { padding: 18px 10px; }
     }
   </style>
 </BaseLayout>
