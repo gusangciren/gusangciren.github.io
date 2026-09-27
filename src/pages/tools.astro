@@ -59,6 +59,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                   <label class="tg"><input type="checkbox" id="tg-name" checked/><span class="sw"></span><span class="tl">名称</span></label>
                   <input id="f-name" class="inp name-inp" type="text" maxlength="14" value="像企业家一样写作"/>
                 </div>
+                <div class="brand-line">
+                  <span class="tl" style="min-width:42px">网站</span>
+                  <input id="f-url" class="inp url-inp" type="text" maxlength="40" value="gusangciren.github.io" placeholder="你的网站（选填，不填则不显示）"/>
+                </div>
                 <div class="cmp-hint">头像 / 名称全关时，品牌行整体收起；上传的头像本机记住，下次不用重传。</div>
               </div>
             </div>
@@ -232,7 +236,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       // ===== 金句卡片工具（推文截图风 · 双栏工作台） =====
       (function () {
         var BG = { 'v-light': '#ffffff', 'v-dark': '#000000', 'v-paper': '#f7f3ec', 'v-brand': '#1c1917' };
-        var state = { scheme: 'v-light', ratio: 'r34', text: '', name: '', handle: '', check: true, avatar: null };
+        var state = { scheme: 'v-light', ratio: 'r34', text: '', name: '', handle: '', check: true, avatar: '/images/logo-180x180.png' };
 
         var $ = function (s) { return document.querySelector(s); };
         var card = document.getElementById('qcCard');
@@ -373,12 +377,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     // ===== 公众号封面制作工具 =====
     (function () {
-      var SITE_URL = 'gusangciren.github.io';
       var DEFAULT_AVATAR = '/images/logo-180x180.png';
       var DEFAULT_NAME = '像企业家一样写作';
 
       var headlineRaw = '';
       var nameEl = document.getElementById('f-name');
+      var urlEl = document.getElementById('f-url');
       var tgAvatar = document.getElementById('tg-avatar');
       var tgName = document.getElementById('tg-name');
       var avatarThumb = document.getElementById('avatar-thumb');
@@ -393,6 +397,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         if (savedA) { avatar = savedA; avatarThumb.src = savedA; }
         var savedN = localStorage.getItem('tools.cv.name');
         if (savedN) { nameEl.value = savedN; }
+        var savedU = localStorage.getItem('tools.cv.url');
+        if (savedU !== null) { urlEl.value = savedU; }
       } catch (e) {}
 
       function esc(s) {
@@ -417,6 +423,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           frameColor: frameVal,
           avatar: avatar,
           name: nameEl.value || DEFAULT_NAME,
+          url: urlEl.value.trim(),
           showAvatar: tgAvatar.checked,
           showName: tgName.checked
         };
@@ -429,7 +436,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         if (d.showAvatar || d.showName) {
           brand = '<div class="brandrow">';
           if (d.showAvatar) brand += '<img class="clogo" src="' + esc(d.avatar) + '" alt="logo"/>';
-          if (d.showName) brand += '<div class="bt"><div class="bn">' + esc(d.name) + '</div><div class="bu">' + SITE_URL + '</div></div>';
+          if (d.showName) brand += '<div class="bt"><div class="bn">' + esc(d.name) + '</div>' + (d.url ? '<div class="bu">' + esc(d.url) + '</div>' : '') + '</div>';
           brand += '</div>';
         }
         el.innerHTML = '<div class="glow"></div>' + frame +
@@ -510,6 +517,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       tgName.addEventListener('change', render);
       nameEl.addEventListener('input', function () {
         try { localStorage.setItem('tools.cv.name', nameEl.value); } catch (e) {}
+        render();
+      });
+      urlEl.addEventListener('input', function () {
+        try { localStorage.setItem('tools.cv.url', urlEl.value); } catch (e) {}
         render();
       });
       btnAvatar.addEventListener('click', function () { fileAvatar.click(); });
@@ -904,6 +915,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 5;
       transition: color .2s, border-color .2s, background .2s; }
     .side-toggle:hover { color: var(--color-accent); border-color: rgba(245,80,0,.45); background: #fff7f2; }
+    /* 收起侧栏时：封面内容居中收束成「专注视图」，预览/提示/设置三块同宽对齐 */
+    .tools-layout.side-hidden .workspace { padding-left: 40px; padding-right: 40px; }
+    .tools-layout.side-hidden #pane-cover .cover-editor { max-width: 760px; width: 100%; margin: 0 auto; }
+    .tools-layout.side-hidden #pane-cover .pv-col,
+    .tools-layout.side-hidden #pane-cover .set-col { width: 100%; }
+    .tools-layout.side-hidden #pane-cover .cv-wrap { margin-inline: auto; }
 
     /* ============================================================
        公众号封面制作工具——全部样式收在 #pane-cover 作用域内，

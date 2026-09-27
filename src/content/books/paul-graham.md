@@ -5,7 +5,7 @@ motto: 活在未来，把缺的东西做出来
 description: 保罗·格雷厄姆（Paul Graham）经典文章中文全译本，持续更新。Y Combinator 创始人用一篇篇长文回答：财富是怎么被创造的、好点子从哪里来、创业公司凭什么长大。现已收录《人们现在如何致富》《如何获得创业灵感》《创业公司 = 增长》。
 cover: /images/pg-cover.jpg
 seriesName: 保罗·格雷厄姆
-order: 1
+order: 4
 isNew: true
 ongoing: true
 forWho: 想理解财富与创业底层逻辑，而不只是听故事的人
