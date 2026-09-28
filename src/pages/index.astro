@@ -181,8 +181,13 @@ function titleWithBrackets(name) {
                 </a>
               ))}
             </div>
-            <a href={`/columns/${column.id}`} class="column-preview-all">
-              查看全部 {column.issueCount} 期 →
+            <a
+              href={column.albumUrl || `/columns/${column.id}`}
+              class="column-preview-all"
+              target={column.albumUrl ? '_blank' : undefined}
+              rel={column.albumUrl ? 'noopener noreferrer' : undefined}
+            >
+              阅读合集 →
             </a>
           </div>
         ))}
