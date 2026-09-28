@@ -26,6 +26,13 @@ const chapters = posts
   .filter(p => p.data.series === book.data.seriesName && p.data.seriesOrder)
   .sort((a, b) => a.data.seriesOrder! - b.data.seriesOrder!);
 
+// 量词：YC 创业课这类课程用「讲」，其余用「章」（与书籍页/首页的 getUnit 口径一致）
+const unit = `${book.data.title}${book.data.subtitle || ''}`.includes('YC') ||
+  (book.data.title || '').includes('课') || (book.data.subtitle || '').includes('讲')
+  ? '讲'
+  : '章';
+const firstHref = chapters.length > 0 ? `/blog/${chapters[0].data.slug}` : '#';
+
 // 判断展示模式：有 chapterSize 的书用章节折叠，没有的用文章平铺
 const chapterSize = book.data.chapterSize;
 
@@ -47,6 +54,7 @@ if (chapterSize && chapters.length > 0) {
 ---
 <BaseLayout title={`${book.data.title} — 书籍 — 像企业家一样写作`}>
   <div class="book-page">
+    <a href="/book" class="book-back">← 返回书架</a>
     <div class="book-hero">
       <div class="book-cover">
         <img src={book.data.cover} alt={book.data.title} class="book-cover-img" />
@@ -60,7 +68,7 @@ if (chapterSize && chapters.length > 0) {
         <div class="book-stats">
           <div class="stat">
             <div class="stat-num">{chapters.length}</div>
-            <div class="stat-label">篇文章</div>
+            <div class="stat-label">{unit}</div>
           </div>
           {chapterSize && (
             <div class="stat">
@@ -69,6 +77,11 @@ if (chapterSize && chapters.length > 0) {
             </div>
           )}
         </div>
+        {chapters.length > 0 && (
+          <div class="book-cta-row">
+            <a class="book-cta" href={firstHref}>开始阅读 →</a>
+          </div>
+        )}
       </div>
     </div>
 
@@ -104,8 +117,8 @@ if (chapterSize && chapters.length > 0) {
       chapters.length > 0 && (
         <div class="articles-section">
           <div class="section-header">
-            <h2>文章列表</h2>
-            <span class="count">共 {chapters.length} 篇文章</span>
+            <h2>目录</h2>
+            <span class="count">共 {chapters.length} {unit}</span>
           </div>
           <div class="article-list">
             {chapters.map(post => (
@@ -134,6 +147,17 @@ if (chapterSize && chapters.length > 0) {
 
 <style is:global>
   .book-page { max-width: 960px; margin: 0 auto; padding: 40px 24px 80px; }
+  .book-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--color-text-secondary, #888);
+    text-decoration: none;
+    margin-bottom: 24px;
+    transition: color 0.2s;
+  }
+  .book-back:hover { color: var(--color-accent, #f55000); }
   .book-hero { display: flex; gap: 40px; align-items: flex-start; margin-bottom: 48px; }
   .book-cover-img { width: 180px; height: auto; border-radius: 10px; box-shadow: 0 12px 40px rgba(0,0,0,0.13), 0 2px 10px rgba(0,0,0,0.06); }
   .book-tag { font-size: 0.8rem; font-weight: 500; color: var(--color-accent, #f55000); margin-bottom: 8px; }
@@ -145,6 +169,23 @@ if (chapterSize && chapters.length > 0) {
   .stat { text-align: center; }
   .stat-num { font-family: var(--font-serif, Georgia, serif); font-size: 1.5rem; font-weight: 700; color: var(--color-text, #1a1a1a); }
   .stat-label { font-size: 0.75rem; color: var(--color-text-secondary, #888); margin-top: 2px; }
+  .book-cta-row { margin-top: 24px; }
+  .book-cta {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--color-accent, #f55000);
+    border: 1px solid var(--color-accent, #f55000);
+    border-radius: 9px;
+    padding: 11px 22px;
+    text-decoration: none;
+    transition: transform .18s, box-shadow .18s;
+  }
+  .book-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(245,80,0,.3);
+  }
 
   /* 章节折叠模式 */
   .chapters-section { margin-top: 0; }
