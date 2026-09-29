@@ -141,23 +141,30 @@ function titleWithBrackets(name) {
       var cards = Array.prototype.slice.call(wrap.querySelectorAll('.deck-card'));
       var n = cards.length, center = 0, timer = null;
       var FALL = 0.19; /* 侧卡缩放衰减：d=1 → .81，d=2 → .62 */
-      /* 间距动态计算：最外侧卡（d=2）的右缘正好对齐专栏内容区边缘（.section-inner 1200 / 视口-48） */
+      function halfWidth() { return Math.min(1200, window.innerWidth - 48) / 2; }
+      /* 桌面/平板：最外侧卡（d=2）右缘正好对齐专栏内容区边缘 */
       function spacing() {
-        var half = Math.min(1200, window.innerWidth - 48) / 2;
+        var half = halfWidth();
         var cw = (cards[0] ? cards[0].offsetWidth : 264) / 2;
         var sp = (half - cw * (1 - 2 * FALL)) / 2;
         return Math.max(150, Math.min(260, sp));
       }
       function render() {
-        var sp = spacing();
+        var mobile = window.innerWidth < 640;
+        var cw = (cards[0] ? cards[0].offsetWidth : 264) / 2;
+        /* 手机：两侧卡只探出 ~44px 干净的封面边（露纯色卡背不露文字），d≥2 完全隐藏 */
+        var PEEK = 44;
+        var sp = mobile ? (halfWidth() + cw * 0.88 - PEEK) : spacing();
         cards.forEach(function (c, i) {
           var d = (i - center + n) % n; if (d > n / 2) d -= n;
           var ad = Math.abs(d);
-          var s = 1 - Math.min(ad, 2) * FALL;
+          var hidden = mobile && ad >= 2;
+          var s = mobile ? (ad === 0 ? 1 : 0.88) : 1 - Math.min(ad, 2) * FALL;
           c.style.transform = 'translateX(' + (d * sp) + 'px) scale(' + s.toFixed(3) + ')';
           c.style.zIndex = 10 - ad * 2;
           /* 浅底：侧卡淡出到白（降不透明度 + 降饱和），而非压暗 */
-          c.style.opacity = (1 - Math.min(ad, 2) * 0.42).toFixed(2);
+          c.style.opacity = hidden ? '0' : (mobile && ad > 0 ? '0.38' : (1 - Math.min(ad, 2) * 0.42).toFixed(2));
+          c.style.pointerEvents = hidden ? 'none' : '';
           c.style.filter = ad > 0 ? 'saturate(' + (1 - Math.min(ad, 2) * 0.4).toFixed(2) + ')' : 'none';
           c.classList.toggle('is-center', ad === 0);
         });
@@ -504,6 +511,13 @@ function titleWithBrackets(name) {
       .site-url-btn { font-size: 12.5px; padding: 6px 12px; }
       .cf-title { font-size: 1.4rem; }
       .cf-wrap { height: 306px; }
+      /* 手机：两端白色渐隐，把侧卡的露边融进页面底色（不露被裁文字） */
+      .cf-wrap::before, .cf-wrap::after {
+        content: ''; position: absolute; top: -20px; bottom: -20px; width: 72px;
+        z-index: 20; pointer-events: none;
+      }
+      .cf-wrap::before { left: -26px; background: linear-gradient(90deg, #fafaf9 52%, rgba(250,250,249,0)); }
+      .cf-wrap::after { right: -26px; background: linear-gradient(270deg, #fafaf9 52%, rgba(250,250,249,0)); }
       .deck-card { width: 206px; height: 264px; margin-left: -103px; }
       .dc-cover { height: 136px; padding-top: 14px; }
       .dc-cover img { width: 82px; }
