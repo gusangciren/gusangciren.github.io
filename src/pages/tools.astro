@@ -41,6 +41,7 @@ try {
         <li data-pane="pane-write"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span><span class="lab">书写伙伴</span></li>
         <li data-pane="pane-cover" class="active"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></span><span class="lab">公众号封面</span></li>
         <li data-pane="pane-quote"><span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 7h5v6H8.5C8.5 16 11 18 14 18v2c-5 0-9-3-9-9Zm9 0h5v6h-3.5C17.5 16 20 18 23 18v2c-5 0-9-3-9-9Z"/></svg></span><span class="lab">句子卡片</span></li>
+        <li data-pane="pane-life"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span><span class="lab">生命日历</span></li>
       </ul>
     </aside>
 
@@ -241,6 +242,91 @@ try {
         </div>
       </section>
 
+      <!-- 4) 生命日历（Life in Weeks · 一生约 4000 个星期） -->
+      <section class="pane" id="pane-life" hidden>
+        <div class="ws">
+          <!-- 左：海报画布 -->
+          <div class="canvas">
+            <div class="life-fit" id="lifeFit">
+              <div class="lifeposter" id="lifeCard">
+                <div class="lp-head">
+                  <span class="lp-tag">LIFE IN WEEKS · 生命日历</span>
+                  <h3 class="lp-title" id="lpTitle">你的一生，约有 <em>4,680</em> 个星期</h3>
+                </div>
+
+                <div class="lp-hero">
+                  <div class="lp-bar">
+                    <span class="lp-bar-fill" id="lpBarFill"></span>
+                    <span class="lp-bar-mark" id="lpBarMark">你在这里</span>
+                  </div>
+                  <div class="lp-bignums">
+                    <div class="lp-big"><b id="lpLived">0</b><span>周已经用掉</span></div>
+                    <div class="lp-big lp-rem"><b id="lpLeft">0</b><span>周还没到来</span></div>
+                  </div>
+                  <div class="lp-concrete" id="lpConcrete">还能过 0 个夏天 · 0 个周末</div>
+                </div>
+
+                <p class="lp-quote">如果你能花 8 小时建造别人的梦想，就能花 1 小时建造自己的梦想。</p>
+                <p class="lp-warn">你大概率不会喜欢「已经填完」的那一格格数量。</p>
+
+                <div class="lp-gridbox" id="lpGridbox">
+                  <div class="lp-grid" id="lpGrid"></div>
+                </div>
+
+                <div class="lp-legend">
+                  <span><i class="sw past"></i>已度过</span>
+                  <span><i class="sw now"></i>本周</span>
+                  <span><i class="sw ms"></i>人生里程碑</span>
+                  <span><i class="sw fut"></i>尚未到来</span>
+                </div>
+
+                <div class="lp-foot">
+                  <span id="lpBrand">像企业家一样写作</span>
+                  <span>gusangciren.github.io</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 右：属性 -->
+          <aside class="props">
+            <div class="field">
+              <label class="fld-label" for="lifeBirth">出生日期</label>
+              <input type="date" id="lifeBirth" class="f-input" value="1995-01-01" />
+              <div class="cmp-hint">示例日期，记得改成自己的。只保存在本机，不会上传。</div>
+            </div>
+            <div class="field">
+              <label class="fld-label">按多少岁算</label>
+              <div class="seg" id="lifeYears">
+                <button class="seg-btn" data-y="80">80</button>
+                <button class="seg-btn on" data-y="90">90</button>
+                <button class="seg-btn" data-y="100">100</button>
+              </div>
+            </div>
+            <div class="field">
+              <label class="fld-label">风格</label>
+              <div class="seg" id="lifeStyle">
+                <button class="seg-btn" data-v="v-light">亮白</button>
+                <button class="seg-btn on" data-v="v-paper">暖纸</button>
+                <button class="seg-btn" data-v="v-brand">深色</button>
+              </div>
+            </div>
+            <div class="field">
+              <label class="fld-label">本周</label>
+              <div class="life-now" id="lifeNow">—</div>
+            </div>
+            <div class="export">
+              <div class="export-row">
+                <button class="btn primary big" id="lifeCopy">复制图片</button>
+                <button class="btn big" id="lifeDown">下载图片</button>
+              </div>
+              <div class="qc-art-note">每周过完，就涂掉一格。一格，就是一周。</div>
+            </div>
+          </aside>
+        </div>
+        <div id="life-stage"></div>
+      </section>
+
       <div class="tools-toast" id="toolsToast"></div>
 
     </main>
@@ -282,7 +368,7 @@ try {
                 bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
               }
               return '@font-face{font-family:"WenKai Export";src:url(data:font/woff2;base64,' + btoa(bin) + ') format("woff2");}' +
-                '#qc-stage,#qc-stage *,#export-stage,#export-stage *{font-family:"WenKai Export","LXGW WenKai",serif !important;}';
+                '#qc-stage,#qc-stage *,#export-stage,#export-stage *,#life-stage,#life-stage *{font-family:"WenKai Export","LXGW WenKai",serif !important;}';
             })
             .catch(function () { return ''; });
         }
@@ -1206,6 +1292,165 @@ try {
 
   </script>
 
+  <script is:inline>
+    // ===== 生命日历（Life in Weeks）：输入生日 → 生成一生周历海报，可复制/下载 =====
+    (function () {
+      var W = 720, H = 1080; // 海报原生尺寸
+      var BG = { 'v-light': '#ffffff', 'v-paper': '#f7f3ec', 'v-brand': '#1c1917' };
+      var card = document.getElementById('lifeCard');
+      var fitEl = document.getElementById('lifeFit');
+      var grid = document.getElementById('lpGrid');
+      var gridbox = document.getElementById('lpGridbox');
+      if (!card || !grid) return;
+
+      var state = { birth: '1995-01-01', years: 90, style: 'v-paper' };
+      try {
+        var b = localStorage.getItem('tools.life.birth'); if (b) state.birth = b;
+        var y = localStorage.getItem('tools.life.years'); if (y) state.years = parseInt(y, 10) || 90;
+        var s = localStorage.getItem('tools.life.style'); if (s && BG[s]) state.style = s;
+      } catch (e) {}
+
+      var fmt = function (n) { return n.toLocaleString('en-US'); };
+
+      function calc() {
+        var birth = new Date(state.birth + 'T00:00:00');
+        var now = new Date();
+        var week = 7 * 86400000;
+        var lived = Math.floor((now - birth) / week);
+        if (isNaN(lived) || lived < 0) lived = 0;
+        var total = state.years * 52;
+        if (lived > total) lived = total;
+        var ageY = (now - birth) / (365.25 * 86400000); // 实际周岁（浮点）
+        var wholeYearsLeft = Math.max(0, state.years - Math.floor(ageY)); // 还能过的整年（夏天/生日）
+        return { lived: lived, total: total, ageY: ageY, summers: wholeYearsLeft };
+      }
+
+      // 人生里程碑（岁）——画在网格上，已被填过的随已过周、尚未到的用橙圈标注
+      var MS = [18, 22, 25, 30, 40, 50, 60, 65, 80];
+
+      function render() {
+        var c = calc();
+        card.className = 'lifeposter ' + state.style;
+        document.getElementById('lpTitle').innerHTML =
+          '你的一生，约有 <em>' + fmt(c.total) + '</em> 个星期';
+        // 网格：52 列 × years 行；已过橙红，本周黑描边，未来浅色，里程碑橙圈
+        var msSet = {};
+        MS.forEach(function (a) { if (a <= state.years) msSet[a * 52] = true; });
+        var html = '';
+        for (var i = 0; i < c.total; i++) {
+          if (i === c.lived) html += '<i class="now"></i>';
+          else if (i < c.lived) html += '<i class="past"></i>';
+          else html += msSet[i] ? '<i class="ms"></i>' : '<i></i>';
+        }
+        grid.innerHTML = html;
+        // 左侧年龄刻度（每 10 岁），行距 = 点高4.2 + 行距1.9 = 6.1
+        var ages = '';
+        for (var a = 0; a < state.years; a += 10) {
+          ages += '<span class="lp-age" style="top:' + (a * 6.1 + 2.1) + 'px">' + a + '</span>';
+        }
+        gridbox.querySelectorAll('.lp-age').forEach(function (x) { x.remove(); });
+        gridbox.insertAdjacentHTML('beforeend', ages);
+        // 比例条 + 大数字 + 具体换算
+        var pct = Math.round(c.lived / c.total * 1000) / 10;
+        var left = c.total - c.lived;
+        var weekends = Math.floor(left / 7);
+        document.getElementById('lpBarFill').style.width = pct + '%';
+        document.getElementById('lpBarMark').style.left = pct + '%';
+        document.getElementById('lpBarMark').textContent = '你在这里 · ' + pct + '%';
+        document.getElementById('lpLived').textContent = fmt(c.lived);
+        document.getElementById('lpLeft').textContent = fmt(left);
+        document.getElementById('lpConcrete').innerHTML =
+          '还能过 <b>' + c.summers + '</b> 个夏天 · <b>' + fmt(weekends) + '</b> 个周末（到 ' + state.years + ' 岁）';
+        document.getElementById('lifeNow').textContent = '这是你人生的第 ' + fmt(c.lived + 1) + ' 周';
+        fit();
+      }
+
+      /* 预览缩放：同句子卡片，按画布宽度把 720px 海报等比缩小 */
+      function fit() {
+        var canvas = document.querySelector('#pane-life .canvas');
+        if (!canvas || !fitEl) return;
+        var cw = canvas.clientWidth;
+        if (cw < 60) return; // 面板隐藏时跳过
+        var avail = cw - 64;
+        var sc = Math.max(0.3, Math.min(1, avail / W));
+        fitEl.style.setProperty('--s', sc);
+        fitEl.style.width = Math.round(W * sc) + 'px';
+        fitEl.style.height = Math.round(H * sc) + 'px';
+      }
+      window.addEventListener('resize', fit);
+
+      // 输入与记忆
+      var birthIn = document.getElementById('lifeBirth');
+      birthIn.value = state.birth;
+      birthIn.addEventListener('change', function () {
+        state.birth = birthIn.value || '1995-01-01';
+        try { localStorage.setItem('tools.life.birth', state.birth); } catch (e) {}
+        render();
+      });
+      document.querySelectorAll('#lifeYears .seg-btn').forEach(function (btn) {
+        btn.classList.toggle('on', +btn.dataset.y === state.years);
+        btn.addEventListener('click', function () {
+          state.years = +btn.dataset.y;
+          document.querySelectorAll('#lifeYears .seg-btn').forEach(function (x) { x.classList.toggle('on', x === btn); });
+          try { localStorage.setItem('tools.life.years', String(state.years)); } catch (e) {}
+          render();
+        });
+      });
+      document.querySelectorAll('#lifeStyle .seg-btn').forEach(function (btn) {
+        btn.classList.toggle('on', btn.dataset.v === state.style);
+        btn.addEventListener('click', function () {
+          state.style = btn.dataset.v;
+          document.querySelectorAll('#lifeStyle .seg-btn').forEach(function (x) { x.classList.toggle('on', x === btn); });
+          try { localStorage.setItem('tools.life.style', state.style); } catch (e) {}
+          render();
+        });
+      });
+
+      // 导出（与句子卡片同一套 html2canvas + 导出字体机制）
+      async function exportCanvas() {
+        if (!window.html2canvas) { alert('图片组件未加载，请稍候重试'); return null; }
+        var stage = document.getElementById('life-stage');
+        var clone = card.cloneNode(true);
+        clone.style.transform = 'none';
+        stage.appendChild(clone);
+        try {
+          await document.fonts.ready;
+          var fontCss = await getExportFontCss();
+          return await html2canvas(clone, { backgroundColor: BG[state.style], scale: 2, useCORS: true, logging: false,
+            onclone: function (doc) {
+              if (fontCss) { var st = doc.createElement('style'); st.textContent = fontCss; doc.head.appendChild(st); }
+            } });
+        } finally {
+          if (clone.parentNode === stage) stage.removeChild(clone);
+        }
+      }
+      document.getElementById('lifeCopy').addEventListener('click', function () {
+        var btn = this; btn.disabled = true; var t = btn.textContent; btn.textContent = '生成中…';
+        exportCanvas().then(function (cv) {
+          if (!cv) return;
+          cv.toBlob(function (blob) {
+            if (blob && navigator.clipboard && window.ClipboardItem) {
+              navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
+                .then(function () { gToast('已复制图片，可直接粘贴'); })
+                .catch(function () { gToast('复制失败，请用下载'); });
+            } else { gToast('当前环境不支持复制图片'); }
+          });
+        }).finally(function () { btn.textContent = t; btn.disabled = false; });
+      });
+      document.getElementById('lifeDown').addEventListener('click', function () {
+        var btn = this; btn.disabled = true; var t = btn.textContent; btn.textContent = '生成中…';
+        exportCanvas().then(function (cv) {
+          if (!cv) return;
+          var a = document.createElement('a');
+          a.download = '生命日历.png'; a.href = cv.toDataURL('image/png');
+          document.body.appendChild(a); a.click(); a.remove(); gToast('已下载图片');
+        }).finally(function () { btn.textContent = t; btn.disabled = false; });
+      });
+
+      render();
+    })();
+  </script>
+
   <style is:global>
     .tools-layout { max-width: 1100px; margin: 0 auto; display: flex; align-items: flex-start; padding: 0 20px; }
     .side { width: 208px; flex: none; padding: 34px 0; position: sticky; top: 56px; align-self: flex-start; }
@@ -1586,6 +1831,74 @@ try {
       /* 金句卡移动放大（移动端体验） */
       #pane-quote .canvas { padding: 24px 8px; }
       #pane-quote .canvas-dot { padding: 18px 10px; }
+    }
+    /* ===== 生命日历（Life in Weeks）——海报画布 + 属性栏 ===== */
+    #pane-life .ws { display: flex; gap: 28px; align-items: flex-start; }
+    #pane-life .canvas { flex: 1; min-width: 0; background: #faf9f7; border: 1px solid var(--color-border); border-radius: 16px; padding: 32px; display: flex; justify-content: center; }
+    #pane-life .props { width: 300px; flex: none; display: flex; flex-direction: column; gap: 18px; }
+    #pane-life .life-fit { position: relative; overflow: hidden; border-radius: 10px; box-shadow: 0 20px 50px -18px rgba(28,25,23,.30); }
+    #pane-life .lifeposter { transform: scale(var(--s, 1)); transform-origin: top left; }
+    #pane-life .lifeposter { width: 720px; height: 1080px; padding: 40px 44px 32px; display: flex; flex-direction: column; background: #f7f3ec; color: #1c1917; }
+    #pane-life .lifeposter.v-light { background: #ffffff; }
+    #pane-life .lifeposter.v-brand { background: #1c1917; color: #f5efe4; }
+    #pane-life .lp-tag { font-size: 11px; letter-spacing: .35em; font-weight: 600; color: #F55000; }
+    #pane-life .v-brand .lp-tag { color: #ff7a3d; }
+    #pane-life .lp-title { font-family: var(--font-serif); font-size: 32px; font-weight: 700; line-height: 1.4; margin: 12px 0 18px; text-align: left; }
+    #pane-life .lp-title em { font-style: normal; color: #F55000; }
+    #pane-life .v-brand .lp-title em { color: #ff7a3d; }
+    /* 比例条：已用掉的橙只占一小条 —— 视觉冲击 */
+    #pane-life .lp-hero { margin-bottom: 14px; }
+    #pane-life .lp-bar { position: relative; height: 16px; border-radius: 9px; background: #ece4d6; }
+    #pane-life .v-brand .lp-bar { background: rgba(255,255,255,.12); }
+    #pane-life .lp-bar-fill { position: absolute; left: 0; top: 0; height: 100%; border-radius: 9px; background: linear-gradient(90deg, #F55000, #ff8a3d); transition: width .3s; }
+    #pane-life .lp-bar-mark { position: absolute; top: -24px; transform: translateX(-50%); font-size: 10.5px; font-weight: 600; color: #F55000; white-space: nowrap; }
+    #pane-life .lp-bar-mark::after { content: ''; position: absolute; left: 50%; top: 100%; transform: translateX(-50%); border: 4px solid transparent; border-top-color: #F55000; }
+    #pane-life .v-brand .lp-bar-mark { color: #ff8a3d; }
+    #pane-life .v-brand .lp-bar-mark::after { border-top-color: #ff8a3d; }
+    #pane-life .lp-bignums { display: flex; gap: 16px; margin-top: 22px; }
+    #pane-life .lp-big { flex: 1; }
+    #pane-life .lp-big b { display: block; font-family: var(--font-serif); font-size: 30px; font-weight: 700; line-height: 1; color: #78716c; }
+    #pane-life .lp-big.lp-rem b { color: #F55000; }
+    #pane-life .v-brand .lp-big b { color: #d6d3d1; }
+    #pane-life .v-brand .lp-big.lp-rem b { color: #ff6a2b; }
+    #pane-life .lp-big span { display: block; font-size: 12px; color: #78716c; margin-top: 6px; }
+    #pane-life .v-brand .lp-big span { color: #a8a29e; }
+    #pane-life .lp-concrete { font-size: 13px; line-height: 1.7; color: #57534e; margin-top: 10px; }
+    #pane-life .v-brand .lp-concrete { color: #d6d3d1; }
+    #pane-life .lp-concrete b { color: #F55000; }
+    #pane-life .v-brand .lp-concrete b { color: #ff8a3d; }
+    #pane-life .lp-quote { font-size: 13px; line-height: 1.8; color: #57534e; margin: 14px 0 0; max-width: 560px; }
+    #pane-life .v-brand .lp-quote { color: #d6d3d1; }
+    #pane-life .lp-warn { font-size: 12.5px; line-height: 1.7; color: #b45309; margin: 6px 0 0; max-width: 560px; }
+    #pane-life .v-brand .lp-warn { color: #ffd9a8; }
+    #pane-life .lp-gridbox { position: relative; margin-top: 18px; flex: 1; min-height: 0; }
+    #pane-life .lp-age { position: absolute; left: 0; font-size: 9.5px; line-height: 1; color: #a8a29e; transform: translateY(-50%); }
+    #pane-life .lp-grid { display: grid; grid-template-columns: repeat(52, 8px); gap: 1.9px 3.6px; margin-left: 30px; }
+    #pane-life .lp-grid i { display: block; width: 8px; height: 4.2px; border-radius: 1.4px; background: #e7dfd0; }
+    #pane-life .v-light .lp-grid i { background: #e7e5e4; }
+    #pane-life .v-brand .lp-grid i { background: rgba(255,255,255,.14); }
+    #pane-life .lp-grid i.past { background: #F55000; }
+    #pane-life .v-brand .lp-grid i.past { background: #ff6a2b; }
+    #pane-life .lp-grid i.now { background: #F55000; box-shadow: 0 0 0 1.6px #1c1917; animation: lifePulse 2.2s ease-in-out infinite; }
+    #pane-life .v-brand .lp-grid i.now { background: #ff6a2b; box-shadow: 0 0 0 1.6px #f5efe4; }
+    #pane-life .lp-grid i.ms { background: transparent; box-shadow: 0 0 0 1.5px #F55000; }
+    #pane-life .v-brand .lp-grid i.ms { background: transparent; box-shadow: 0 0 0 1.5px #ff8a3d; }
+    @keyframes lifePulse { 0%,100% { box-shadow: 0 0 0 1.6px #1c1917; } 50% { box-shadow: 0 0 0 2.8px #1c1917; } }
+    #pane-life .lp-legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 11px; color: #78716c; margin-top: 14px; }
+    #pane-life .v-brand .lp-legend { color: #a8a29e; }
+    #pane-life .lp-legend .sw { display: inline-block; width: 9px; height: 6px; border-radius: 1.5px; vertical-align: middle; margin-right: 4px; }
+    #pane-life .lp-legend .sw.past { background: #F55000; }
+    #pane-life .lp-legend .sw.now { background: #F55000; box-shadow: 0 0 0 1.6px #1c1917; }
+    #pane-life .lp-legend .sw.ms { background: transparent; box-shadow: 0 0 0 1.5px #F55000; }
+    #pane-life .lp-legend .sw.fut { background: #e7dfd0; }
+    #pane-life .lp-foot { display: flex; justify-content: space-between; font-size: 11.5px; color: #a8a29e; margin-top: 12px; }
+    #pane-life .life-now { font-size: 14px; font-weight: 600; color: #F55000; line-height: 1.6; }
+    #pane-life .f-input { width: 100%; box-sizing: border-box; border: 1.5px solid var(--color-border); border-radius: 10px; padding: 9px 12px; font-family: inherit; font-size: 14px; color: var(--color-text); background: #fff; }
+    #pane-life .f-input:focus { outline: none; border-color: var(--color-accent); }
+    #pane-life #life-stage { position: fixed; left: -99999px; top: 0; }
+    @media (max-width: 900px) {
+      #pane-life .ws { flex-direction: column; }
+      #pane-life .props { width: 100%; }
     }
   </style>
 </BaseLayout>
