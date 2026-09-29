@@ -838,6 +838,10 @@ html { scroll-behavior: smooth; }
 .see-all:hover { text-decoration: underline; }
 
 /* ========== Responsive ========== */
+/* 工具入口：仅电脑/平板显示，手机（≤640px）隐藏（2026-09-29） */
+@media (max-width: 640px) {
+  .nav-links a.nav-tools { display: none; }
+}
 @media (max-width: 640px) {
   .nav-inner {
     padding: 0 16px;

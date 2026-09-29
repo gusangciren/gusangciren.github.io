@@ -8,34 +8,41 @@
 ---
 
 <div class="rdl-wrap">
-  {/* ===== 引导栏 ===== */}
-  <div class="rdl-headbar">
-    <div class="rdl-ic">✉</div>
-    <h2 class="rdl-h2">《致读者的一封信》</h2>
-    <p class="rdl-sub">关于免费资料、AI 时代的用法，以及怎么找到我</p>
-  </div>
+  {/* ===== 第 1 层 · 背景插画（focus-traveller 湖山场景） ===== */}
+  <div class="rdl-bg" aria-hidden="true"></div>
+  {/* ===== 第 2 层 · 半透明遮罩 ===== */}
+  <div class="rdl-bg-ov" aria-hidden="true"></div>
+  {/* ===== 第 3 层 · 顶层内容（引导栏 + 信封） ===== */}
+  <div class="rdl-ct">
+    {/* 引导栏 */}
+    <div class="rdl-headbar">
+      <div class="rdl-ic">✉</div>
+      <h2 class="rdl-h2">《致读者的一封信》</h2>
+      <p class="rdl-sub">关于免费资料、AI 时代的用法，以及怎么找到我</p>
+    </div>
 
-  {/* ===== 信封 ===== */}
-  <div class="rdl-stage">
-    <div class="rdl-scene" id="rdl-scene">
-      <div class="rdl-env">
-        <div class="rdl-face">
-          <div class="rdl-back"></div>
-          <div class="rdl-lpeek">
-            <span class="rdl-lp-tag">✈ 致读者的一封信</span>
-            <div class="rdl-lp-title">“我”读完，就让 <em>AI</em> 读。<br />把资源变成资产。</div>
-            <span class="rdl-lp-hint">点 击 展 开 阅 读</span>
+    {/* 信封 */}
+    <div class="rdl-stage">
+      <div class="rdl-scene" id="rdl-scene">
+        <div class="rdl-env">
+          <div class="rdl-face">
+            <div class="rdl-back"></div>
+            <div class="rdl-lpeek">
+              <span class="rdl-lp-tag">✈ 致读者的一封信</span>
+              <div class="rdl-lp-title">“我”读完，就让 <em>AI</em> 读。<br />把资源变成资产。</div>
+              <span class="rdl-lp-hint">点 击 展 开 阅 读</span>
+            </div>
+            <div class="rdl-flap"></div>
+            <div class="rdl-pocket"></div>
+            <div class="rdl-wax">启</div>
+            <div class="rdl-qinqi">亲启</div>
+            <div class="rdl-addr"><em>TO · READER</em><i></i><i></i></div>
+            <div class="rdl-via">VIA AIR MAIL</div>
           </div>
-          <div class="rdl-flap"></div>
-          <div class="rdl-pocket"></div>
-          <div class="rdl-wax">启</div>
-          <div class="rdl-qinqi">亲启</div>
-          <div class="rdl-addr"><em>TO · READER</em><i></i><i></i></div>
-          <div class="rdl-via">VIA AIR MAIL</div>
         </div>
       </div>
+      <div class="rdl-hint">— 点 击 拆 信 —</div>
     </div>
-    <div class="rdl-hint">— 点 击 拆 信 —</div>
   </div>
 </div>
 
@@ -110,13 +117,19 @@
 
 <style is:global>
 /* ===== 读者信（rdl- 前缀防冲突）· 放大版 ===== */
-.rdl-wrap{max-width:1040px;margin:16px auto 0;}
+/* 三层结构（金句做法）：背景插画 → 半透明遮罩 → 顶层内容，均 absolute inset:0 叠放 */
+.rdl-wrap{position:relative;width:calc(100% - 48px);max-width:1200px;margin:16px auto 0;border-radius:20px;overflow:hidden;
+  box-shadow:0 24px 60px rgba(28,25,23,.12);}
+.rdl-bg{position:absolute;inset:0;background:url('/images/letter-bg-focus.jpg') center 58% / cover no-repeat;}
+.rdl-bg-ov{position:absolute;inset:0;background:rgba(22,17,10,.44);}
+.rdl-ct{position:relative;z-index:2;padding:54px 20px 64px;}
 .rdl-headbar{text-align:center;padding:0 20px;}
-.rdl-ic{font-size:26px;color:var(--color-accent);line-height:1;}
-.rdl-h2{font-family:var(--font-serif);font-size:2.3rem;font-weight:700;margin:8px 0 6px;color:var(--color-text);}
-.rdl-sub{font-size:15px;color:var(--color-text-secondary);}
+.rdl-ic{font-size:26px;color:#ffd9a8;line-height:1;}
+.rdl-h2{font-family:var(--font-serif);font-size:2.3rem;font-weight:700;margin:8px 0 6px;color:#fff;
+  text-shadow:0 2px 14px rgba(0,0,0,.25);}
+.rdl-sub{font-size:15px;color:rgba(255,255,255,.88);}
 .rdl-stage{display:flex;flex-direction:column;align-items:center;padding-top:130px;}
-.rdl-hint{margin-top:18px;font-size:14px;color:var(--color-text-secondary);letter-spacing:.3em;}
+.rdl-hint{margin-top:18px;font-size:14px;color:rgba(255,255,255,.92);letter-spacing:.3em;}
 
 /* 信封 A2 · 放大 */
 .rdl-env{position:relative;width:min(480px,88vw);aspect-ratio:410/252;padding:9px;border-radius:12px;cursor:pointer;

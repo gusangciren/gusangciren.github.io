@@ -33,6 +33,7 @@ function titleWithBrackets(name) {
   /* 只要含中文就加书名号（含 YC 创业课这类中英混排），纯英文书名才不加 */
   return /[一-龥]/.test(name) ? `《${name}》` : name;
 }
+
 ---
 
 <BaseLayout title="像企业家一样写作">
@@ -58,44 +59,42 @@ function titleWithBrackets(name) {
     </div>
   </section>
 
-  <!-- Books Preview：书架横滑 · 书脊墙（方案 C） -->
+  <!-- Books Preview：封面流 · 站点白底 · /book 同款白卡（2026-09-29 ②） -->
   <section class="section section-books">
     <div class="section-inner">
-      <SectionHeader title="书籍作品" icon="book" />
-      <div class="shelf-wrap">
-        <button class="shelf-arrow prev" id="shelf-prev" aria-label="向左滑动">‹</button>
-        <div class="books-shelf" id="books-shelf">
-          {books.map((book) => {
+      <div class="books-cf">
+        <div class="cf-head">
+          <div class="cf-title">书籍<span class="hl">作品</span></div>
+          <div class="cf-sub">我这辈子遇到的聪明人，没有一个不每天阅读的——没有，一个都没有。（查理·芒格）</div>
+        </div>
+        <div class="cf-wrap" id="books-deck">
+          {books.map((book, i) => {
             const slug = book.slug || book.id.replace(/\.(md|mdx)$/i, '');
             const firstChapter = firstChapterMap.get(book.id);
             const chapterCount = chapterCountMap.get(book.id) || 0;
             const unit = getUnit(book);
             const href = firstChapter ? `/blog/${firstChapter}` : `/book/${slug}`;
-            // 有系列名的书（如《闭环》），首页统一显示「书名：副标题」，避免与书籍页名称不一致
-            const title = book.data.seriesName && book.data.subtitle
-              ? `${book.data.title}：${book.data.subtitle}`
-              : (book.data.seriesName || book.data.title);
+            const meta = book.data.ongoing ? '连载中' : `${chapterCount} ${unit} · 免费`;
+            const fullTitle = titleWithBrackets(book.data.subtitle ? `${book.data.title}：${book.data.subtitle}` : book.data.title);
             return (
-              <a href={href} class="shelf-card">
-                <div class="shelf-cover">
-                  {book.data.ongoing ? (
-                    <span class="shelf-ongoing">持续更新中···</span>
-                  ) : book.data.isNew ? (
-                    <span class="shelf-new">NEW</span>
-                  ) : null}
-                  <img src={book.data.cover} alt={book.data.title} loading="lazy" />
+              <a href={href} class="deck-card">
+                <div class="dc-cover">
+                  {book.data.ongoing && <span class="dc-ongoing">持续更新中…</span>}
+                  {book.data.isNew && !book.data.ongoing && <span class="dc-new">NEW</span>}
+                  <img src={book.data.cover} alt={book.data.title} loading="lazy" onerror="this.classList.add('broken')" />
                 </div>
-                <h3>{titleWithBrackets(title)}</h3>
-                {book.data.motto && <p class="shelf-hook">{book.data.motto}</p>}
-                {chapterCount > 0 && (
-                  <span class="shelf-cta">{chapterCount} {unit} · 开始阅读 →</span>
-                )}
+                <div class="dc-body">
+                  <div class="dc-title">{fullTitle}</div>
+                  <p class="dc-desc">{book.data.description}</p>
+                  <div class="dc-foot">
+                    <span class="dc-meta">{meta}</span>
+                    <span class="dc-go">开始阅读 →</span>
+                  </div>
+                </div>
               </a>
             );
           })}
-          <a class="shelf-more" href="/book">全部书籍<br />→</a>
         </div>
-        <button class="shelf-arrow next" id="shelf-next" aria-label="向右滑动">›</button>
       </div>
     </div>
   </section>
@@ -137,25 +136,43 @@ function titleWithBrackets(name) {
     })();
 
     (function () {
-      var shelf = document.getElementById('books-shelf');
-      var prev = document.getElementById('shelf-prev');
-      var next = document.getElementById('shelf-next');
-      if (!shelf || !prev || !next) return;
-      function go(dir) {
-        var card = shelf.querySelector('.shelf-card');
-        var w = card ? card.offsetWidth + 16 : 260;
-        shelf.scrollBy({ left: dir * w * 2, behavior: 'smooth' });
+      var wrap = document.getElementById('books-deck');
+      if (!wrap) return;
+      var cards = Array.prototype.slice.call(wrap.querySelectorAll('.deck-card'));
+      var n = cards.length, center = 0, timer = null;
+      var FALL = 0.19; /* 侧卡缩放衰减：d=1 → .81，d=2 → .62 */
+      /* 间距动态计算：最外侧卡（d=2）的右缘正好对齐专栏内容区边缘（.section-inner 1200 / 视口-48） */
+      function spacing() {
+        var half = Math.min(1200, window.innerWidth - 48) / 2;
+        var cw = (cards[0] ? cards[0].offsetWidth : 264) / 2;
+        var sp = (half - cw * (1 - 2 * FALL)) / 2;
+        return Math.max(150, Math.min(260, sp));
       }
-      prev.addEventListener('click', function () { go(-1); });
-      next.addEventListener('click', function () { go(1); });
-      function sync() {
-        var max = shelf.scrollWidth - shelf.clientWidth - 2;
-        prev.classList.toggle('off', shelf.scrollLeft <= 2);
-        next.classList.toggle('off', shelf.scrollLeft >= max);
+      function render() {
+        var sp = spacing();
+        cards.forEach(function (c, i) {
+          var d = (i - center + n) % n; if (d > n / 2) d -= n;
+          var ad = Math.abs(d);
+          var s = 1 - Math.min(ad, 2) * FALL;
+          c.style.transform = 'translateX(' + (d * sp) + 'px) scale(' + s.toFixed(3) + ')';
+          c.style.zIndex = 10 - ad * 2;
+          /* 浅底：侧卡淡出到白（降不透明度 + 降饱和），而非压暗 */
+          c.style.opacity = (1 - Math.min(ad, 2) * 0.42).toFixed(2);
+          c.style.filter = ad > 0 ? 'saturate(' + (1 - Math.min(ad, 2) * 0.4).toFixed(2) + ')' : 'none';
+          c.classList.toggle('is-center', ad === 0);
+        });
       }
-      shelf.addEventListener('scroll', sync, { passive: true });
-      window.addEventListener('resize', sync);
-      sync();
+      function go(i) { center = ((i % n) + n) % n; render(); }
+      cards.forEach(function (c, i) {
+        c.addEventListener('click', function (e) {
+          if (i !== center) { e.preventDefault(); go(i); }
+        });
+      });
+      wrap.addEventListener('mouseenter', function () { if (timer) { clearInterval(timer); timer = null; } });
+      wrap.addEventListener('mouseleave', start);
+      function start() { if (!timer) timer = setInterval(function () { go(center + 1); }, 3500); }
+      window.addEventListener('resize', render);
+      render(); start();
     })();
   </script>
 
@@ -344,181 +361,71 @@ function titleWithBrackets(name) {
     .site-url-btn:hover { background: #d94700; transform: translateY(-1px); }
     .site-url-btn.copied { background: #2a9d3c; }
 
-    /* ===== 首页书籍：书架横滑 · 书脊墙（方案 C） ===== */
+    /* ===== 首页书籍：封面流 · 站点白底 · 完整彩卡（2026-09-29 ① 全融入版） ===== */
     .section-books .section-inner { max-width: 1200px; }
     .section-columns .section-inner { max-width: 1200px; }
-    .shelf-wrap { position: relative; }
-    .books-shelf {
-      display: flex;
-      gap: 16px;
-      overflow-x: auto;
-      scroll-snap-type: x proximity;
-      padding: 4px 4px 14px;
-      scrollbar-width: thin;
-      scrollbar-color: #d6d3d1 transparent;
+    .books-cf { /* 全融入：无面板、直接用页面底色，与全站统一 */ }
+    .cf-head { text-align: center; padding: 0 24px; }
+    .cf-title {
+      font-family: var(--font-serif); font-size: 1.9rem; font-weight: 700;
+      color: var(--color-text); letter-spacing: .02em; margin-bottom: 8px;
     }
-    .books-shelf { scrollbar-width: auto; }
-    .books-shelf::-webkit-scrollbar { height: 10px; }
-    .books-shelf::-webkit-scrollbar-track { background: rgba(0,0,0,.04); border-radius: 999px; }
-    .books-shelf::-webkit-scrollbar-thumb { background: #c4c0bc; border-radius: 999px; }
-    .shelf-card {
-      flex: 0 0 340px;
-      scroll-snap-align: start;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding: 28px 24px;
-      background: var(--color-card-bg);
-      border: 2px solid rgba(245,80,0,.5);
-      border-radius: 14px;
-      box-shadow: 0 6px 22px rgba(245,80,0,.10);
-      text-decoration: none;
-      color: inherit;
-      transition: box-shadow .2s, transform .2s, border-color .2s;
-      perspective: 900px;
-    }
-    .shelf-card:hover {
-      box-shadow: 0 16px 36px rgba(245,80,0,.22);
-      border-color: var(--color-accent);
-      transform: translateY(-4px);
-    }
-    .shelf-card:hover .shelf-cover {
-      transform: rotateY(-16deg) scale(1.04);
-      box-shadow: 0 18px 42px rgba(0,0,0,.22);
-    }
-    .shelf-cover {
-      position: relative;
-      width: 120px;
-      aspect-ratio: 3/4;
-      border-radius: 8px;
-      overflow: hidden;
-      margin-bottom: 18px;
-      box-shadow: 0 10px 28px rgba(0,0,0,0.16);
-      flex-shrink: 0;
-      transition: transform .35s cubic-bezier(.2,.7,.3,1), box-shadow .2s;
-      transform-style: preserve-3d;
-    }
-    .shelf-cover img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .shelf-new {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: var(--color-accent);
-      color: #fff;
-      font-size: 10.5px;
-      font-weight: 700;
-      letter-spacing: .08em;
-      padding: 3px 9px;
-      border-radius: 999px;
-      box-shadow: 0 3px 8px rgba(245,80,0,.35);
-    }
-    .shelf-ongoing {
-      position: absolute;
-      top: 12px;
-      right: -22px;
-      width: 90px;
-      text-align: center;
-      transform: rotate(45deg);
-      transform-origin: center center;
-      background: var(--color-accent);
-      color: #fff;
-      font-size: 9px;
-      font-weight: 600;
-      letter-spacing: .04em;
-      padding: 3px 0;
-      box-shadow: 0 2px 5px rgba(0,0,0,.15);
-      z-index: 3;
-      pointer-events: none;
-    }
-    .shelf-card h3 {
-      font-family: var(--font-serif);
-      font-size: 0.98rem;
-      font-weight: 600;
-      margin-bottom: 6px;
-      line-height: 1.45;
-    }
-    .shelf-hook {
-      font-family: var(--font-serif);
-      font-size: 13px;
-      font-style: italic;
-      color: var(--color-accent);
-      margin-bottom: 14px;
-      line-height: 1.55;
-    }
-    .shelf-cta {
-      display: inline-block;
-      font-size: 13px;
-      color: #fff;
-      background: #1a1a1a;
-      border: 1.5px solid #1a1a1a;
-      border-radius: 999px;
-      padding: 8px 16px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: background .2s, border-color .2s, transform .2s, box-shadow .2s;
-    }
-    .shelf-card:hover .shelf-cta {
-      background: var(--color-accent);
-      border-color: var(--color-accent);
-      transform: translateY(-1px);
-      box-shadow: 0 6px 14px rgba(245,80,0,.25);
-    }
-    .shelf-more {
-      flex: 0 0 92px;
-      scroll-snap-align: start;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      gap: 6px;
-      border: 1.5px dashed var(--color-border);
-      border-radius: 14px;
-      font-size: 13.5px;
-      font-weight: 600;
-      line-height: 1.6;
-      color: var(--color-accent);
-      text-decoration: none;
-      transition: border-color .2s, background .2s, transform .2s;
-    }
-    .shelf-more:hover {
-      border-color: var(--color-accent);
-      background: rgba(245,80,0,.04);
-      transform: translateY(-2px);
-    }
-    .shelf-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 3;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
+    .cf-title .hl { color: var(--color-accent); }
+    .cf-sub { font-size: .92rem; color: var(--color-text-secondary); margin-bottom: 22px; }
+    .cf-wrap { position: relative; height: 392px; margin-top: 30px; overflow-x: clip; }
+    .deck-card {
+      position: absolute; left: 50%; top: 0; margin-left: -132px;
+      width: 264px; height: 352px; border-radius: 14px; overflow: hidden;
+      display: flex; flex-direction: column;
+      background: var(--color-card-bg, #fff);
       border: 1px solid var(--color-border);
-      background: #fff;
-      color: #57534e;
-      font-size: 18px;
-      line-height: 1;
-      cursor: pointer;
-      box-shadow: 0 4px 14px rgba(0,0,0,.12);
-      display: none;
-      place-items: center;
-      transition: opacity .2s, color .2s, border-color .2s;
+      text-decoration: none; cursor: pointer; color: inherit;
+      transform-origin: 50% 100%;
+      transition: transform .45s cubic-bezier(.22,.61,.36,1), filter .45s, opacity .45s, box-shadow .45s;
+      box-shadow: 0 12px 26px rgba(28,25,23,.10);
     }
-    .shelf-arrow.prev { left: -14px; }
-    .shelf-arrow.next { right: -14px; }
-    .shelf-arrow.off { opacity: 0; pointer-events: none; }
-    @media (hover: hover) and (min-width: 861px) {
-      .shelf-arrow { display: grid; }
-      .shelf-arrow:hover { color: var(--color-accent); border-color: var(--color-accent); }
+    .deck-card.is-center { box-shadow: 0 22px 44px rgba(245,80,0,.18); border-color: rgba(245,80,0,.35); }
+    .deck-card img.broken { display: none; }
+    .dc-cover {
+      position: relative; background: #f7f6f4; height: 176px;
+      display: flex; justify-content: center; align-items: flex-start;
+      padding-top: 20px; overflow: hidden;
     }
+    .dc-cover img {
+      width: 104px; aspect-ratio: 3 / 4; object-fit: cover;
+      border-radius: 4px; box-shadow: 0 4px 14px rgba(0,0,0,.16);
+    }
+    .dc-new {
+      position: absolute; top: 12px; right: 12px;
+      background: var(--color-accent); color: #fff;
+      font-size: 10.5px; font-weight: 700; letter-spacing: .08em;
+      padding: 3px 9px; border-radius: 999px;
+      box-shadow: 0 4px 10px rgba(245,80,0,.3); z-index: 3;
+    }
+    .dc-ongoing {
+      position: absolute; top: 16px; right: -26px; width: 104px; text-align: center;
+      transform: rotate(45deg); transform-origin: center center;
+      font-size: 10px; font-weight: 600; color: #fff; background: var(--color-accent);
+      letter-spacing: .04em; padding: 4px 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,.15); z-index: 3; pointer-events: none;
+      white-space: nowrap;
+    }
+    .dc-body { padding: 13px 16px 13px; display: flex; flex-direction: column; flex: 1; min-height: 0; }
+    .dc-title {
+      font-family: var(--font-serif); font-size: 13px; font-weight: 700; line-height: 1.5;
+      text-align: center; margin: 0 0 7px; color: var(--color-text);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .dc-desc {
+      font-size: 12px; color: #555; line-height: 1.65; margin: 0;
+      display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .dc-foot {
+      margin-top: auto; display: flex; justify-content: space-between; align-items: center;
+      border-top: 1px solid var(--color-border); padding-top: 10px;
+    }
+    .dc-meta { font-size: 11.5px; color: var(--color-text-secondary); white-space: nowrap; }
+    .dc-go { font-size: 12.5px; color: var(--color-accent); font-weight: 600; white-space: nowrap; }
 
     /* ===== 首页专栏预览卡片（方案 B） ===== */
     .columns-preview-grid {
@@ -595,21 +502,21 @@ function titleWithBrackets(name) {
       .site-url-box { max-width: 100%; padding: 5px 5px 5px 12px; }
       .site-url-text { font-size: 13.5px; }
       .site-url-btn { font-size: 12.5px; padding: 6px 12px; }
-      .books-shelf { gap: 14px; }
-      .shelf-card { flex-basis: 262px; padding: 22px 18px; }
-      .shelf-cover { width: 104px; }
-      .shelf-card h3 { font-size: 1rem; }
-      .shelf-hook { font-size: 12px; }
-      .shelf-cta { font-size: 12.5px; }
-      .shelf-more { font-size: 12.5px; }
+      .cf-title { font-size: 1.4rem; }
+      .cf-wrap { height: 306px; }
+      .deck-card { width: 206px; height: 264px; margin-left: -103px; }
+      .dc-cover { height: 136px; padding-top: 14px; }
+      .dc-cover img { width: 82px; }
+      .dc-body { padding: 11px 13px 11px; }
+      .dc-title { font-size: 10.5px; }
+      .dc-desc { font-size: 11px; -webkit-line-clamp: 2; }
+      .dc-meta { font-size: 10.5px; }
+      .dc-go { font-size: 11.5px; }
       .columns-preview-grid { grid-template-columns: 1fr; gap: 16px; }
       .column-preview-card { padding: 20px 18px; }
       .column-preview-card h3 { font-size: 1.05rem; }
       .column-preview-desc { font-size: 12px; }
       .column-preview-item { font-size: 12.5px; }
-    }
-    @media (max-width: 400px) {
-      .shelf-card { flex-basis: 262px; }
     }
   </style>
 </BaseLayout>
