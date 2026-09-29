@@ -149,32 +149,75 @@ function titleWithBrackets(name) {
         var sp = (half - cw * (1 - 2 * FALL)) / 2;
         return Math.max(150, Math.min(260, sp));
       }
-      function render() {
+      function render(off) {
         var mobile = window.innerWidth < 640;
         var cw = (cards[0] ? cards[0].offsetWidth : 264) / 2;
-        /* 手机：两侧卡只探出 ~44px 干净的封面边（露纯色卡背不露文字），d≥2 完全隐藏 */
-        var PEEK = 44;
+        /* 手机：两侧卡探出 ~90px 隐约可见下一本（渐隐遮罩融掉边缘，不露被裁文字），d≥2 隐藏 */
+        var PEEK = 90;
         var sp = mobile ? (halfWidth() + cw * 0.88 - PEEK) : spacing();
+        var off = off || 0;
         cards.forEach(function (c, i) {
           var d = (i - center + n) % n; if (d > n / 2) d -= n;
           var ad = Math.abs(d);
           var hidden = mobile && ad >= 2;
           var s = mobile ? (ad === 0 ? 1 : 0.88) : 1 - Math.min(ad, 2) * FALL;
-          c.style.transform = 'translateX(' + (d * sp) + 'px) scale(' + s.toFixed(3) + ')';
+          c.style.transform = 'translateX(' + (d * sp + off) + 'px) scale(' + s.toFixed(3) + ')';
           c.style.zIndex = 10 - ad * 2;
           /* 浅底：侧卡淡出到白（降不透明度 + 降饱和），而非压暗 */
-          c.style.opacity = hidden ? '0' : (mobile && ad > 0 ? '0.38' : (1 - Math.min(ad, 2) * 0.42).toFixed(2));
+          c.style.opacity = hidden ? '0' : (mobile && ad > 0 ? '0.5' : (1 - Math.min(ad, 2) * 0.42).toFixed(2));
           c.style.pointerEvents = hidden ? 'none' : '';
           c.style.filter = ad > 0 ? 'saturate(' + (1 - Math.min(ad, 2) * 0.4).toFixed(2) + ')' : 'none';
           c.classList.toggle('is-center', ad === 0);
         });
       }
       function go(i) { center = ((i % n) + n) % n; render(); }
+      var lastDrag = 0;
       cards.forEach(function (c, i) {
         c.addEventListener('click', function (e) {
+          if (Date.now() - lastDrag < 400) { e.preventDefault(); return; } /* 刚滑完不误触链接 */
           if (i !== center) { e.preventDefault(); go(i); }
         });
       });
+      /* 手机：手指横向滑动切换（实时跟手，松手按阈值吸附；竖向滚动不受影响） */
+      var tsX = 0, tsY = 0, dragX = 0, axis = null, dragging = false;
+      function setCardTransition(on) {
+        cards.forEach(function (c) { c.style.transition = on ? '' : 'none'; });
+      }
+      wrap.addEventListener('touchstart', function (e) {
+        if (window.innerWidth < 640 && e.touches.length === 1) {
+          if (timer) { clearInterval(timer); timer = null; }
+          tsX = e.touches[0].clientX; tsY = e.touches[0].clientY;
+          dragging = true; axis = null; dragX = 0;
+        }
+      }, { passive: true });
+      wrap.addEventListener('touchmove', function (e) {
+        if (!dragging) return;
+        var dx = e.touches[0].clientX - tsX, dy = e.touches[0].clientY - tsY;
+        if (!axis) {
+          if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+          axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+        }
+        if (axis !== 'x') return;
+        e.preventDefault();
+        dragX = dx;
+        setCardTransition(false);
+        render(dragX);
+      }, { passive: false });
+      function touchEnd() {
+        if (!dragging) return;
+        dragging = false;
+        setCardTransition(true);
+        var moved = dragX; dragX = 0;
+        if (axis === 'x' && Math.abs(moved) > 40) {
+          lastDrag = Date.now();
+          go(center + (moved < 0 ? 1 : -1));
+        } else {
+          render();
+        }
+        start();
+      }
+      wrap.addEventListener('touchend', touchEnd);
+      wrap.addEventListener('touchcancel', touchEnd);
       wrap.addEventListener('mouseenter', function () { if (timer) { clearInterval(timer); timer = null; } });
       wrap.addEventListener('mouseleave', start);
       function start() { if (!timer) timer = setInterval(function () { go(center + 1); }, 3500); }
@@ -511,13 +554,13 @@ function titleWithBrackets(name) {
       .site-url-btn { font-size: 12.5px; padding: 6px 12px; }
       .cf-title { font-size: 1.4rem; }
       .cf-wrap { height: 306px; }
-      /* 手机：两端白色渐隐，把侧卡的露边融进页面底色（不露被裁文字） */
+      /* 手机：两端白色渐隐只收最外 ~44px，侧卡探出的 90px 主体隐约可见（被裁文字融进底色） */
       .cf-wrap::before, .cf-wrap::after {
-        content: ''; position: absolute; top: -20px; bottom: -20px; width: 72px;
+        content: ''; position: absolute; top: -20px; bottom: -20px; width: 44px;
         z-index: 20; pointer-events: none;
       }
-      .cf-wrap::before { left: -26px; background: linear-gradient(90deg, #fafaf9 52%, rgba(250,250,249,0)); }
-      .cf-wrap::after { right: -26px; background: linear-gradient(270deg, #fafaf9 52%, rgba(250,250,249,0)); }
+      .cf-wrap::before { left: -26px; background: linear-gradient(90deg, #fafaf9 30%, rgba(250,250,249,0)); }
+      .cf-wrap::after { right: -26px; background: linear-gradient(270deg, #fafaf9 30%, rgba(250,250,249,0)); }
       .deck-card { width: 206px; height: 264px; margin-left: -103px; }
       .dc-cover { height: 136px; padding-top: 14px; }
       .dc-cover img { width: 82px; }
