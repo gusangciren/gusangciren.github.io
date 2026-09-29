@@ -422,10 +422,10 @@ function titleWithBrackets(name) {
     }
     .cf-title .hl { color: var(--color-accent); }
     .cf-sub { font-size: .92rem; color: var(--color-text-secondary); margin-bottom: 22px; }
-    .cf-wrap { position: relative; height: 392px; margin-top: 30px; overflow-x: clip; }
+    .cf-wrap { position: relative; height: 486px; margin-top: 30px; overflow-x: clip; }
     .deck-card {
-      position: absolute; left: 50%; top: 0; margin-left: -132px;
-      width: 264px; height: 352px; border-radius: 14px; overflow: hidden;
+      position: absolute; left: 50%; top: 0; margin-left: -165px;
+      width: 330px; height: 440px; border-radius: 16px; overflow: hidden;
       display: flex; flex-direction: column;
       background: var(--color-card-bg, #fff);
       border: 1px solid var(--color-border);
@@ -437,45 +437,45 @@ function titleWithBrackets(name) {
     .deck-card.is-center { box-shadow: 0 22px 44px rgba(245,80,0,.18); border-color: rgba(245,80,0,.35); }
     .deck-card img.broken { display: none; }
     .dc-cover {
-      position: relative; background: #f7f6f4; height: 176px;
+      position: relative; background: #f7f6f4; height: 224px;
       display: flex; justify-content: center; align-items: flex-start;
-      padding-top: 20px; overflow: hidden;
+      padding-top: 24px; overflow: hidden;
     }
     .dc-cover img {
-      width: 104px; aspect-ratio: 3 / 4; object-fit: cover;
-      border-radius: 4px; box-shadow: 0 4px 14px rgba(0,0,0,.16);
+      width: 130px; aspect-ratio: 3 / 4; object-fit: cover;
+      border-radius: 5px; box-shadow: 0 4px 14px rgba(0,0,0,.16);
     }
     .dc-new {
-      position: absolute; top: 12px; right: 12px;
+      position: absolute; top: 14px; right: 14px;
       background: var(--color-accent); color: #fff;
-      font-size: 10.5px; font-weight: 700; letter-spacing: .08em;
-      padding: 3px 9px; border-radius: 999px;
+      font-size: 12px; font-weight: 700; letter-spacing: .08em;
+      padding: 4px 11px; border-radius: 999px;
       box-shadow: 0 4px 10px rgba(245,80,0,.3); z-index: 3;
     }
     .dc-ongoing {
-      position: absolute; top: 16px; right: -26px; width: 104px; text-align: center;
+      position: absolute; top: 20px; right: -30px; width: 122px; text-align: center;
       transform: rotate(45deg); transform-origin: center center;
-      font-size: 10px; font-weight: 600; color: #fff; background: var(--color-accent);
-      letter-spacing: .04em; padding: 4px 0;
+      font-size: 11.5px; font-weight: 600; color: #fff; background: var(--color-accent);
+      letter-spacing: .04em; padding: 5px 0;
       box-shadow: 0 2px 6px rgba(0,0,0,.15); z-index: 3; pointer-events: none;
       white-space: nowrap;
     }
-    .dc-body { padding: 13px 16px 13px; display: flex; flex-direction: column; flex: 1; min-height: 0; }
+    .dc-body { padding: 16px 20px 15px; display: flex; flex-direction: column; flex: 1; min-height: 0; }
     .dc-title {
-      font-family: var(--font-serif); font-size: 13px; font-weight: 700; line-height: 1.5;
-      text-align: center; margin: 0 0 7px; color: var(--color-text);
+      font-family: var(--font-serif); font-size: 16px; font-weight: 700; line-height: 1.5;
+      text-align: center; margin: 0 0 9px; color: var(--color-text);
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .dc-desc {
-      font-size: 12px; color: #555; line-height: 1.65; margin: 0;
+      font-size: 13.5px; color: #555; line-height: 1.68; margin: 0;
       display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
     }
     .dc-foot {
       margin-top: auto; display: flex; justify-content: space-between; align-items: center;
-      border-top: 1px solid var(--color-border); padding-top: 10px;
+      border-top: 1px solid var(--color-border); padding-top: 12px;
     }
-    .dc-meta { font-size: 11.5px; color: var(--color-text-secondary); white-space: nowrap; }
-    .dc-go { font-size: 12.5px; color: var(--color-accent); font-weight: 600; white-space: nowrap; }
+    .dc-meta { font-size: 13px; color: var(--color-text-secondary); white-space: nowrap; }
+    .dc-go { font-size: 14px; color: var(--color-accent); font-weight: 600; white-space: nowrap; }
 
     /* ===== 首页专栏预览卡片（方案 B） ===== */
     .columns-preview-grid {
