@@ -142,6 +142,28 @@ if (chapterSize && chapters.length > 0) {
         <p>本书文章尚未上传，敬请期待。</p>
       </div>
     )}
+
+    {book.data.wechatAlbum && (
+      <a
+        href={book.data.wechatAlbum.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="album-card"
+      >
+        <div class="album-shot">
+          <img src={book.data.wechatAlbum.image} alt={book.data.wechatAlbum.title} loading="lazy" />
+        </div>
+        <div class="album-info">
+          <span class="album-kicker">微信公众号 · 系列专辑</span>
+          <span class="album-title">{book.data.wechatAlbum.title}</span>
+          {book.data.wechatAlbum.note && <span class="album-note">{book.data.wechatAlbum.note}</span>}
+          <span class="album-meta">
+            {book.data.wechatAlbum.count && <span class="album-count">{book.data.wechatAlbum.count}</span>}
+            <span class="album-link">在微信中查看 →</span>
+          </span>
+        </div>
+      </a>
+    )}
   </div>
 </BaseLayout>
 
@@ -215,11 +237,39 @@ if (chapterSize && chapters.length > 0) {
   .article-date { font-size: 0.75rem; color: var(--color-text-secondary, #888); flex-shrink: 0; }
   .empty-notice { text-align: center; padding: 60px 20px; color: var(--color-text-secondary, #888); font-size: 0.95rem; }
 
+  /* 公众号专辑卡（目录末尾） */
+  .album-card {
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 20px;
+    background: var(--color-card-bg, #fff);
+    border: 1px solid var(--color-border, #e5e5e5);
+    border-radius: 12px;
+    text-decoration: none;
+    color: var(--color-text, #1a1a1a);
+    transition: all 0.2s ease;
+  }
+  .album-card:hover { border-color: var(--color-accent, #f55000); box-shadow: 0 6px 24px rgba(245,80,0,0.1); transform: translateY(-2px); }
+  .album-shot { flex-shrink: 0; width: 132px; border-radius: 10px; overflow: hidden; border: 1px solid var(--color-border, #e5e5e5); cursor: pointer; }
+  .album-shot img { display: block; width: 100%; height: auto; transition: transform 0.25s ease; }
+  .album-card:hover .album-shot img { transform: scale(1.04); }
+  .album-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+  .album-kicker { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.05em; color: var(--color-accent, #f55000); }
+  .album-title { font-family: var(--font-serif, Georgia, serif); font-size: 1.05rem; font-weight: 700; line-height: 1.4; }
+  .album-note { font-size: 0.82rem; color: var(--color-text-secondary, #888); line-height: 1.7; }
+  .album-meta { display: flex; align-items: center; gap: 14px; margin-top: 6px; flex-wrap: wrap; }
+  .album-count { font-size: 0.78rem; font-weight: 700; color: var(--color-accent, #f55000); background: var(--color-accent-light, #fff5f0); border: 1px solid rgba(245,80,0,0.18); padding: 3px 12px; border-radius: 20px; }
+  .album-link { font-size: 0.82rem; font-weight: 600; color: var(--color-accent, #f55000); }
+
   @media (max-width: 640px) {
     .book-hero { flex-direction: column; align-items: center; text-align: center; }
     .book-cover-img { width: 140px; }
     .motto { border-left: none; padding-left: 0; }
     .book-stats { justify-content: center; }
     .chapter-grid { grid-template-columns: 1fr; }
+    .album-card { flex-direction: row; gap: 16px; padding: 14px; }
+    .album-shot { width: 96px; }
   }
 </style>

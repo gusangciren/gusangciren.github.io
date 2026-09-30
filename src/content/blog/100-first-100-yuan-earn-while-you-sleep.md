@@ -7,7 +7,7 @@ series: "第一个100块"
 seriesOrder: 5
 ---
 
-![](/images/100/016_Image_1.png)
+![纳瓦尔：Learn to sell. Learn to build.](/images/100/17-纳瓦尔推特.png)
 
 我最自豪的推论是：内容是数字产品、内容是内容营销；写作是数字产品、写作是数字营销。
 

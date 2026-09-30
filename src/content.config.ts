@@ -30,6 +30,15 @@ const books = defineCollection({
     isNew: z.boolean().optional(),
     featured: z.boolean().optional(),
     ongoing: z.boolean().optional(),
+    wechatAlbum: z
+      .object({
+        title: z.string(),
+        image: z.string(),
+        url: z.string(),
+        note: z.string().optional(),
+        count: z.string().optional(),
+      })
+      .optional(),
   }),
 });
 

@@ -11,4 +11,10 @@ benefits:
   - 找到你的赛道和第一批观众
   - 把内容变成可以卖的产品
   - 建立睡觉时也在赚钱的收入系统
+wechatAlbum:
+  title: 第一个100块「七步曲」
+  image: /images/100/20-公众号专辑-第一个100块七步曲.jpg
+  url: https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzkyOTE4MDcyOA==&action=getalbum&album_id=4040771453392732161&scene=126#wechat_redirect
+  note: 本系列首发于微信公众号「种一个梦」，点击查看完整专辑。
+  count: 14 篇内容 · 阅读 2.7万
 ---
