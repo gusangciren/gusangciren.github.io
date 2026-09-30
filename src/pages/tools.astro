@@ -646,7 +646,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       var layout = document.querySelector('.tools-layout');
       var btn = document.getElementById('sideToggle');
       if (!layout || !btn) return;
-      var KEY = 'toolsSideHidden';
       function apply(hid) {
         layout.classList.toggle('side-hidden', hid);
         btn.setAttribute('aria-expanded', hid ? 'false' : 'true');
@@ -655,9 +654,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         btn.setAttribute('data-tip', hid ? '展开侧边栏 · Ctrl+G' : '收起侧边栏 · Ctrl+G');
       }
       btn.addEventListener('click', function () {
-        var hid = !layout.classList.contains('side-hidden');
-        try { localStorage.setItem(KEY, hid ? '1' : '0'); } catch (e) {}
-        apply(hid);
+        apply(!layout.classList.contains('side-hidden'));
       });
       document.addEventListener('keydown', function (ev) {
         var tg = ev.target;
@@ -667,9 +664,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           btn.click();
         }
       });
-      var saved = '0';
-      try { saved = localStorage.getItem(KEY) || '0'; } catch (e) {}
-      apply(saved === '1');
+      /* 默认展开：加载时侧边栏始终打开（不再记忆收起状态） */
+      apply(false);
     })();
 
     // ===== 书写伙伴（白噪音 + 专注时间 + 即时排版） =====
@@ -1315,18 +1311,18 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     .btn.primary { background: var(--color-accent); color: #fff; border-color: var(--color-accent); }
     .btn.primary:hover { filter: brightness(1.06); color: #fff; }
 
-    #pane-quote .ws { display: flex; align-items: stretch; border: 1px solid var(--color-border, #e7e5e4); border-radius: 16px; overflow: hidden; background: #fff; }
+    #pane-quote .ws { display: flex; align-items: stretch; }
 
-    #pane-quote .canvas { flex: 1; min-width: 0; overflow: auto; display: flex; align-items: flex-start; justify-content: center; padding: 34px 16px; background: #faf9f7; }
-    #pane-quote .canvas-dot { padding: 38px 40px; border-radius: 18px; }
+    #pane-quote .canvas { flex: 1; min-width: 0; overflow: auto; display: flex; align-items: flex-start; justify-content: center; padding: 0 16px; }
+    #pane-quote .canvas-dot { padding: 22px 40px 38px; border-radius: 18px; }
 
     /* 预览缩放：外层量好尺寸，内层卡片原尺寸 transform 缩放（导出走离屏原尺寸克隆，不经缩放） */
-    #pane-quote .card-fit { position: relative; overflow: hidden; border-radius: 10px; box-shadow: 0 20px 50px -18px rgba(28,25,23,.30); }
-    #pane-quote .card-fit .tcard { transform: scale(var(--qc-s, 1)); transform-origin: top left; box-shadow: none; }
+    #pane-quote .card-fit { position: relative; }
+    #pane-quote .card-fit .tcard { transform: scale(var(--qc-s, 1)); transform-origin: top left; box-shadow: 0 20px 50px -18px rgba(28,25,23,.30); border-radius: 10px; overflow: hidden; }
     #pane-quote #qc-stage { position: absolute; left: -10000px; top: 0; }
     #pane-quote #qc-stage .tcard { transform: none; }
 
-    #pane-quote .props { width: 300px; flex: none; background: #fff; border-left: 1px solid var(--color-border, #e7e5e4); padding: 22px 18px; overflow-y: auto; }
+    #pane-quote .props { width: 300px; flex: none; padding: 22px 18px; overflow-y: auto; }
     #pane-quote .field { margin-bottom: 16px; }
     #pane-quote .fld-label { display: block; font-size: 13px; color: var(--color-text-secondary); margin-bottom: 7px; }
     #pane-quote .f-input, #pane-quote .f-area { width: 100%; padding: 11px 13px; border: 1px solid var(--color-border, #e7e5e4); border-radius: 11px; font-family: var(--font-serif); font-size: 14px; color: var(--color-text); background: #fff; outline: none; transition: border-color .2s; box-sizing: border-box; }
