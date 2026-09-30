@@ -1,36 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
-
-/* 随机金句库：构建时从已发布的 blog 文章与 books 书集里自动抽句，发文越多库越大 */
-let diceQuotes = [];
-try {
-  const posts = await getCollection('blog');
-  const chapters = await getCollection('books');
-  const pool = new Set();
-  const pick = (body) => {
-    if (!body) return;
-    const text = String(body)
-      .replace(/^---[\s\S]*?---/, '')
-      .replace(/```[\s\S]*?```/g, ' ')
-      .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
-      .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
-      .replace(/[`>*#_~|]/g, '');
-    text.split(/[。！？\n]/).forEach((raw) => {
-      const s = raw.trim().replace(/^["'「『《（(【\s]+/, '').replace(/["'」』》》）)】\s]+$/, '');
-      if (s.length >= 8 && s.length <= 42 && /[\u4e00-\u9fa5]/.test(s) && !/https?:|@|\/\/|^\d+$/.test(s)) pool.add(s);
-    });
-  };
-  posts.forEach((p) => pick(p.body));
-  chapters.forEach((c) => pick(c.body));
-  diceQuotes = [...pool];
-  /* 控制体积：全站可抽出上万句，随机取 260 句嵌入页面（每次构建换一批，像换新句库） */
-  for (let i = diceQuotes.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [diceQuotes[i], diceQuotes[j]] = [diceQuotes[j], diceQuotes[i]];
-  }
-  diceQuotes = diceQuotes.slice(0, 260);
-} catch (e) { diceQuotes = []; }
 ---
 
 <BaseLayout title="工具箱 · 像企业家一样写作">
@@ -155,7 +124,7 @@ try {
             </div>
             <div class="field">
               <label class="fld-label">灵感</label>
-              <button class="btn sm" id="qcDice" style="width:100%" data-quotes={JSON.stringify(diceQuotes)}>🎲 随机一句</button>
+              <button class="btn sm" id="qcDice" style="width:100%">🎲 随机一句</button>
             </div>
             <div class="field">
               <label class="fld-label">头像</label>
@@ -360,9 +329,8 @@ try {
         handleIn.addEventListener('input', function () { state.handle = handleIn.value; render(); saveProfile(); });
         checkIn.addEventListener('change', function () { state.check = checkIn.checked; render(); });
 
-        /* 随机金句：内置句库 + 构建时从已发布文章/书集抽取的句子（data-quotes），合并去重 */
-        var QUOTES = (function () {
-          var base = [
+        /* 随机金句：内置句库（网站抓取句已下架，后续按用户提供的句子卡片扩充） */
+        var QUOTES = [
           '写作，是把混乱的想法一个字一个字排好队。',
           '你不需要灵感，你需要坐下来。',
           '每天写一点，比偶尔写一篇更有力量。',
@@ -388,10 +356,6 @@ try {
           '你今天写下的字，是明天别人的路标。',
           '想法不值钱，做完才值钱。'
           ];
-          var extra = [];
-          try { extra = JSON.parse(document.getElementById('qcDice').getAttribute('data-quotes') || '[]') || []; } catch (e) {}
-          return base.concat(extra.filter(function (q) { return base.indexOf(q) === -1; }));
-        })();
         var lastQ = -1;
         document.getElementById('qcDice').addEventListener('click', function () {
           var i = lastQ;
@@ -1209,7 +1173,7 @@ try {
 
 
   <style is:global>
-    .tools-layout { max-width: 1100px; margin: 0 auto; display: flex; align-items: flex-start; padding: 0 20px; }
+    .tools-layout { max-width: none; margin: 0; width: 100%; display: flex; align-items: flex-start; padding: 0 20px; }
     .side { width: 208px; flex: none; padding: 34px 0; position: sticky; top: 56px; align-self: flex-start; }
     .side-title { font-size: 13px; color: var(--color-text-secondary); letter-spacing: 2px; padding: 0 14px 12px; }
     .side ul { list-style: none; margin: 0; padding: 0; }
@@ -1217,7 +1181,9 @@ try {
     .side li .num { font-variant-numeric: tabular-nums; color: var(--color-accent); font-weight: 700; width: 18px; flex: none; }
     .side li:hover { background: var(--soft, #f5f4f2); }
     .side li.active { background: var(--color-card-bg, #fff); color: var(--color-text, #1c1917); box-shadow: 0 1px 3px rgba(0,0,0,.06); font-weight: 700; }
-    .workspace { flex: 1; min-width: 0; padding: 34px 0 60px 24px; position: relative; }
+    .workspace { flex: 1; min-width: 0; padding: 34px 232px 60px 24px; position: relative; }
+    /* 编辑区在视口内真正居中：右侧补偿侧栏宽度(208)+间隙，抵消侧栏占去的左侧空间 */
+    .workspace > .pane { max-width: 920px; margin: 0 auto; }
 
     /* 侧边栏收起/展开（flomo 式隐藏栏） */
     .side { overflow: hidden; transition: width .28s ease, opacity .2s ease; }
@@ -1578,7 +1544,7 @@ try {
       .side li.active .ic { color: #fff; }
       .side li.active::before { display: none; }
       .side-handle { display: none; }
-      .workspace { padding-top: 18px; padding-left: 0; }
+      .workspace { padding-top: 18px; padding-left: 0; padding-right: 0; }
       /* 点击区 ≥44px（移动端触控） */
       #pane-write .wp-chip, #pane-write .wp-focus, #pane-write .wp-reset { min-height: 38px; padding: 8px 15px; }
       #pane-write .wp-copymd { min-height: 42px; }
