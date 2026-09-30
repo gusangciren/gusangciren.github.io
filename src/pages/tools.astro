@@ -474,7 +474,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       }
       function cleanHL(raw) { return (raw || '').replace(/\*\*/g, ''); }
       function normHL(el) { return (el.innerText || '').replace(/\n+$/, ''); }
-      function titleSize(t) { return 44; } // 固定字号：与线上既有观感一致，不做动态缩放
+      function titleSize(t) { // 按最长行自适应：信息流里封面缩到 ~0.38 倍，44px 只剩 ~17px 看不清
+        var lines = (t || '').split('\n'), n = 0;
+        for (var i = 0; i < lines.length; i++) n = Math.max(n, lines[i].replace(/\s/g, '').length);
+        if (n <= 6) return 60;
+        if (n <= 11) return 54;
+        if (n <= 16) return 48;
+        return 44;
+      }
       function renderTitle(raw) {
         if (!raw) return '';
         return raw.split('\n').slice(0, 3).map(function (line) { // 最多 3 行
