@@ -231,10 +231,71 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     })();
 
       // ===== 全局轻提示（toast）：复制 / 导出 / 保存等反馈统一走这里 =====
+      // 位置在屏幕顶部居中：底部 toast 在小屏 / 导出坞在右下时看不见
       function gToast(msg) {
         var t = document.getElementById('toolsToast'); if (!t) return;
         t.textContent = msg; t.classList.add('show'); clearTimeout(t._t);
         t._t = setTimeout(function () { t.classList.remove('show'); }, 1900);
+      }
+
+      // ===== 中央确认卡（方案 B）：生成中 / 已复制 / 已下载 等强反馈 =====
+      var bigcardEl = null, bigcardT = null;
+      var BIG_ICONS = {
+        wait: '<svg viewBox="0 0 24 24" class="bigspin"><circle cx="12" cy="12" r="9" fill="none" stroke="#e7e5e4" stroke-width="2.5"/><path d="M12 3a9 9 0 0 1 9 9" fill="none" stroke="#F53F3F" stroke-width="2.5" stroke-linecap="round"/></svg>',
+        ok: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#EAF3DE"/><path d="M7.5 12.5 10.5 15.5 16.5 8.5" fill="none" stroke="#3B6D11" stroke-width="2" stroke-linecap="round"/></svg>',
+        err: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#FCEBEB"/><path d="M8.5 8.5l7 7M15.5 8.5l-7 7" stroke="#A32D2D" stroke-width="2" stroke-linecap="round"/></svg>'
+      };
+      function bigCard(msg, kind, sticky) {
+        if (!bigcardEl) {
+          bigcardEl = document.createElement('div');
+          bigcardEl.className = 'bigcard';
+          bigcardEl.innerHTML = '<div class="bigcard-box"><span class="bigcard-ic"></span><span class="bigcard-msg"></span></div>';
+          document.body.appendChild(bigcardEl);
+        }
+        bigcardEl.classList.add('show');
+        bigcardEl.setAttribute('data-kind', kind);
+        bigcardEl.querySelector('.bigcard-ic').innerHTML = BIG_ICONS[kind] || BIG_ICONS.ok;
+        bigcardEl.querySelector('.bigcard-msg').textContent = msg;
+        clearTimeout(bigcardT);
+        if (!sticky) bigcardT = setTimeout(function () { bigcardEl.classList.remove('show'); }, 1600);
+      }
+      function bigWait(msg) { bigCard(msg, 'wait', true); }   // 生成中：常驻，直到 bigDone 替换
+      function bigDone(msg, ok) { bigCard(msg, ok === false ? 'err' : 'ok', false); }
+
+      // ===== 行内 Markdown（**加粗** / *斜体*）：金句卡正文与封面标题共用 =====
+      function escHtml(s) {
+        return String(s).replace(/[&<>"]/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+        });
+      }
+      function mdInline1(s) {
+        return String(s).split(/(\*[^*]+\*)/g).map(function (p) {
+          return /^\*[^*]+\*$/.test(p) ? '<em>' + escHtml(p.slice(1, -1)) + '</em>' : escHtml(p);
+        }).join('');
+      }
+      function mdInline(raw) {
+        return String(raw || '').split(/(\*\*[^*]+\*\*)/g).map(function (p) {
+          return /^\*\*[^*]+\*\*$/.test(p) ? '<strong>' + mdInline1(p.slice(2, -2)) + '</strong>' : mdInline1(p);
+        }).join('');
+      }
+      function stripMd(raw) { return String(raw || '').replace(/\*/g, ''); }
+
+      // contenteditable 里把选区（或占位词）包进标记：走 execCommand('insertText')，可 Ctrl+Z 撤销
+      function mdWrapSel(el, before, after, fallback) {
+        el.focus();
+        var sel = window.getSelection && window.getSelection();
+        if (!sel || !sel.rangeCount) return;
+        var inner = sel.toString() || fallback;
+        document.execCommand('insertText', false, before + inner + after);
+      }
+
+      // ===== 纯文本粘贴：拦截 paste，只取 text/plain，杜绝外部字体/背景/白底一起带进来 =====
+      function bindPlainTextPaste(el) {
+        el.addEventListener('paste', function (e) {
+          e.preventDefault();
+          var t = (e.clipboardData || window.clipboardData).getData('text/plain');
+          if (t) document.execCommand('insertText', false, t);
+        });
       }
 
       // ===== 导出字体（金句 + 封面共用）：全字库子集文楷 → data URI 注入。
@@ -288,7 +349,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         function render() {
           card.className = 'tcard ' + state.scheme + ' ' + state.ratio;
           if (document.activeElement !== textEl) {
-            textEl.textContent = state.text || '';
+            /* 失焦态把 **加粗** / *斜体* 渲染成样式；编辑中显示原文 */
+            textEl.innerHTML = mdInline(state.text || '');
             textEl.classList.toggle('is-empty', !/\S/.test(state.text || ''));
           }
           $('#qcName').textContent = state.name || '名字';
@@ -299,7 +361,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           var prev = $('#qcAvaPrev');
           prev.innerHTML = state.avatar ? '<img src="' + state.avatar + '">' : '<span>人</span>';
           $('#qcAvaClr').style.display = state.avatar ? '' : 'none';
-          textEl.style.fontSize = textSize((state.text || '').length) + 'px';
+          textEl.style.fontSize = textSize(stripMd(state.text || '').length) + 'px';
           fit();
         }
 
@@ -323,8 +385,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           var raw = textEl.innerText.replace(/\n$/, '');
           state.text = /\S/.test(raw) ? raw : '';
           textEl.classList.toggle('is-empty', !/\S/.test(textEl.textContent));
-          textEl.style.fontSize = textSize(state.text.length) + 'px';
+          textEl.style.fontSize = textSize(stripMd(state.text).length) + 'px';
         });
+        /* 纯文本粘贴：从微信/网页复制过来时只取文字，不带外部字体与背景 */
+        bindPlainTextPaste(textEl);
+        /* 文字快捷键：Ctrl/Cmd+B 加粗（**）、Ctrl/Cmd+I 斜体（*），与书写伙伴一致 */
+        textEl.addEventListener('keydown', function (e) {
+          var mod = e.ctrlKey || e.metaKey;
+          if (mod && (e.key === 'b' || e.key === 'B')) { e.preventDefault(); mdWrapSel(textEl, '**', '**', '加粗文字'); return; }
+          if (mod && (e.key === 'i' || e.key === 'I')) { e.preventDefault(); mdWrapSel(textEl, '*', '*', '斜体文字'); return; }
+        });
+        /* 重新进入编辑时还原原文（把渲染好的粗体/斜体还原成 ** / * 标记，改起来不丢） */
+        textEl.addEventListener('focusin', function () {
+          if (/<strong|<em/.test(textEl.innerHTML)) textEl.textContent = state.text || '';
+        });
+        /* 失焦后把 **加粗** / *斜体* 渲染成样式（与封面标题行为一致） */
+        textEl.addEventListener('blur', function () { render(); });
         nameIn.addEventListener('input', function () { state.name = nameIn.value; render(); saveProfile(); });
         handleIn.addEventListener('input', function () { state.handle = handleIn.value; render(); saveProfile(); });
         checkIn.addEventListener('change', function () { state.check = checkIn.checked; render(); });
@@ -392,13 +468,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           });
         });
 
-        function toast(m) {
-          var t = document.getElementById('qcToast'); if (!t) return;
-          t.textContent = m; t.classList.add('show'); clearTimeout(t._t);
-          t._t = setTimeout(function () { t.classList.remove('show'); }, 1800);
-        }
+        function toast(m) { gToast(m); } /* 统一走顶部轻提示（原底部 toast 小屏看不见） */
+        var qcBusy = false;
         async function exportCanvas() {
-          if (!window.html2canvas) { alert('图片组件未加载，请稍候重试'); return null; }
+          if (!window.html2canvas) { bigDone('图片组件未加载，请稍候重试', false); return null; }
           var stage = document.getElementById('qc-stage');
           var clone = card.cloneNode(true);
           clone.style.transform = 'none';
@@ -409,29 +482,38 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             return await html2canvas(clone, { backgroundColor: BG[state.scheme], scale: 2, useCORS: true, logging: false,
               onclone: function (doc) {
                 if (fontCss) { var st = doc.createElement('style'); st.textContent = fontCss; doc.head.appendChild(st); }
+                /* 导出时把 **标记** 渲染成粗体/斜体（编辑中卡片显示的是原文） */
+                var t = doc.querySelector('.t-text');
+                if (t) { t.innerHTML = mdInline(state.text || ''); }
               } });
           } finally {
             if (clone.parentNode === stage) stage.removeChild(clone);
           }
         }
         document.getElementById('qcCopy').addEventListener('click', function () {
+          if (qcBusy) return; qcBusy = true;
+          bigWait('正在生成图片…');
           exportCanvas().then(function (cv) {
+            qcBusy = false;
             if (!cv) return;
             cv.toBlob(function (blob) {
               if (blob && navigator.clipboard && window.ClipboardItem) {
                 navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
-                  .then(function () { toast('已复制图片，可直接粘贴'); })
-                  .catch(function () { toast('复制失败，请用下载'); });
-              } else { toast('当前环境不支持复制图片'); }
+                  .then(function () { bigDone('已复制，可直接粘贴'); })
+                  .catch(function () { bigDone('复制失败，请改用下载', false); });
+              } else { bigDone('当前环境不支持复制图片', false); }
             });
           });
         });
         document.getElementById('qcDown').addEventListener('click', function () {
+          if (qcBusy) return; qcBusy = true;
+          bigWait('正在生成图片…');
           exportCanvas().then(function (cv) {
+            qcBusy = false;
             if (!cv) return;
             var a = document.createElement('a');
             a.download = '句子卡片.png'; a.href = cv.toDataURL('image/png');
-            document.body.appendChild(a); a.click(); a.remove(); toast('已下载图片');
+            document.body.appendChild(a); a.click(); a.remove(); bigDone('图片已下载');
           });
         });
 
@@ -472,10 +554,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
         });
       }
-      function cleanHL(raw) { return (raw || '').replace(/\*\*/g, ''); }
+      function cleanHL(raw) { return (raw || '').replace(/\*/g, ''); }
       function normHL(el) { return (el.innerText || '').replace(/\n+$/, ''); }
       function titleSize(t) { // 按最长行自适应：信息流里封面缩到 ~0.38 倍，44px 只剩 ~17px 看不清
-        var lines = (t || '').split('\n'), n = 0;
+        var lines = (stripMd(t || '')).split('\n'), n = 0;
         for (var i = 0; i < lines.length; i++) n = Math.max(n, lines[i].replace(/\s/g, '').length);
         if (n <= 6) return 60;
         if (n <= 11) return 54;
@@ -486,12 +568,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         if (!raw) return '';
         return raw.split('\n').slice(0, 3).map(function (line) { // 最多 3 行
           if (!line) return '';
-          if (line.indexOf('**') !== -1) {
-            return line.split(/(\*\*[^*]+\*\*)/g).map(function (p) {
-              return /^\*\*[^*]+\*\*$/.test(p) ? '<em>' + esc(p.slice(2, -2)) + '</em>' : esc(p);
-            }).join('');
-          }
-          return esc(line);
+          return mdInline(line); // **加粗** / *斜体* 统一解析（与句子卡片一致）
         }).join('<br>');
       }
       function data() {
@@ -553,22 +630,24 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       }
       async function copyArt(btn, builder) {
         var t = btn.textContent; btn.disabled = true; btn.textContent = '生成中…';
+        bigWait('正在生成封面…');
         try {
           var x = exportEl(builder); var c = await renderArt(x.el); x.done();
           var blob = await new Promise(function (r) { c.toBlob(r, 'image/png'); });
           await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-          btn.textContent = '已复制 ✓'; gToast('封面已复制到剪贴板');
-        } catch (e) { console.error(e); btn.textContent = '复制失败'; }
+          btn.textContent = '已复制 ✓'; bigDone('已复制，可直接粘贴');
+        } catch (e) { console.error(e); btn.textContent = '复制失败'; bigDone('复制失败，请改用下载', false); }
         setTimeout(function () { btn.textContent = t; btn.disabled = false; }, 1800);
       }
       async function downloadArt(btn, builder, name) {
         var t = btn.textContent; btn.disabled = true; btn.textContent = '生成中…';
+        bigWait('正在生成封面…');
         try {
           var x = exportEl(builder); var c = await renderArt(x.el); x.done();
           var a = document.createElement('a'); a.href = c.toDataURL('image/png'); a.download = name + '.png';
           document.body.appendChild(a); a.click(); a.remove();
-          btn.textContent = '已下载 ✓'; gToast('封面图片已开始下载');
-        } catch (e) { console.error(e); btn.textContent = '下载失败'; }
+          btn.textContent = '已下载 ✓'; bigDone('封面图片已下载');
+        } catch (e) { console.error(e); btn.textContent = '下载失败'; bigDone('下载失败，请重试', false); }
         setTimeout(function () { btn.textContent = t; btn.disabled = false; }, 1800);
       }
 
@@ -578,9 +657,25 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           e.target.classList.toggle('is-empty', headlineRaw.trim().length === 0);
         }
       });
-      wrap90.addEventListener('keydown', function (e) { // 标题最多 3 行：满 3 行后拦截回车
-        if (e.key === 'Enter' && e.target && e.target.classList && e.target.classList.contains('ctitle')) {
+      /* ctitle 动态创建，粘贴/快捷键/还原统一用委托 */
+      wrap90.addEventListener('paste', function (e) {
+        if (!(e.target && e.target.classList && e.target.classList.contains('ctitle'))) return;
+        e.preventDefault();
+        var t = (e.clipboardData || window.clipboardData).getData('text/plain');
+        if (t) document.execCommand('insertText', false, t);
+      });
+      wrap90.addEventListener('keydown', function (e) {
+        if (!(e.target && e.target.classList && e.target.classList.contains('ctitle'))) return;
+        var mod = e.ctrlKey || e.metaKey;
+        if (mod && (e.key === 'b' || e.key === 'B')) { e.preventDefault(); mdWrapSel(e.target, '**', '**', '加粗文字'); return; }
+        if (mod && (e.key === 'i' || e.key === 'I')) { e.preventDefault(); mdWrapSel(e.target, '*', '*', '斜体文字'); return; }
+        if (e.key === 'Enter') { // 标题最多 3 行：满 3 行后拦截回车
           if (normHL(e.target).split('\n').length >= 3) e.preventDefault();
+        }
+      });
+      wrap90.addEventListener('focusin', function (e) { // 进入编辑时还原 ** / * 原文，避免加粗被洗掉
+        if (e.target && e.target.classList && e.target.classList.contains('ctitle') && /<strong|<em/.test(e.target.innerHTML)) {
+          e.target.textContent = headlineRaw;
         }
       });
       wrap90.addEventListener('focusout', function (e) {
@@ -1388,7 +1483,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     #pane-quote .t-glow { display: none; }
     #pane-quote .v-brand .t-glow { display: block; position: absolute; top: -80px; right: -80px; width: 340px; height: 340px; background: radial-gradient(circle, rgba(245, 80, 0, 0.28), transparent 70%); pointer-events: none; }
 
-    #pane-quote .toast { position: fixed; left: 50%; bottom: 34px; transform: translateX(-50%) translateY(20px); background: #1c1917; color: #fff; font-size: 13px; padding: 10px 22px; border-radius: 999px; opacity: 0; pointer-events: none; transition: .25s; z-index: 99; font-family: var(--font-serif); }
+    #pane-quote .toast { position: fixed; left: 50%; top: 18px; transform: translateX(-50%) translateY(-12px); background: #1c1917; color: #fff; font-size: 13px; padding: 10px 22px; border-radius: 999px; opacity: 0; pointer-events: none; transition: .25s; z-index: 99; font-family: var(--font-serif); }
     #pane-quote .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     /* ============================================================
@@ -1527,12 +1622,26 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       70% { box-shadow: 0 0 0 14px rgba(245,80,0,0); transform: scale(1.07); }
       100% { box-shadow: 0 0 0 0 rgba(245,80,0,0); transform: scale(1); }
     }
-    /* 全局轻提示 toast */
-    .tools-toast { position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%) translateY(20px);
+    /* 全局轻提示 toast（顶部居中：底部 toast 小屏看不见） */
+    .tools-toast { position: fixed; left: 50%; top: 18px; transform: translateX(-50%) translateY(-12px);
       background: #1c1917; color: #fff; font-size: 13px; padding: 11px 22px; border-radius: 999px;
       opacity: 0; pointer-events: none; transition: .28s; z-index: 200; font-family: var(--font-serif);
       box-shadow: 0 10px 30px -10px rgba(0,0,0,.5); }
     .tools-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* 中央确认卡（方案 B）：生成中 / 已复制 / 已下载 —— 小屏必看得见 */
+    .bigcard { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+      z-index: 9999; pointer-events: none; opacity: 0; transition: opacity .18s ease; }
+    .bigcard.show { opacity: 1; }
+    .bigcard-box { display: flex; align-items: center; gap: 13px; background: rgba(255,255,255,.98);
+      border: 1px solid #e7e5e4; border-radius: 16px; padding: 18px 30px;
+      box-shadow: 0 18px 48px -12px rgba(0,0,0,.25); transform: scale(.92); transition: transform .18s ease;
+      font-family: var(--font-serif); }
+    .bigcard.show .bigcard-box { transform: scale(1); }
+    .bigcard-box svg { width: 32px; height: 32px; flex-shrink: 0; }
+    .bigcard-msg { font-size: 16.5px; font-weight: 700; color: #1c1917; letter-spacing: .01em; }
+    .bigspin { animation: bigspin .9s linear infinite; }
+    @keyframes bigspin { to { transform: rotate(360deg); } }
 
     @media (max-width: 640px) {
       .tools-layout { flex-direction: column; }
