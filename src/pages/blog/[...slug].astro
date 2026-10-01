@@ -184,9 +184,10 @@ function cleanTitle(t: string, s: string) {
   .reading-progress.show { opacity: 1; }
 
   /* ===== 杂志章节页（方案 C 优化） ===== */
+  /* 宽度 = 目录 248 + 正文 680 + 右侧等宽 248 + padding 40，使正文正好落在视口中心 */
   .reader {
     position: relative;
-    max-width: 1040px;
+    max-width: 1216px;
     margin: 0 auto;
     padding: 0 20px;
   }
@@ -231,6 +232,7 @@ function cleanTitle(t: string, s: string) {
     display: flex;
     align-items: flex-start;
     gap: 28px;
+    max-width: 680px; margin: 0 auto;
   }
   .reader-hero-back {
     display: inline-block;
@@ -282,10 +284,16 @@ function cleanTitle(t: string, s: string) {
   }
 
   /* 正文 + 时间线目录 */
-  .reader-body { display: flex; align-items: flex-start; gap: 40px; }
+  .reader-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) min(680px, 100%) minmax(0, 1fr);
+    align-items: start;
+  }
 
   .reader-toc {
-    width: 220px; flex-shrink: 0;
+    grid-column: 1; justify-self: end;
+    width: clamp(150px, 14vw, 210px);
+    margin-right: 24px;
     position: sticky; top: 72px;
     max-height: calc(100vh - 92px);
     overflow-y: auto;
@@ -344,7 +352,7 @@ function cleanTitle(t: string, s: string) {
   }
   .reader-toc-sub-item:hover { color: var(--color-accent); background: rgba(245,80,0,0.06); }
 
-  .reader-main { flex: 1; min-width: 0; }
+  .reader-main { grid-column: 2; min-width: 0; }
   .reader-prose { max-width: 680px; margin: 0; padding: 0; }
   .reader-prose .article-header { display: none; }
 
@@ -406,14 +414,15 @@ function cleanTitle(t: string, s: string) {
     transform: translateX(0) !important;
   }
 
-  @media (max-width: 860px) {
+  /* 侧边目录需要 248px 列宽，装不下时（<1120px）降级为抽屉，避免目录被裁 */
+  @media (max-width: 1120px) {
     .reader { padding: 0 16px; }
     .reader-hero { padding: 36px 0 22px; }
     .reader-hero-title { font-size: 1.7rem; }
     .reader-hero-inner { gap: 18px; }
     .reader-hero-num { font-size: 5rem; width: 72px; margin-top: -8px; }
 
-    .reader-body { flex-direction: column; gap: 0; }
+    .reader-body { display: block; }
     .reader-toc {
       position: fixed; top: 0; left: 0; bottom: 0;
       width: 80%; max-width: 300px;
