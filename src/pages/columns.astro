@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import SectionHeader from '../components/SectionHeader.astro';
 import { columns } from '../data/columns';
 
 function pad(n: number) {
@@ -10,6 +9,11 @@ function pad(n: number) {
 function findIssue(column: (typeof columns)[number], n: number) {
   return column.issues.find((i) => i.issue === n);
 }
+
+const writeCol = columns.find((c) => c.id === 'write-like-entrepreneur');
+const uacCol = columns.find((c) => c.id === 'uac-weekly');
+const totalIssues = (writeCol?.issueCount ?? 0) + (uacCol?.issueCount ?? 0);
+const bundleAlbumUrl = columns.find((c) => c.albumUrl)?.albumUrl;
 ---
 
 <BaseLayout
@@ -17,166 +21,173 @@ function findIssue(column: (typeof columns)[number], n: number) {
   description="两个长期更新的专栏：UAC 周刊（57 期）与《像企业家一样写作》（19 期）。按主题策展，从最值得读的那一期开始。"
 >
   <div class="columns-page">
-    <SectionHeader title="专栏" icon="pen" suffix="（持续更新中）" />
+    <div class="columns-inner">
+      {/* ===== 深夜书房 · 价值头部 ===== */}
+      <header class="sh-hero">
+        <p class="sh-kick">深夜书房 · THE COLUMNS</p>
+        <h1 class="sh-title">一份合集，两个专栏，<em>{totalIssues} 期全部可读</em>。</h1>
+        <p class="sh-sub">买一次，两样都得到——1）周刊每周给你新的东西读，2）书籍陪你走到第一笔收入。</p>
 
-    {/* ===== 付费合集入口 ===== */}
-    <div class="bundle-bar">
-      <div class="bundle-txt">
-        <b>买一次，两样都得到</b>
-        <span>
-          UAC 周刊 与《写作并变现：像企业家一样写作》打包在<b>同一个付费合集</b>里——一次购买，两个专栏全部解锁。
-        </span>
-      </div>
-      <div class="bundle-actions">
-        <div class="intro-act">
+        <div class="sh-actions">
           <a class="btn" href="https://mp.weixin.qq.com/s/QnwuoIzN_dxPYM5W5hsWMA" target="_blank" rel="noopener noreferrer">
-            介绍信
+            先读介绍信
+          </a>
+          <a class="btn ghost" href={bundleAlbumUrl} target="_blank" rel="noopener noreferrer">
+            查看并订阅合集 ↗
           </a>
           <button type="button" class="intro-qr-btn" id="intro-qr-btn">（二维码）</button>
         </div>
-        <a class="btn" href={columns.find((c) => c.albumUrl)?.albumUrl} target="_blank" rel="noopener noreferrer">
-          查看并订阅合集 ↗
-        </a>
-      </div>
-    </div>
+      </header>
 
-    {/* ===== 介绍信二维码浮层 ===== */}
-    <div class="intro-qr-overlay" id="intro-qr-overlay" aria-hidden="true">
-      <div class="intro-qr-modal">
-        <button type="button" class="intro-qr-close" id="intro-qr-close" aria-label="关闭">✕</button>
-        <img src="/images/intro-letter-qr.png" alt="介绍信二维码" />
-        <p class="intro-qr-cap">微信扫一扫，查看介绍信</p>
+      {/* ===== 介绍信二维码浮层 ===== */}
+      <div class="intro-qr-overlay" id="intro-qr-overlay" aria-hidden="true">
+        <div class="intro-qr-modal">
+          <button type="button" class="intro-qr-close" id="intro-qr-close" aria-label="关闭">✕</button>
+          <img src="/images/intro-letter-qr.png" alt="介绍信二维码" />
+          <p class="intro-qr-cap">微信扫一扫，查看介绍信</p>
+        </div>
       </div>
-    </div>
 
-    {/* ===== 双栏专栏详情 ===== */}
-    <div class="col-grid">
-      {columns.map((column, idx) => {
-        const latest = column.issues[0];
-        return (
-          <section class="col-block" id={column.id}>
-            {/* 专栏头部 */}
-            <div class="col-hero">
-              <div class="col-hero-top">
-                <span class="col-num">{idx + 1}）</span>
+      {/* ===== 书房两排书架（两档专栏 · 平等） ===== */}
+      <div class="col-grid">
+        {columns.map((column) => {
+          const latest = column.issues[0];
+          return (
+            <section class="col-block" id={column.id}>
+              {/* 专栏头部 */}
+              <div class="col-hero">
+                <div class="col-count"><b>{column.issueCount}</b><span>期</span></div>
                 <h2>{column.name}</h2>
-              </div>
-              <p class="claim">{column.claim}</p>
-              <div class="proof">
-                <span class="stat"><b>{column.issueCount}</b> 期连载</span>
-                <span class="desc">{column.description}</span>
-              </div>
-              <div class="hero-actions">
-                <a class="btn" href={latest.url} target="_blank" rel="noopener noreferrer">
-                  读最新一期 →
+                <p class="claim">{column.claim}</p>
+                <a class="latest" href={latest.url} target="_blank" rel="noopener noreferrer">
+                  读最新一期（第 {latest.issue} 期）→
                 </a>
               </div>
-            </div>
 
-            {/* 编辑精选 */}
-            <div class="sec">
-              <div class="sec-label">从这 3 篇开始</div>
-              <div class="feat">
-                {column.featured.map((f) => {
-                  const it = findIssue(column, f.issue);
-                  return (
-                    it && (
-                      <a
-                        class="feat-card"
-                        href={it.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <div class="n">第 {f.issue} 期</div>
-                        <div class="t">{it.title}</div>
-                        <div class="v">{f.value}</div>
-                      </a>
-                    )
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* 主题分组 */}
-            <div class="sec">
-              <div class="sec-label">按主题读</div>
-              {column.groups.map((g) => (
-                <div class="grp">
-                  <div class="grp-head">
-                    <h3>{g.name}</h3>
-                    <span class="c">{g.issues.length} 篇</span>
-                  </div>
-                  {g.issues.map((n) => {
-                    const it = findIssue(column, n);
+              {/* 编辑精选 */}
+              <div class="sec">
+                <div class="sec-label">从这 3 篇开始</div>
+                <div class="feat">
+                  {column.featured.map((f) => {
+                    const it = findIssue(column, f.issue);
                     return (
                       it && (
                         <a
-                          class="grp-row"
+                          class="feat-card"
                           href={it.url}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          <span class="badge">{pad(n)}</span>
-                          <span class="t">{it.title}</span>
-                          <span class="go">微信阅读 ↗</span>
+                          <div class="n">第 {f.issue} 期</div>
+                          <div class="t">{it.title}</div>
+                          <div class="v">{f.value}</div>
                         </a>
                       )
                     );
                   })}
                 </div>
-              ))}
-            </div>
+              </div>
 
-            {/* 底部 CTA */}
-            <div class="cta-bar">
-              <p>共 {column.issueCount} 期 · 往期全部可直接阅读</p>
-              <a
-                class="btn"
-                href={column.albumUrl || latest.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {column.albumUrl ? '在微信中看全部 →' : '开始阅读 →'}
-              </a>
-            </div>
-          </section>
-        );
-      })}
+              {/* 主题分组 */}
+              <div class="sec">
+                <div class="sec-label">按主题读</div>
+                {column.groups.map((g) => (
+                  <div class="grp">
+                    <div class="grp-head">
+                      <h3>{g.name}</h3>
+                      <span class="c">{g.issues.length} 篇</span>
+                    </div>
+                    {g.issues.map((n) => {
+                      const it = findIssue(column, n);
+                      return (
+                        it && (
+                          <a
+                            class="grp-row"
+                            href={it.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <span class="badge">{pad(n)}</span>
+                            <span class="t">{it.title}</span>
+                            <span class="go">微信阅读 ↗</span>
+                          </a>
+                        )
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+
+              {/* 底部 CTA */}
+              <div class="cta-bar">
+                <p>共 {column.issueCount} 期 · 往期全部可直接阅读</p>
+                <a
+                  class="btn"
+                  href={column.albumUrl || latest.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {column.albumUrl ? '在微信中看全部 →' : '开始阅读 →'}
+                </a>
+              </div>
+            </section>
+          );
+        })}
+      </div>
+
+      <p class="sh-foot">两排书架，一份合集。购买后两个专栏的全部期数一起解锁。</p>
     </div>
   </div>
 </BaseLayout>
 
 <style is:global>
+  /* ===== 深夜书房 · 整页深色 ===== */
   .columns-page {
+    position: relative;
+    min-height: 100vh;
+    background-color: #12100b;
+    background-image: radial-gradient(1400px 520px at 50% -100px, #2b2317 0%, rgba(24,19,8,0) 72%);
+    background-repeat: no-repeat;
+    color: #f0e9dc;
+  }
+  .columns-inner {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 100px 24px 80px;
+    padding: 72px 24px 80px;
   }
 
-  /* 付费合集入口 */
-  .bundle-bar {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    gap: 24px;
-    padding: 18px 26px;
-    background: rgba(245,80,0,.06);
-    border: 1px solid rgba(245,80,0,.18);
-    border-radius: 16px;
-    margin-bottom: 40px;
+  /* 价值头部 */
+  .sh-hero { text-align: center; margin-bottom: 52px; }
+  .sh-kick {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .34em;
+    color: #c9973f;
+    margin: 0 0 14px;
   }
-  .bundle-actions {
+  .sh-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    line-height: 1.55;
+    color: #f7f1e4;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .sh-title em { font-style: normal; color: #e8a04c; text-shadow: 0 0 26px rgba(232,160,76,.35); }
+  .sh-sub {
+    font-size: 14px;
+    color: #a89e8d;
+    margin: 12px auto 0;
+    max-width: 680px;
+    line-height: 1.9;
+  }
+  .sh-actions {
     display: flex;
-    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    margin-top: 32px;
     flex-wrap: wrap;
-    justify-content: flex-end;
-    align-items: flex-start;
-  }
-  .intro-act {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
   }
   .intro-qr-btn {
     border: none;
@@ -185,12 +196,220 @@ function findIssue(column: (typeof columns)[number], n: number) {
     cursor: pointer;
     font-family: inherit;
     font-size: 12px;
-    color: var(--color-text-secondary);
+    color: #9a8f7d;
     transition: color .15s;
   }
-  .intro-qr-btn:hover { color: var(--color-accent); }
+  .intro-qr-btn:hover { color: #e8a04c; }
 
-  /* ===== 介绍信二维码浮层 ===== */
+  /* 书架双栏 */
+  .col-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+    align-items: stretch;
+  }
+  .col-block {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(240,233,220,.14);
+    border-radius: 18px;
+    overflow: hidden;
+    background: rgba(240,233,220,.035);
+  }
+  .col-block .cta-bar { margin-top: auto; }
+
+  /* 按钮：琥珀金体系 */
+  .btn {
+    display: inline-block;
+    background: linear-gradient(180deg, #e8a04c, #d98a30);
+    color: #17130d;
+    font-size: 13.5px;
+    font-weight: 700;
+    padding: 11px 24px;
+    border-radius: 9px;
+    text-decoration: none;
+    box-shadow: 0 8px 22px rgba(232,160,76,.28);
+    transition: transform .15s, box-shadow .15s;
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 12px 28px rgba(232,160,76,.4); }
+  .btn.ghost {
+    background: none;
+    color: #e8c89a;
+    border: 1px solid rgba(232,200,154,.45);
+    box-shadow: none;
+  }
+  .btn.ghost:hover { background: rgba(232,200,154,.1); box-shadow: none; }
+
+  /* 专栏头部 */
+  .col-hero {
+    padding: 30px 30px 26px;
+    border-bottom: 1px solid rgba(240,233,220,.12);
+  }
+  .col-count {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    margin-bottom: 6px;
+  }
+  .col-count b {
+    font-family: Georgia, var(--font-serif);
+    font-size: 2.6rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #e8a04c;
+  }
+  .col-count span { font-size: 13px; color: #a89e8d; }
+  .col-hero h2 {
+    font-size: 1.45rem;
+    font-weight: 700;
+    margin: 0 0 10px;
+    color: #f7f1e4;
+  }
+  .col-hero .claim {
+    font-size: 13.5px;
+    color: #cfc5b2;
+    line-height: 1.9;
+    margin: 0 0 14px;
+  }
+  .col-hero .latest {
+    font-size: 13px;
+    color: #e8a04c;
+    text-decoration: none;
+    font-weight: 700;
+  }
+  .col-hero .latest:hover { color: #f2b665; }
+
+  /* 区块 */
+  .sec {
+    padding: 24px 30px;
+    border-bottom: 1px solid rgba(240,233,220,.12);
+  }
+  .sec-label {
+    font-size: 11px;
+    letter-spacing: .18em;
+    color: #c9973f;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
+  /* 精选 */
+  .feat {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .feat-card {
+    display: block;
+    border: 1px solid rgba(240,233,220,.12);
+    border-radius: 12px;
+    padding: 16px 15px;
+    text-decoration: none;
+    color: inherit;
+    transition: all .18s;
+  }
+  .feat-card:hover {
+    border-color: rgba(232,160,76,.55);
+    background: rgba(232,160,76,.06);
+    transform: translateY(-2px);
+  }
+  .feat-card .n {
+    font-size: 11.5px;
+    color: #e8a04c;
+    font-weight: 700;
+  }
+  .feat-card .t {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.5;
+    margin: 6px 0 6px;
+    color: #ece3d2;
+  }
+  .feat-card .v {
+    font-size: 12px;
+    color: #9a8f7d;
+    line-height: 1.6;
+  }
+
+  /* 分组 */
+  .grp { margin-bottom: 22px; }
+  .grp:last-child { margin-bottom: 0; }
+  .grp-head {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .grp-head h3 {
+    margin: 0;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: #f0e9dc;
+  }
+  .grp-head .c {
+    font-size: 12px;
+    color: #9a8f7d;
+  }
+  .grp-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 4px;
+    border-top: 1px solid rgba(240,233,220,.08);
+    text-decoration: none;
+    color: inherit;
+    transition: background .15s;
+    border-radius: 6px;
+  }
+  .grp-row:hover { background: rgba(232,160,76,.06); }
+  .badge {
+    flex: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 7px;
+    background: rgba(232,160,76,.1);
+    color: #e8a04c;
+    font-size: 11.5px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .grp-row .t {
+    flex: 1;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #d8cfbf;
+  }
+  .grp-row:hover .t { color: #ece3d2; }
+  .grp-row .go {
+    flex: none;
+    font-size: 11.5px;
+    color: #6f6656;
+    transition: color .15s;
+  }
+  .grp-row:hover .go { color: #e8a04c; }
+
+  /* CTA */
+  .cta-bar {
+    padding: 24px 30px;
+    text-align: center;
+  }
+  .cta-bar p {
+    margin: 0 0 12px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #a89e8d;
+  }
+
+  .sh-foot {
+    text-align: center;
+    font-size: 12.5px;
+    color: #9a8f7d;
+    margin: 44px 0 0;
+  }
+
+  /* ===== 介绍信二维码浮层（保持白色弹层） ===== */
   .intro-qr-overlay {
     position: fixed;
     inset: 0;
@@ -198,7 +417,7 @@ function findIssue(column: (typeof columns)[number], n: number) {
     display: none;
     align-items: center;
     justify-content: center;
-    background: rgba(28,25,23,.5);
+    background: rgba(28,25,23,.6);
     padding: 20px;
   }
   .intro-qr-overlay.active { display: flex; }
@@ -235,256 +454,6 @@ function findIssue(column: (typeof columns)[number], n: number) {
     cursor: pointer;
     box-shadow: 0 4px 10px rgba(0,0,0,.25);
   }
-  .bundle-txt {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    min-width: 0;
-  }
-  .bundle-txt b {
-    font-size: 14px;
-    color: var(--color-accent);
-  }
-  .bundle-txt span {
-    font-size: 12.5px;
-    color: var(--color-text-secondary);
-    line-height: 1.6;
-  }
-  .bundle-txt span b { font-size: 12.5px; }
-
-  /* 双栏容器 */
-  .col-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 44px;
-    align-items: start;
-  }
-
-  /* 单个专栏块 */
-  .col-block {
-    border: 1.5px solid rgba(245,80,0,.22);
-    border-radius: 18px;
-    overflow: hidden;
-    background: var(--color-card-bg, #fff);
-    box-shadow: 0 12px 34px rgba(0,0,0,.07);
-  }
-
-  .btn {
-    display: inline-block;
-    background: var(--color-accent);
-    color: #fff;
-    font-size: 13px;
-    font-weight: 600;
-    padding: 9px 18px;
-    border-radius: 22px;
-    text-decoration: none;
-    transition: opacity .2s;
-  }
-  .btn:hover { opacity: .88; }
-  .btn.ghost {
-    background: #fff;
-    color: var(--color-accent);
-    border: 1.5px solid var(--color-accent);
-  }
-
-  /* 头部 */
-  .col-hero {
-    padding: 30px 28px 26px;
-    border-bottom: 1px solid var(--color-border);
-  }
-  .col-hero-top {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 10px;
-  }
-  .col-num {
-    flex: none;
-    display: inline-flex;
-    align-items: center;
-    font-family: var(--font-serif);
-    font-size: 2.2rem;
-    font-weight: 800;
-    line-height: 1;
-    color: var(--color-accent);
-  }
-  .col-hero h2 {
-    font-family: var(--font-serif);
-    font-size: 1.6rem;
-    font-weight: 700;
-    margin: 0;
-  }
-  .col-hero .claim {
-    font-size: 1rem;
-    color: #333;
-    line-height: 1.85;
-    margin: 0 0 16px;
-  }
-  .proof {
-    display: flex;
-    align-items: baseline;
-    gap: 14px;
-    flex-wrap: wrap;
-    margin: 0 0 18px;
-    padding: 12px 16px;
-    background: rgba(245, 80, 0, 0.06);
-    border-radius: 10px;
-  }
-  .proof .stat {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 5px;
-    font-size: 12.5px;
-    color: var(--color-text-secondary);
-  }
-  .proof b {
-    color: var(--color-accent);
-    font-family: var(--font-serif);
-    font-size: 1.5rem;
-    font-weight: 800;
-    line-height: 1;
-  }
-  .proof .desc {
-    position: relative;
-    padding-left: 14px;
-    font-size: 12.5px;
-    color: var(--color-text-secondary);
-  }
-  .proof .desc::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 1px;
-    height: 12px;
-    background: var(--color-border);
-  }
-  .hero-actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  /* 区块 */
-  .sec {
-    padding: 26px 28px;
-    border-bottom: 1px solid var(--color-border);
-  }
-  .sec-label {
-    font-size: 11px;
-    letter-spacing: .12em;
-    color: var(--color-text-secondary);
-    font-weight: 700;
-    margin-bottom: 14px;
-  }
-
-  /* 精选 */
-  .feat {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
-  .feat-card {
-    display: block;
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    padding: 16px 15px;
-    text-decoration: none;
-    color: inherit;
-    transition: all .18s;
-  }
-  .feat-card:hover {
-    border-color: var(--color-accent);
-    background: rgba(245,80,0,.03);
-    transform: translateY(-2px);
-  }
-  .feat-card .n {
-    font-size: 11.5px;
-    color: var(--color-accent);
-    font-weight: 700;
-  }
-  .feat-card .t {
-    font-size: 13.5px;
-    font-weight: 600;
-    line-height: 1.45;
-    margin: 6px 0 6px;
-  }
-  .feat-card .v {
-    font-size: 12px;
-    color: var(--color-text-secondary);
-    line-height: 1.55;
-  }
-
-  /* 分组 */
-  .grp { margin-bottom: 22px; }
-  .grp:last-child { margin-bottom: 0; }
-  .grp-head {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    margin-bottom: 6px;
-  }
-  .grp-head h3 {
-    margin: 0;
-    font-size: 14.5px;
-    font-weight: 600;
-    font-family: var(--font-serif);
-  }
-  .grp-head .c {
-    font-size: 12px;
-    color: var(--color-text-secondary);
-  }
-  .grp-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 9px 2px;
-    border-top: 1px solid #f2f2f2;
-    text-decoration: none;
-    color: inherit;
-    transition: background .15s;
-  }
-  .grp-row:hover { background: rgba(245,80,0,.04); }
-  .badge {
-    flex: none;
-    width: 30px;
-    height: 30px;
-    border-radius: 7px;
-    background: rgba(245,80,0,.08);
-    color: var(--color-accent);
-    font-size: 11.5px;
-    font-weight: 800;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-variant-numeric: tabular-nums;
-  }
-  .grp-row .t {
-    flex: 1;
-    font-size: 13.5px;
-    line-height: 1.5;
-  }
-  .grp-row .go {
-    flex: none;
-    font-size: 11.5px;
-    color: #ccc;
-    transition: color .15s;
-  }
-  .grp-row:hover .go { color: var(--color-accent); }
-
-  /* CTA */
-  .cta-bar {
-    padding: 24px 28px;
-    background: var(--color-bg, #fafaf9);
-    text-align: center;
-  }
-  .cta-bar p {
-    margin: 0 0 12px;
-    font-size: 13.5px;
-    font-weight: 600;
-  }
 
   @media (max-width: 900px) {
     .col-grid { grid-template-columns: 1fr; gap: 28px; }
@@ -492,16 +461,12 @@ function findIssue(column: (typeof columns)[number], n: number) {
     .grp-row .go { display: none; }
   }
   @media (max-width: 640px) {
-    .columns-page { padding: 80px 16px 60px; }
-    .bundle-bar { grid-template-columns: 1fr; gap: 14px; padding: 16px 18px; }
-    .bundle-actions { flex-direction: column; align-items: stretch; }
-    .bundle-actions > .btn { flex: 1; text-align: center; }
-    .intro-act { width: 100%; }
-    .intro-act .btn { flex: 1; text-align: center; }
+    .columns-inner { padding: 52px 16px 60px; }
+    .sh-title { font-size: 1.55rem; }
+    .sh-actions { flex-direction: column; }
+    .sh-actions .btn { width: 100%; text-align: center; }
     .col-hero { padding: 24px 18px 20px; }
-    .col-hero h2 { font-size: 1.3rem; }
-    .col-hero-top { gap: 10px; margin-bottom: 8px; }
-    .col-num { font-size: 1.8rem; }
+    .col-hero h2 { font-size: 1.25rem; }
     .sec { padding: 20px 18px; }
   }
 </style>
