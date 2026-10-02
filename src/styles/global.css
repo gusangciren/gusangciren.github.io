@@ -653,9 +653,14 @@ html { scroll-behavior: smooth; }
 .faq-item p { font-size: 14px; color: var(--color-text-secondary); line-height: 1.7; }
 
 
-/* ========== Hero (index page) ========== */
+/* ========== Hero (index page) ==========
+   2026-10-02：银河夜景全幅背景 + 深色压层，文字压图改白字；
+   压层保证任何屏幕宽度下白字都可读，星空不被洗灰 */
 .hero {
-  padding: 76px 24px 32px;
+  padding: clamp(84px, 12vw, 128px) 24px clamp(64px, 9vw, 96px);
+  background:
+    linear-gradient(180deg, rgba(8, 10, 24, 0.48) 0%, rgba(8, 10, 24, 0.36) 55%, rgba(8, 10, 24, 0.55) 100%),
+    url('/images/hero-night.jpg') center 42% / cover no-repeat;
 }
 .hero-inner {
   max-width: 960px;
@@ -671,16 +676,18 @@ html { scroll-behavior: smooth; }
   letter-spacing: -0.01em;
   line-height: 1.15;
   margin-bottom: 8px;
-  color: var(--color-text);
+  color: #fff;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.45);
 }
 .hero-cn {
   font-size: 1.05rem;
-  color: var(--color-text-secondary);
+  color: rgba(255, 255, 255, 0.88);
   margin-bottom: 30px;
   line-height: 1.7;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.4);
 }
 .hero-cn strong {
-  color: var(--color-text);
+  color: #fff;
   font-weight: 700;
 }
 .hero-actions {
