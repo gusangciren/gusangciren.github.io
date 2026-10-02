@@ -1,0 +1,37 @@
+---
+/**
+ * 分享按钮：点开菜单 → 复制链接
+ * variant="inline" 文章底部（读完后自然看到）
+ * 导航旁那一处在 BaseLayout.astro 里内联（该文件 frontmatter 是 .ts 风格，
+ * 无法 import Astro 组件），两处共用 global.css 里的 .share-* 样式。
+ */
+type Props = {
+  variant?: 'inline' | 'nav';
+  label?: string;
+};
+
+const { variant = 'inline', label = '复制链接' } = Astro.props;
+---
+
+<div class={`share-btn share-${variant}`}>
+  <button class="share-trigger" type="button" aria-label="分享" aria-haspopup="true" aria-expanded="false">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="18" cy="5" r="3"/>
+      <circle cx="6" cy="12" r="3"/>
+      <circle cx="18" cy="19" r="3"/>
+      <line x1="8.6" y1="10.5" x2="15.4" y2="6.5"/>
+      <line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/>
+    </svg>
+    <span class="share-trigger-text">分享</span>
+  </button>
+
+  <div class="share-menu" role="menu">
+    <button class="share-item" type="button" role="menuitem" data-act="copy">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/>
+        <path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>
+      </svg>
+      <span class="share-item-text">{label}</span>
+    </button>
+  </div>
+</div>

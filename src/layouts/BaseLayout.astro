@@ -3,9 +3,11 @@ export interface Props {
   title: string;
   description?: string;
   image?: string;
+  /** 是否在导航左上角显示分享按钮（目前只有首页开启） */
+  shareCorner?: boolean;
 }
 
-const { title, description, image } = Astro.props;
+const { title, description, image, shareCorner = false } = Astro.props;
 
 const SITE_URL = 'https://gusangciren.github.io';
 const SITE_NAME = '像企业家一样写作';
@@ -57,10 +59,32 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
   <body>
     <nav class="navbar">
       <div class="nav-inner">
+        <div class="nav-lead">
+        {shareCorner && (
+          <div class="share-btn share-corner">
+            <button class="share-trigger" type="button" aria-label="分享" aria-haspopup="true" aria-expanded="false">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                <line x1="8.6" y1="10.5" x2="15.4" y2="6.5"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/>
+              </svg>
+              <span class="share-trigger-text">分享</span>
+            </button>
+            <div class="share-menu" role="menu">
+              <button class="share-item" type="button" role="menuitem" data-act="copy">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/>
+                  <path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>
+                </svg>
+                <span class="share-item-text">复制链接</span>
+              </button>
+            </div>
+          </div>
+        )}
         <a href="/" class="logo">
           <img src="/images/logo-header.png" alt="Logo" class="logo-img" />
           <span>像企业家一样写作</span>
         </a>
+        </div>
         <div class="nav-links" id="nav-pill">
           <span class="nav-slider" id="nav-slider"></span>
           <a href="/book">书籍</a>
@@ -81,6 +105,83 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
       </div>
     </div>
 
+
+    <!-- 分享按钮：点开菜单 → 复制链接（导航旁 + 文章底部共用一套逻辑与样式） -->
+    <script is:inline>
+      (function () {
+        function flash(btn, txt, ok) {
+          var span = btn.querySelector('.share-item-text');
+          if (!span) return;
+          var old = span.textContent;
+          span.textContent = txt;
+          btn.classList.toggle('done', !!ok);
+          setTimeout(function () { span.textContent = old; btn.classList.remove('done'); }, 1600);
+        }
+        function closeAll(except) {
+          document.querySelectorAll('.share-btn.open').forEach(function (b) {
+            if (b === except) return;
+            b.classList.remove('open');
+            var t = b.querySelector('.share-trigger');
+            if (t) t.setAttribute('aria-expanded', 'false');
+          });
+        }
+
+        document.addEventListener('click', function (e) {
+          var root = e.target.closest ? e.target.closest('.share-btn') : null;
+
+          /* 点菜单项 → 复制链接 */
+          var item = e.target.closest ? e.target.closest('.share-item') : null;
+          if (item) {
+            var url = window.location.href;
+            var done = function () { flash(item, '已复制 ✓', true); };
+            var fail = function () { flash(item, '复制失败', false); };
+            var fallback = function () {
+              try {
+                var ta = document.createElement('textarea');
+                ta.value = url;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                done();
+              } catch (err) { fail(); }
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(url).then(done).catch(fallback);
+            } else { fallback(); }
+            closeAll(null);
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+          }
+
+          /* 点触发器 → 开合菜单 */
+          var trig = e.target.closest ? e.target.closest('.share-trigger') : null;
+          if (trig) {
+            var box = trig.closest('.share-btn');
+            var wasOpen = box.classList.contains('open');
+            closeAll(box);
+            if (!wasOpen) {
+              box.classList.add('open');
+              trig.setAttribute('aria-expanded', 'true');
+            } else {
+              trig.setAttribute('aria-expanded', 'false');
+            }
+            e.preventDefault();
+            return;
+          }
+
+          /* 点别处 → 全部收起 */
+          if (!root) closeAll(null);
+        });
+
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') closeAll(null);
+        });
+      })();
+    </script>
 
     <!-- 导航胶囊滑块（仿 iOS 相册 视频/照片 切换动态） -->
     <script is:inline>

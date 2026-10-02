@@ -1080,3 +1080,103 @@ html { scroll-behavior: smooth; }
 .qc.c .qc-src { color: #6b6258; }
 
 /* ========== 首页 Hero 背景已移除（沿用下方基础 .hero 布局） ========== */
+
+/* ========== 分享按钮（复制链接） ========== */
+.share-btn {
+  position: relative;
+  display: inline-flex;
+}
+.share-inline {
+  display: flex;
+  justify-content: center;
+  margin: 26px 0 8px;
+}
+.share-nav { display: inline-flex; }
+
+.share-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: border-color .2s, color .2s, background .2s;
+}
+.share-trigger:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  background: rgba(245, 80, 0, .04);
+}
+.share-trigger-text { line-height: 1; }
+
+.share-menu {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  min-width: 148px;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(28, 25, 23, .16);
+  padding: 6px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .2s, transform .2s, visibility .2s;
+  z-index: 1200;
+}
+.share-btn.open .share-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+.share-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 12px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  color: var(--color-text);
+  font-size: 13.5px;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  text-align: left;
+  transition: background .15s, color .15s;
+}
+.share-item:hover { background: rgba(245, 80, 0, .08); color: var(--color-accent); }
+.share-item.done { color: #2a9d3c; }
+.share-item.done:hover { background: rgba(42, 157, 60, .1); color: #2a9d3c; }
+
+/* 首页左上角分享按钮（目前只有首页开启）
+   导航是 space-between 三段（分享/logo｜链接），分享会占一格把 logo 挤到中间，
+   所以把「分享 + logo」包成 .nav-lead 靠左成组，链接仍靠右。 */
+.nav-lead {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.share-corner { display: inline-flex; flex: none; }
+.share-corner .share-trigger { padding: 7px 12px; }
+/* 导航在页面最顶部，菜单必须向下弹，否则会弹出视口外 */
+.share-corner .share-menu {
+  left: 0;
+  right: auto;
+  top: calc(100% + 8px);
+  bottom: auto;
+  transform: translateY(-6px);
+}
+.share-corner.open .share-menu { transform: translateY(0); }
+
+@media (max-width: 600px) {
+  .share-trigger-text { display: none; }
+  .share-trigger { padding: 8px 10px; }
+}
