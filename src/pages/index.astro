@@ -5,6 +5,24 @@ import ReaderLetter from '../components/ReaderLetter.astro';
 import { getCollection } from 'astro:content';
 import { columns } from '../data/columns';
 
+const writeCol = columns.find((c) => c.id === 'write-like-entrepreneur');
+const uacCol = columns.find((c) => c.id === 'uac-weekly');
+const stationDefs = [
+  { label: '一句话', issue: 1, sub: '随手记录 · 01 期' },
+  { label: '一篇文章', issue: 3, sub: '250 字攒够成文 · 03 期' },
+  { label: '一本书', issue: 16, sub: '知识卡片成书 · 16 期' },
+  { label: '一笔收入', issue: 17, sub: '让自己产品化 · 17 期' },
+  { label: '一门生意', issue: 19, sub: '打造别人想要的东西 · 19 期' },
+];
+const stations = stationDefs.map((s) => {
+  const it = writeCol?.issues.find((i) => i.issue === s.issue);
+  return { ...s, url: it?.url };
+});
+const writeCount = writeCol?.issueCount ?? 0;
+const uacCount = uacCol?.issueCount ?? 0;
+const totalIssues = uacCount + writeCount;
+const columnsHref = '/columns';
+
 const books = await getCollection('books');
 const posts = await getCollection('blog');
 
@@ -226,44 +244,88 @@ function titleWithBrackets(name) {
     })();
   </script>
 
-  <!-- Columns Preview -->
+  <!-- Columns Preview · 深夜书房「一条路」 -->
   <section class="section section-columns">
     <div class="section-inner">
-      <SectionHeader title="专栏" icon="pen" suffix="（持续更新中）" />
-      <div class="columns-preview-grid">
-        {columns.map((column) => (
-          <div class="column-preview-card">
-            <h3>{titleWithBrackets(column.name)}</h3>
-            <p class="column-preview-desc">{column.description}</p>
-            <div class="column-preview-list">
-              {column.issues.slice(0, 3).map((issue) => (
-                <a
-                  href={issue.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="column-preview-item"
-                >
-                  <span>第 {issue.issue} 期 · {issue.title}</span>
-                  <span>↗</span>
-                </a>
-              ))}
+      <div class="cd">
+        <h3 class="cd-title">写作这门生意，<em>我把每一步都走给你看</em>。</h3>
+        <p class="cd-sub">买一份合集，两个专栏一起解锁——1）周刊每周给你新的东西读，2）书籍陪你走到第一笔收入。</p>
+
+        <div class="cd-path">
+          <span class="cd-lamp" style="left:20%"></span>
+          <span class="cd-lamp" style="left:40%"></span>
+          <span class="cd-lamp" style="left:60%"></span>
+          <span class="cd-lamp" style="left:80%"></span>
+          {stations.map((s) => (
+            <div class="cd-st">
+              <span class="cd-dot"></span>
+              <a href={s.url} target="_blank" rel="noopener noreferrer" class="cd-st-label">{s.label}</a>
+              <span class="cd-st-sub">{s.sub}</span>
             </div>
-            <a
-              href={column.albumUrl || `/columns/${column.id}`}
-              class="column-preview-all"
-              target={column.albumUrl ? '_blank' : undefined}
-              rel={column.albumUrl ? 'noopener noreferrer' : undefined}
-            >
-              阅读合集 →
-            </a>
+          ))}
+        </div>
+
+        <div class="cd-legend">
+          <div class="cd-legend-row">
+            <span><i class="cd-lit"></i>五个站 = <b>《写作并变现》{writeCount} 期</b>，从头走到尾</span>
+            <span><i class="cd-dim"></i>小灯 = <b>《UAC 周刊》{uacCount} 期</b>，每周一篇沿途输入</span>
           </div>
-        ))}
+        </div>
+
+        <div class="cd-cta">
+          <a href={columnsHref} class="cd-btn">从一句话走到第一笔收入 →</a>
+          <span class="cd-note">{totalIssues} 期全部可读 · 每周更新</span>
+        </div>
       </div>
     </div>
   </section>
 
+  <style>
+    .section-columns{background:radial-gradient(1600px 620px at 50% -120px,#2b2317 0%,#181308 55%,#100d08 100%)}
+    .section-columns .section-inner{max-width:1400px}
+    .cd{position:relative;max-width:1400px;margin:0 auto;color:#f0e9dc}
+    .cd-title{position:relative;text-align:center;font-size:2.2rem;font-weight:700;line-height:1.55;color:#f7f1e4;max-width:1000px;margin:0 auto}
+    .cd-title em{font-style:normal;color:#e8a04c;text-shadow:0 0 26px rgba(232,160,76,.35)}
+    .cd-sub{position:relative;text-align:center;font-size:14px;color:#a89e8d;margin-top:12px;max-width:760px;margin-left:auto;margin-right:auto}
+    .cd-path{position:relative;max-width:1360px;margin:52px auto 0;display:flex;justify-content:space-between}
+    .cd-path::before{content:'';position:absolute;top:7px;left:10%;right:10%;height:1px;background:linear-gradient(90deg,rgba(232,160,76,.18),rgba(232,160,76,.5))}
+    .cd-st{position:relative;flex:1;text-align:center;padding:0 6px}
+    .cd-dot{display:block;width:15px;height:15px;border-radius:50%;background:#181308;border:2px solid #a8763a;margin:0 auto;position:relative;z-index:1;transition:.2s}
+    .cd-st:hover .cd-dot{border-color:#e8a04c;background:#2b2317;box-shadow:0 0 14px rgba(232,160,76,.5)}
+    .cd-st:last-child .cd-dot{background:#e8a04c;border-color:#e8a04c;animation:cdGlow 2.8s ease-in-out infinite}
+    @keyframes cdGlow{0%,100%{box-shadow:0 0 10px rgba(232,160,76,.45)}50%{box-shadow:0 0 26px rgba(232,160,76,.95)}}
+    .cd-st-label{display:block;font-size:15.5px;color:#ece3d2;margin-top:12px;transition:.2s;text-decoration:none}
+    .cd-st:hover .cd-st-label{color:#e8a04c}
+    .cd-st-sub{display:block;font-size:11.5px;color:#9a8f7d;margin-top:3px;white-space:nowrap}
+    .cd-st:first-child .cd-st-sub{color:#c9973f}
+    .cd-lamp{position:absolute;top:4.5px;width:7px;height:7px;border-radius:50%;background:rgba(232,160,76,.38);transform:translateX(-50%);z-index:0}
+    .cd-legend{position:relative;max-width:860px;margin:28px auto 0;text-align:center;font-size:13px;color:#a89e8d}
+    .cd-legend-row{display:flex;justify-content:center;gap:26px;flex-wrap:wrap}
+    .cd-legend i{display:inline-block;vertical-align:middle;margin-right:7px;border-radius:50%}
+    .cd-lit{width:11px;height:11px;background:#e8a04c;box-shadow:0 0 8px rgba(232,160,76,.6)}
+    .cd-dim{width:7px;height:7px;background:rgba(232,160,76,.38)}
+    .cd-legend b{color:#d8cfbb;font-weight:600}
+    .cd-cta{position:relative;text-align:center;margin-top:30px}
+    .cd-btn{display:inline-block;background:linear-gradient(180deg,#e8a04c,#d98a30);color:#17130d;font-weight:700;font-size:14px;border-radius:9px;padding:12px 34px;text-decoration:none;box-shadow:0 10px 26px rgba(232,160,76,.3);transition:.15s}
+    .cd-btn:hover{transform:translateY(-1px);box-shadow:0 14px 32px rgba(232,160,76,.42)}
+    .cd-note{display:block;font-size:12px;color:#9a8f7d;margin-top:10px}
+    .letter-gap{margin-top:72px}
+    @media(max-width:860px){
+      .cd-title{font-size:1.6rem}
+      .cd-path{flex-direction:column;gap:24px;align-items:flex-start;max-width:320px}
+      .cd-path::before{left:7px;right:auto;top:8px;bottom:8px;width:1px;height:auto;background:linear-gradient(180deg,rgba(232,160,76,.18),rgba(232,160,76,.5))}
+      .cd-st{display:flex;align-items:center;gap:14px;text-align:left;padding:0;width:100%}
+      .cd-dot{margin:0;flex:none}
+      .cd-st-label{margin-top:0}
+      .cd-lamp{display:none}
+      .cd-st-sub{white-space:normal}
+    }
+  </style>
+
   {/* ===== 致读者的一封信（拆信交互 · A2 悬念款） ===== */}
-  <ReaderLetter />
+  <div class="letter-gap">
+    <ReaderLetter />
+  </div>
 
   <style is:global>
     /* ===== Hero 内联搜索（方案 B） ===== */
