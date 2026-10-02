@@ -1,0 +1,313 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import { shopItems as items } from '../data/shop';
+
+/* ============================================================
+   橱窗：商品 / 作品陈列（独立页 /shop）
+   交互：默认显示「面料特写（印花布）」，鼠标悬停后整图淡入换成「T 恤成品照」。
+   手法：双层整图淡入（做法 A）—— 底层面料图，上层 T 恤图 opacity 0。
+   不做抠图、不做印花叠加，图片什么样就怎么显示。
+   商品数据见 src/data/shop.ts，与 /tools 的橱窗面板共用。
+   ============================================================ */
+---
+
+<BaseLayout
+  title="橱窗 — 像企业家一样写作"
+  description="山隱、山里人、有点人情世故、晚风。像企业家一样写作的 T 恤。"
+>
+  <div class="shop-page">
+    <div class="shop-header">
+      <SectionHeader title="橱窗" icon="book" />
+      <p class="shop-sub">衣服上写什么，鼠标悬停就能看 · 手机轻触切换</p>
+    </div>
+
+    <div class="shop-grid">
+      {items.map((it) => (
+        <div class="shop-card" data-qr={it.qr} data-name={it.name}>
+          <div class="shop-stage">
+            <img class="shop-layer shop-fabric" src={it.fabric} alt={`${it.name} 印花面料`} loading="lazy" />
+            <img class="shop-layer shop-tee" src={it.tee} alt={`${it.name} ${it.color} T 恤`} loading="lazy" />
+            <button class="shop-plus" type="button" aria-label={`购买 ${it.name}`}>+</button>
+          </div>
+          <div class="shop-info">
+            <div class="shop-line1">
+              <span class="sm-name">{it.name}</span>
+              <span class="sm-dots" aria-hidden="true"></span>
+              <span class="sm-color">{it.color}</span>
+              <button class="sm-plus" type="button" aria-label={`购买 ${it.name}`}>+</button>
+            </div>
+            <div class="shop-line2">
+              <span class="sm-tag">{it.tagline}</span>
+              <span class="sm-price">{it.price}</span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <p class="shop-hint">样品实拍 · 点 + 扫码去微信小店下单</p>
+  </div>
+
+  {/* ===== 购买二维码弹层 ===== */}
+  <div class="qr-overlay" id="qrOverlay" hidden>
+    <div class="qr-modal" role="dialog" aria-modal="true" aria-label="扫码购买">
+      <button class="qr-close" id="qrClose" type="button" aria-label="关闭">×</button>
+      <img class="qr-img" id="qrImg" src="" alt="微信扫码下单" />
+      <p class="qr-tip">微信扫码，跳转到小程序下单</p>
+    </div>
+  </div>
+</BaseLayout>
+
+<style is:global>
+  /* ========== 橱窗：面料特写 → T 恤成品照（整图淡入） ========== */
+  .shop-page {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+  .shop-header { text-align: center; margin-bottom: 34px; }
+  .shop-sub {
+    color: var(--color-text-secondary);
+    font-size: 13.5px;
+    margin-top: 10px;
+  }
+  .shop-grid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+  .shop-card {
+    position: relative;
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    padding: 14px 14px 16px;
+    color: inherit;
+    box-shadow: 0 8px 22px rgba(28, 25, 23, .05);
+    transition: transform .35s cubic-bezier(.22, .61, .36, 1), box-shadow .35s, border-color .35s;
+  }
+  .shop-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px rgba(245, 80, 0, .16);
+    border-color: rgba(245, 80, 0, .35);
+  }
+
+  /* 舞台：正方形，两层图绝对定位叠放 */
+  .shop-stage {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f4f2f0;
+  }
+  .shop-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  /* 底层：面料特写 */
+  .shop-fabric { z-index: 1; }
+  /* 上层：T 恤成品照，默认透明，悬停淡入 */
+  .shop-tee {
+    z-index: 2;
+    opacity: 0;
+    transition: opacity .4s ease;
+  }
+  .shop-card:hover .shop-tee { opacity: 1; }
+
+  .shop-plus {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: var(--color-accent);
+    color: #fff;
+    font-size: 17px;
+    line-height: 28px;
+    text-align: center;
+    padding: 0;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    box-shadow: 0 4px 12px rgba(245, 80, 0, .32);
+    opacity: 0;
+    transform: scale(.7);
+    transition: opacity .3s, transform .3s, background .2s;
+    z-index: 3;
+  }
+  .shop-card:hover .shop-plus { opacity: 1; transform: scale(1); }
+  .shop-plus:hover { background: #d94700; }
+
+  .shop-info { margin-top: 12px; }
+  .shop-line1 {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .sm-name { font-size: 15px; font-weight: 700; }
+  .sm-dots {
+    flex: 1;
+    border-bottom: 1px dotted var(--color-border);
+    transform: translateY(-3px);
+  }
+  .sm-color { font-size: 12px; color: var(--color-text-secondary); }
+  .sm-plus {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    background: none;
+    border: none;
+    border-left: 1px solid var(--color-border);
+    margin-left: 2px;
+    padding: 0 0 0 6px;
+    cursor: pointer;
+    line-height: 1.4;
+    font-family: var(--font-sans);
+    transition: color .2s;
+  }
+  .sm-plus:hover { color: var(--color-accent); }
+  .shop-line2 {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .sm-tag { font-size: 12.5px; color: var(--color-text-secondary); flex: 1; }
+  .sm-price { font-size: 13px; color: var(--color-text-secondary); }
+
+  .shop-hint {
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-size: 13px;
+    margin-top: 30px;
+  }
+
+  /* 手机没有 hover：默认显示 T 恤图，轻触卡片切回面料图，+ 号常显 */
+  @media (hover: none) {
+    .shop-tee { opacity: 1; }
+    .shop-plus { opacity: 1; transform: scale(1); }
+    .shop-card.tap .shop-tee { opacity: 0; }
+  }
+
+  /* ========== 购买二维码弹层 ========== */
+  .qr-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 400;
+    background: rgba(28, 25, 23, .55);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .qr-overlay[hidden] { display: none; }
+  .qr-modal {
+    position: relative;
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px 20px 18px;
+    max-width: 340px;
+    width: 100%;
+    /* 右上角要给 .qr-close（-14px 外移）留位置，别被 overflow 裁掉 */
+    margin: 14px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .3);
+    animation: qrIn .22s ease;
+  }
+  @keyframes qrIn {
+    from { opacity: 0; transform: translateY(12px) scale(.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .qr-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+  .qr-tip {
+    text-align: center;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    margin-top: 12px;
+  }
+  /* 关闭按钮：放在二维码图「右上角外侧」——图片本身是橙红色，
+     深色叉放图内会被淹没；白底圆钮 + 描边阴影才够显眼 */
+  .qr-close {
+    position: absolute;
+    top: -14px;
+    right: -14px;
+    width: 36px;
+    height: 36px;
+    border: 2px solid var(--color-border);
+    border-radius: 50%;
+    background: #fff;
+    color: var(--color-text);
+    font-size: 26px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 3;
+    font-family: var(--font-sans);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, .2);
+    transition: background .2s, color .2s, transform .2s;
+  }
+  .qr-close:hover {
+    background: var(--color-text);
+    color: #fff;
+    border-color: var(--color-text);
+    transform: rotate(90deg);
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var overlay = document.getElementById('qrOverlay');
+    var qrImg = document.getElementById('qrImg');
+    var closeBtn = document.getElementById('qrClose');
+    if (!overlay || !qrImg) return;
+
+    function openQr(card) {
+      var src = card.getAttribute('data-qr');
+      if (src) qrImg.setAttribute('src', src);
+      overlay.removeAttribute('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeQr() {
+      overlay.setAttribute('hidden', '');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('click', function (e) {
+      /* 点 + 号 → 开二维码 */
+      var plus = e.target.closest ? e.target.closest('.shop-plus, .sm-plus') : null;
+      if (plus) {
+        var card = plus.closest('.shop-card');
+        if (card) {
+          e.preventDefault();
+          e.stopPropagation();
+          openQr(card);
+        }
+        return;
+      }
+      /* 点遮罩空白处 → 关闭 */
+      if (e.target === overlay) { closeQr(); return; }
+      /* 触屏：点卡片空白处切换面料图/T 恤图（不干扰 + 号） */
+      var c = e.target.closest ? e.target.closest('.shop-card') : null;
+      if (c && !window.matchMedia('(hover: none)').matches) return;
+      if (c) c.classList.toggle('tap');
+    });
+
+    closeBtn.addEventListener('click', closeQr);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeQr();
+    });
+  })();
+</script>

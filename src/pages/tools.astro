@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { shopItems } from '../data/shop';
 ---
 
 <BaseLayout title="工具箱 · 像企业家一样写作">
@@ -10,6 +11,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <li data-pane="pane-write"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span><span class="lab">书写伙伴</span></li>
         <li data-pane="pane-cover" class="active"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></span><span class="lab">公众号封面</span></li>
         <li data-pane="pane-quote"><span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 7h5v6H8.5C8.5 16 11 18 14 18v2c-5 0-9-3-9-9Zm9 0h5v6h-3.5C17.5 16 20 18 23 18v2c-5 0-9-3-9-9Z"/></svg></span><span class="lab">句子卡片</span></li>
+        <li data-pane="pane-shop"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 4.5 4h15L21 9.5"/><path d="M3 9.5a2 2 0 0 0 4 0 2 2 0 0 0 4 0 2 2 0 0 0 4 0 2 2 0 0 0 4 0"/><path d="M5 11v9h14v-9"/><path d="M9.5 20v-5h5v5"/></svg></span><span class="lab">橱窗画廊</span></li>
       </ul>
     </aside>
 
@@ -210,6 +212,48 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </div>
       </section>
 
+      <!-- 4) 橱窗（商品陈列 · 数据同 /shop 页） -->
+      <section class="pane" id="pane-shop" hidden>
+        <div class="shop-wrap">
+          <p class="shop-tip">衣服上写什么，鼠标悬停就能看 · 点 + 扫码去微信小店下单</p>
+
+          <div class="shop-grid">
+            {shopItems.map((it) => (
+              <div class="shop-card" data-qr={it.qr} data-name={it.name}>
+                <div class="shop-stage">
+                  <img class="shop-layer shop-fabric" src={it.fabric} alt={`${it.name} 印花面料`} loading="lazy" />
+                  <img class="shop-layer shop-tee" src={it.tee} alt={`${it.name} ${it.color} T 恤`} loading="lazy" />
+                  <button class="shop-plus" type="button" aria-label={`购买 ${it.name}`}>+</button>
+                </div>
+                <div class="shop-info">
+                  <div class="shop-line1">
+                    <span class="sm-name">{it.name}</span>
+                    <span class="sm-dots" aria-hidden="true"></span>
+                    <span class="sm-color">{it.color}</span>
+                    <button class="sm-plus" type="button" aria-label={`购买 ${it.name}`}>+</button>
+                  </div>
+                  <div class="shop-line2">
+                    <span class="sm-tag">{it.tagline}</span>
+                    <span class="sm-price">{it.price}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <p class="shop-hint">样品实拍</p>
+        </div>
+
+        {/* 购买二维码弹层（橱窗面板内一份，ID 加后缀避免与其它脚本冲突） */}
+        <div class="qr-overlay" id="qrOverlayShop" hidden>
+          <div class="qr-modal" role="dialog" aria-modal="true" aria-label="扫码购买">
+            <button class="qr-close" id="qrCloseShop" type="button" aria-label="关闭">×</button>
+            <img class="qr-img" id="qrImgShop" src="" alt="微信扫码下单" />
+            <p class="qr-tip">微信扫码，跳转到小程序下单</p>
+          </div>
+        </div>
+      </section>
+
 
       <div class="tools-toast" id="toolsToast"></div>
 
@@ -228,6 +272,42 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           window.dispatchEvent(new Event('resize'));
         });
       });
+
+      // ===== 橱窗：点 + 弹购买二维码 =====
+      (function () {
+        var pane = document.getElementById('pane-shop');
+        var overlay = document.getElementById('qrOverlayShop');
+        var qrImg = document.getElementById('qrImgShop');
+        var closeBtn = document.getElementById('qrCloseShop');
+        if (!pane || !overlay || !qrImg) return;
+
+        function openQr(card) {
+          var src = card.getAttribute('data-qr');
+          if (src) qrImg.setAttribute('src', src);
+          overlay.removeAttribute('hidden');
+          document.body.style.overflow = 'hidden';
+        }
+        function closeQr() {
+          overlay.setAttribute('hidden', '');
+          document.body.style.overflow = '';
+        }
+
+        pane.addEventListener('click', function (e) {
+          var plus = e.target.closest ? e.target.closest('.shop-plus, .sm-plus') : null;
+          if (plus) {
+            var card = plus.closest('.shop-card');
+            if (card) { e.preventDefault(); e.stopPropagation(); openQr(card); }
+            return;
+          }
+          /* 触屏：点卡片空白处切换面料图 / T 恤图 */
+          var c = e.target.closest ? e.target.closest('.shop-card') : null;
+          if (c && window.matchMedia('(hover: none)').matches) c.classList.toggle('tap');
+        });
+
+        overlay.addEventListener('click', function (e) { if (e.target === overlay) closeQr(); });
+        closeBtn.addEventListener('click', closeQr);
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeQr(); });
+      })();
     })();
 
       // ===== 全局轻提示（toast）：复制 / 导出 / 保存等反馈统一走这里 =====
@@ -1666,6 +1746,194 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       /* 金句卡移动放大（移动端体验） */
       #pane-quote .canvas { padding: 24px 8px; }
       #pane-quote .canvas-dot { padding: 18px 10px; }
+    }
+
+    /* ==========================================================
+       橱窗面板（与 /shop 独立页共用同一套样式与商品数据）
+       ========================================================== */
+    .shop-wrap { max-width: 920px; margin: 0 auto; }
+    .shop-tip {
+      text-align: center;
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      margin-bottom: 20px;
+    }
+    #pane-shop .shop-grid {
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    }
+    #pane-shop .shop-card {
+      position: relative;
+      background: var(--color-card-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 14px;
+      padding: 12px 12px 14px;
+      color: inherit;
+      box-shadow: 0 8px 22px rgba(28, 25, 23, .05);
+      transition: transform .35s cubic-bezier(.22, .61, .36, 1), box-shadow .35s, border-color .35s;
+    }
+    #pane-shop .shop-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 40px rgba(245, 80, 0, .16);
+      border-color: rgba(245, 80, 0, .35);
+    }
+    #pane-shop .shop-stage {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #f4f2f0;
+    }
+    #pane-shop .shop-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    #pane-shop .shop-fabric { z-index: 1; }
+    #pane-shop .shop-tee {
+      z-index: 2;
+      opacity: 0;
+      transition: opacity .4s ease;
+    }
+    #pane-shop .shop-card:hover .shop-tee { opacity: 1; }
+    #pane-shop .shop-plus {
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: none;
+      background: var(--color-accent);
+      color: #fff;
+      font-size: 16px;
+      line-height: 26px;
+      text-align: center;
+      padding: 0;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 4px 12px rgba(245, 80, 0, .32);
+      opacity: 0;
+      transform: scale(.7);
+      transition: opacity .3s, transform .3s, background .2s;
+      z-index: 3;
+    }
+    #pane-shop .shop-card:hover .shop-plus { opacity: 1; transform: scale(1); }
+    #pane-shop .shop-plus:hover { background: #d94700; }
+    #pane-shop .shop-info { margin-top: 11px; }
+    #pane-shop .shop-line1 { display: flex; align-items: center; gap: 6px; }
+    #pane-shop .sm-name { font-size: 14.5px; font-weight: 700; }
+    #pane-shop .sm-dots {
+      flex: 1;
+      border-bottom: 1px dotted var(--color-border);
+      transform: translateY(-3px);
+    }
+    #pane-shop .sm-color { font-size: 11.5px; color: var(--color-text-secondary); }
+    #pane-shop .sm-plus {
+      font-size: 12px;
+      color: var(--color-text-secondary);
+      background: none;
+      border: none;
+      border-left: 1px solid var(--color-border);
+      margin-left: 2px;
+      padding: 0 0 0 6px;
+      cursor: pointer;
+      line-height: 1.4;
+      font-family: inherit;
+      transition: color .2s;
+    }
+    #pane-shop .sm-plus:hover { color: var(--color-accent); }
+    #pane-shop .shop-line2 {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    #pane-shop .sm-tag { font-size: 12px; color: var(--color-text-secondary); flex: 1; }
+    #pane-shop .sm-price { font-size: 12.5px; color: var(--color-text-secondary); }
+    #pane-shop .shop-hint {
+      text-align: center;
+      color: var(--color-text-secondary);
+      font-size: 12.5px;
+      margin-top: 24px;
+    }
+
+    /* 购买二维码弹层 */
+    .qr-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 400;
+      background: rgba(28, 25, 23, .55);
+      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .qr-overlay[hidden] { display: none; }
+.qr-modal {
+    position: relative;
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px 20px 18px;
+    max-width: 340px;
+    width: 100%;
+    /* 右上角要给 .qr-close（-14px 外移）留位置，别被 overflow 裁掉 */
+    margin: 14px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .3);
+    animation: qrIn .22s ease;
+  }
+    @keyframes qrIn {
+      from { opacity: 0; transform: translateY(12px) scale(.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .qr-img { display: block; width: 100%; height: auto; border-radius: 10px; }
+    .qr-tip {
+      text-align: center;
+      font-size: 13px;
+      color: var(--color-text-secondary);
+      margin-top: 12px;
+    }
+/* 关闭按钮：放在二维码图「右上角外侧」——图片本身是橙红色，
+     深色叉放图内会被淹没；白底圆钮 + 描边阴影才够显眼 */
+  .qr-close {
+    position: absolute;
+    top: -14px;
+    right: -14px;
+    width: 36px;
+    height: 36px;
+    border: 2px solid var(--color-border);
+    border-radius: 50%;
+    background: #fff;
+    color: var(--color-text);
+    font-size: 26px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 3;
+    font-family: inherit;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, .2);
+    transition: background .2s, color .2s, transform .2s;
+  }
+  .qr-close:hover {
+    background: var(--color-text);
+    color: #fff;
+    border-color: var(--color-text);
+    transform: rotate(90deg);
+  }
+
+    /* 手机无 hover：默认显示 T 恤图，+ 号常显 */
+    @media (hover: none) {
+      #pane-shop .shop-tee { opacity: 1; }
+      #pane-shop .shop-plus { opacity: 1; transform: scale(1); }
+      #pane-shop .shop-card.tap .shop-tee { opacity: 0; }
     }
   </style>
 </BaseLayout>
