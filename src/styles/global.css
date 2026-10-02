@@ -1071,3 +1071,5 @@ html { scroll-behavior: smooth; }
 .qc.c .qc-quote { font-size: 21px; padding-top: 10px; }
 .qc.c .qc-foot { border-top: 1px solid rgba(43, 38, 32, 0.15); }
 .qc.c .qc-src { color: #6b6258; }
+
+/* ========== 首页 Hero 背景已移除（沿用下方基础 .hero 布局） ========== */

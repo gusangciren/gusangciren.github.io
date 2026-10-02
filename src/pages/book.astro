@@ -161,18 +161,18 @@ function titleWithBrackets(name: string) {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 36px 20px;
+    padding: 22px 16px;
     text-decoration: none;
   }
   .bf-cover img {
-    width: 200px;
-    aspect-ratio: 210/297;
-    object-fit: cover;
-    border-radius: 6px;
-    box-shadow: 0 14px 32px rgba(0,0,0,.2);
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 5px;
+    box-shadow: 0 10px 26px rgba(0,0,0,.18);
     transition: transform .25s;
   }
-  .bf-cover:hover img { transform: translateY(-4px) scale(1.02); }
+  .bf-cover:hover img { transform: scale(1.02); }
   .bf-new {
     position: absolute;
     top: 14px;
@@ -406,8 +406,8 @@ function titleWithBrackets(name: string) {
   }
 
   @media (max-width: 860px) {
-    .bf-cover { flex-basis: 210px; padding: 26px 14px; }
-    .bf-cover img { width: 156px; }
+    .bf-cover { flex-basis: 210px; padding: 18px 12px; }
+    .bf-cover img { width: 100%; }
     .bf-body { padding: 22px 22px 24px; }
     .bf-title { font-size: 1.2rem; }
   }
@@ -416,8 +416,8 @@ function titleWithBrackets(name: string) {
     .book-grid { grid-template-columns: 1fr; max-width: 360px; margin: 0 auto; }
     .bc-cover img { width: 50%; }
     .book-feat { flex-direction: column; }
-    .bf-cover { flex-basis: auto; padding: 28px 16px; }
-    .bf-cover img { width: 168px; }
+    .bf-cover { flex-basis: auto; padding: 22px 16px; }
+    .bf-cover img { width: 100%; height: auto; }
     .bf-body { padding: 20px 20px 24px; }
     .bf-acts { width: 100%; }
     .bf-btn { flex: 1; text-align: center; }
