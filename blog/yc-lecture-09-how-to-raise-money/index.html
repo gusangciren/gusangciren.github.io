@@ -1,0 +1,797 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="YC 创业课第9讲｜Marc Andreessen、Ron Conway、Parker Conrad"><link rel="canonical" href="https://gusangciren.github.io/blog/yc-lecture-09-how-to-raise-money/"><title>如何融资 — 像企业家一样写作</title><!-- 社交分享卡片（微信 / 微博 / X 等抓取标题、描述与缩略图） --><meta property="og:type" content="website"><meta property="og:site_name" content="像企业家一样写作"><meta property="og:title" content="如何融资 — 像企业家一样写作"><meta property="og:description" content="YC 创业课第9讲｜Marc Andreessen、Ron Conway、Parker Conrad"><meta property="og:image" content="https://gusangciren.github.io/images/logo-180x180.png"><meta property="og:url" content="https://gusangciren.github.io/blog/yc-lecture-09-how-to-raise-money/"><meta property="og:locale" content="zh_CN"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="如何融资 — 像企业家一样写作"><meta name="twitter:description" content="YC 创业课第9讲｜Marc Andreessen、Ron Conway、Parker Conrad"><meta name="twitter:image" content="https://gusangciren.github.io/images/logo-180x180.png"><link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml"><link rel="sitemap" type="application/xml" href="/sitemap-index.xml"><!-- Static CSS — no build hash, safe for incremental deploys --><link rel="stylesheet" href="/global.css"><!-- 金句卡片导出为图片（同 origin，无 CORS 风险） --><script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script><!-- 中文字体：经 BootCDN 加载（国内可访问，不走被墙的 Google Fonts）。
+         用 preload + onload 切换，去掉 @import 的渲染阻塞；字体未到位时先用系统衬线字体（等同 font-display:swap） --><link rel="preload" as="style" href="/fonts/fonts.css" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/fonts/fonts.css"></noscript><link rel="stylesheet" href="/_astro/BaseLayout.Bu4xGSCj.css">
+<link rel="stylesheet" href="/_astro/_..pIQ4IDMw.css"></head> <body> <nav class="navbar"> <div class="nav-inner"> <div class="nav-lead">  <a href="/" class="logo"> <img src="/images/logo-header.png" alt="Logo" class="logo-img"> <span>像企业家一样写作</span> </a> </div> <div class="nav-links" id="nav-pill"> <span class="nav-slider" id="nav-slider"></span> <a href="/book">书籍</a> <a href="/columns">专栏</a> <a href="/tools" class="nav-tools">工具</a> </div> </div> </nav> <!-- 搜索浮窗 --> <div id="search-overlay" class="search-overlay"> <div class="search-modal"> <div class="search-header"> <input id="search-input" type="text" placeholder="搜索书籍、章节或关键词…" autocomplete="off"> <button id="search-close" class="search-close-btn" aria-label="关闭搜索">✕</button> </div> <div id="search-results" class="search-results"></div> </div> </div> <!-- 分享按钮：点开菜单 → 复制链接（导航旁 + 文章底部共用一套逻辑与样式） --> <script>
+      (function () {
+        function flash(btn, txt, ok) {
+          var span = btn.querySelector('.share-item-text');
+          if (!span) return;
+          var old = span.textContent;
+          span.textContent = txt;
+          btn.classList.toggle('done', !!ok);
+          setTimeout(function () { span.textContent = old; btn.classList.remove('done'); }, 1600);
+        }
+        function closeAll(except) {
+          document.querySelectorAll('.share-btn.open').forEach(function (b) {
+            if (b === except) return;
+            b.classList.remove('open');
+            var t = b.querySelector('.share-trigger');
+            if (t) t.setAttribute('aria-expanded', 'false');
+          });
+        }
+
+        document.addEventListener('click', function (e) {
+          var root = e.target.closest ? e.target.closest('.share-btn') : null;
+
+          /* 点菜单项 → 复制链接 */
+          var item = e.target.closest ? e.target.closest('.share-item') : null;
+          if (item) {
+            var url = window.location.href;
+            var done = function () { flash(item, '已复制 ✓', true); };
+            var fail = function () { flash(item, '复制失败', false); };
+            var fallback = function () {
+              try {
+                var ta = document.createElement('textarea');
+                ta.value = url;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                done();
+              } catch (err) { fail(); }
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(url).then(done).catch(fallback);
+            } else { fallback(); }
+            closeAll(null);
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+          }
+
+          /* 点触发器 → 开合菜单 */
+          var trig = e.target.closest ? e.target.closest('.share-trigger') : null;
+          if (trig) {
+            var box = trig.closest('.share-btn');
+            var wasOpen = box.classList.contains('open');
+            closeAll(box);
+            if (!wasOpen) {
+              box.classList.add('open');
+              trig.setAttribute('aria-expanded', 'true');
+            } else {
+              trig.setAttribute('aria-expanded', 'false');
+            }
+            e.preventDefault();
+            return;
+          }
+
+          /* 点别处 → 全部收起 */
+          if (!root) closeAll(null);
+        });
+
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') closeAll(null);
+        });
+      })();
+    </script> <!-- 导航胶囊滑块（仿 iOS 相册 视频/照片 切换动态） --> <script>
+      (function () {
+        var pill = document.getElementById('nav-pill');
+        var slider = document.getElementById('nav-slider');
+        if (!pill || !slider) return;
+        var links = Array.prototype.slice.call(pill.querySelectorAll('a'));
+        var path = window.location.pathname.replace(/\/+$/, '') || '/';
+        var activeIdx = -1;
+        links.forEach(function (a, i) {
+          var href = (a.getAttribute('href') || '').replace(/\/+$/, '') || '/';
+          var match = (href === '/') ? (path === '/') : (path === href || path.indexOf(href + '/') === 0);
+          if (match) activeIdx = i;
+        });
+        if (activeIdx < 0) { slider.style.opacity = '0'; return; }
+        links[activeIdx].classList.add('active');
+        function move(idx, animate) {
+          var a = links[idx];
+          if (!a) return;
+          if (!animate) slider.style.transition = 'none';
+          slider.style.width = a.offsetWidth + 'px';
+          slider.style.transform = 'translateX(' + a.offsetLeft + 'px)';
+          if (!animate) {
+            void slider.offsetWidth; /* 强制回流，让下一次位移产生过渡动画 */
+            slider.style.transition = '';
+          }
+        }
+        /* iOS 动态：先停在另一项上，再滑到当前项 */
+        move(activeIdx === 0 ? 1 : 0, false);
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () { move(activeIdx, true); });
+        });
+        window.addEventListener('resize', function () { move(activeIdx, false); });
+      })();
+    </script> <main>   <div id="reading-progress" class="reading-progress"></div> <!-- 书籍系列：杂志章节页（方案 C 优化版） -->
+    <div class="reader"> <!-- 吸顶极简条：滚过章首后出现 --> <div class="reader-mini" id="reader-mini"> <a href="/book" class="reader-mini-back" aria-label="返回书架">←</a> <span class="reader-mini-book">YC 创业课</span> <span class="reader-mini-sep">·</span> <span class="reader-mini-chapter">如何融资</span> <span class="reader-mini-pct" id="mini-pct">0%</span> </div> <!-- 章首大标题区：超大章节号 + 居左内容 --> <header class="reader-hero"> <div class="reader-hero-inner"> <div class="reader-hero-num" aria-hidden="true">09</div> <div class="reader-hero-text"> <a href="/book" class="reader-hero-back">← 返回书架</a> <div class="reader-hero-book">《YC 创业课：如何创办初创公司》</div> <div class="reader-hero-chapter">第 9 章 / 共 20 章</div> <h1 class="reader-hero-title">如何融资</h1> <div class="reader-hero-meta"> <time>2026年6月27日</time> <span class="reader-hero-dot">·</span> <span>约 46 分钟阅读</span> </div> </div> </div> </header> <!-- 正文 + 时间线目录 --> <div class="reader-body"> <aside class="reader-toc" id="reader-toc"> <div class="reader-toc-inner"> <div class="reader-toc-book">《YC 创业课：如何创办初创公司》</div> <nav class="reader-toc-nav"> <div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-01-how-to-start-a-startup" class="reader-toc-item"> <span class="reader-toc-title">如何创办初创公司</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-02-ideas-products-teams-execution-part2" class="reader-toc-item"> <span class="reader-toc-title">创意、产品、团队与执行（第二部分）</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-03-counterintuitive-parts-and-how-to-have-ideas" class="reader-toc-item"> <span class="reader-toc-title">创业中反直觉的部分，以及如何产生创意</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-04-building-product-talking-to-users-and-growing" class="reader-toc-item"> <span class="reader-toc-title">打造产品、与用户对话、实现增长</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-05-business-strategy-and-monopoly-theory" class="reader-toc-item"> <span class="reader-toc-title">商业战略与垄断理论</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-06-growth" class="reader-toc-item"> <span class="reader-toc-title">增长</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-07-how-to-build-products-users-love" class="reader-toc-item"> <span class="reader-toc-title">如何打造用户热爱的产品（第一部分）</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-08-doing-things-that-dont-scale-pr" class="reader-toc-item"> <span class="reader-toc-title">做那些无法规模化的事、公关，以及如何起步</span> </a>  </div><div class="reader-toc-item-wrap active "> <a href="/blog/yc-lecture-09-how-to-raise-money" class="reader-toc-item"> <span class="reader-toc-title">如何融资</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-10-company-culture-and-building-a-team" class="reader-toc-item"> <span class="reader-toc-title">企业文化与团队建设（第一部分）</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-11-company-culture-and-building-a-team-part2" class="reader-toc-item"> <span class="reader-toc-title">企业文化与团队建设（第二部分）</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-12-sales-and-marketing" class="reader-toc-item"> <span class="reader-toc-title">销售与营销（面向企业客户）</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-13-how-to-be-a-great-founder" class="reader-toc-item"> <span class="reader-toc-title">如何成为一位伟大的创始人</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-14-how-to-operate" class="reader-toc-item"> <span class="reader-toc-title">如何运营</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-15-how-to-manage" class="reader-toc-item"> <span class="reader-toc-title">如何管理</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-16-how-to-run-a-user-interview" class="reader-toc-item"> <span class="reader-toc-title">如何进行用户访谈</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-17-how-to-build-products-users-love-part2" class="reader-toc-item"> <span class="reader-toc-title">如何打造用户热爱的产品（第二部分）</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-18-legal-finance-hr" class="reader-toc-item"> <span class="reader-toc-title">创业公司的法律、财务与人力机制</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-19-sales-marketing-pitch-investor-roleplaying" class="reader-toc-item"> <span class="reader-toc-title">销售、营销与融资路演</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-20-closing-thoughts-and-later-stage-advice" class="reader-toc-item"> <span class="reader-toc-title">收官思考与后期阶段建议</span> </a>  </div> </nav> </div> </aside> <main class="reader-main">  <article class="prose reader-prose"> <p><strong>YC 创业课第九讲 · Marc Andreessen（安德森·霍洛维茨联合创始人）、Ron Conway（SV Angel 创始人）、Parker Conrad（Zenefits 联合创始人）、Sam Altman（主持人）</strong></p>
+<hr>
+<h2 id="投资人到底凭什么决定投你">投资人到底凭什么决定投你？</h2>
+<p><strong>Sam Altman：</strong> 我想先问 Marc 和 Ron 一个问题，这也是今天大家最想问、排在第一位的问题：你们到底凭什么决定投资一家由创始人创办的公司？</p>
+<h3 id="ron-conway-的投资标准">Ron Conway 的投资标准</h3>
+<p><strong>Ron Conway：</strong> 我们有一张幻灯片专门讲这个——</p>
+<p>说起来，SV Angel 以及它的关联实体，已经投资了超过 700 家公司。要投到 700 家，就意味着我们亲自和成千上万的创业者谈过话。每次见到一位创业者，我脑子里会同时过很多问题。</p>
+<p>就在你跟我说话的第一分钟里，我其实在判断：“这个人是领导者吗？""这个人正直吗？专注吗？对产品有执念吗？” 我通常先问的第一个问题是：“是什么启发你创造了这个产品？” 我希望听到的答案是：这个产品源于创始人自己遇到的个人问题，而它正是那个问题的解药。</p>
+<p>接下来我会看沟通能力。因为如果你要当领导者、要组建团队——假设你的产品会成功——你就必须是一个极其善于沟通的人，必须是一个天生的领导者。当然，有些领导特质可以后天学，但你最好天生就有那种”能扛事、能带人”的气质。我先把话筒交回幻灯片，不过还是让 Marc 接着说。</p>
+<h3 id="marc-andreessen风险投资是一场极端异常值的游戏">Marc Andreessen：风险投资是一场极端异常值的游戏</h3>
+<p><strong>Marc Andreessen：</strong> 我完全同意 Ron 说的。这个问题有很多细节可以展开。我们和 Ron 可能略有不同——我们投资各个阶段的公司，从种子轮、风投轮到成长轮，也覆盖消费级、企业级以及一大堆别的商业模式。如果有具体问题，我们可以深入聊。</p>
+<p>我想分享两个通用的概念。</p>
+<p><strong>第一，风险投资百分之百是一场极端异常值的游戏，是极端的异常值。</strong> 通常的统计是：每年大约有 4000 家值得风投关注、想要融资的公司。其中大约 200 家能获得顶级风投的投资。这 200 家里，大约有 15 家终有一天会做到一年 1 亿美元的收入。而那 15 家，在那一年里，会产生当年整个风投类别大约 97% 的回报。所以风险投资是一场极端”盛宴或饥荒”的生意。你要么在那 15 家里，要么不在；你要么在那 200 家里，要么不在。所以我们寻找的核心——不管具体标准怎么谈——全都是在寻找那个极端的异常值。</p>
+<p><strong>第二，我们内部经常琢磨的一个概念：投资优势，而不是”没有弱点”。</strong> 这听起来显而易见，其实相当微妙。做风投有一种默认做法，就是打勾：很好的创始人、很好的想法、很好的产品、很好的初始客户。勾、勾、勾、勾。好，这看起来不错，我投钱。但你会发现，这种打勾式交易——它们一直都在发生——往往缺了某种让它们真正卓越、真正特别的东西。它们没有一个能让自己成为异常值的极端优势。</p>
+<p>反过来说，<strong>那些拥有真正极端优势的公司，往往也带着严重的缺陷。</strong> 风投的一个警世教训就是：如果你不投那些有严重缺陷的公司，你就投不中大多数大赢家。我们可以一个例子接一个例子地举。但那样的话，几乎历史上所有的大赢家都会被你排除掉。所以我们追求的是：去投资那些在重要维度上拥有真正极端优势的公司，并且我们愿意容忍某些弱点。</p>
+<h3 id="ron-conway第一句话就要让人听懂你的产品">Ron Conway：第一句话就要让人听懂你的产品</h3>
+<p><strong>Ron Conway：</strong> 好，我不想在幻灯片上绕太久，但当你第一次见投资人时，你必须能用<strong>一句有说服力的一句话</strong>说清你的产品——这句话你要像疯了一样反复练——让对方一听就能在脑海里立刻想象出你的产品长什么样。我今天见到的创业者里，大概 25% 在说完第一句话之后，我还是不知道他们是做什么的。随着年龄增长、耐心变差，我会直接说：“等一下，我还不知道你是做什么的呢。” 所以尽量把这句话打磨到完美。</p>
+<p>然后我想跳到第二栏。你必须果断，取得进展的唯一方式就是做决定。<strong>拖延是初创公司的魔鬼。</strong> 无论是招聘的决定、裁人的决定，你都得快速做。归根结底就是组建一支伟大的团队。一旦你有了好产品，剩下的就全是执行和组建团队。</p>
+<h2 id="parker-conrad-的种子轮故事先做出成绩">Parker Conrad 的种子轮故事：先做出成绩</h2>
+<p><strong>Sam Altman：</strong> Parker，你能讲讲你的种子轮是怎么跑下来的吗？从融资的角度看，有哪些地方你本该做得不一样？</p>
+<h3 id="前一家公司被-60-家机构拒绝">前一家公司被 60 家机构拒绝</h3>
+<p><strong>Parker Conrad：</strong> 当然。其实我现在的这家公司，从融资的角度看，进展相对较快。但我有一段经历：之前我创办过一家公司，待了六年，我和联合创始人几乎把硅谷的每一家风投机构都推介了一遍。<strong>我们真的跑了 60 家不同的机构，他们全都对我们说”不”。</strong> 我们一直都在琢磨：我们的推介该怎么调整？幻灯片该怎么改？故事该怎么打磨？</p>
+<p>有一次，我在 Khosla Ventures 做推介，一位风投给了我一个关键启发。他在找一个我们手头根本没有的特定分析，他说：“伙计们，你们没搞懂。你们知道吗，如果你们是 Twitter 那帮人，你们大可以进来含含糊糊随便说一通，随随便便放点东西在这儿，我们都会投你们。但你们不是 Twitter 那帮人，所以你们得把这件事变得超级简单，把所有这些东西都给我们准备好。” 诸如此类。</p>
+<p><strong>而我从中得出的教训，恰恰和他想让我接受的相反：天哪，我真的应该想办法成为 Twitter 那帮人，这才是玩转这件事的方式。</strong></p>
+<p>所以我现在这家公司——Zenefits——让我觉得特别有吸引力的原因之一，就是当我在琢磨它的时候，它看起来像一门<strong>也许我根本不需要融资就能做起来的生意</strong>。现金流足够，看起来足够有说服力，我或许真能做到不融资。</p>
+<p>结果证明，<strong>这些恰恰就是投资人最喜欢投资的那种公司</strong>，这让我融资变得异常轻松。所以我常说，我嘴上说我是你们的专家，其实我并不觉得自己多擅长融资——这可能是我所有工作里相对不太擅长的一块。但我认为，<strong>如果你能建起一门一切都朝正确方向走的公司，如果你能像 Twitter 那帮人一样，那么其他一切都不重要；如果你成不了 Twitter 那帮人，那其他任何东西都很难让你的事情凑到一起。</strong></p>
+<h3 id="为什么风投会说像-twitter-那帮人">为什么风投会说”像 Twitter 那帮人”？</h3>
+<p><strong>Ron Conway：</strong> 为什么那个 VC 要说”像 Twitter 那帮人”？那网站当时可是被”失败鲸”整整统治了两年啊？</p>
+<p><strong>Marc Andreessen：</strong> 因为那招管用啊。</p>
+<p><strong>Ron Conway：</strong> 我想说的另一点是：<strong>能不融资就尽量长时间地自己撑着。</strong> 我见过科技圈最优秀的一位创始人在启动新公司，我问她：“你打算什么时候融资？""我也许不融。” 我说：“太棒了。” 永远不要忘了这条自己撑着的路。</p>
+<h2 id="最核心的建议好到他们无法忽视你">最核心的建议：好到他们无法忽视你</h2>
+<p><strong>Marc Andreessen：</strong> 我本来想在结尾讲这个，现在就先讲了。Parker 刚才给了你们将要听到的最重要的东西，这也是我本来要讲的内容。关于这类话题，我读过的最重要的一条建议，一直来自喜剧演员 Steve Martin——我觉得他是个绝对的天才，写过一本讲他职业生涯起步的好书，书名叫《天生站上台》（Born Standing Up），薄薄一本小册子，讲他如何成为 Steve Martin。书里有这么一段，他说成功的秘诀是什么？</p>
+<p>“<strong>成功的秘诀就是：好到他们无法忽视你。</strong>”</p>
+<p>所以在某种意义上，我们整场对话——而且我敢肯定我们还会一直聊下去——其实都是次要的。因为如果你像 Parker 那样做，建起一门注定会取得巨大成功的生意，那么投资人会追着你投钱。而如果你带着一个理论、一个计划、却没有数据，只是下一个”千家之一”，那融资会困难得多、困难得多。</p>
+<p>所以积极的表述方式是：<strong>好到他们无法忽视你。你几乎总是把精力花在让生意变得更好上，比花在让推介变得更好上更值当。</strong></p>
+<h3 id="融资是创始人这辈子做过最容易的事">融资是创始人这辈子做过最容易的事</h3>
+<p>还有一件事——这是从积极角度看；从消极的、警世的角度看也是这样——每次我说这话都会惹麻烦，但我现在吃了好多感冒药，所以我打算直接放开了讲：<strong>融资是初创公司创始人这辈子要做的最容易的事。</strong></p>
+<p>跟招聘第 20 号工程师比？难得多。把产品卖给大企业？更难。让消费级业务跑出病毒式增长？更难。拿到广告收入？更难。<strong>你这辈子几乎做的所有事，都比融资难。</strong> 所以我认为 Parker 完全正确：如果你陷入”融资很难”的境地，跟接下来要做的所有其他事比，融资其实并不难。记住这一点非常重要。<strong>人们常说，融资其实不算一种成功，也不是公司的里程碑——我觉得这话是对的。</strong> 我认为这正是背后的原因：它把你放到一个能做所有其他更难之事的位置上。</p>
+<h2 id="风险与现金的洋葱理论">风险与现金的洋葱理论</h2>
+<p><strong>Sam Altman：</strong> 顺着这个说——你们希望创始人在融资时有什么不一样的做法？具体来说，Marc，你刚才提到了钱和融资之间的关系？</p>
+<p><strong>Marc Andreessen：</strong> 我认为人们最大一处遗漏——而且我觉得这是我们所有人的错，我们都没有足够多地谈它——就是创业者在融资和运营公司时普遍没注意到的东西：<strong>风险与现金之间的关系。</strong> 也就是风险与融到现金的关系，以及风险与花掉现金的关系。我一直很推崇 Andy Rachleff 多年前教我的一个概念，他称之为”<strong>风险洋葱理论</strong>”。</p>
+<p>基本上，你可以把一家初创公司在第一天时的状态，想象成带着每一种能想象得到的风险，你基本上可以列一张风险清单。比如：创始团队风险——创始人能否一起共事；然后是产品风险——你能把产品做出来吗；你会有技术风险，也许你需要一次机器学习的突破之类的，你能做到吗；你会有发布风险——发布顺利吗；你会有市场接受风险、收入风险。对很多带着销售团队的公司来说，还有一个大风险：你到底能不能把产品卖到足够高的价钱，覆盖掉销售成本？所以你有销售成本风险。如果你做的是消费级产品，你就有病毒式增长风险。</p>
+<p><strong>所以一家初创公司一开始，就是这一长串风险清单。我始终认为，运营一家初创公司的方式，也是我思考融资的方式：它是一个随着你往前走、一层一层剥开风险的过程。</strong></p>
+<p>你融种子轮，是为了剥开最前面两三层风险——创始团队风险、产品风险，也许还有最初的市场验证风险。你融 A 轮，是为了剥开下一级产品风险——也许你能剥掉一部分招聘风险，因为你把完整的工程团队搭起来了；也许能剥掉一部分客户风险，因为你拿到了前五个客户。所以基本思路是：<strong>你随着进展一层层剥开风险，靠达成里程碑来剥开风险。</strong> 当你达成里程碑时，你既在生意上取得了进展，也在证明你有理由去融更多的钱。对吧？</p>
+<p>所以当你进来向我们推介 B 轮时，最好的说法是这样对我们讲：</p>
+<blockquote>
+<p>我融了种子轮，达成了这些里程碑，消除了这些风险。我融了 A 轮，达成了这些里程碑，消除了这些风险。现在我在融 B 轮。这是我的里程碑，这是我的风险，等我去融 C 轮的时候，我将处于这样一种状态。</p>
+</blockquote>
+<p>然后你根据你从生意里剥掉的风险，来校准你融的钱数和花法。我讲这一大套，听起来显而易见，但我之所以讲，是因为这是一种系统性思考”钱怎么募、怎么用”的方式。而不是像如今很多人在做的那样：“天哪，让我尽量多融钱，让我去建豪华办公室，让我尽量多招人”，然后就盼着最好的情况发生。</p>
+<h3 id="ron-conway-的战术别签保密协议一定要写下来">Ron Conway 的战术：别签保密协议，一定要写下来</h3>
+<p><strong>Ron Conway：</strong> 我来谈点战术。一定、一定不要让人家签<strong>保密协议（NDA）</strong>。我们现在很少被要求签了，因为大多数创始人已经明白：如果你在关系一开始就让人家签 NDA，你基本上是在说”我不信任你”。投资人和创始人之间的关系，包含着大量的信任。</p>
+<p><strong>我见过的最大错误，远不只是”不把事情写下来”那么简单。</strong> 我的建议是：融资过程要尽量快速、高效，不要沉迷其中。出于某种原因，创始人会把自我卷进融资里，觉得这是一场个人胜利。但正如 Marc 所说，这只是漫漫长路上最微小的一步，却也是最基础的一步。赶紧把它做完。</p>
+<p>但在过程里，当有人对你做出承诺时，<strong>你上车之后，给他们发一封邮件，确认他们刚才对你说的话。</strong> 因为很多投资人的记性很短，他们会忘掉自己说过要投你，忘掉估值是多少，忘掉自己说过要找个共同投资人。你只要把它写下来，就能消掉所有这些争议。当他们想反悔时，你只需把那封邮件重发一遍，说一句”不好意思”。希望他们无论如何已经回复了那封邮件，所以——写下来。开会时做笔记，对重要的事做跟进。</p>
+<h2 id="融资流程到底怎么走">融资流程到底怎么走？</h2>
+<p><strong>Sam Altman：</strong> 我想在这里多聊点战术。流程到底是怎么跑的？人们能直接给你发邮件，还是得通过人引荐？要做多少次会才能做决定？你怎么弄清什么条款才对？创始人什么时候能开口要支票？</p>
+<h3 id="sv-angel-的种子轮打法">SV Angel 的种子轮打法</h3>
+<p><strong>Ron Conway：</strong> 好。SV Angel 投种子阶段的初创公司，所以我们喜欢做第一个投资人。我们今天通常投大约 100 万到 200 万美元，以前只有 100 万。所以如果我们要投 25 万美元，那就意味着那个联合投资团里还有五六位其他投资人。SV Angel 现在有一支 13 人的团队。我不再做尽职调查了，也不再当那个筛子。我只是帮那些开始成熟的投资组合公司做重大项目。但我们有一整个团队在处理流程。</p>
+<p>在 SV Angel，我们最终每看 30 家公司投一家，节奏大约是每周一家。我觉得有意思的是，我们真的不接受任何主动送上门的项目。我们的网络现在太庞大了，基本上只从自己的网络里接线索。我们评估机会——这意味着你必须发来一份非常好的简短执行摘要。如果我们喜欢，团队真的会投票——虽然我不再参加这个会了——但团队会投票决定是否打这个电话。时间在这个流程里就是这么金贵。如果 SV Angel 足够多的成员觉得有意思，他们就会指派一个人给那位创始人打电话，通常是我们团队里对那个领域有经验的人。如果电话聊得顺，宾果！我们想见你。如果 SV Angel 约你见面，那我们就已经在投资的路上了。如果那次会面顺利，我们会做一些背景调查——侧面的背景调查——对公司、对他们要攻的市场有感觉，然后做出投资承诺。接着就开始帮着找其他有价值的投资人加入这个联合投资团。<strong>因为如果我们要分担同等的工作量，我们希望这家公司的其他投资人，也都是出色的天使投资人。</strong></p>
+<h3 id="a16z-的-a-轮打法">a16z 的 A 轮打法</h3>
+<p><strong>Marc Andreessen：</strong> 好，我来谈谈风投阶段，也就是 A 轮阶段。可以公平地说，在这一点上，顶级风投机构在 A 轮阶段只投两类公司。</p>
+<p><strong>第一类，是它们之前已经融过种子轮的公司。</strong> 所以当我们做 A 轮时，几乎总是这家公司已经在 Ron 和他喜欢合作的那帮人那里，拿了 100 万或 200 万美元的种子融资。说清楚，几乎总是 Ron，和他喜欢合作的那帮人。所以如果你要做 A 轮，你要做的第一件事就是先去融种子轮，这基本上就是现在的通行路径。偶尔我们也会直接跳到一家没融过种子轮的公司，而那种情况真正发生时，几乎总是因为创始人以前就是成功的创始人，而且几乎可以肯定是我们过去合作过的人。</p>
+<p>我们其实还没官宣，但我们刚做完其中一例——几周后公布——那是一位创始人，我是他的天使投资人，其实 Ron 好像也在那家公司，2006 年。后来那家公司按自己的轨迹发展，最终被另一家大公司收购了。现在那个团队正在启动新项目。所以在那种情况下，我们会直接跳到 A 轮，因为他们太知名了，而且计划早都排好了。那是例外，<strong>几乎所有情况都以一轮种子轮为前提。</strong></p>
+<p>另一件事我前面提过，但和 Ron 说的差不多：我们每年通过推荐网络收到大约 2000 个推荐。<strong>到目前为止，拿到 A 轮风投机构引荐的最好方式，就是走种子轮投资人，或者走 YC 这样的项目。</strong></p>
+<h2 id="创始人最该关心什么条款">创始人最该关心什么条款？</h2>
+<p><strong>Sam Altman：</strong> 说到条款。创始人最该关心哪些条款？又该怎么谈判？</p>
+<h3 id="parker-conrad选对种子轮投资人最重要">Parker Conrad：选对种子轮投资人最重要</h3>
+<p><strong>Parker Conrad：</strong> 很可能正因为 Marc 说的那些原因，种子阶段最重要的一件事，就是选对种子轮投资人，因为他们会为未来的融资活动打下地基。他们会做正确的引荐，而且我认为引荐质量的差别巨大。所以如果你能从一位风投非常信任、非常尊重的人那里，拿到一个非常好的引荐，那这件事顺利的概率，比从一位他们没那么熟的人那里拿到一份冷淡的引荐，要高得多。所以种子阶段，你大概能做的最好的事，就是找到对的投资人，然后——</p>
+<p><strong>Sam Altman：</strong> 创始人怎么知道谁是对的投资人？</p>
+<p><strong>Parker Conrad：</strong> 嗯，我觉得这真的很难。我觉得最好的方式之一——不是要给 YC 打广告——是 YC 在”告诉你他们认为那些人是谁”这件事上做得非常好，而且真的能给你指路。我实际发现，你们说过哪些人最好，还挺准的——在我们融后续轮次时，那些人被证明最有帮助，给出了最好的引荐。而那些我觉得还行、但 YC 评分没那么高的人，结果证明在种子轮里真的是不中用的人。</p>
+<p><strong>Sam Altman：</strong> 总有一天我们会把其中一些人的名字公布出来——</p>
+<p><strong>Parker Conrad：</strong> 天哪，你要是真这么干，会有好多人不爽的。</p>
+<h3 id="估值与股权稀释">估值与股权稀释</h3>
+<p><strong>Sam Altman：</strong> 那你怎么看待谈判？你怎么弄清公司正确的估值应该是多少，条款是什么？</p>
+<p><strong>Parker Conrad：</strong> 我刚起步、在融种子轮的时候，其实并不真懂。我的意思是，我们聊过这个。我一开始估值要得偏高了。你们知道，YC 搞了一个叫演示日（Demo Day）的活动，让所有投资人在同一时间看你的公司。我开始试图以 1200 万或 1500 万美元的估值上限去融。<strong>这跟估值不是完全一回事，但大致相当。</strong> 所有人都觉得那疯了，完全离谱。你太自大了，那根本行不通。</p>
+<p>于是我开始往下压一点。短短几天里，我决定以 900 万去融，不知为何，这撞上了一个种子阶段的神奇阈值——低于 1000 万时，对那一轮的需求似乎几乎是无限的。没人愿意付 1200 万，但在 900 万美元上限下，我感觉我本可以融到 1000 万美元。<strong>一旦我撞上那个阈值，那一整轮大概一周内就凑齐了。</strong></p>
+<p>似乎一直存在这些阈值——它们会随时间波动——尤其对种子阶段的公司，投资人觉得高于这条线就是疯了，无所谓。有一个人们愿意支付的大致区间，你只需弄清那是什么。“<strong>只拿你需要的钱，别多融。</strong>” 把它做完。归根结底，你融的是 1200 万、900 万还是 600 万，对公司其余部分来说并不是什么大事。</p>
+<p><strong>Sam Altman：</strong> 你认为创始人在种子轮、A 轮里，应该出售公司的最高比例是多少？</p>
+<p><strong>Parker Conrad：</strong> 我不知道这里的规则。棘手的是，在 A 轮上似乎尤其麻烦。你大概会卖出公司 20% 到 30%。再往下，风投往往更看重所有权而非价格。所以你可能会发现，当公司融特别大的轮次时，是因为投资人说：“听着，我不会低于 20% 的所有权，但我愿意为它付更多钱。” 高于 30%，股权结构表（cap table）可能就会出怪事，比如——你知道，往后要让股权结构表上整整齐齐地坐满公司就变难了。一切似乎都落在这个区间里，所以那大概就是它的本来面目。多数情况下，种子阶段从我听到的来看，似乎也没什么魔法，但人们说的是 10% 到 15%，不过那大多只是我听来的。</p>
+<h3 id="ron-conway别让股权被稀释太狠">Ron Conway：别让股权被稀释太狠</h3>
+<p><strong>Ron Conway：</strong> 我同意所有这些。我认为把流程跑完很重要。但我认为创始人在一开始要问自己一个问题：到哪个点上，我的所有权开始让我泄气？<strong>因为如果天使轮就有 40% 的稀释，我真的会对创始人说：“你意识到你这等于已经把自己毁了吗？如果你是一家正常的公司，你将只拥有这家公司不到 5% 的股份。”</strong> 而你将做这家公司所有的苦活。所以这些指导原则很重要。10% 到 15%，是因为如果你给出去超过这个比例，留给你和团队的就不多了。做所有苦活的，是你们。</p>
+<p><strong>Marc Andreessen：</strong> 我们实际上会——直接走开。过去五年里我们见过一系列有趣的公司，我们就是直接走开，根本不出价，纯粹因为他们的股权结构表已经被毁了。外部投资人已经占得太多。有一家我们真的很想投的公司，但当我们跟他们谈时，外部投资人已经占了它的 80%。那是一家相对年轻的公司，他们只是做了两轮早期融资，卖掉了太多股份。说真的，我们担心——而且担心得没错——那种结构会让团队泄气。</p>
+<h2 id="ron-conway-最成功的投资google">Ron Conway 最成功的投资：Google</h2>
+<p><strong>Sam Altman：</strong> 在开放观众提问之前，还有一个问题。Ron 和 Marc，你们能各自讲一个做过的最成功的投资故事吗，以及它是怎么发生的？</p>
+<p><strong>Ron Conway：</strong> 对我来说，清清楚楚，是 1999 年对 Google 的投资。<strong>我们从那里面拿到了 googol（也就是 10 的 100 次方）倍的回报。</strong></p>
+<p>有趣的是，我是通过一位斯坦福教授 <strong>David Cheriton</strong> 认识 Google 的，他在工程学院，现在还在这儿。他其实是 Google 的天使投资人，也是我们基金的投资人。我们和基金投资人有种互惠关系：你看到任何有趣的公司，都得告诉我们。我们喜欢 David Cheriton 做我们基金的投资人，因为他能接触到计算机科学系的项目渠道。在 Vivek Wadhwa 家的派对上，所有人都穿着全套燕尾服——我讨厌燕尾服——有人知道 David Cheriton 吗？因为你肯定知道他最讨厌燕尾服，可他偏偏穿着。但我走到他面前，我们先一起抱怨了那身行头。然后我说：“嘿，斯坦福那边有什么新鲜事？” 他说：“嗯，有个叫 BackRub 的项目，是做搜索的。它基于网页排名（PageRank）和相关性来做搜索。”</p>
+<p>今天人人都说网页排名加相关性显而易见。但在 1998 年，那并不显然——工程师在基于这个叫网页排名的东西设计产品。它最初只是一个简单的算法：如果很多人去那个网站，别的网站又把他们引向那里，那那个网站上一定在发生什么好事。那就是最初的算法，动机是相关性。所以我对 David 说：“我必须见这些人。” 他说：“在他们准备好之前，你见不到。” 那是接下来的五月——有意思的是，我等了，每个月给他们打一次电话，打了五个月。终于拿到了和 Larry 与 Sergey 面试的机会。</p>
+<p>他们马上就很有策略。他们说：“我们可以让你投，但前提是你能拉上红杉资本一起。我们不认识红杉，但他们是 Yahoo 的投资人，因为我们进场晚了，但我们想确保和 Yahoo 达成了合作。” 所以我靠自己挣到了进入 Google 投资的机会。</p>
+<h2 id="marc-andreessen-的故事airbnb当初错过的那家">Marc Andreessen 的故事：Airbnb（当初错过的那家）</h2>
+<p><strong>Marc Andreessen：</strong> 我来讲一个另一面的故事，关于 Airbnb。我们不是早期投资人。Airbnb 是一笔成长轮投资，我们在 2011 年以大约 10 亿美元的估值，做了 Airbnb 的第一大笔成长轮。我认为这会证明是有史以来最惊人的成长之一，我认为这真的会是一家伟大的公司，所以我讲这个故事，因为它不是个纯粹天才的故事。</p>
+<p><strong>我们当初没投。</strong> 我觉得我们第一次根本没跟他们见面，也许我们的一个初级同事见了。我前面说过，风投完全是一场异常值的游戏。异常值的关键之一，就是它们的想法在起初往往看着完全是离谱的。所以当然，<strong>要列一张最离谱的想法清单，有一个网站让别人住你家里，那肯定排在顶端。而你能想到第二蠢的想法，是有一个网站让你住别人家里。Airbnb 把这两个坏主意深度结合在了一起。</strong> 所以当然，结果证明，他们解锁了一种全新的房地产销售方式，他们解锁了这个巨大的全球现象。</p>
+<p>所以一部分原因，只是我们终于面对了这个事实：我们对这个想法和数据的初始分析彻底失误了，而数字清楚地证明我们错了，客户行为也清楚地证明我们错了。</p>
+<p>所以我们公司的一个理念是，我们做多阶段投资——一个重要的原因就是为了<strong>能修正自己的错误</strong>：当早期搞砸时，我们可以事后付更高的代价再挤进去。我要强调的另一件事是，我们在高估值时扣下扳机的原因，是因为那时我们已经花时间和创始人相处过了——和 <strong>Brian、Joe 与 Nate</strong>。我有个朋友有句很棒的话，他说，当人们职业生涯往前走，他们得到越来越大的一份工作，到某个点上，他们拿到了真正的大活儿。<strong>有些人成长着进入了角色，另一半人则是膨胀着撑进了角色。</strong> 你能隐约看出区别。有些人在某个点上就彻底失去理智了。这些公司里，有些是超级成功、超高速增长的，Airbnb 就是经典案例，有一帮超级年轻、以前从没运营过任何东西的创始人。他们要怎么运营这个巨大的全球业务？我们当时印象极深，直到今天，每次和这三个人打交道，他们的成熟度、他们的进步幅度，都让我们惊叹。就像他们越来越成熟，判断力越来越好，而且随着成长越来越谦逊。所以这让我们的感觉特别好——不仅仅因为这个生意会增长，更因为这些人是真能建起一些东西、并且能用极好的方式去运营它的人。</p>
+<p><strong>Ron Conway：</strong> 你知道吗，人们总问我，为什么我觉得 Airbnb 会成为这么伟大的一家公司？有意思的是，我们对 Airbnb 特别着迷。这是因为<strong>三位创始人彼此一样出色。这非常罕见。</strong> 在 Google 的例子里，两位创始人，其中一位比另一位略强……嘿，他是首席执行官。每家公司都有个首席执行官。我为什么提这个？因为你创办公司时，必须去找一个和你一样好、或者比你还好的人来当联合创始人。如果你这么做了，你成功的机会会呈天文数字级地增长。这就是为什么 Airbnb 这么快就如此成功。<strong>反常现象是 Facebook 的 Mark Zuckerberg。没错，他有个很棒的团队，但 Mark Zuckerberg 这种”一个人”的现象，才是异常值。</strong> 所以你创办公司时，必须找到杰出的联合创始人。</p>
+<h2 id="观众问答">观众问答</h2>
+<h3 id="问融资是为了方便大退出或被收购吗">问：融资是为了方便大退出或被收购吗？</h3>
+<p><strong>提问者：</strong> 显然，融资的传统理由是你需要钱。但我越脱离传统看法，听到的另一种说法就越多：融资更多是为了促成一次大退出，或者最坏情况下促成”人才收购”（被买下后整个团队被收编），而不是悄无声息地消失。这种说法在多大程度上是准确的？</p>
+<p><strong>Ron Conway：</strong> 如果你选的投资人拥有好的人脉关系网和好的领域专长，他们在你公司所做的事上能增加的价值，比那笔钱多得多。那些才是你该找的投资人类型。</p>
+<p><strong>Marc Andreessen：</strong> 所以问题的答案是”是”，但某种意义上这并不重要。因为你不能照着最坏情形去规划这些事。我的意思是，那正是不希望发生的情形。虽然答案是”是”，但它大概不该太重地影响决策过程。它也许会进入”从哪个投资人那里融钱”的选择，但大概不会进入”要不要融资”这个问题。</p>
+<h3 id="问资本设备密集型的公司怎么撑住不泄气">问：资本设备密集型的公司怎么撑住不泄气？</h3>
+<p><strong>提问者：</strong> 如果你想创办一门资本设备密集型的生意，各位对怎么处理”泄气”有什么建议？不是所有事都从软件、病毒式增长或别的什么起步。创始人对于资本设备密集型的公司该怎么做？</p>
+<p><strong>Marc Andreessen：</strong> 我会加倍强调我前面关于风险洋葱理论、以及风险与现金要分阶段的说法。也就是：生意需要的资本越多，你就必须越高强度地精准弄清，要让它转起来需要什么，以及里程碑和风险的分阶段是怎样的。在那种情况下，你要排好——要非常精准地排好——因为风险太高了，一切都会走向失控，对吧？你要非常精准地弄清，你的 A 轮能完成什么，什么才叫 A 轮的成功执行。如果你在 A 轮融了太多的钱，那会在日后把你彻底拖垮，对吧？因为你后来要融 C 轮，累计的稀释会变得太重。所以你必须在每一轮都精准，必须融尽可能接近精确数目的钱。然后你必须对投资人尽可能的纯粹、干净、精准，讲清风险和里程碑。</p>
+<p>顺便说一句，这是件大事，我很高兴你问了。它有点回到了 Parker 说的话。如果你走进我们公司，你拥有 Twitter 或 Pinterest，或者你拥有某种东西，它只是病毒式增长，只是在着火，就是要起飞——那些是容易的。就像，让我们直接把钱投进去，让我们直接喂饱这头野兽。但如果你走进来，你像是在说：“我有个真正伟大的想法，但这需要 3 亿美元，分五年、大概五轮分阶段投进去。它有潜力带来非常大的结果，但这不是 Twitter。” 我们仍然会做那些，但团队的运营卓越性重要得多。“<strong>你传达运营卓越性的方式之一，就是计划的质量。回到 Steve Martin 那句话，好到他们无法忽视你。计划应当是精准的。</strong>”</p>
+<p><strong>Ron Conway：</strong> 如果你是资本设备密集型的，除了风投，还有借钱的办法。</p>
+<p><strong>Marc Andreessen：</strong> 你可以加上风险债务（venture debt），之后再做租赁融资，但这再次强调了运营卓越性的必要。因为如果你要举债，那你真的需要在运营公司上非常精准，因为很容易触发贷款里的契约条款，很容易丢掉公司。所以这是一个穿针引线的过程。它要求的，只是比下一个 Snapchat 更高阶的管理水平。</p>
+<h3 id="问什么信号说明你不该和某个投资人合作">问：什么信号说明你不该和某个投资人合作？</h3>
+<p><strong>提问者：</strong> 什么信号说明你不该和某个投资人合作？</p>
+<p><strong>Ron Conway：</strong> 嗯，那正好和我说的”好投资人”的反面一样。如果是没有你所在领域专长的投资人，是没有人脉关系网、没法帮你做业务拓展引荐、没法帮你做 A 轮引荐的投资人，你就不该拿那个人的钱。尤其是，如果他们只是为了赚钱而来。那些人你很快就能嗅出来。</p>
+<p><strong>Marc Andreessen：</strong> 我很高兴你问了这个问题，因为它引出了一个更大的观点。如果你的公司是成功的——至少是那些我们想投的、想建起大品牌公司的——那么我们谈论的是十年、十五年或二十年的旅程。十、十五或二十年——你可能注意到了——比美国平均婚姻的持续时间还长。</p>
+<p>这很重大。关键投资人的选择，特别是那些将要进入公司董事会的投资人的选择，我认为和选择跟谁结婚一样重要——那是极其重要的。这些人，你要和他们生活在一起、合作、依赖，在压力极大、焦虑重重的条件下，长时间地处理各种处境。</p>
+<p>这是我一直在提的重要论点，我总在说，有时人们信，有时不信。如果一切顺利，你的投资人是谁并不重要。但几乎从来不是一切都一直顺利。即使那些大成功的公司，即使是 Facebook——所有这些如今被认为极其成功的公司——<strong>一路上各种糟心事反复爆发，一遍又一遍，一遍又一遍。</strong> 有无数次压力山大的董事会会议和讨论，以及公司前途悬于一线、深夜里召开的会议，在那些时刻，每个人真的需要处于同一个团队里，有同样的目标，朝同一个方向拉，有共同的理解，有正确种类的操守，有正确种类的耐力，才能真正扛过来袭的风暴。</p>
+<p>你会发现的一件事是，第一次创业和第二次创业的创始人之间，最大的区别就是：几乎总是第二次创业的创始人，在经历过一次之后，会认真得多地对待这一点。<strong>所以这真的、真的、真的很重要——你的搭档是谁。</strong> 这真的像结婚，真的值得投入——也许没有选配偶那么多的时间和精力——但值得花大量时间去真正弄懂，你即将与之合作的人到底是谁。这比”我在估值上多拿了 500 万，或者多拿了 200 万美元的支票”重要得多。</p>
+<p><strong>Ron Conway：</strong> 我知道在 SV Angel，<strong>我们的态度是，只要你投资了一位创业者，我们就是在投资他的一生。</strong> 因为如果我们做了正确的决定，我们会投资他们创办的每一家公司。一日是创业者，终身是创业者。我们真的确实把它视为一场婚姻。</p>
+<p><strong>Parker Conrad：</strong> 我总在第一次会面里寻找：<strong>你是否觉得你尊重这个人？你是否觉得你可以从他身上学到很多？</strong> 因为有时你和风投见面，会觉得他们理解得很慢，就是没悟到。有时你走进去，他们对你的生意有着令人难以置信的洞察，你走出来的时候仿佛在说：“天哪，就算这几个人没投，我和他们共度的那个小时也是我时间极好的利用，我觉得我出来时，对需要做什么、要去哪里，有了清晰得多的画面。” 那是未来几年会是什么样子的绝佳缩影。如果你觉得，即使他们没带支票簿来，你也真的希望这个人深度参与公司，那也许是个非常好的信号。如果不是，那也许是个非常糟的信号。</p>
+<h3 id="问你们投资多少公司的限制是时间钱还是好项目">问：你们投资多少公司的限制是时间、钱还是好项目？</h3>
+<p><strong>提问者：</strong> 什么限制了你们投资多少公司？时间、金钱，还是缺乏好公司？</p>
+<p><strong>Ron Conway：</strong> SV Angel 已经大致适应了一周一家。你当然做不了更多，那是一支 13 人的团队。所以真的是公司的数量。</p>
+<p><strong>Marc Andreessen：</strong> Ron，如果你有双倍的时间，你会投双倍数量的公司吗？</p>
+<p><strong>Ron Conway：</strong> 我会建议别这么干。我宁愿给现有公司增加更多价值。SV Angel 确实有一份书面的利益冲突政策。但当我们真有冲突时，通常是因为一家公司已经演变进了另一个领域。我们通常不投有直接冲突的公司。如果我们投了，我们会向另一家公司、向两家都披露，并且记住，在我们的阶段，我们反正也不知道公司的产品策略。我们可能根本不知道有多少需要披露的东西，但我们的冲突政策也谈到了这个真正重要的词：<strong>信任</strong>。换句话说，如果我们互不信任，那就已经有了一个糟糕的开头。在 SV Angel，创始人和我们之间的关系建立在信任之上。如果有人不信任我们，他们就不该和我们合作。</p>
+<p><strong>Marc Andreessen：</strong> 让我回到原问题。这是在我们公司被讨论得最多的问题。顶级风投机构的主要限制，是<strong>机会成本</strong>这个概念。这个概念的意思是，你做的每件事，都有一大堆别的事你不能做。这不太是我们投了 500 万美元进一家公司、公司出错、我们亏了钱那种成本。那不是我们担心的损失，因为按理论，我们会有赢家来补足那个坑。</p>
+<p>我们担心的成本，是每项投资对我们运营公司都有两个层面的影响。<strong>第一：冲突规则。</strong> 所以在风投轮和成长轮上，我们的政策肯定是，不投有冲突的公司。我们在一个类别里只投一家公司。所以如果我们投了 MySpace，一年后 Facebook 出现了，我们就出局了，不能投。每项投资都把我们锁进了一个类别。而这个性质——当我们内部讨论这些时——是个非常复杂的话题。你只知道已经存在的公司，你不知道还没被创办的公司。要是你投了一家不会成为赢家的早期公司，等赢家出现时你已经被锁死了，那上帝保佑你。</p>
+<p><strong>第二：普通合伙人（GP）的时间和带宽上的机会成本。</strong> 回到增值的概念，我们是一家普通的合伙制公司，我们有正式的合伙人。一个合伙人如果完全、彻底地满载，也许总共能在十到十二个董事会里。基本上你想把它想成一张票，你有有限数量的洞可以打，每次你做一项投资，你就打一个洞。当你没洞可打时，你就完了，做不了任何新投资。风投运作的方式非常像这样。一种看待它的方式是：我们的普通合伙人任何时刻拥有的每一个董事会席位，都是公司的资产，可以被部署到机会上。但我们每次做一项投资，它就把我们能打的洞的数量减掉一个，于是减少了公司做新交易的能力。每项投资我们不仅排除了竞争集合，也排除了我们单纯会耗尽时间去做掉的其它交易。</p>
+<p>这回到了我前面说的。这家公司相当不错，它看起来相当明显会拿到风投融资，你为什么不投它？嗯，单看它自己，如果我们有无限容量，我们大概会投，但相对于被竞争集合挡住、以及没有那个董事会席位给一个更好的机会，我们基于这个理由放弃了很多。</p>
+<h3 id="问没产品凭什么投你">问：没产品凭什么投你？</h3>
+<p><strong>提问者：</strong> 什么能说服你们投资一家没有产品可展示的公司？你们基于什么做出那个判断？</p>
+<p><strong>Ron Conway：</strong> 能说服我们的，通常就是说服我们的东西：创始人和他们的团队本身。所以我们先投人，不一定先投产品想法。产品想法往往会变来变去。所以我们会先投团队。如果还是用户前阶段，估值往往会相应较低，除非其中一位创始人有成功的履历。</p>
+<p><strong>Marc Andreessen：</strong> 对我们来说，如果在投资时除了计划之外什么都没有，那几乎总是——除了我们之前合作过的创始人，或者非常知名的创始人——只有这类人。你知道吗，在这些对话里，默认的假设是我们都在创办消费级网络公司或消费级移动公司。你知道还有其他类别。比如企业软件公司、SaaS（软件即服务）、应用软件公司。没有最小可行产品（MVP）要常见得多，冷启动要常见得多。他们先建产品再融 A 轮要常见得多。有没有 MVP 没意义，客户不会买 MVP，客户在第一次开始用时其实就需要一整套完整的产品。所以公司实际上需要融 500 万或 1000 万美元，才能把第一个产品建出来。<strong>但在几乎所有那些情况下，那都将是一位以前已经做过这件事的创始人。</strong></p>
+<h3 id="问理想的董事会结构是什么">问：理想的董事会结构是什么？</h3>
+<p><strong>提问者：</strong> 理想的董事会结构是什么？</p>
+<p><strong>Parker Conrad：</strong> 我们很幸运拥有——有我自己和我的联合创始人，以及一位安德森·霍洛维茨的合伙人。我认为这消除了恐惧，多了一点信任。它消除了”有人会为了给大公司腾位置而随意把你炒掉”的恐惧。但在多数情况下，如果你信任和你合作的人，这真的不该是问题。事情几乎从不会走到董事会投票那一步，而等它走到时，任何方面都已经彻底出问题了。风投拥有的大部分权力，都在董事会结构之外。融资轮里内嵌着一些<strong>保护性契约条款</strong>——你不能举债，你不能卖掉公司，有些事你不做成他们同意就做不了。</p>
+<p><strong>这没有人们说得那么严重。</strong> 我发现，作为创始人，如果公司发展顺利，你相对于投资人的权力就是无限的。不管董事会结构是什么，不管轮次里的条款是什么。如果你说：“这是我想做的，我认为这是我们需要做的”，哪怕是一个好投资人，或者一个坏投资人，他们都会像在说：“让我们把它变成现实。” 他们想和你一起坐上这艘火箭船。而当事情变糟时，不管你在系统里为自己建了什么保护，都不重要。</p>
+<p><strong>Marc Andreessen：</strong> 当一家公司陷入绝境时，不管之前轮次的条款是什么，它们全都会被重新谈判。我在董事会待了二十年，从没参加过一次真正算数的重要董事会投票。它从来不是投票，只有很多讨论、很多争议，从来不是投票。决定到最后总是清楚的。它几乎总是一致同意。所以我认为，决定几乎总是围绕那些难以量化的东西，而不是围绕细节。</p>
+<hr>
+<p><strong>Sam Altman：</strong> 好，谢谢大家今天来！</p> <div class="cta-box"> <p>觉得有用？继续阅读</p> <div class="cta-buttons"> <a href="/book" class="cta-btn cta-btn-primary">查看书籍</a>  </div> </div> </article> <!-- 底部导航 --> <nav class="reader-footnav"> <a href="/blog/yc-lecture-08-doing-things-that-dont-scale-pr" class="reader-prev"> <span class="reader-foot-label">← 上一章</span> <span class="reader-foot-title">做那些无法规模化的事、公关，以及如何起步</span> </a> <a href="/blog/yc-lecture-10-company-culture-and-building-a-team" class="reader-next"> <span class="reader-foot-label">继续阅读下一章 →</span> <span class="reader-foot-title">企业文化与团队建设（第一部分）</span> </a> </nav> </main> </div> <!-- 移动端目录抽屉 --> <button class="reader-toc-toggle" id="reader-toc-toggle" aria-label="打开目录">目录</button> <div class="reader-toc-scrim" id="reader-toc-scrim"></div> </div> </main> <footer> <div class="footer-inner"> <p>© 2026 像企业家一样写作</p> <div class="footer-links"> <button type="button" class="footer-link-btn" id="wechat-qr-trigger">网站有bug，“码”上办，联系本人。</button> </div> </div> </footer> <!-- 微信名片二维码浮层 --> <div id="wechat-qr-overlay" class="wechat-qr-overlay" aria-hidden="true"> <div class="wechat-qr-modal"> <button type="button" class="wechat-qr-close" id="wechat-qr-close" aria-label="关闭">✕</button> <img src="/images/wechat-qr.png" alt="微信名片二维码"> <p class="wechat-qr-cap">微信扫一扫，联系本人</p> </div> </div> <script>
+    (function () {
+      var trigger = document.getElementById('wechat-qr-trigger');
+      var overlay = document.getElementById('wechat-qr-overlay');
+      var closeBtn = document.getElementById('wechat-qr-close');
+      if (!trigger || !overlay) return;
+      function openQr() {
+        overlay.classList.add('active');
+        overlay.setAttribute('aria-hidden', 'false');
+      }
+      function closeQr() {
+        overlay.classList.remove('active');
+        overlay.setAttribute('aria-hidden', 'true');
+      }
+      trigger.addEventListener('click', openQr);
+      if (closeBtn) closeBtn.addEventListener('click', closeQr);
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeQr();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeQr();
+      });
+    })();
+  </script>  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    let _searchIndex = null;
+
+    async function loadSearchIndex() {
+      if (_searchIndex) return _searchIndex;
+      try {
+        const resp = await fetch('/search.json?t=' + Date.now());
+        _searchIndex = await resp.json();
+      } catch (e) {
+        console.warn('search.json load failed', e);
+        _searchIndex = { posts: [], books: [] };
+      }
+      return _searchIndex;
+    }
+
+    function openSearch(initialQuery) {
+      const overlay = document.getElementById('search-overlay');
+      const input = document.getElementById('search-input');
+      overlay.classList.add('active');
+      input.value = initialQuery || '';
+      input.focus();
+      renderResults(input.value);
+    }
+
+    function closeSearch() {
+      document.getElementById('search-overlay').classList.remove('active');
+    }
+
+    function getSnippet(text, keyword, radius) {
+      radius = radius || 30;
+      if (!text) return '';
+      const idx = text.toLowerCase().indexOf(keyword.toLowerCase());
+      if (idx === -1) return text.substring(0, 80);
+      const start = Math.max(0, idx - radius);
+      const end = Math.min(text.length, idx + keyword.length + radius);
+      let s = text.substring(start, end);
+      if (start > 0) s = '…' + s;
+      if (end < text.length) s = s + '…';
+      return s;
+    }
+
+    function escapeHtml(s) {
+      return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    function escapeReg(s) {
+      return (s || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+    function highlight(text, q) {
+      const safe = escapeHtml(text);
+      if (!q) return safe;
+      try {
+        const re = new RegExp('(' + escapeReg(q) + ')', 'gi');
+        return safe.replace(re, '<mark>$1</mark>');
+      } catch (e) { return safe; }
+    }
+    function matchScore(item, q) {
+      const t = (item.title || '').toLowerCase();
+      const d = (item.desc || '').toLowerCase();
+      const c = (item.content || '').toLowerCase();
+      if (t.includes(q)) return 3;
+      if (d.includes(q)) return 2;
+      if (c.includes(q)) return 1;
+      return 0;
+    }
+    function resultItemHtml(item, q, href, isBook) {
+      const snippet = getSnippet(item.content || '', q, 40);
+      const contentHit = (item.content || '').toLowerCase().includes(q);
+      const desc = (contentHit && snippet) ? snippet : (item.desc || snippet || '');
+      return '<a href="' + href + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+        '<div class="search-result-title"><span class="search-result-type' + (isBook ? ' book' : '') + '">' + (isBook ? '书籍' : '章节') + '</span>' + highlight(item.title, q) + '</div>' +
+        '<div class="search-result-desc">' + highlight(desc, q) + '</div>' +
+      '</a>';
+    }
+
+    // 专栏条目：外链到微信公众号（不加 ?q=）
+    function columnItemHtml(col, q) {
+      return '<a href="' + escapeHtml(col.url) + '" target="_blank" rel="noopener noreferrer" class="search-result-item">' +
+        '<div class="search-result-title"><span class="search-result-type column">专栏</span>' + highlight(col.title, q) + '</div>' +
+        '<div class="search-result-desc">' + highlight(col.desc || col.columnName, q) + '</div>' +
+      '</a>';
+    }
+
+    function renderResults(query) {
+      const container = document.getElementById('search-results');
+      if (!query.trim()) {
+        container.innerHTML = '<div class="search-empty">输入关键词搜索书籍、章节与专栏…</div>';
+        return;
+      }
+      const q = query.toLowerCase();
+      const index = _searchIndex || { posts: [], books: [], columns: [] };
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      const matchedColumns = (index.columns || []).filter(c =>
+        c.title.toLowerCase().includes(q) ||
+        c.columnName.toLowerCase().includes(q) ||
+        c.rawTitle.toLowerCase().includes(q) ||
+        String(c.issue).includes(q)
+      );
+      if (matchedPosts.length === 0 && matchedBooks.length === 0 && matchedColumns.length === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        return;
+      }
+      const bookBySeries = {};
+      index.books.forEach(b => { if (b.series) bookBySeries[b.series] = b.title; });
+
+      let html = '';
+      // 书籍命中 → 单独作为「书籍」结果
+      if (matchedBooks.length) {
+        matchedBooks.sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        matchedBooks.forEach(b => { html += resultItemHtml(b, q, '/book/' + b.slug, true); });
+      }
+      // 章节按书籍分组
+      const groups = {};
+      matchedPosts.forEach(p => { const k = p.series || ''; (groups[k] = groups[k] || []).push(p); });
+      Object.keys(groups).forEach(series => {
+        const title = bookBySeries[series] || series || '其他';
+        groups[series].sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(title) + '》</div>';
+        groups[series].forEach(p => { html += resultItemHtml(p, q, '/blog/' + p.slug, false); });
+        html += '</div>';
+      });
+      // 专栏按专栏名分组（外链到微信）
+      const colGroups = {};
+      matchedColumns.forEach(c => { const k = c.columnName || ''; (colGroups[k] = colGroups[k] || []).push(c); });
+      Object.keys(colGroups).forEach(name => {
+        colGroups[name].sort((a, b) => a.issue - b.issue);
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(name) + '》· 专栏</div>';
+        colGroups[name].forEach(c => { html += columnItemHtml(c, q); });
+        html += '</div>';
+      });
+      container.innerHTML = html;
+    }
+
+    // ===== Hero 内联搜索（方案 B） =====
+    function closeHeroSearch() {
+      const dropdown = document.getElementById('hero-search-dropdown');
+      if (dropdown) { dropdown.classList.remove('show'); dropdown.innerHTML = ''; }
+    }
+
+    async function renderHeroResults(query) {
+      const container = document.getElementById('hero-search-dropdown');
+      if (!container) return;
+      if (!query.trim()) { closeHeroSearch(); return; }
+      const index = await loadSearchIndex();
+      const q = query.toLowerCase();
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      const matchedColumns = (index.columns || []).filter(c =>
+        c.title.toLowerCase().includes(q) ||
+        c.columnName.toLowerCase().includes(q) ||
+        c.rawTitle.toLowerCase().includes(q) ||
+        String(c.issue).includes(q)
+      );
+      const total = matchedPosts.length + matchedBooks.length + matchedColumns.length;
+      if (total === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        container.classList.add('show');
+        return;
+      }
+      const bookBySeries = {};
+      index.books.forEach(b => { if (b.series) bookBySeries[b.series] = b.title; });
+      let html = '';
+      if (matchedBooks.length) {
+        matchedBooks.slice(0, 2).sort((a, b) => matchScore(b, q) - matchScore(a, q)).forEach(b => {
+          html += resultItemHtml(b, q, '/book/' + b.slug, true);
+        });
+      }
+      const groups = {};
+      matchedPosts.forEach(p => { const k = p.series || ''; (groups[k] = groups[k] || []).push(p); });
+      let shown = 0;
+      Object.keys(groups).slice(0, 3).forEach(series => {
+        const title = bookBySeries[series] || series || '其他';
+        groups[series].sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(title) + '》</div>';
+        groups[series].slice(0, 3).forEach(p => { html += resultItemHtml(p, q, '/blog/' + p.slug, false); shown++; });
+        html += '</div>';
+      });
+      // 专栏命中（外链到微信）
+      const colGroups = {};
+      matchedColumns.forEach(c => { const k = c.columnName || ''; (colGroups[k] = colGroups[k] || []).push(c); });
+      Object.keys(colGroups).slice(0, 2).forEach(name => {
+        colGroups[name].sort((a, b) => a.issue - b.issue);
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(name) + '》· 专栏</div>';
+        colGroups[name].slice(0, 3).forEach(c => { html += columnItemHtml(c, q); shown++; });
+        html += '</div>';
+      });
+      if (total > shown + Math.min(matchedBooks.length, 2)) {
+        html += '<a href="#" class="hero-search-all" data-q="' + encodeURIComponent(q) + '">查看全部 ' + total + ' 条结果 →</a>';
+      }
+      container.innerHTML = html;
+      container.classList.add('show');
+    }
+
+    function initHeroSearch() {
+      const input = document.getElementById('hero-search-input');
+      const dropdown = document.getElementById('hero-search-dropdown');
+      const goBtn = document.getElementById('hero-search-go');
+      if (!input || !dropdown) return;
+
+      let inputTimeout;
+      input.addEventListener('input', () => {
+        clearTimeout(inputTimeout);
+        inputTimeout = setTimeout(() => renderHeroResults(input.value), 120);
+      });
+      input.addEventListener('focus', () => { if (input.value.trim()) renderHeroResults(input.value); });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(input.value); });
+        }
+        if (e.key === 'Escape') { closeHeroSearch(); input.blur(); }
+      });
+
+      if (goBtn) {
+        goBtn.addEventListener('click', () => {
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(input.value); });
+        });
+      }
+
+      dropdown.addEventListener('click', (e) => {
+        const all = e.target.closest('.hero-search-all');
+        if (all) {
+          e.preventDefault();
+          const q = decodeURIComponent(all.getAttribute('data-q') || '');
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(q); });
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.hero-search')) closeHeroSearch();
+      });
+    }
+
+    initHeroSearch();
+
+    // ===== 导航搜索图标（全站兜底入口） =====
+    const navSearchBtn = document.getElementById('nav-search-btn');
+    if (navSearchBtn) {
+      navSearchBtn.addEventListener('click', () => {
+        loadSearchIndex().then(() => openSearch());
+      });
+    }
+
+    document.getElementById('search-close').addEventListener('click', closeSearch);
+    document.getElementById('search-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeSearch();
+    });
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      renderResults(e.target.value);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+    });
+    });
+  </script> <!-- 页面关键词高亮（从搜索结果跳转过来时） --> <script>
+    (function() {
+      function getQueryParam(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name) || '';
+      }
+
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function highlightKeyword(keyword) {
+        if (!keyword.trim()) return;
+        const main = document.querySelector('main');
+        if (!main) return;
+
+        const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, null, false);
+        const nodesToReplace = [];
+        const regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
+
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node.parentElement && node.parentElement.tagName === 'MARK') continue;
+          if (regex.test(node.textContent)) {
+            nodesToReplace.push(node);
+          }
+        }
+
+        let firstMark = null;
+        nodesToReplace.forEach(textNode => {
+          const span = document.createElement('span');
+          span.innerHTML = textNode.textContent.replace(regex, '<mark class="search-highlight">$1</mark>');
+          const marks = span.querySelectorAll('mark');
+          if (marks.length > 0 && !firstMark) {
+            firstMark = marks[0];
+          }
+          const fragment = document.createDocumentFragment();
+          while (span.firstChild) {
+            fragment.appendChild(span.firstChild);
+          }
+          textNode.parentNode.replaceChild(fragment, textNode);
+        });
+
+        if (firstMark) {
+          firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(function() {
+            const marks = main.querySelectorAll('mark.search-highlight');
+            marks.forEach(function(m) {
+              const parent = m.parentNode;
+              parent.replaceChild(document.createTextNode(m.textContent), m);
+              parent.normalize();
+            });
+          }, 6000);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          highlightKeyword(getQueryParam('q'));
+        });
+      } else {
+        highlightKeyword(getQueryParam('q'));
+      }
+    })();
+  </script> <!-- 代码块复制按钮 --> <script>
+    (function() {
+      function initCopyButtons() {
+        document.querySelectorAll('.prose pre').forEach(function(pre) {
+          if (pre.querySelector('.copy-btn')) return;
+          var btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.textContent = '复制';
+          btn.setAttribute('aria-label', '复制代码');
+          btn.addEventListener('click', function() {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+              btn.textContent = '已复制';
+              btn.classList.add('copied');
+              setTimeout(function() {
+                btn.textContent = '复制';
+                btn.classList.remove('copied');
+              }, 2000);
+            }).catch(function() {
+              btn.textContent = '失败';
+              setTimeout(function() { btn.textContent = '复制'; }, 2000);
+            });
+          });
+          pre.style.position = 'relative';
+          pre.appendChild(btn);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCopyButtons);
+      } else {
+        initCopyButtons();
+      }
+    })();
+  </script> <!-- 选中文字：复制 / 生成金句卡片 --> <div class="sel-bubble" id="sel-bubble"> <span class="sb-act sb-copy" id="sbCopy">复制</span> <span class="sb-sep"></span> <span class="sb-act sb-card" id="sbCard">金句卡片</span> </div> <!-- 金句卡片弹层 --> <div class="qc-overlay" id="qcOverlay"> <div class="qc-modal"> <button class="qc-close" id="qcClose" aria-label="关闭">×</button> <div class="qc-stage"> <div class="qc a" id="qcCard"> <div class="qc-mark">“</div> <div class="qc-quote" id="qcQuote">先写完，再改清楚。</div> <div class="qc-foot"> <img class="qc-logo" src="/images/logo-180x180.png" alt="logo"> <div class="qc-src"> <div class="qc-site" id="qcSite">像企业家一样写作</div> <div class="qc-from" id="qcFrom">—— 选自正文</div> <div class="qc-url">gusangciren.github.io</div> </div> </div> </div> <div class="qc-tip">样式会记住你上次的选择</div> </div> <div class="qc-side"> <h3>金句卡片</h3> <p class="qc-sub">选好样式后下载或复制图片</p> <div class="qc-styles" id="qcStyles"> <div class="qc-style active" data-s="b"><div class="sw b"></div><div><div class="t">A · 深色品牌</div><div class="d">信息流吸睛</div></div></div> <div class="qc-style" data-s="a"><div class="sw a"></div><div><div class="t">B · 极简暖白</div><div class="d">站点默认，最协调</div></div></div> <div class="qc-style" data-s="c"><div class="sw c"></div><div><div class="t">C · 杂志书页</div><div class="d">书卷气</div></div></div> </div> <div class="qc-actions"> <div class="qc-act primary" data-act="copyimg">复制图片</div> <div class="qc-act" data-act="download">下载图片</div> </div> </div> </div> </div> <!-- 交互增强：阅读进度条 / 暗色模式 / 划词复制 / 金句卡片 --> <script>
+    (function () {
+      // ===== 划词气泡：复制 / 金句卡片 =====
+      var bubble = document.getElementById('sel-bubble');
+      var sbCopy = document.getElementById('sbCopy');
+      var sbCard = document.getElementById('sbCard');
+      var overlay = document.getElementById('qcOverlay');
+      var card = document.getElementById('qcCard');
+      var qQuote = document.getElementById('qcQuote');
+      var qSite = document.getElementById('qcSite');
+      var qFrom = document.getElementById('qcFrom');
+      var stylesBox = document.getElementById('qcStyles');
+      var lastText = '';
+
+      function hideBubble() { bubble.classList.remove('show'); }
+      function getSource() {
+        var h = document.querySelector('.article-header h1, .book-details h1, .prose h1, .community-hero h1');
+        var name = h ? h.textContent.trim() : document.title.trim();
+        try {
+          // 去掉标题尾部与站名重复的「— 像企业家一样写作」
+          name = name.replace(new RegExp('\\s*[—–-]\\s*' + getSite() + '\\s*$'), '');
+        } catch (e) {}
+        return name;
+      }
+      function getSite() {
+        var m = document.querySelector('meta[property="og:site_name"]');
+        return m ? m.content : '像企业家一样写作';
+      }
+
+      if (bubble) {
+        var SKIP = 'input,textarea,pre,code,.search-overlay,.wechat-qr-overlay,.rdl-ov,button,a,img';
+        document.addEventListener('mouseup', function () {
+          setTimeout(function () {
+            var sel = window.getSelection();
+            if (!sel || sel.isCollapsed) { hideBubble(); return; }
+            var text = sel.toString().trim();
+            var node = sel.anchorNode;
+            if (text.length < 2 || !node || !node.parentElement || node.parentElement.closest(SKIP)) { hideBubble(); return; }
+            var rect = sel.getRangeAt(0).getBoundingClientRect();
+            bubble.style.left = (rect.left + rect.width / 2) + 'px';
+            bubble.style.top = (rect.top - 6) + 'px';
+            lastText = text;
+            bubble.classList.add('show');
+          }, 10);
+        });
+        document.addEventListener('mousedown', function (e) { if (!bubble.contains(e.target)) hideBubble(); });
+        window.addEventListener('scroll', hideBubble, { passive: true });
+
+        sbCopy.addEventListener('click', function (ev) {
+          ev.stopPropagation();
+          var t = lastText;
+          function ok() {
+            sbCopy.textContent = '已复制 ✓'; sbCopy.classList.add('copied');
+            setTimeout(function () { sbCopy.textContent = '复制'; sbCopy.classList.remove('copied'); hideBubble(); }, 1200);
+          }
+          function fb() {
+            var i = document.createElement('textarea'); i.value = t; document.body.appendChild(i); i.select();
+            try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(i); ok();
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).then(ok).catch(fb); }
+          else { fb(); }
+        });
+        sbCard.addEventListener('click', function (ev) { ev.stopPropagation(); openCard(lastText); });
+      }
+
+      function openCard(text) {
+        qQuote.textContent = text || '先写完，再改清楚。';
+        var len = qQuote.textContent.length;
+        qQuote.style.fontSize = (len > 100 ? 18 : len > 60 ? 20 : 22) + 'px';
+        qSite.textContent = getSite();
+        qFrom.textContent = '—— 选自《' + getSource() + '》';
+        var saved = 'b';
+        try { saved = localStorage.getItem('qcStyle') || 'b'; } catch (e) {}
+        setStyle(saved);
+        overlay.classList.add('show');
+      }
+      var currentStyle = 'a';
+      function setStyle(s) {
+        currentStyle = s;
+        card.className = 'qc ' + s;
+        document.querySelectorAll('.qc-style').forEach(function (o) { o.classList.toggle('active', o.dataset.s === s); });
+        try { localStorage.setItem('qcStyle', s); } catch (e) {}
+      }
+      stylesBox.addEventListener('click', function (e) {
+        var o = e.target.closest('.qc-style'); if (o) setStyle(o.dataset.s);
+      });
+      document.getElementById('qcClose').addEventListener('click', function () { overlay.classList.remove('show'); });
+      overlay.addEventListener('click', function (e) { if (e.target === overlay) overlay.classList.remove('show'); });
+
+      // ===== 导出为图片（html2canvas） =====
+      function ensureH2C(cb) {
+        if (window.html2canvas) { cb(); return; }
+        var s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+        s.onload = cb;
+        s.onerror = function () { alert('金句卡片图片组件加载失败，请检查网络后重试'); };
+        document.head.appendChild(s);
+      }
+      // 每套样式的底色：填满圆角外区域，避免相册把透明像素渲染成黑角
+      var QC_BG = { a: '#ffffff', b: '#1c1917', c: '#f3ede1' };
+      var fontCssPromise = null;
+      function getFontCss() {
+        if (!fontCssPromise) {
+          fontCssPromise = fetch('https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-webfont/1.7.0/lxgwwenkai-regular.css')
+            .then(function (r) { return r.ok ? r.text() : ''; })
+            .catch(function () { return ''; });
+        }
+        return fontCssPromise;
+      }
+      function capture() {
+        return document.fonts.ready.then(function () {
+          return getFontCss().then(function (css) {
+            return html2canvas(card, {
+              scale: 2,
+              backgroundColor: QC_BG[currentStyle] || '#ffffff',
+              useCORS: true,
+              logging: false,
+              onclone: function (doc) {
+                // 导出环境可能没等到文楷加载完，主动注入字体 CSS 兜底；
+                // 即使仍回退，整卡统一衬线栈（楷体），上下字体也一致
+                if (css) {
+                  var st = doc.createElement('style');
+                  st.textContent = css;
+                  doc.head.appendChild(st);
+                }
+              }
+            });
+          });
+        });
+      }
+      function flash(btn, txt) { var o = btn.textContent; btn.textContent = txt; setTimeout(function () { btn.textContent = o; }, 1400); }
+
+      document.querySelectorAll('.qc-act').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var act = btn.dataset.act;
+          ensureH2C(function () {
+            capture().then(function (canvas) {
+              if (act === 'download') {
+                var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png';
+                a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已下载 ✓');
+              } else if (act === 'copyimg') {
+                canvas.toBlob(function (blob) {
+                  if (blob && navigator.clipboard && window.ClipboardItem) {
+                    navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
+                      .then(function () { flash(btn, '已复制 ✓'); })
+                      .catch(function () { var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png'; a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已保存 ✓'); });
+                  } else {
+                    var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png'; a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已保存 ✓');
+                  }
+                });
+              }
+            });
+          });
+        });
+      });
+    })();
+  </script> </body></html>  <script type="module">(function(){const n=document.getElementById("reading-progress"),r=document.getElementById("reader-mini"),d=document.getElementById("mini-pct"),i=document.querySelector(".reader-hero");function c(){const e=window.scrollY||document.documentElement.scrollTop,t=document.documentElement.scrollHeight-document.documentElement.clientHeight,o=t>0?Math.min(100,Math.max(0,e/t*100)):0,u=Math.round(o);n&&(n.style.width=o+"%",n.classList.toggle("show",e>50)),d&&(d.textContent=u+"%"),r&&i&&r.classList.toggle("show",e>i.offsetHeight+20)}window.addEventListener("scroll",c,{passive:!0}),window.addEventListener("resize",c),c();const s=document.getElementById("reader-toc-toggle"),l=document.getElementById("reader-toc-scrim"),m=document.getElementById("reader-toc");function a(){document.body.classList.remove("toc-open")}s&&s.addEventListener("click",()=>document.body.classList.toggle("toc-open")),l&&l.addEventListener("click",a),m&&m.querySelectorAll("a").forEach(e=>e.addEventListener("click",a)),document.addEventListener("keydown",e=>{if(e.target&&/^(INPUT|TEXTAREA)$/.test(e.target.tagName))return;const t=document.querySelector(".reader-prev[href]"),o=document.querySelector(".reader-next[href]");e.key==="ArrowLeft"&&t&&(window.location.href=t.getAttribute("href")),e.key==="ArrowRight"&&o&&(window.location.href=o.getAttribute("href"))})})();</script> <script type="module">(function(){var o=[1,1.25,1.5,2];function l(t){t=Math.max(0,Math.round(t));var a=Math.floor(t/60),e=t%60;return(a<10?"0":"")+a+":"+(e<10?"0":"")+e}function d(t){return"audio:"+t}document.querySelectorAll(".aplayer").forEach(function(t){var a=t.getAttribute("data-audio");if(!a)return;var e=t.querySelector("audio"),E=t.querySelector(".aplayer-play"),s=t.querySelector(".aplayer-bar"),m=t.querySelector(".aplayer-bar i"),v=t.querySelector(".aplayer-now"),y=t.querySelector(".aplayer-rate"),f=t.querySelector(".aplayer-label"),i=0,p=!1;e.src=a,e.addEventListener("loadedmetadata",function(){if(!p&&isFinite(e.duration)&&e.duration>0){p=!0,f.textContent=f.textContent+" · "+l(e.duration);try{var n=parseFloat(localStorage.getItem(d(a)));!isNaN(n)&&n>1&&n<e.duration-2&&(e.currentTime=n,v.textContent=l(n),m.style.width=n/e.duration*100+"%")}catch{}}});function u(){var n=e.duration||0,r=n?e.currentTime/n:0;m.style.width=Math.min(100,r*100)+"%",v.textContent=l(e.currentTime),t.classList.toggle("playing",!e.paused)}E.addEventListener("click",function(){e.paused?(e.currentTime>=(e.duration||0)-.3&&(e.currentTime=0),e.play().catch(function(){})):e.pause()}),e.addEventListener("play",u),e.addEventListener("pause",u),e.addEventListener("timeupdate",function(){u();try{localStorage.setItem(d(a),e.currentTime)}catch{}}),e.addEventListener("ended",function(){try{localStorage.removeItem(d(a))}catch{}m.style.width="0%",v.textContent="00:00",t.classList.remove("playing")}),y.addEventListener("click",function(){i=(i+1)%o.length,e.playbackRate=o[i],y.textContent="倍速 "+o[i]+"x"});function h(n){var r=s.getBoundingClientRect(),c=Math.min(1,Math.max(0,(n.clientX-r.left)/r.width));e.duration&&(e.currentTime=c*e.duration,u())}s.addEventListener("mousedown",function(n){h(n);function r(L){h(L)}function c(){document.removeEventListener("mousemove",r),document.removeEventListener("mouseup",c)}document.addEventListener("mousemove",r),document.addEventListener("mouseup",c)})})})();</script>

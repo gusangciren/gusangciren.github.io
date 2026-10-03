@@ -1,0 +1,750 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="YC 创业课第12讲｜Aaron Levie（Box CEO）"><link rel="canonical" href="https://gusangciren.github.io/blog/yc-lecture-12-sales-and-marketing/"><title>销售与营销（面向企业客户） — 像企业家一样写作</title><!-- 社交分享卡片（微信 / 微博 / X 等抓取标题、描述与缩略图） --><meta property="og:type" content="website"><meta property="og:site_name" content="像企业家一样写作"><meta property="og:title" content="销售与营销（面向企业客户） — 像企业家一样写作"><meta property="og:description" content="YC 创业课第12讲｜Aaron Levie（Box CEO）"><meta property="og:image" content="https://gusangciren.github.io/images/logo-180x180.png"><meta property="og:url" content="https://gusangciren.github.io/blog/yc-lecture-12-sales-and-marketing/"><meta property="og:locale" content="zh_CN"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="销售与营销（面向企业客户） — 像企业家一样写作"><meta name="twitter:description" content="YC 创业课第12讲｜Aaron Levie（Box CEO）"><meta name="twitter:image" content="https://gusangciren.github.io/images/logo-180x180.png"><link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml"><link rel="sitemap" type="application/xml" href="/sitemap-index.xml"><!-- Static CSS — no build hash, safe for incremental deploys --><link rel="stylesheet" href="/global.css"><!-- 金句卡片导出为图片（同 origin，无 CORS 风险） --><script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script><!-- 中文字体：经 BootCDN 加载（国内可访问，不走被墙的 Google Fonts）。
+         用 preload + onload 切换，去掉 @import 的渲染阻塞；字体未到位时先用系统衬线字体（等同 font-display:swap） --><link rel="preload" as="style" href="/fonts/fonts.css" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/fonts/fonts.css"></noscript><link rel="stylesheet" href="/_astro/BaseLayout.Bu4xGSCj.css">
+<link rel="stylesheet" href="/_astro/_..pIQ4IDMw.css"></head> <body> <nav class="navbar"> <div class="nav-inner"> <div class="nav-lead">  <a href="/" class="logo"> <img src="/images/logo-header.png" alt="Logo" class="logo-img"> <span>像企业家一样写作</span> </a> </div> <div class="nav-links" id="nav-pill"> <span class="nav-slider" id="nav-slider"></span> <a href="/book">书籍</a> <a href="/columns">专栏</a> <a href="/tools" class="nav-tools">工具</a> </div> </div> </nav> <!-- 搜索浮窗 --> <div id="search-overlay" class="search-overlay"> <div class="search-modal"> <div class="search-header"> <input id="search-input" type="text" placeholder="搜索书籍、章节或关键词…" autocomplete="off"> <button id="search-close" class="search-close-btn" aria-label="关闭搜索">✕</button> </div> <div id="search-results" class="search-results"></div> </div> </div> <!-- 分享按钮：点开菜单 → 复制链接（导航旁 + 文章底部共用一套逻辑与样式） --> <script>
+      (function () {
+        function flash(btn, txt, ok) {
+          var span = btn.querySelector('.share-item-text');
+          if (!span) return;
+          var old = span.textContent;
+          span.textContent = txt;
+          btn.classList.toggle('done', !!ok);
+          setTimeout(function () { span.textContent = old; btn.classList.remove('done'); }, 1600);
+        }
+        function closeAll(except) {
+          document.querySelectorAll('.share-btn.open').forEach(function (b) {
+            if (b === except) return;
+            b.classList.remove('open');
+            var t = b.querySelector('.share-trigger');
+            if (t) t.setAttribute('aria-expanded', 'false');
+          });
+        }
+
+        document.addEventListener('click', function (e) {
+          var root = e.target.closest ? e.target.closest('.share-btn') : null;
+
+          /* 点菜单项 → 复制链接 */
+          var item = e.target.closest ? e.target.closest('.share-item') : null;
+          if (item) {
+            var url = window.location.href;
+            var done = function () { flash(item, '已复制 ✓', true); };
+            var fail = function () { flash(item, '复制失败', false); };
+            var fallback = function () {
+              try {
+                var ta = document.createElement('textarea');
+                ta.value = url;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                done();
+              } catch (err) { fail(); }
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(url).then(done).catch(fallback);
+            } else { fallback(); }
+            closeAll(null);
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+          }
+
+          /* 点触发器 → 开合菜单 */
+          var trig = e.target.closest ? e.target.closest('.share-trigger') : null;
+          if (trig) {
+            var box = trig.closest('.share-btn');
+            var wasOpen = box.classList.contains('open');
+            closeAll(box);
+            if (!wasOpen) {
+              box.classList.add('open');
+              trig.setAttribute('aria-expanded', 'true');
+            } else {
+              trig.setAttribute('aria-expanded', 'false');
+            }
+            e.preventDefault();
+            return;
+          }
+
+          /* 点别处 → 全部收起 */
+          if (!root) closeAll(null);
+        });
+
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') closeAll(null);
+        });
+      })();
+    </script> <!-- 导航胶囊滑块（仿 iOS 相册 视频/照片 切换动态） --> <script>
+      (function () {
+        var pill = document.getElementById('nav-pill');
+        var slider = document.getElementById('nav-slider');
+        if (!pill || !slider) return;
+        var links = Array.prototype.slice.call(pill.querySelectorAll('a'));
+        var path = window.location.pathname.replace(/\/+$/, '') || '/';
+        var activeIdx = -1;
+        links.forEach(function (a, i) {
+          var href = (a.getAttribute('href') || '').replace(/\/+$/, '') || '/';
+          var match = (href === '/') ? (path === '/') : (path === href || path.indexOf(href + '/') === 0);
+          if (match) activeIdx = i;
+        });
+        if (activeIdx < 0) { slider.style.opacity = '0'; return; }
+        links[activeIdx].classList.add('active');
+        function move(idx, animate) {
+          var a = links[idx];
+          if (!a) return;
+          if (!animate) slider.style.transition = 'none';
+          slider.style.width = a.offsetWidth + 'px';
+          slider.style.transform = 'translateX(' + a.offsetLeft + 'px)';
+          if (!animate) {
+            void slider.offsetWidth; /* 强制回流，让下一次位移产生过渡动画 */
+            slider.style.transition = '';
+          }
+        }
+        /* iOS 动态：先停在另一项上，再滑到当前项 */
+        move(activeIdx === 0 ? 1 : 0, false);
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () { move(activeIdx, true); });
+        });
+        window.addEventListener('resize', function () { move(activeIdx, false); });
+      })();
+    </script> <main>   <div id="reading-progress" class="reading-progress"></div> <!-- 书籍系列：杂志章节页（方案 C 优化版） -->
+    <div class="reader"> <!-- 吸顶极简条：滚过章首后出现 --> <div class="reader-mini" id="reader-mini"> <a href="/book" class="reader-mini-back" aria-label="返回书架">←</a> <span class="reader-mini-book">YC 创业课</span> <span class="reader-mini-sep">·</span> <span class="reader-mini-chapter">销售与营销（面向企业客户）</span> <span class="reader-mini-pct" id="mini-pct">0%</span> </div> <!-- 章首大标题区：超大章节号 + 居左内容 --> <header class="reader-hero"> <div class="reader-hero-inner"> <div class="reader-hero-num" aria-hidden="true">12</div> <div class="reader-hero-text"> <a href="/book" class="reader-hero-back">← 返回书架</a> <div class="reader-hero-book">《YC 创业课：如何创办初创公司》</div> <div class="reader-hero-chapter">第 12 章 / 共 20 章</div> <h1 class="reader-hero-title">销售与营销（面向企业客户）</h1> <div class="reader-hero-meta"> <time>2026年6月27日</time> <span class="reader-hero-dot">·</span> <span>约 36 分钟阅读</span> </div> </div> </div> </header> <!-- 正文 + 时间线目录 --> <div class="reader-body"> <aside class="reader-toc" id="reader-toc"> <div class="reader-toc-inner"> <div class="reader-toc-book">《YC 创业课：如何创办初创公司》</div> <nav class="reader-toc-nav"> <div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-01-how-to-start-a-startup" class="reader-toc-item"> <span class="reader-toc-title">如何创办初创公司</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-02-ideas-products-teams-execution-part2" class="reader-toc-item"> <span class="reader-toc-title">创意、产品、团队与执行（第二部分）</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-03-counterintuitive-parts-and-how-to-have-ideas" class="reader-toc-item"> <span class="reader-toc-title">创业中反直觉的部分，以及如何产生创意</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-04-building-product-talking-to-users-and-growing" class="reader-toc-item"> <span class="reader-toc-title">打造产品、与用户对话、实现增长</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-05-business-strategy-and-monopoly-theory" class="reader-toc-item"> <span class="reader-toc-title">商业战略与垄断理论</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-06-growth" class="reader-toc-item"> <span class="reader-toc-title">增长</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-07-how-to-build-products-users-love" class="reader-toc-item"> <span class="reader-toc-title">如何打造用户热爱的产品（第一部分）</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-08-doing-things-that-dont-scale-pr" class="reader-toc-item"> <span class="reader-toc-title">做那些无法规模化的事、公关，以及如何起步</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-09-how-to-raise-money" class="reader-toc-item"> <span class="reader-toc-title">如何融资</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-10-company-culture-and-building-a-team" class="reader-toc-item"> <span class="reader-toc-title">企业文化与团队建设（第一部分）</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-11-company-culture-and-building-a-team-part2" class="reader-toc-item"> <span class="reader-toc-title">企业文化与团队建设（第二部分）</span> </a>  </div><div class="reader-toc-item-wrap active "> <a href="/blog/yc-lecture-12-sales-and-marketing" class="reader-toc-item"> <span class="reader-toc-title">销售与营销（面向企业客户）</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-13-how-to-be-a-great-founder" class="reader-toc-item"> <span class="reader-toc-title">如何成为一位伟大的创始人</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-14-how-to-operate" class="reader-toc-item"> <span class="reader-toc-title">如何运营</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-15-how-to-manage" class="reader-toc-item"> <span class="reader-toc-title">如何管理</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-16-how-to-run-a-user-interview" class="reader-toc-item"> <span class="reader-toc-title">如何进行用户访谈</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-17-how-to-build-products-users-love-part2" class="reader-toc-item"> <span class="reader-toc-title">如何打造用户热爱的产品（第二部分）</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-18-legal-finance-hr" class="reader-toc-item"> <span class="reader-toc-title">创业公司的法律、财务与人力机制</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-19-sales-marketing-pitch-investor-roleplaying" class="reader-toc-item"> <span class="reader-toc-title">销售、营销与融资路演</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-20-closing-thoughts-and-later-stage-advice" class="reader-toc-item"> <span class="reader-toc-title">收官思考与后期阶段建议</span> </a>  </div> </nav> </div> </aside> <main class="reader-main">  <article class="prose reader-prose"> <p><strong>YC 创业课第十二讲 · Aaron Levie（Box 联合创始人兼首席执行官）</strong></p>
+<hr>
+<h2 id="开场为什么你应该做企业软件公司">开场：为什么你应该做企业软件公司</h2>
+<p>（会场响起《猛虎之眼》的音乐，Aaron Levie 走上台）</p>
+<p>能把音乐声开大一点，让它更有带动感吗？好了，好了。各位，我们得找到节拍，然后跟着节拍拍手。好了，请停下音乐。请放上演示文稿。谢谢。这大概是企业软件里最让人振奋的一件事了。剩下的都是下坡路。谢谢你们那段排练得很好的开场介绍。</p>
+<p>我是 Aaron Levie，Box 的首席执行官兼联合创始人。欢迎来到这一期——关于如何创办一家企业软件公司。这是我理解的情况，这是你们在修的课，对吧？不对。</p>
+<p>所以今天我的任务就是这样：我要试着说服你们，今天这堂课上其他所有演讲者说的都是错的，而你们真正想做的，其实是一家企业软件公司。希望我们能把这个话题聊透，让你们真切感受到，为什么做企业级市场超级酷；为什么「消费者赛道更有意思」这种看法是错的；以及为什么你们应该选择企业软件。有多少人想做一家企业软件公司？好，不错。非常感谢。希望我们最后能再投一次票，希望那个数字没有缩水。这真的是我今天唯一的目标。</p>
+<h2 id="box-的故事从消费者服务到企业服务">Box 的故事：从消费者服务到企业服务</h2>
+<h3 id="box-今天的数据">Box 今天的数据</h3>
+<p>今天我们要谈三件事。第一件，是 Box 的简短背景。因为我们刚开始的时候，根本不知道自己想做企业软件。所以我想稍微讲讲，我们当初为什么盯上企业市场，以及我们今天在做什么。然后，我们要谈改变企业软件的几个主要因素——正是它们，让今天创办一家创业公司成为可能。最后，我们来看一些「模式」：也就是如何识别机会、并由你自己动手去创办一家创业公司的方法。希望这些能成为一些实在、有用的建议。先打个预防针：我最近几天说话太多，嗓子有点哑，希望我能撑到第三部分、把那些建议讲完。</p>
+<p>做企业市场，这些是 Box 的一些高层数据：<strong>我们有大约二十四万家企业在使用 Box，有超过两千七百万用户把 Box 引入了他们各自的组织，财富 500 强里百分之九十九都是我们的客户</strong>。其实那剩下的百分之一基本就是微软，而他们好像不大愿意从我们这儿买东西。这方面我们还得再下点功夫。</p>
+<p>有很多用户把 Box 带进了职场环境，下面这些是正在使用我们产品的一些组织。我们服务的行业非常广，从制造业、消费品，到像通用电气这样的公司都有。斯坦福医疗实际上就在医疗部门内部，用我们的产品做协作检索。在医疗、媒体、制造业之间，这些只是我们覆盖的部分行业。</p>
+<h3 id="box-是怎么走到今天的">Box 是怎么走到今天的？</h3>
+<p>问题是：我们是怎么走到今天的？因为我们创办公司时，并没有打算做成一家企业软件公司——尽管事情最后就是这么发展的。我们在 2005 年正式发布了产品，而想法是 2004 年还在大学时冒出来的。2004 年有人在上网吗？好，太好了。我本来不确定你们这代年轻人上不上网，所以——挺好。抱歉，好了，年龄梗到此为止。重点是：回到 2004 年，你可能还记得，那会儿真没多少事可干。挺无聊的，对吧？那是在 Facebook 出现之前，当然更是在 Snapchat 之前，所以没什么可玩的。你没法给人发十五秒的短视频或照片、然后让它自动消失，因为你连手机都没有。</p>
+<p>所以在 2004 年的互联网上，真没多少热闹事。当时的互联网大概就是这副模样——一片荒芜、空旷的景象。说明一下：那头开心的骆驼是 Google，那头沮丧的骆驼是 Yahoo！这就是 2004 年的互联网。Yahoo！后来好了很多，但在 2004 年年中，他们还在摸索方向。而 Google 正在接管世界。但这就是当时整个世界的全部。</p>
+<h3 id="2004-年的文件共享之痛">2004 年的文件共享之痛</h3>
+<p>所以 2004 年我们在大学里注意到一件事：出于某种原因，共享文件真的特别难。现在这听起来是个多简单的点子啊，可你要回到十年前看。当时，在企业之间搬运数据，要么贵得离谱，要么难得出奇。我当时在实习，我的工作大部分就是和纸张打交道——把打印出来的纸复印一遍，再塞进文件柜。如果你不是计算机专业的，实习生干的就是这个。所以我复印纸张一流，可惜这技能今天基本用不上了。但共享文件真的很难。在课堂这种环境里，你们要分小组做大作业，共享文件同样很难。我读的是南加州大学，学校只给你五十兆字节的存储空间。五十兆字节，你基本上只能存一个文件，然后它每六个月还会自动清空一次。所以当时管信息技术的那人，显然没在用硬盘。于是，存储和共享文件就难到了极点。那我们为什么不让人随时随地都能轻松存文件、分享文件呢？</p>
+<p>于是我们有了当时那个点子——Box.net。我们观察到，软件世界里有好几个因素正在发生变化。第一，存储成本正在急剧下降。在我们的生意里，基本上每一两年，一块硬盘能装下的存储和数据量就能翻一倍。所以以前不划算的事，现在变得可行了。计算的成本、存储的成本都降下来了。我们还有了更强大的浏览器和网络。Firefox 刚刚冒头。人们在家、在教室里，都用上了快得多的网络。同时，人们想要存储和共享信息的地方也变多了。于是这三个因素开始浮现。等会儿我给具体建议时，你们可以回过头来对照这些因素。<strong>要记住的第一条：永远盯着那些正在变化的技术因素</strong>。任何一个底层技术因素发生重大变化的市场，都处在一个即将发生剧烈变革的环境里。</p>
+<p>我们很幸运——对云端数据的需求正在变得越来越重要，而成本和可行性也在迅速改善。我们决定快速拼出一个 Box 的早期版本，以 Box.net 的名义发布。想法很简单：让共享文件变得超级容易。结果这个点子一下子就火了。我们从一个叫马克·库班的人那里拿到了天使投资。</p>
+<h2 id="抉择时刻消费者与企业">抉择时刻：消费者与企业</h2>
+<h3 id="退学创业">退学创业</h3>
+<p>我们要从大学退学，我们要搬到湾区，那会特别带劲。说到退学——在座有人退过学吗？好，挺好。还是待在学校里吧！</p>
+<p>当你从大学退学时，大家脑子里想的都是：那一定会酷毙了。比尔·盖茨退了学，就会像比尔·盖茨那样；或者迈克尔·戴尔退了学，就会像迈克尔·戴尔那样让人激动；史蒂夫·乔布斯也退了学，所以人们想象的就是这样。但没人记得，这家伙其实也退过学。</p>
+<p>所以这真不是成功的保证。说起来好笑，我甚至不确定这家伙到底退没退学，只是看起来他非退不可。如果谁和他有亲戚关系，我道歉——这只是网上一张搞笑图。总之，我们决定退学，先搬到了伯克利，后来又到了帕洛阿尔托。我们决定把产品免费开放。每个月都有几十万人注册我们的产品。如果你去 Box.net，能拿到 1 吉字节的免费文件存储空间——在 2006 年，这又是个大数字。但用户涨得太快，我们反而在发愁接下来该怎么办。</p>
+<h3 id="撞墙卡在中间">撞墙：卡在中间</h3>
+<p>我们撞上的是任何创业公司都会遇到的典型问题，只不过我们的商业模式让这个问题格外突出：我们为消费者做出了一款非常稳健、非常可靠的企业级产品，说白了，推出的是一款存在感极弱的东西。对消费者而言，我们碰到的情况是——你做了那么多可以付费的功能，可很多消费者根本用不上这些功能。而对大企业来说，我们的安全性和围绕「企业如何使用自己的数据」的能力又远远不够。于是我们给消费者的，比他们需要的多；给企业想要的，又比他们需要的少。</p>
+<p><strong>所以我们发现自己站在了十字路口</strong>。那段时间，我们很难想清楚这生意到底要往哪走。我们非得做个选择不可。我们走到了一条岔路前，必须选一条走下去。那是在 2006 年上半年到下半年的事。我当时 23 岁，我的联合创始人 22 岁。我们的创始团队甚至更年轻，全都退了学。</p>
+<h3 id="两条道路的对比">两条道路的对比</h3>
+<p>所以在 2006、2007 年，我们想象了这两条路，两个世界截然不同。做消费者创业公司，基本上就是一直好玩：你们整天开派对，超级刺激。而做企业，你要跟那些大块头硬碰硬——这是个相当吃力不讨好的模式，因为人们普遍讨厌企业软件。我们当时对两条路的想象就是这样：必须二选一。我们看着这两条路想：<strong>消费者那条路看起来真好玩，企业那条路看起来真难，而且竞争惨烈。</strong></p>
+<p>与此同时，在消费者这个领域，你永远在跟一个问题搏斗：怎么变现？你怎么真的让人们掏钱买你的产品？在消费者市场，你其实只有两种商业模式。要么让人们为你的应用付费，要么在应用里放广告。给你们一点参照，这是今天的数字：消费者世界里，每年花在移动应用上的钱大约是 350 亿美元。挺大一个数字，对吧？350 亿美元。这是今天砸在移动应用上的真金白银。广告方面，全球数字广告是 1350 亿美元。所以大多数消费者企业——如果你不做电商——盯上的就是大约 1700 亿美元的市场，要么是人们在应用上的购买力，要么是围绕这类服务的全球广告。数字很大，机会不少。</p>
+<p>然而在企业这边，每年花在企业信息技术上的钱是 3.7 万亿美元。这些钱覆盖服务器、基础设施、软件、网络、服务。整条技术栈加起来，一年就是几万亿美元的支出。我们意识到，这两个市场之间，存在着相当宽的落差。我们要费劲让消费者每月掏几美元；而 Google、微软和苹果，会想方设法让这类产品随着时间变得免费。当时还有传言说 Google Drive 要出来了。所有这些产品，都正在或者即将登场。</p>
+<p><strong>但在企业里，重点根本不是帮他们省信息技术开支。他们要么是想提升生产力，要么是想做大业务</strong>。所以价值等式完全不同。对消费者来说，我们巴不得把要花的钱压到最低，只买尽可能少的东西。而对企业来说，心态有点转变：我能从技术里得到什么？这对我值多少钱？所以这是个非常关键的数据点。</p>
+<h3 id="企业软件的糟糕名声">企业软件的糟糕名声</h3>
+<p>可问题是，企业软件一点都不性感，对吧？竞争激烈，生意极难做。你早上从床上蹦起来时，绝不会喊着「我太兴奋了，今天要去创办一家企业软件公司」。原因其实在当时非常直白：那时候做软件的方式，慢得离谱。之所以慢，是因为你不能让客户的任何东西出岔子；销售流程也慢，因为客户要花很长时间才肯买你的技术。我想大家都习惯了这样一种观念——当你试图卖企业软件时，客户可能要花上长达几年的时间，才真正把软件买下来；然后再花更多年，才能把技术真正部署上线。所以很多公司活了好多年，技术却从头到尾没被用过。</p>
+<p>这感觉像个巨大的问题，不是我们想趟的浑水。技术本身就很复杂——我不知道在座有多少人不得不使用企业软件，但它通常真的复杂得要命。你会忍不住琢磨：上帝造人的时候，设计师到底是抽了什么风，非要把四十七个按钮塞到一页上？你根本看不懂，原因我们一会儿再讲。<strong>说白了，就是没人真正用心做设计、用心做用户体验</strong>。软件就是复杂。最后，如果这还不够糟，你还得想清楚怎么把这软件卖出去。对任何热爱互联网力量的人来说，「得靠一个销售中介才能触达客户」这种念头，听着就让人倒胃口。你得雇一大帮人，他们要遍布每个国家，而且他们是你和客户之间唯一的接口。你雇一个叫查克的人，查克会拎着公文包滚进来，试图向客户推销一大堆企业软件。说清楚点，查克长这样（幻灯片）。这就是我们脑子里为企业勾画的销售流程。</p>
+<p>查克看着是个乐天派，但他仍然是你的软件到达客户途中的一道中介。那我们扩大业务规模时，凭什么非得经过这个销售中介？我待会儿会讲，为什么我们在「销售」这件事上的判断是错的。但这就是我们当时的恐惧。如果这还不够难，2007 年还有投资人跟我们说：你们基本上不可能在企业里做出来。你们又是一支二十岁上下的创始团队。你们团队里，没有一个人待过企业。微软、Oracle、IBM，这些公司会把你们踩在脚下。这事儿会难到不能再难。平心而论，他们在好几个点上都说对了。我们是个极其没经验的团队，职业生涯还非常早期。比方说，我们的联合创始人看着像十三岁。说明一下他长什么样——这是他当我们的首席财务官时，我想是他二十九岁的样子。但当时看起来，我们像是会卷款跑路去迪士尼乐园。我完全理解他们为什么觉得我们成不了。我无法想象把钱交给他。</p>
+<h2 id="为什么还是要做企业世界已经变了">为什么还是要做企业：世界已经变了</h2>
+<p>但我们还是决定，这事儿必须做，必须拼尽全力试一把。我们要把规模效应、消费者级的体验、我们公司的基因，一并带进企业市场，看看能不能在那里落地。我们真的很幸运。有一位投资人，在他职业生涯的早期，因为看准「企业市场正在发生某种变化、而我们正好能借上力」，押注了我们。</p>
+<p>我们决定：如果要做企业、要盯住企业，我们就必须换一套完全不同的规则来玩。那么，这个时代里，软件的复杂性有什么能改变？这个新时代里，慢吞吞的销售流程有什么能改变？我们怎么才能绕过那个极其间接的过程，直接触达用户、触达客户，把技术推出去？我们怎么才能为「用户」做设计，而不是仅仅为了客户走一遍招标需求的流程？于是我们把企业里那些既定事实一条条列出来，然后——并非在所有情况下——反其道而行之。我们要找到技术世界里已经发生变化的那些东西，借此建一家更新、更好的软件公司。这就是我们八年前做出的决定，也是我们一路聚焦企业的原因。</p>
+<p>今天，我们又有大约二十四万家企业在使用产品。原因在于：我们设计的商业模式、设计的软件、设计的解决方案，是针对世界的某一个特定版本去打造的；而结果证明，世界最终走向的，正是那个版本。我会稍微展开讲讲，我们围绕它建公司的那个「世界变了什么」。我也强烈建议你们：如果你要创办一家企业软件公司，就让你的技术顺应这个趋势。这就是我们做决定的缘由，也是我们着手解决这个问题的起点。</p>
+<h2 id="企业软件世界的五大变化">企业软件世界的五大变化</h2>
+<p>关于企业的一切——按定义，也就是企业所使用的软件——仅仅在过去五年里，就全变了。如果说曾经有一个做企业软件公司的神奇时点，那么现在就是，就看组织内部正在发生的变化有多剧烈。</p>
+<p>我们来过一遍其中几件。</p>
+<h3 id="应用公司正在迁移到云端">应用公司正在迁移到云端</h3>
+<p><strong>第一，大多数应用公司正在向云端迁移</strong>。最重要的一点是：如果你要开一家商业管理公司、一家商业智能公司，甚至一家联系人管理公司，多年前，你的点子必须在每一个客户现场都部署一遍。无论你卖给了多少客户、无论在哪个地区，每个客户都得把它装进自己的数据中心。这就是本地部署计算的软肋。你做了大量重复劳动，制造了海量冗余，拖慢了为企业交付和构建软件的整个过程。突然之间，云端来了——像 Salesforce.com、像 Amazon Web Services 这样的东西，基本上是在说：凭什么每个想搭几台服务器的客户，都得自己买服务器、塞进自己的数据机房，再配上安全和网络，半年后才上线、开发才能用？应用也是同样的道理。他们说：这事儿放在今天还有什么意义？我们干脆把几万台服务器摆在一起，按需提供，你们想用什么、什么时候用，随便挑，我们就能办到。</p>
+<p>我们正从一个「昂贵计算」的世界，走向一个「更便宜、按需计算」的世界。对创业公司来说，好处在于客户面临的阻力没那么大——他们更愿意采用新技术。<strong>一旦计算变便宜，采用新方案就更容易。也就是说，他们向你敞开大门的门槛——那个门槛低得多，这对创业公司来说是天大的好事。</strong></p>
+<h3 id="从定制平台到标准化软件">从定制平台到标准化软件</h3>
+<p>我们正从一个「定制平台」的世界，走向一个「标准化软件」的世界。过去，你必须在软件本身之上，把所有定制、所有客户体验都搭一遍；而现在，客户意识到他们并不需要开放平台，他们可以在产品之上再定制一层。过去，你创办一家企业软件公司时，只能卖给全球前五或前一万家公司。因为只有那些公司，才拥有相应的实力、人才、基础设施和预算，能把你的技术真正用进企业里。而今天，哪怕一家只有两人的小公司，也能注册使用 Box；同时我们也在和拥有三十多万员工的通用电气合作。所以你现在既能服务地球上任何角落的小企业，也能服务地球上的一些巨无霸——这意味着你可进攻的市场大得多。这让「进攻企业」成了一个更划算的经济命题。</p>
+<h3 id="平台本身变得更加全球化">平台本身变得更加全球化</h3>
+<p>平台本身正变得更加全球化。我们公司才起步几周，客户就已经遍布国际了。如果按传统方式做企业，光是打通内部流程，可能就得花上好几年。</p>
+<h3 id="移动设备最深刻的转变">移动设备：最深刻的转变</h3>
+<p><strong>最后，也是最深刻的一次转变——移动设备</strong>。iPhone、iPad、Android、平板电脑，所有这些形态，都变得越来越由用户主导。这一点根本性地重要。在信息技术主导的世界里，老牌厂商通常赢，因为他们跟信息技术部门、跟首席信息官、跟公司的采购权，有着现成的关系。而在一个由用户主导的模型里，用户把自己用的技术带进来——带进销售团队，带进市场团队，带进财务部门——而你，可以围绕这个用户来构建软件。这意味着，他们能把企业带进门；而当他们想要更好的管控、更好的安全性、更好的可扩展性时，你就能把产品卖给他们。</p>
+<p>所以你作为一家商业软件公司，商业模式还是那个商业模式，但现在进入公司的路径，是穿过最终用户。以上这些是定量的因素变化。仅举几个定量变化：地球上有近二十亿部智能手机。这改变了地球上每一个信息技术模式。因为十年前，如果你负责管理公司的技术，你只要管办公楼里那点计算机网络就行。但现在有几十亿部智能手机，你得管理「随时随地、在任何网络上」的计算方式。这对软件公司而言变得至关重要，因为没有任何一家老牌厂商，搭建过一套能驱动这种工作流、以及企业如何使用自己数据的技术栈。于是这就创造了一个巨大的创业机会。</p>
+<h3 id="三十亿人上线">三十亿人上线</h3>
+<p>地球上有近三十亿人在线。这意味着，每家企业都在改变「如何把自己的产品交给客户」的方式。也就是说，每个行业都在变。在一个企业里，技术革命只会发生在两种时刻。<strong>第一，是原材料发生变化——也就是说，计算成本下降，它们被集中起来，让人们按需使用</strong>。第二件能改变的事，是这些企业必须去争取的人，需要在这些企业的产品里获得新的体验。我举个例子：你们出校门，大概会用过像 Uber 或 Lyft 这样的东西。如果你是做航运的、做交通运输的，Uber 就代表着你们行业的一次巨变。所以你不能让 Uber 就这么存在，却不去想：Uber 的影响是什么？Instacart 的影响是什么？Lyft 对我商业模式的影响又是什么？</p>
+<p>在企业正在应对这类变化的世界里，你们会需要新技术，来帮他们构建自己的商业模式、帮他们适应这种颠覆。这就是为什么，现在甚至是创办行业垂直软件公司的绝佳时机。此刻，每一个行业都在经历一场由商业模式和技术驱动的颠覆。这意味着他们需要来自创业公司的技术，帮他们熬过这一关。我给你们几个例子：在零售业，有一个「全渠道」或「多渠道」商务的愿景。你们要在网上买、在手机上买、在店里买，还希望东西能送到你们手上。所以大多数老牌技术，支撑不了多渠道商务。没人做好准备去应对：当消费者想随时随地、带着更好的信息和更聪明的推荐去买东西时，这到底意味着什么？于是全世界每一家零售商，都需要一套全新的技术栈，来支撑他们的零售体验。</p>
+<p>在医疗领域，每一家医疗机构都在想办法，构建更个性化、更具预测性的体验；他们想让药物适配到个人。随着医疗的商业模式从「按手术收费、按检查收费」，转向——说真的——客户为「保持健康、维持健康」付费，突然之间，每一家医疗机构都需要技术来交付医疗体验。他们会想做远程医疗。他们会想在最贴近社区的地方、而不仅仅在那种巨无霸医院里，提供医疗服务。还会有新的使用场景不断冒出来。我们的医疗服务提供者之间要怎么连通，好让一位医生能做出更好的决策？所有这些，都需要全新的企业软件来支撑这些生意和行业。</p>
+<p>在媒体领域，举个例：你们面对的是一个行业正从「真正的线性内容」转型的世界——无论是电视、音乐还是电影，那都是一套线性供应链导向的商业模式：一部电影拍出来，先在影院放三个月，之后才上 iTunes 或其他平台——而现在，人们想要的是按需体验。这会改变发行的方式，规模是三十亿网民。而同样，没有任何一家媒体集团，拥有一套真正能支撑「内容、数据、信息如何在这个体系里规模化流动」的平台。我昨天才在洛杉矶，和一家媒体公司开会，他们基本是靠预测分析，在三十亿用户中找到了潜在的观影人群。他们想极度精准地触达那些喜欢某类电影的特定影迷。于是突然之间，一家电影公司就需要大数据、需要商业智能、需要营销，才能去推广和发行。</p>
+<p>这正是两个行业交汇的地方，所有全新的软件都将不可或缺。所以每个行业都在经历某种形式的这种变革。你可以挑任何一个行业，放大进去看：未来几年，有哪些底层技术因素会改变这个行业的商业模式？然后就必然需要软件，来支撑那类体验。想想水的未来——谁来支撑它？我敢说，那也需要软件。</p>
+<p>所以基本上，世界各地的每一家公司——在斯坦福的好处是，我们研究技术，把技术行业当成「一个行业」来看。但事实上正在发生的，是每一个行业都会带上技术的成分。如果企业不善用技术，未来就活不下去；如果他们不具备利用数据、运用这些新工具的能力，就撑不住。而他们将通过与我们称之为「技术行业」的伙伴合作，来完成这件事——而不是每家公司都自己从零把这套专业能力建起来。所以在未来五到十年里，会有大量的合作：公司需要技术来更聪明、更快速地工作，需要更安全地做这些事。这不仅会改变个人在这些环境里的工作方式，最终还会改变这些公司的商业模式。以上就是第二章。</p>
+<h2 id="实战建议构建企业软件公司的模式">实战建议：构建企业软件公司的模式</h2>
+<p>现在我来给你们一些实用建议，帮你们起步。平心而论，这些建议大多是用事后的眼光看的——也就是说，事情不会完全照这个剧本发生；但我可以回过头说，正是这些事，让后来的结果成了真。创办一家公司，很难做到精确预判。你们未必能把所有这些事都想明白，但这会给你们一种「模式感」，在你们构建、或正在思考构建一家企业软件公司时，用来识别机会。</p>
+<h3 id="发现技术颠覆">发现技术颠覆</h3>
+<p><strong>第一，发现技术颠覆</strong>。无论你做消费者还是做企业，这一点都成立。其余几条更偏企业，但这一条是基础——只要你打算创办一家技术公司。你必须寻找新的使能技术，或者大趋势、根本性的趋势，在「事情现在怎么做」和「事情本可以怎么做」之间，撕开一道宽宽的口子。回看我们的生意，那道缺口基本上是：存储越来越便宜，互联网越来越快，浏览器越来越好，可我们还在用一种极其复杂、极其笨重的手段共享文件。<strong>任何时刻，只要「可能性」和「今天的实际做法」之间的落差达到最大，那就是用新技术去解决一个问题的机会</strong>。当你看企业市场时，要问的是：计算成本下降得如此之快，到底改变了企业能用他们的数据做什么？</p>
+<p>从商业角度，这会带来什么变化？有哪些事，因为经济可行性或技术可行性，在十到十五年前是不可能的，而现在变成了可能？有个挺好玩的做法：时不时翻出一篇一九九零或一九八零年代报纸上谈技术的商业文章，你会发现，我们现在干的，基本上都是在重做十年、二十年、三十年前试过的技术。那时候太贵、太难用，我们还没有那些使能技术让它变成现实。你能看到一个概念浮现：五年前、十年前不可能的事，现在变得非常务实。我举个例子。有家公司叫 PlanGrid，有人知道 PlanGrid 是干什么的吗？哦，酷。你是做建筑这一行的？你是？我的天，那算什么行当？</p>
+<p>问：PlanGrid？还是建筑？</p>
+<p>Aaron Levie：建筑。</p>
+<p>问：我在工地干活，我们盖楼。</p>
+<p>Aaron Levie：我的天，太棒了。简单说，PlanGrid 是一个移动应用，让你管理建筑项目、调阅蓝图、管理围绕整个施工过程的所有数据。这家公司意识到，每年大约有四十亿美元，是花在打印蓝图上。每次图纸有改动，所有印刷件和更新都要层层传达、像涟漪一样扩散到一张巨大的承包商和建筑工网络里。哪怕只是一个极细微的改动。然后他们突然意识到：有了 iPad，我们手里有了一个完美的设备形态，来装载蓝图和内容。这东西能在建筑行业里扩散开——而这个行业，除了设计端，并不是以高科技闻名的。他们怎么才能构建出技术，让数据协作这个难题，在一个许久没怎么变过的行业里，变得真正无缝、真正容易？这是对市场中一次变化的完美发现，并把这两件事怎么合到一起想明白了。然后这支团队据此做出了一家很棒的创业公司，做得极好，正在接管建筑行业——眼前这位就是证明。谢谢。</p>
+<h3 id="有意从小处开始">有意从小处开始</h3>
+<p><strong>接下来，在企业市场，你们要有意地从小处起步</strong>。我这话是什么意思？你们想找到一个——在所有「用户主导」范式的企业里，这一点更成立——自然的楔子：你能做出一个产品，滑进其他现有产品的缝隙里；但你同时又认为，它会随着时间，扩展成企业结构里更重要的一块。</p>
+<p>你们一开始要做的，是拿下问题的一小片，把用户体验做到极致。你们要么改变商业模式，要么创造新技术，让这个从前很难的问题变得真的、真的简单。一开始它可能显得很小——也许你们先攻小企业，然后再往上游走；也许你们先从一个使用场景的一小片切入，再向外扩展。但你们是「有意」从小做起的。因为你们没法跟老牌厂商竞争，老牌厂商永远冲着「完整解决方案」去。所以你们必须找到：在完整方案里，有哪些缝隙足够大，大到客户愿意用一个独立的技术去解决它？但随着时间的推进，你们又能扩展——要么去够更大的客户，要么去覆盖更多的使用场景。</p>
+<p>一个绝佳的例子是 ZenPayroll。ZenPayroll 是几年前由斯坦福毕业生创办的。基本上，他们发现小企业的工资单，是个复杂得要命、又极其烦人的流程。那是因为几十年来，我们一直在用同一批供应商做这事，而它们的数字化程度很低。你不会以邮件收据的形式收到付款回单，非常复杂；你也看不到自己薪资的图表，周围基本没有像样的数据。于是他们说：我们要先拿下最痛的那一片——围绕招人和发薪。就只是工资单管理这一块。我们会接入大量已有的结构，但要把它做得超级简单。而现在，他们既能随着时间往上游市场走，也能随着时间推出新服务。结果是，这个市场的老牌厂商，最终看着 ZenPayroll 这种东西说：嗯，那很小啊，只做小企业嘛，能有多大能耐？但那只是起点。当他们拿到了那个楔子、嵌进了市场，他们就能随着时间再次扩张，搭建出更多的服务和能力。但他们找到了那个恰到好处的切口，建起了一家新公司，并让它冒了头。</p>
+<h3 id="寻找不对称性">寻找不对称性</h3>
+<p><strong>然后，你们真的想找到「不对称性」</strong>。你们想做一些老牌厂商不能做、或不愿做的事——要么因为经济学上对他们没意义（或者经济学的逻辑太反常），要么因为技术上他们做不到。我举两个例子。如果你们今天要为企业构建一款软件，去进攻一个老牌厂商把持的品类，而那个品类更偏向「套件式」打法，那么你们要做的，是构建平台无关的技术。套件玩家会希望一切都跟自己集成，因为垂直集成更有价值。但你们要去攻一个不同的切入点：你们希望自己的技术能跨所有平台工作。这样你们就能和许许多多种客户合作，能成为许许多多平台的盟友——而传统的老牌厂商做不到这一点。这在技术上是不可行的，因为它的架构、或者它底层的商业模式，决定了它做不到。另一件事，是去做经济学上可行、但别人没做的事。你们可以研究一家老牌公司的成本结构，找出他们无法降价的那些地方——因为那套商业模式是公司立足的根本。或者，你们能找到哪些前所未见的、独特的变现方式，让其他人做起来都不划算。</p>
+<p>有家公司叫 Zenefits，做人力资源管理的软件，帮你们这样的小创业公司，管理所有的福利和所有的人力资源信息。他们没有直接向那些「可能并不看重软件现阶段价值」的创业公司收费，而是意识到：他们可以从保险公司那里拿佣金——是保险公司为「能用上他们软件」这件事付钱。客户本身并不为 Zenefits 付费。Zenefits 的平台由保险公司买单，由此他们创造出了一种商业模式，没有其他软件公司想到过、也攻不破。他们同时在颠覆一个此前鲜见创新的品类——小企业的健康与福利领域。</p>
+<h3 id="找到最疯狂但仍然合理的离群客户">找到最疯狂但仍然合理的离群客户</h3>
+<p><strong>接下来，你们想找到客户生态里，那些最疯狂、但依然合理的离群者</strong>。也就是说，你们要找到处在业务、商业模式、行业边缘的客户，找出这些客户独有的特征，把他们当作你们的早期采用者。Paul Graham 写过一篇很棒的文章，谈的是「生活在未来，并在生活在未来时，去构建那些缺失的东西」。这是在颠覆的浪潮里发现趋势和模式的简易方法。职场里也一样。如果你找到那些「在未来工作」的客户，你就能和他们一起，发现未来还缺什么；我们怎么构建技术，来支撑所有即将涌现的新使用场景？</p>
+<p>有家公司叫 Skycatch，做企业无人机。乍一看有点怪，但在建筑、农业这些领域，他们现在正用无人机来做数据采集、给不同环境建模。所以这家公司能找到所有处在行业最前沿的公司，摸清那些企业的运作方式里，有什么独特或新颖之处；他们和很多这样的早期采用者合作，搭建起了自己的平台。说白了，它就是第一家做企业无人机的公司。所以思路是：去看看你的市场，找到那些处在市场最前沿、用技术抢占先机的客户，找到那些用技术换取性能优势的客户，然后跟他们合作，看你的产品能怎么演化。</p>
+<h3 id="倾听客户但不总是照他们说的做">倾听客户，但不总是照他们说的做</h3>
+<p><strong>倾听你们的客户，但不总是照他们告诉你的原话去做</strong>。这是构建企业软件时一个非常关键的区分。你们的客户会提出一大堆需求。你们的工作，是把那些清单提炼、浓缩成最终的产品。这不是说你们就不照他们说的做。你们的工作是：倾听他们的问题，把它们翻译成能为他们构建出「最好、最简单解决方案」的东西。这真的是你们的本职——Palantir 就是个很好的例子：它面对非常、非常复杂的问题，然后把它缩减成简单的方案，去解决那些客户自己都不知道该怎么开口提的复杂问题。</p>
+<p>你们要「模块化」，而不是「定制化」。所以，要构建一个平台，而不要把所有的定制技术和客户垂直体验，都直接焊死在软件本身里。务必把开放性和接口，当作构建体验的方式来思考，别把它们直接写死进产品。永远以用户为中心。现在做企业软件公司最神奇的一点在于：你可以把消费者的基因放在产品的正中央。这永远意味着采用更容易，你的产品有更大的机会病毒式传播，在组织内也更容易卖进去。永远记得把消费者的基因带进产品。你的产品应该能自己卖自己。<strong>但这不意味着你不需要销售人员</strong>。所以这是一个非常关键的区分。要利用互联网的一切、利用用户的一切，去触达你的客户。但你很可能仍然需要销售——作为一种帮客户梳理你的产品、帮客户看清竞争格局和生态系统的手段。所以你们会想要非常懂行的销售同事，他们能在这些岗位上，帮客户把部署真正用起来。但别让销售成为借口，别让销售变成「不做好产品」的挡箭牌。</p>
+<p>所以你从根本上，是在内部构建一款产品。有家公司叫 Mixpanel，它是从开发者那条线切入，最终用更偏内部销售的方式，把产品卖给了整个组织。还有，去读这三本书：《跨越鸿沟》、《创新者的窘境》和《云背后》。这三本加起来，如果你一口气全读完，你会脱颖而出。</p>
+<h2 id="结语">结语</h2>
+<p>最后总结一下：今天，此刻，就是创办一家软件公司的绝佳时机。我祝你们好运。如果没成，我们在招人。<strong>唯一另一件事是：请不要跟我竞争，因为我已经有够多竞争对手了</strong>。理想情况是，要么来跟我们共事，要么去创办你们自己的公司。</p>
+<p>非常感谢！</p> <div class="cta-box"> <p>觉得有用？继续阅读</p> <div class="cta-buttons"> <a href="/book" class="cta-btn cta-btn-primary">查看书籍</a>  </div> </div> </article> <!-- 底部导航 --> <nav class="reader-footnav"> <a href="/blog/yc-lecture-11-company-culture-and-building-a-team-part2" class="reader-prev"> <span class="reader-foot-label">← 上一章</span> <span class="reader-foot-title">企业文化与团队建设（第二部分）</span> </a> <a href="/blog/yc-lecture-13-how-to-be-a-great-founder" class="reader-next"> <span class="reader-foot-label">继续阅读下一章 →</span> <span class="reader-foot-title">如何成为一位伟大的创始人</span> </a> </nav> </main> </div> <!-- 移动端目录抽屉 --> <button class="reader-toc-toggle" id="reader-toc-toggle" aria-label="打开目录">目录</button> <div class="reader-toc-scrim" id="reader-toc-scrim"></div> </div> </main> <footer> <div class="footer-inner"> <p>© 2026 像企业家一样写作</p> <div class="footer-links"> <button type="button" class="footer-link-btn" id="wechat-qr-trigger">网站有bug，“码”上办，联系本人。</button> </div> </div> </footer> <!-- 微信名片二维码浮层 --> <div id="wechat-qr-overlay" class="wechat-qr-overlay" aria-hidden="true"> <div class="wechat-qr-modal"> <button type="button" class="wechat-qr-close" id="wechat-qr-close" aria-label="关闭">✕</button> <img src="/images/wechat-qr.png" alt="微信名片二维码"> <p class="wechat-qr-cap">微信扫一扫，联系本人</p> </div> </div> <script>
+    (function () {
+      var trigger = document.getElementById('wechat-qr-trigger');
+      var overlay = document.getElementById('wechat-qr-overlay');
+      var closeBtn = document.getElementById('wechat-qr-close');
+      if (!trigger || !overlay) return;
+      function openQr() {
+        overlay.classList.add('active');
+        overlay.setAttribute('aria-hidden', 'false');
+      }
+      function closeQr() {
+        overlay.classList.remove('active');
+        overlay.setAttribute('aria-hidden', 'true');
+      }
+      trigger.addEventListener('click', openQr);
+      if (closeBtn) closeBtn.addEventListener('click', closeQr);
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeQr();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeQr();
+      });
+    })();
+  </script>  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    let _searchIndex = null;
+
+    async function loadSearchIndex() {
+      if (_searchIndex) return _searchIndex;
+      try {
+        const resp = await fetch('/search.json?t=' + Date.now());
+        _searchIndex = await resp.json();
+      } catch (e) {
+        console.warn('search.json load failed', e);
+        _searchIndex = { posts: [], books: [] };
+      }
+      return _searchIndex;
+    }
+
+    function openSearch(initialQuery) {
+      const overlay = document.getElementById('search-overlay');
+      const input = document.getElementById('search-input');
+      overlay.classList.add('active');
+      input.value = initialQuery || '';
+      input.focus();
+      renderResults(input.value);
+    }
+
+    function closeSearch() {
+      document.getElementById('search-overlay').classList.remove('active');
+    }
+
+    function getSnippet(text, keyword, radius) {
+      radius = radius || 30;
+      if (!text) return '';
+      const idx = text.toLowerCase().indexOf(keyword.toLowerCase());
+      if (idx === -1) return text.substring(0, 80);
+      const start = Math.max(0, idx - radius);
+      const end = Math.min(text.length, idx + keyword.length + radius);
+      let s = text.substring(start, end);
+      if (start > 0) s = '…' + s;
+      if (end < text.length) s = s + '…';
+      return s;
+    }
+
+    function escapeHtml(s) {
+      return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    function escapeReg(s) {
+      return (s || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+    function highlight(text, q) {
+      const safe = escapeHtml(text);
+      if (!q) return safe;
+      try {
+        const re = new RegExp('(' + escapeReg(q) + ')', 'gi');
+        return safe.replace(re, '<mark>$1</mark>');
+      } catch (e) { return safe; }
+    }
+    function matchScore(item, q) {
+      const t = (item.title || '').toLowerCase();
+      const d = (item.desc || '').toLowerCase();
+      const c = (item.content || '').toLowerCase();
+      if (t.includes(q)) return 3;
+      if (d.includes(q)) return 2;
+      if (c.includes(q)) return 1;
+      return 0;
+    }
+    function resultItemHtml(item, q, href, isBook) {
+      const snippet = getSnippet(item.content || '', q, 40);
+      const contentHit = (item.content || '').toLowerCase().includes(q);
+      const desc = (contentHit && snippet) ? snippet : (item.desc || snippet || '');
+      return '<a href="' + href + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+        '<div class="search-result-title"><span class="search-result-type' + (isBook ? ' book' : '') + '">' + (isBook ? '书籍' : '章节') + '</span>' + highlight(item.title, q) + '</div>' +
+        '<div class="search-result-desc">' + highlight(desc, q) + '</div>' +
+      '</a>';
+    }
+
+    // 专栏条目：外链到微信公众号（不加 ?q=）
+    function columnItemHtml(col, q) {
+      return '<a href="' + escapeHtml(col.url) + '" target="_blank" rel="noopener noreferrer" class="search-result-item">' +
+        '<div class="search-result-title"><span class="search-result-type column">专栏</span>' + highlight(col.title, q) + '</div>' +
+        '<div class="search-result-desc">' + highlight(col.desc || col.columnName, q) + '</div>' +
+      '</a>';
+    }
+
+    function renderResults(query) {
+      const container = document.getElementById('search-results');
+      if (!query.trim()) {
+        container.innerHTML = '<div class="search-empty">输入关键词搜索书籍、章节与专栏…</div>';
+        return;
+      }
+      const q = query.toLowerCase();
+      const index = _searchIndex || { posts: [], books: [], columns: [] };
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      const matchedColumns = (index.columns || []).filter(c =>
+        c.title.toLowerCase().includes(q) ||
+        c.columnName.toLowerCase().includes(q) ||
+        c.rawTitle.toLowerCase().includes(q) ||
+        String(c.issue).includes(q)
+      );
+      if (matchedPosts.length === 0 && matchedBooks.length === 0 && matchedColumns.length === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        return;
+      }
+      const bookBySeries = {};
+      index.books.forEach(b => { if (b.series) bookBySeries[b.series] = b.title; });
+
+      let html = '';
+      // 书籍命中 → 单独作为「书籍」结果
+      if (matchedBooks.length) {
+        matchedBooks.sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        matchedBooks.forEach(b => { html += resultItemHtml(b, q, '/book/' + b.slug, true); });
+      }
+      // 章节按书籍分组
+      const groups = {};
+      matchedPosts.forEach(p => { const k = p.series || ''; (groups[k] = groups[k] || []).push(p); });
+      Object.keys(groups).forEach(series => {
+        const title = bookBySeries[series] || series || '其他';
+        groups[series].sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(title) + '》</div>';
+        groups[series].forEach(p => { html += resultItemHtml(p, q, '/blog/' + p.slug, false); });
+        html += '</div>';
+      });
+      // 专栏按专栏名分组（外链到微信）
+      const colGroups = {};
+      matchedColumns.forEach(c => { const k = c.columnName || ''; (colGroups[k] = colGroups[k] || []).push(c); });
+      Object.keys(colGroups).forEach(name => {
+        colGroups[name].sort((a, b) => a.issue - b.issue);
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(name) + '》· 专栏</div>';
+        colGroups[name].forEach(c => { html += columnItemHtml(c, q); });
+        html += '</div>';
+      });
+      container.innerHTML = html;
+    }
+
+    // ===== Hero 内联搜索（方案 B） =====
+    function closeHeroSearch() {
+      const dropdown = document.getElementById('hero-search-dropdown');
+      if (dropdown) { dropdown.classList.remove('show'); dropdown.innerHTML = ''; }
+    }
+
+    async function renderHeroResults(query) {
+      const container = document.getElementById('hero-search-dropdown');
+      if (!container) return;
+      if (!query.trim()) { closeHeroSearch(); return; }
+      const index = await loadSearchIndex();
+      const q = query.toLowerCase();
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      const matchedColumns = (index.columns || []).filter(c =>
+        c.title.toLowerCase().includes(q) ||
+        c.columnName.toLowerCase().includes(q) ||
+        c.rawTitle.toLowerCase().includes(q) ||
+        String(c.issue).includes(q)
+      );
+      const total = matchedPosts.length + matchedBooks.length + matchedColumns.length;
+      if (total === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        container.classList.add('show');
+        return;
+      }
+      const bookBySeries = {};
+      index.books.forEach(b => { if (b.series) bookBySeries[b.series] = b.title; });
+      let html = '';
+      if (matchedBooks.length) {
+        matchedBooks.slice(0, 2).sort((a, b) => matchScore(b, q) - matchScore(a, q)).forEach(b => {
+          html += resultItemHtml(b, q, '/book/' + b.slug, true);
+        });
+      }
+      const groups = {};
+      matchedPosts.forEach(p => { const k = p.series || ''; (groups[k] = groups[k] || []).push(p); });
+      let shown = 0;
+      Object.keys(groups).slice(0, 3).forEach(series => {
+        const title = bookBySeries[series] || series || '其他';
+        groups[series].sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(title) + '》</div>';
+        groups[series].slice(0, 3).forEach(p => { html += resultItemHtml(p, q, '/blog/' + p.slug, false); shown++; });
+        html += '</div>';
+      });
+      // 专栏命中（外链到微信）
+      const colGroups = {};
+      matchedColumns.forEach(c => { const k = c.columnName || ''; (colGroups[k] = colGroups[k] || []).push(c); });
+      Object.keys(colGroups).slice(0, 2).forEach(name => {
+        colGroups[name].sort((a, b) => a.issue - b.issue);
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(name) + '》· 专栏</div>';
+        colGroups[name].slice(0, 3).forEach(c => { html += columnItemHtml(c, q); shown++; });
+        html += '</div>';
+      });
+      if (total > shown + Math.min(matchedBooks.length, 2)) {
+        html += '<a href="#" class="hero-search-all" data-q="' + encodeURIComponent(q) + '">查看全部 ' + total + ' 条结果 →</a>';
+      }
+      container.innerHTML = html;
+      container.classList.add('show');
+    }
+
+    function initHeroSearch() {
+      const input = document.getElementById('hero-search-input');
+      const dropdown = document.getElementById('hero-search-dropdown');
+      const goBtn = document.getElementById('hero-search-go');
+      if (!input || !dropdown) return;
+
+      let inputTimeout;
+      input.addEventListener('input', () => {
+        clearTimeout(inputTimeout);
+        inputTimeout = setTimeout(() => renderHeroResults(input.value), 120);
+      });
+      input.addEventListener('focus', () => { if (input.value.trim()) renderHeroResults(input.value); });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(input.value); });
+        }
+        if (e.key === 'Escape') { closeHeroSearch(); input.blur(); }
+      });
+
+      if (goBtn) {
+        goBtn.addEventListener('click', () => {
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(input.value); });
+        });
+      }
+
+      dropdown.addEventListener('click', (e) => {
+        const all = e.target.closest('.hero-search-all');
+        if (all) {
+          e.preventDefault();
+          const q = decodeURIComponent(all.getAttribute('data-q') || '');
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(q); });
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.hero-search')) closeHeroSearch();
+      });
+    }
+
+    initHeroSearch();
+
+    // ===== 导航搜索图标（全站兜底入口） =====
+    const navSearchBtn = document.getElementById('nav-search-btn');
+    if (navSearchBtn) {
+      navSearchBtn.addEventListener('click', () => {
+        loadSearchIndex().then(() => openSearch());
+      });
+    }
+
+    document.getElementById('search-close').addEventListener('click', closeSearch);
+    document.getElementById('search-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeSearch();
+    });
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      renderResults(e.target.value);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+    });
+    });
+  </script> <!-- 页面关键词高亮（从搜索结果跳转过来时） --> <script>
+    (function() {
+      function getQueryParam(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name) || '';
+      }
+
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function highlightKeyword(keyword) {
+        if (!keyword.trim()) return;
+        const main = document.querySelector('main');
+        if (!main) return;
+
+        const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, null, false);
+        const nodesToReplace = [];
+        const regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
+
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node.parentElement && node.parentElement.tagName === 'MARK') continue;
+          if (regex.test(node.textContent)) {
+            nodesToReplace.push(node);
+          }
+        }
+
+        let firstMark = null;
+        nodesToReplace.forEach(textNode => {
+          const span = document.createElement('span');
+          span.innerHTML = textNode.textContent.replace(regex, '<mark class="search-highlight">$1</mark>');
+          const marks = span.querySelectorAll('mark');
+          if (marks.length > 0 && !firstMark) {
+            firstMark = marks[0];
+          }
+          const fragment = document.createDocumentFragment();
+          while (span.firstChild) {
+            fragment.appendChild(span.firstChild);
+          }
+          textNode.parentNode.replaceChild(fragment, textNode);
+        });
+
+        if (firstMark) {
+          firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(function() {
+            const marks = main.querySelectorAll('mark.search-highlight');
+            marks.forEach(function(m) {
+              const parent = m.parentNode;
+              parent.replaceChild(document.createTextNode(m.textContent), m);
+              parent.normalize();
+            });
+          }, 6000);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          highlightKeyword(getQueryParam('q'));
+        });
+      } else {
+        highlightKeyword(getQueryParam('q'));
+      }
+    })();
+  </script> <!-- 代码块复制按钮 --> <script>
+    (function() {
+      function initCopyButtons() {
+        document.querySelectorAll('.prose pre').forEach(function(pre) {
+          if (pre.querySelector('.copy-btn')) return;
+          var btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.textContent = '复制';
+          btn.setAttribute('aria-label', '复制代码');
+          btn.addEventListener('click', function() {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+              btn.textContent = '已复制';
+              btn.classList.add('copied');
+              setTimeout(function() {
+                btn.textContent = '复制';
+                btn.classList.remove('copied');
+              }, 2000);
+            }).catch(function() {
+              btn.textContent = '失败';
+              setTimeout(function() { btn.textContent = '复制'; }, 2000);
+            });
+          });
+          pre.style.position = 'relative';
+          pre.appendChild(btn);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCopyButtons);
+      } else {
+        initCopyButtons();
+      }
+    })();
+  </script> <!-- 选中文字：复制 / 生成金句卡片 --> <div class="sel-bubble" id="sel-bubble"> <span class="sb-act sb-copy" id="sbCopy">复制</span> <span class="sb-sep"></span> <span class="sb-act sb-card" id="sbCard">金句卡片</span> </div> <!-- 金句卡片弹层 --> <div class="qc-overlay" id="qcOverlay"> <div class="qc-modal"> <button class="qc-close" id="qcClose" aria-label="关闭">×</button> <div class="qc-stage"> <div class="qc a" id="qcCard"> <div class="qc-mark">“</div> <div class="qc-quote" id="qcQuote">先写完，再改清楚。</div> <div class="qc-foot"> <img class="qc-logo" src="/images/logo-180x180.png" alt="logo"> <div class="qc-src"> <div class="qc-site" id="qcSite">像企业家一样写作</div> <div class="qc-from" id="qcFrom">—— 选自正文</div> <div class="qc-url">gusangciren.github.io</div> </div> </div> </div> <div class="qc-tip">样式会记住你上次的选择</div> </div> <div class="qc-side"> <h3>金句卡片</h3> <p class="qc-sub">选好样式后下载或复制图片</p> <div class="qc-styles" id="qcStyles"> <div class="qc-style active" data-s="b"><div class="sw b"></div><div><div class="t">A · 深色品牌</div><div class="d">信息流吸睛</div></div></div> <div class="qc-style" data-s="a"><div class="sw a"></div><div><div class="t">B · 极简暖白</div><div class="d">站点默认，最协调</div></div></div> <div class="qc-style" data-s="c"><div class="sw c"></div><div><div class="t">C · 杂志书页</div><div class="d">书卷气</div></div></div> </div> <div class="qc-actions"> <div class="qc-act primary" data-act="copyimg">复制图片</div> <div class="qc-act" data-act="download">下载图片</div> </div> </div> </div> </div> <!-- 交互增强：阅读进度条 / 暗色模式 / 划词复制 / 金句卡片 --> <script>
+    (function () {
+      // ===== 划词气泡：复制 / 金句卡片 =====
+      var bubble = document.getElementById('sel-bubble');
+      var sbCopy = document.getElementById('sbCopy');
+      var sbCard = document.getElementById('sbCard');
+      var overlay = document.getElementById('qcOverlay');
+      var card = document.getElementById('qcCard');
+      var qQuote = document.getElementById('qcQuote');
+      var qSite = document.getElementById('qcSite');
+      var qFrom = document.getElementById('qcFrom');
+      var stylesBox = document.getElementById('qcStyles');
+      var lastText = '';
+
+      function hideBubble() { bubble.classList.remove('show'); }
+      function getSource() {
+        var h = document.querySelector('.article-header h1, .book-details h1, .prose h1, .community-hero h1');
+        var name = h ? h.textContent.trim() : document.title.trim();
+        try {
+          // 去掉标题尾部与站名重复的「— 像企业家一样写作」
+          name = name.replace(new RegExp('\\s*[—–-]\\s*' + getSite() + '\\s*$'), '');
+        } catch (e) {}
+        return name;
+      }
+      function getSite() {
+        var m = document.querySelector('meta[property="og:site_name"]');
+        return m ? m.content : '像企业家一样写作';
+      }
+
+      if (bubble) {
+        var SKIP = 'input,textarea,pre,code,.search-overlay,.wechat-qr-overlay,.rdl-ov,button,a,img';
+        document.addEventListener('mouseup', function () {
+          setTimeout(function () {
+            var sel = window.getSelection();
+            if (!sel || sel.isCollapsed) { hideBubble(); return; }
+            var text = sel.toString().trim();
+            var node = sel.anchorNode;
+            if (text.length < 2 || !node || !node.parentElement || node.parentElement.closest(SKIP)) { hideBubble(); return; }
+            var rect = sel.getRangeAt(0).getBoundingClientRect();
+            bubble.style.left = (rect.left + rect.width / 2) + 'px';
+            bubble.style.top = (rect.top - 6) + 'px';
+            lastText = text;
+            bubble.classList.add('show');
+          }, 10);
+        });
+        document.addEventListener('mousedown', function (e) { if (!bubble.contains(e.target)) hideBubble(); });
+        window.addEventListener('scroll', hideBubble, { passive: true });
+
+        sbCopy.addEventListener('click', function (ev) {
+          ev.stopPropagation();
+          var t = lastText;
+          function ok() {
+            sbCopy.textContent = '已复制 ✓'; sbCopy.classList.add('copied');
+            setTimeout(function () { sbCopy.textContent = '复制'; sbCopy.classList.remove('copied'); hideBubble(); }, 1200);
+          }
+          function fb() {
+            var i = document.createElement('textarea'); i.value = t; document.body.appendChild(i); i.select();
+            try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(i); ok();
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).then(ok).catch(fb); }
+          else { fb(); }
+        });
+        sbCard.addEventListener('click', function (ev) { ev.stopPropagation(); openCard(lastText); });
+      }
+
+      function openCard(text) {
+        qQuote.textContent = text || '先写完，再改清楚。';
+        var len = qQuote.textContent.length;
+        qQuote.style.fontSize = (len > 100 ? 18 : len > 60 ? 20 : 22) + 'px';
+        qSite.textContent = getSite();
+        qFrom.textContent = '—— 选自《' + getSource() + '》';
+        var saved = 'b';
+        try { saved = localStorage.getItem('qcStyle') || 'b'; } catch (e) {}
+        setStyle(saved);
+        overlay.classList.add('show');
+      }
+      var currentStyle = 'a';
+      function setStyle(s) {
+        currentStyle = s;
+        card.className = 'qc ' + s;
+        document.querySelectorAll('.qc-style').forEach(function (o) { o.classList.toggle('active', o.dataset.s === s); });
+        try { localStorage.setItem('qcStyle', s); } catch (e) {}
+      }
+      stylesBox.addEventListener('click', function (e) {
+        var o = e.target.closest('.qc-style'); if (o) setStyle(o.dataset.s);
+      });
+      document.getElementById('qcClose').addEventListener('click', function () { overlay.classList.remove('show'); });
+      overlay.addEventListener('click', function (e) { if (e.target === overlay) overlay.classList.remove('show'); });
+
+      // ===== 导出为图片（html2canvas） =====
+      function ensureH2C(cb) {
+        if (window.html2canvas) { cb(); return; }
+        var s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+        s.onload = cb;
+        s.onerror = function () { alert('金句卡片图片组件加载失败，请检查网络后重试'); };
+        document.head.appendChild(s);
+      }
+      // 每套样式的底色：填满圆角外区域，避免相册把透明像素渲染成黑角
+      var QC_BG = { a: '#ffffff', b: '#1c1917', c: '#f3ede1' };
+      var fontCssPromise = null;
+      function getFontCss() {
+        if (!fontCssPromise) {
+          fontCssPromise = fetch('https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-webfont/1.7.0/lxgwwenkai-regular.css')
+            .then(function (r) { return r.ok ? r.text() : ''; })
+            .catch(function () { return ''; });
+        }
+        return fontCssPromise;
+      }
+      function capture() {
+        return document.fonts.ready.then(function () {
+          return getFontCss().then(function (css) {
+            return html2canvas(card, {
+              scale: 2,
+              backgroundColor: QC_BG[currentStyle] || '#ffffff',
+              useCORS: true,
+              logging: false,
+              onclone: function (doc) {
+                // 导出环境可能没等到文楷加载完，主动注入字体 CSS 兜底；
+                // 即使仍回退，整卡统一衬线栈（楷体），上下字体也一致
+                if (css) {
+                  var st = doc.createElement('style');
+                  st.textContent = css;
+                  doc.head.appendChild(st);
+                }
+              }
+            });
+          });
+        });
+      }
+      function flash(btn, txt) { var o = btn.textContent; btn.textContent = txt; setTimeout(function () { btn.textContent = o; }, 1400); }
+
+      document.querySelectorAll('.qc-act').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var act = btn.dataset.act;
+          ensureH2C(function () {
+            capture().then(function (canvas) {
+              if (act === 'download') {
+                var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png';
+                a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已下载 ✓');
+              } else if (act === 'copyimg') {
+                canvas.toBlob(function (blob) {
+                  if (blob && navigator.clipboard && window.ClipboardItem) {
+                    navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
+                      .then(function () { flash(btn, '已复制 ✓'); })
+                      .catch(function () { var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png'; a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已保存 ✓'); });
+                  } else {
+                    var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png'; a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已保存 ✓');
+                  }
+                });
+              }
+            });
+          });
+        });
+      });
+    })();
+  </script> </body></html>  <script type="module">(function(){const n=document.getElementById("reading-progress"),r=document.getElementById("reader-mini"),d=document.getElementById("mini-pct"),i=document.querySelector(".reader-hero");function c(){const e=window.scrollY||document.documentElement.scrollTop,t=document.documentElement.scrollHeight-document.documentElement.clientHeight,o=t>0?Math.min(100,Math.max(0,e/t*100)):0,u=Math.round(o);n&&(n.style.width=o+"%",n.classList.toggle("show",e>50)),d&&(d.textContent=u+"%"),r&&i&&r.classList.toggle("show",e>i.offsetHeight+20)}window.addEventListener("scroll",c,{passive:!0}),window.addEventListener("resize",c),c();const s=document.getElementById("reader-toc-toggle"),l=document.getElementById("reader-toc-scrim"),m=document.getElementById("reader-toc");function a(){document.body.classList.remove("toc-open")}s&&s.addEventListener("click",()=>document.body.classList.toggle("toc-open")),l&&l.addEventListener("click",a),m&&m.querySelectorAll("a").forEach(e=>e.addEventListener("click",a)),document.addEventListener("keydown",e=>{if(e.target&&/^(INPUT|TEXTAREA)$/.test(e.target.tagName))return;const t=document.querySelector(".reader-prev[href]"),o=document.querySelector(".reader-next[href]");e.key==="ArrowLeft"&&t&&(window.location.href=t.getAttribute("href")),e.key==="ArrowRight"&&o&&(window.location.href=o.getAttribute("href"))})})();</script> <script type="module">(function(){var o=[1,1.25,1.5,2];function l(t){t=Math.max(0,Math.round(t));var a=Math.floor(t/60),e=t%60;return(a<10?"0":"")+a+":"+(e<10?"0":"")+e}function d(t){return"audio:"+t}document.querySelectorAll(".aplayer").forEach(function(t){var a=t.getAttribute("data-audio");if(!a)return;var e=t.querySelector("audio"),E=t.querySelector(".aplayer-play"),s=t.querySelector(".aplayer-bar"),m=t.querySelector(".aplayer-bar i"),v=t.querySelector(".aplayer-now"),y=t.querySelector(".aplayer-rate"),f=t.querySelector(".aplayer-label"),i=0,p=!1;e.src=a,e.addEventListener("loadedmetadata",function(){if(!p&&isFinite(e.duration)&&e.duration>0){p=!0,f.textContent=f.textContent+" · "+l(e.duration);try{var n=parseFloat(localStorage.getItem(d(a)));!isNaN(n)&&n>1&&n<e.duration-2&&(e.currentTime=n,v.textContent=l(n),m.style.width=n/e.duration*100+"%")}catch{}}});function u(){var n=e.duration||0,r=n?e.currentTime/n:0;m.style.width=Math.min(100,r*100)+"%",v.textContent=l(e.currentTime),t.classList.toggle("playing",!e.paused)}E.addEventListener("click",function(){e.paused?(e.currentTime>=(e.duration||0)-.3&&(e.currentTime=0),e.play().catch(function(){})):e.pause()}),e.addEventListener("play",u),e.addEventListener("pause",u),e.addEventListener("timeupdate",function(){u();try{localStorage.setItem(d(a),e.currentTime)}catch{}}),e.addEventListener("ended",function(){try{localStorage.removeItem(d(a))}catch{}m.style.width="0%",v.textContent="00:00",t.classList.remove("playing")}),y.addEventListener("click",function(){i=(i+1)%o.length,e.playbackRate=o[i],y.textContent="倍速 "+o[i]+"x"});function h(n){var r=s.getBoundingClientRect(),c=Math.min(1,Math.max(0,(n.clientX-r.left)/r.width));e.duration&&(e.currentTime=c*e.duration,u())}s.addEventListener("mousedown",function(n){h(n);function r(L){h(L)}function c(){document.removeEventListener("mousemove",r),document.removeEventListener("mouseup",c)}document.addEventListener("mousemove",r),document.addEventListener("mouseup",c)})})})();</script>

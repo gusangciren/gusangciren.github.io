@@ -1,0 +1,827 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="像企业家一样写作 —— 把写作当成一门生意。免费读完《选择改变命运》《闭环：在你睡觉时赚钱》与 YC 创业课中文版，以及 UAC 周刊全部往期。"><link rel="canonical" href="https://gusangciren.github.io/"><title>像企业家一样写作</title><!-- 社交分享卡片（微信 / 微博 / X 等抓取标题、描述与缩略图） --><meta property="og:type" content="website"><meta property="og:site_name" content="像企业家一样写作"><meta property="og:title" content="像企业家一样写作"><meta property="og:description" content="像企业家一样写作 —— 把写作当成一门生意。免费读完《选择改变命运》《闭环：在你睡觉时赚钱》与 YC 创业课中文版，以及 UAC 周刊全部往期。"><meta property="og:image" content="https://gusangciren.github.io/images/logo-180x180.png"><meta property="og:url" content="https://gusangciren.github.io/"><meta property="og:locale" content="zh_CN"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="像企业家一样写作"><meta name="twitter:description" content="像企业家一样写作 —— 把写作当成一门生意。免费读完《选择改变命运》《闭环：在你睡觉时赚钱》与 YC 创业课中文版，以及 UAC 周刊全部往期。"><meta name="twitter:image" content="https://gusangciren.github.io/images/logo-180x180.png"><link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml"><link rel="sitemap" type="application/xml" href="/sitemap-index.xml"><!-- Static CSS — no build hash, safe for incremental deploys --><link rel="stylesheet" href="/global.css"><!-- 金句卡片导出为图片（同 origin，无 CORS 风险） --><script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script><!-- 中文字体：经 BootCDN 加载（国内可访问，不走被墙的 Google Fonts）。
+         用 preload + onload 切换，去掉 @import 的渲染阻塞；字体未到位时先用系统衬线字体（等同 font-display:swap） --><link rel="preload" as="style" href="/fonts/fonts.css" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/fonts/fonts.css"></noscript><link rel="stylesheet" href="/_astro/BaseLayout.Bu4xGSCj.css">
+<link rel="stylesheet" href="/_astro/index.qiUb1FVF.css"></head> <body> <nav class="navbar"> <div class="nav-inner"> <div class="nav-lead">  <a href="/" class="logo"> <img src="/images/logo-header.png" alt="Logo" class="logo-img"> <span>像企业家一样写作</span> </a> </div> <div class="nav-links" id="nav-pill"> <span class="nav-slider" id="nav-slider"></span> <a href="/book">书籍</a> <a href="/columns">专栏</a> <a href="/tools" class="nav-tools">工具</a> </div> </div> </nav> <!-- 搜索浮窗 --> <div id="search-overlay" class="search-overlay"> <div class="search-modal"> <div class="search-header"> <input id="search-input" type="text" placeholder="搜索书籍、章节或关键词…" autocomplete="off"> <button id="search-close" class="search-close-btn" aria-label="关闭搜索">✕</button> </div> <div id="search-results" class="search-results"></div> </div> </div> <!-- 分享按钮：点开菜单 → 复制链接（导航旁 + 文章底部共用一套逻辑与样式） --> <script>
+      (function () {
+        function flash(btn, txt, ok) {
+          var span = btn.querySelector('.share-item-text');
+          if (!span) return;
+          var old = span.textContent;
+          span.textContent = txt;
+          btn.classList.toggle('done', !!ok);
+          setTimeout(function () { span.textContent = old; btn.classList.remove('done'); }, 1600);
+        }
+        function closeAll(except) {
+          document.querySelectorAll('.share-btn.open').forEach(function (b) {
+            if (b === except) return;
+            b.classList.remove('open');
+            var t = b.querySelector('.share-trigger');
+            if (t) t.setAttribute('aria-expanded', 'false');
+          });
+        }
+
+        document.addEventListener('click', function (e) {
+          var root = e.target.closest ? e.target.closest('.share-btn') : null;
+
+          /* 点菜单项 → 复制链接 */
+          var item = e.target.closest ? e.target.closest('.share-item') : null;
+          if (item) {
+            var url = window.location.href;
+            var done = function () { flash(item, '已复制 ✓', true); };
+            var fail = function () { flash(item, '复制失败', false); };
+            var fallback = function () {
+              try {
+                var ta = document.createElement('textarea');
+                ta.value = url;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                done();
+              } catch (err) { fail(); }
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(url).then(done).catch(fallback);
+            } else { fallback(); }
+            closeAll(null);
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+          }
+
+          /* 点触发器 → 开合菜单 */
+          var trig = e.target.closest ? e.target.closest('.share-trigger') : null;
+          if (trig) {
+            var box = trig.closest('.share-btn');
+            var wasOpen = box.classList.contains('open');
+            closeAll(box);
+            if (!wasOpen) {
+              box.classList.add('open');
+              trig.setAttribute('aria-expanded', 'true');
+            } else {
+              trig.setAttribute('aria-expanded', 'false');
+            }
+            e.preventDefault();
+            return;
+          }
+
+          /* 点别处 → 全部收起 */
+          if (!root) closeAll(null);
+        });
+
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') closeAll(null);
+        });
+      })();
+    </script> <!-- 导航胶囊滑块（仿 iOS 相册 视频/照片 切换动态） --> <script>
+      (function () {
+        var pill = document.getElementById('nav-pill');
+        var slider = document.getElementById('nav-slider');
+        if (!pill || !slider) return;
+        var links = Array.prototype.slice.call(pill.querySelectorAll('a'));
+        var path = window.location.pathname.replace(/\/+$/, '') || '/';
+        var activeIdx = -1;
+        links.forEach(function (a, i) {
+          var href = (a.getAttribute('href') || '').replace(/\/+$/, '') || '/';
+          var match = (href === '/') ? (path === '/') : (path === href || path.indexOf(href + '/') === 0);
+          if (match) activeIdx = i;
+        });
+        if (activeIdx < 0) { slider.style.opacity = '0'; return; }
+        links[activeIdx].classList.add('active');
+        function move(idx, animate) {
+          var a = links[idx];
+          if (!a) return;
+          if (!animate) slider.style.transition = 'none';
+          slider.style.width = a.offsetWidth + 'px';
+          slider.style.transform = 'translateX(' + a.offsetLeft + 'px)';
+          if (!animate) {
+            void slider.offsetWidth; /* 强制回流，让下一次位移产生过渡动画 */
+            slider.style.transition = '';
+          }
+        }
+        /* iOS 动态：先停在另一项上，再滑到当前项 */
+        move(activeIdx === 0 ? 1 : 0, false);
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () { move(activeIdx, true); });
+        });
+        window.addEventListener('resize', function () { move(activeIdx, false); });
+      })();
+    </script> <main>   <section class="hero" data-astro-cid-j7pv25f6> <div class="hero-inner" data-astro-cid-j7pv25f6> <h1 data-astro-cid-j7pv25f6>Build, sell, write, read, invest, and own.</h1> <p class="hero-cn" data-astro-cid-j7pv25f6>构建，销售，写作，阅读，投资，掌控——<strong data-astro-cid-j7pv25f6>把这些变成习惯。</strong></p> <div class="hero-search" data-astro-cid-j7pv25f6> <div class="hero-search-box" data-astro-cid-j7pv25f6> <input id="hero-search-input" type="text" placeholder="我想知道····" autocomplete="off" data-astro-cid-j7pv25f6> <button id="hero-search-go" class="hero-search-go" type="button" aria-label="搜索" data-astro-cid-j7pv25f6> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-j7pv25f6><circle cx="11" cy="11" r="7" data-astro-cid-j7pv25f6></circle><line x1="16.5" y1="16.5" x2="21" y2="21" data-astro-cid-j7pv25f6></line></svg> </button> </div> <div id="hero-search-dropdown" class="hero-search-dropdown" data-astro-cid-j7pv25f6></div> </div> <p class="mobile-tip" data-astro-cid-j7pv25f6>（我更希望你在电脑上打开我）</p> <div class="site-url-box" data-astro-cid-j7pv25f6> <span class="site-url-text" data-astro-cid-j7pv25f6>gusangciren.github.io</span> <button class="site-url-btn" type="button" data-url="gusangciren.github.io" data-astro-cid-j7pv25f6>复制</button> </div> </div> </section>  <section class="section section-books" data-astro-cid-j7pv25f6> <div class="section-inner" data-astro-cid-j7pv25f6> <div class="books-cf" data-astro-cid-j7pv25f6> <div class="cf-head" data-astro-cid-j7pv25f6> <div class="cf-title" data-astro-cid-j7pv25f6><svg class="cf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-j7pv25f6><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" data-astro-cid-j7pv25f6></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" data-astro-cid-j7pv25f6></path></svg>书籍<span class="hl" data-astro-cid-j7pv25f6>作品</span></div> <div class="cf-sub" data-astro-cid-j7pv25f6>我这辈子遇到的聪明人，没有一个不每天阅读的——没有，一个都没有。（查理·芒格）</div> </div> <div class="cf-wrap" id="books-deck" data-astro-cid-j7pv25f6> <a href="/blog/first-100-yuan-important-logic" class="deck-card" data-astro-cid-j7pv25f6> <div class="dc-cover" data-astro-cid-j7pv25f6>   <img src="/images/book2-cover.png" alt="闭环" loading="lazy" onerror="this.classList.add('broken')" data-astro-cid-j7pv25f6> </div> <div class="dc-body" data-astro-cid-j7pv25f6> <div class="dc-title" data-astro-cid-j7pv25f6>《闭环：在你睡觉时赚钱》</div> <p class="dc-desc" data-astro-cid-j7pv25f6>用企业家思维重新理解写作。不是教你写爆款文章，而是教你建立从内容到收入的完整闭环。七个步骤，每一步都是真实踩过的坑。从找到赛道、获得观众，到提供服务、构建被动收入系统，带你走完创作者变现的全路径。</p> <div class="dc-foot" data-astro-cid-j7pv25f6> <span class="dc-meta" data-astro-cid-j7pv25f6>7 章 · 免费</span> <span class="dc-go" data-astro-cid-j7pv25f6>开始阅读 →</span> </div> </div> </a><a href="/blog/fate-why-choice-matters" class="deck-card" data-astro-cid-j7pv25f6> <div class="dc-cover" data-astro-cid-j7pv25f6>   <img src="/images/book1-cover.png" alt="选择改变命运" loading="lazy" onerror="this.classList.add('broken')" data-astro-cid-j7pv25f6> </div> <div class="dc-body" data-astro-cid-j7pv25f6> <div class="dc-title" data-astro-cid-j7pv25f6>《选择改变命运：靠学识赢得未来》</div> <p class="dc-desc" data-astro-cid-j7pv25f6>人生由十几个重大选择和无数微小选择构成。在重大选择面前做出最优选择，在微小选择面前养成好习惯——这就是改变命运的方法。全书十六章，从脑科学、经济学、心理学三个维度，帮你建立选择的操作系统。</p> <div class="dc-foot" data-astro-cid-j7pv25f6> <span class="dc-meta" data-astro-cid-j7pv25f6>16 章 · 免费</span> <span class="dc-go" data-astro-cid-j7pv25f6>开始阅读 →</span> </div> </div> </a><a href="/blog/yc-lecture-01-how-to-start-a-startup" class="deck-card" data-astro-cid-j7pv25f6> <div class="dc-cover" data-astro-cid-j7pv25f6>   <img src="/images/yc-cover.png" alt="YC 创业课" loading="lazy" onerror="this.classList.add('broken')" data-astro-cid-j7pv25f6> </div> <div class="dc-body" data-astro-cid-j7pv25f6> <div class="dc-title" data-astro-cid-j7pv25f6>《YC 创业课：如何创办初创公司》</div> <p class="dc-desc" data-astro-cid-j7pv25f6>Y Combinator 创业课（CS183B）中文全译本。20 讲覆盖创意、产品、团队、执行、融资、增长、管理、运营、销售、法律与文化全路径，讲者包括 Sam Altman、Peter Thiel、Ben Horowitz、Marc Andreessen、Kevin Hale、Brian Chesky 等。整理自现场字幕，信息保留率 ≥99%。</p> <div class="dc-foot" data-astro-cid-j7pv25f6> <span class="dc-meta" data-astro-cid-j7pv25f6>20 讲 · 免费</span> <span class="dc-go" data-astro-cid-j7pv25f6>开始阅读 →</span> </div> </div> </a><a href="/blog/pg-how-people-get-rich-now" class="deck-card" data-astro-cid-j7pv25f6> <div class="dc-cover" data-astro-cid-j7pv25f6> <span class="dc-ongoing" data-astro-cid-j7pv25f6>持续更新中…</span>  <img src="/images/pg-cover.png" alt="保罗·格雷厄姆文集" loading="lazy" onerror="this.classList.add('broken')" data-astro-cid-j7pv25f6> </div> <div class="dc-body" data-astro-cid-j7pv25f6> <div class="dc-title" data-astro-cid-j7pv25f6>《保罗·格雷厄姆文集：创业与财富》</div> <p class="dc-desc" data-astro-cid-j7pv25f6>保罗·格雷厄姆（Paul Graham）经典文章中文全译本，持续更新。Y Combinator 创始人用一篇篇长文回答：财富是怎么被创造的、好点子从哪里来、创业公司凭什么长大。现已收录《人们现在如何致富》《如何获得创业灵感》《创业公司 = 增长》。</p> <div class="dc-foot" data-astro-cid-j7pv25f6> <span class="dc-meta" data-astro-cid-j7pv25f6>连载中</span> <span class="dc-go" data-astro-cid-j7pv25f6>开始阅读 →</span> </div> </div> </a> </div> </div> </div> </section> <script>
+    (function () {
+      document.querySelectorAll('.site-url-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var url = btn.dataset.url;
+          function done() {
+            btn.classList.add('copied');
+            btn.textContent = '已复制';
+            setTimeout(function () {
+              btn.classList.remove('copied');
+              btn.textContent = '复制';
+            }, 1500);
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(url).then(done).catch(function () {
+              var input = document.createElement('input');
+              input.value = url;
+              document.body.appendChild(input);
+              input.select();
+              document.execCommand('copy');
+              document.body.removeChild(input);
+              done();
+            });
+          } else {
+            var input = document.createElement('input');
+            input.value = url;
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand('copy');
+            document.body.removeChild(input);
+            done();
+          }
+        });
+      });
+    })();
+
+    (function () {
+      var wrap = document.getElementById('books-deck');
+      if (!wrap) return;
+      var cards = Array.prototype.slice.call(wrap.querySelectorAll('.deck-card'));
+      var n = cards.length, center = 0, timer = null;
+      var FALL = 0.19; /* 侧卡缩放衰减：d=1 → .81，d=2 → .62 */
+      function halfWidth() { return Math.min(1200, window.innerWidth - 48) / 2; }
+      /* 桌面/平板：最外侧卡（d=2）右缘正好对齐专栏内容区边缘 */
+      function spacing() {
+        var half = halfWidth();
+        var cw = (cards[0] ? cards[0].offsetWidth : 264) / 2;
+        var sp = (half - cw * (1 - 2 * FALL)) / 2;
+        return Math.max(150, Math.min(260, sp));
+      }
+      function render(off) {
+        var mobile = window.innerWidth < 640;
+        var cw = (cards[0] ? cards[0].offsetWidth : 264) / 2;
+        /* 手机：两侧卡探出 ~90px 隐约可见下一本（渐隐遮罩融掉边缘，不露被裁文字），d≥2 隐藏 */
+        var PEEK = 90;
+        var sp = mobile ? (halfWidth() + cw * 0.88 - PEEK) : spacing();
+        var off = off || 0;
+        cards.forEach(function (c, i) {
+          var d = (i - center + n) % n; if (d > n / 2) d -= n;
+          var ad = Math.abs(d);
+          var hidden = mobile && ad >= 2;
+          var s = mobile ? (ad === 0 ? 1 : 0.88) : 1 - Math.min(ad, 2) * FALL;
+          c.style.transform = 'translateX(' + (d * sp + off) + 'px) scale(' + s.toFixed(3) + ')';
+          c.style.zIndex = 10 - ad * 2;
+          /* 浅底：侧卡淡出到白（降不透明度 + 降饱和），而非压暗 */
+          c.style.opacity = hidden ? '0' : (mobile && ad > 0 ? '0.5' : (1 - Math.min(ad, 2) * 0.42).toFixed(2));
+          c.style.pointerEvents = hidden ? 'none' : '';
+          c.style.filter = ad > 0 ? 'saturate(' + (1 - Math.min(ad, 2) * 0.4).toFixed(2) + ')' : 'none';
+          c.classList.toggle('is-center', ad === 0);
+        });
+      }
+      function go(i) { center = ((i % n) + n) % n; render(); }
+      var lastDrag = 0;
+      cards.forEach(function (c, i) {
+        c.addEventListener('click', function (e) {
+          if (Date.now() - lastDrag < 400) { e.preventDefault(); return; } /* 刚滑完不误触链接 */
+          if (i !== center) { e.preventDefault(); go(i); }
+        });
+      });
+      /* 手机：手指横向滑动切换（实时跟手，松手按阈值吸附；竖向滚动不受影响） */
+      var tsX = 0, tsY = 0, dragX = 0, axis = null, dragging = false;
+      function setCardTransition(on) {
+        cards.forEach(function (c) { c.style.transition = on ? '' : 'none'; });
+      }
+      wrap.addEventListener('touchstart', function (e) {
+        if (window.innerWidth < 640 && e.touches.length === 1) {
+          if (timer) { clearInterval(timer); timer = null; }
+          tsX = e.touches[0].clientX; tsY = e.touches[0].clientY;
+          dragging = true; axis = null; dragX = 0;
+        }
+      }, { passive: true });
+      wrap.addEventListener('touchmove', function (e) {
+        if (!dragging) return;
+        var dx = e.touches[0].clientX - tsX, dy = e.touches[0].clientY - tsY;
+        if (!axis) {
+          if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+          axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+        }
+        if (axis !== 'x') return;
+        e.preventDefault();
+        dragX = dx;
+        setCardTransition(false);
+        render(dragX);
+      }, { passive: false });
+      function touchEnd() {
+        if (!dragging) return;
+        dragging = false;
+        setCardTransition(true);
+        var moved = dragX; dragX = 0;
+        if (axis === 'x' && Math.abs(moved) > 40) {
+          lastDrag = Date.now();
+          go(center + (moved < 0 ? 1 : -1));
+        } else {
+          render();
+        }
+        start();
+      }
+      wrap.addEventListener('touchend', touchEnd);
+      wrap.addEventListener('touchcancel', touchEnd);
+      wrap.addEventListener('mouseenter', function () { if (timer) { clearInterval(timer); timer = null; } });
+      wrap.addEventListener('mouseleave', start);
+      function start() { if (!timer) timer = setInterval(function () { go(center + 1); }, 3500); }
+      window.addEventListener('resize', render);
+      render(); start();
+    })();
+  </script>  <section class="section section-columns" data-astro-cid-j7pv25f6> <div class="section-inner" data-astro-cid-j7pv25f6> <div class="cd" data-astro-cid-j7pv25f6> <h3 class="cd-title" data-astro-cid-j7pv25f6>写作这门生意，<em data-astro-cid-j7pv25f6>我把每一步都走给你看</em>。</h3> <p class="cd-sub" data-astro-cid-j7pv25f6>买一份合集，两个专栏一起解锁——1）周刊每周给你新的东西读，2）书籍陪你走到第一笔收入。</p> <div class="cd-body" data-astro-cid-j7pv25f6> <a href="/columns" class="cd-book" aria-label="《写作并变现》" data-astro-cid-j7pv25f6> <img src="/images/book-xiezuobianxian-cover.jpg" alt="《写作并变现》封面" loading="lazy" data-astro-cid-j7pv25f6> <span class="cd-book-name" data-astro-cid-j7pv25f6>《写作并变现》</span> <span class="cd-book-sub" data-astro-cid-j7pv25f6>书籍 · <b class="cd-num" data-astro-cid-j7pv25f6>19</b> 期</span> </a> <div class="cd-right" data-astro-cid-j7pv25f6> <div class="cd-path" data-astro-cid-j7pv25f6> <span class="cd-lamp" style="left:20%" data-astro-cid-j7pv25f6></span> <span class="cd-lamp" style="left:40%" data-astro-cid-j7pv25f6></span> <span class="cd-lamp" style="left:60%" data-astro-cid-j7pv25f6></span> <span class="cd-lamp" style="left:80%" data-astro-cid-j7pv25f6></span> <div class="cd-st" data-astro-cid-j7pv25f6> <span class="cd-dot" data-astro-cid-j7pv25f6></span> <a href="https://mp.weixin.qq.com/s?__biz=MzkyOTE4MDcyOA==&amp;mid=2247496812&amp;idx=1&amp;sn=60521b10df1ee51445b87af96ff0f30b&amp;chksm=c20fc93bf578402dded5accc6baf345fce55441e50d495fb800666dca1fa990417c170d26d4c#rd" target="_blank" rel="noopener noreferrer" class="cd-st-label" data-astro-cid-j7pv25f6>一句话</a> <span class="cd-st-sub" data-astro-cid-j7pv25f6>随手记录 · 01 期</span> </div><div class="cd-st" data-astro-cid-j7pv25f6> <span class="cd-dot" data-astro-cid-j7pv25f6></span> <a href="https://mp.weixin.qq.com/s?__biz=MzkyOTE4MDcyOA==&amp;mid=2247496916&amp;idx=1&amp;sn=2cd25b3201741eb006f78b7028033ad5&amp;chksm=c20fc983f57840958af20c2abb0b7afa9e9daa42ba7eacfeb4336ca5929c9e811c65838d3771#rd" target="_blank" rel="noopener noreferrer" class="cd-st-label" data-astro-cid-j7pv25f6>一篇文章</a> <span class="cd-st-sub" data-astro-cid-j7pv25f6>250 字攒够成文 · 03 期</span> </div><div class="cd-st" data-astro-cid-j7pv25f6> <span class="cd-dot" data-astro-cid-j7pv25f6></span> <a href="https://mp.weixin.qq.com/s?__biz=MzkyOTE4MDcyOA==&amp;mid=2247497471&amp;idx=1&amp;sn=3f0c7ef4ae769e8ea260a819cded9498&amp;chksm=c20fcba8f57842becfcfb20e9e28f5e6d0ded4f1730ac395eedf378f826569642bed64338671#rd" target="_blank" rel="noopener noreferrer" class="cd-st-label" data-astro-cid-j7pv25f6>一本书</a> <span class="cd-st-sub" data-astro-cid-j7pv25f6>知识卡片成书 · 16 期</span> </div><div class="cd-st" data-astro-cid-j7pv25f6> <span class="cd-dot" data-astro-cid-j7pv25f6></span> <a href="https://mp.weixin.qq.com/s?__biz=MzkyOTE4MDcyOA==&amp;mid=2247497499&amp;idx=1&amp;sn=435ed13a1284a6dfbe67a60661b5fb1d&amp;chksm=c20fca4cf578435a7ca2834d1e133fc5d583062ea0f649abcbefad829352ff815dc19f600cb7#rd" target="_blank" rel="noopener noreferrer" class="cd-st-label" data-astro-cid-j7pv25f6>一笔收入</a> <span class="cd-st-sub" data-astro-cid-j7pv25f6>让自己产品化 · 17 期</span> </div><div class="cd-st" data-astro-cid-j7pv25f6> <span class="cd-dot" data-astro-cid-j7pv25f6></span> <a href="https://mp.weixin.qq.com/s?__biz=MzkyOTE4MDcyOA==&amp;mid=2247497771&amp;idx=1&amp;sn=4a708dc38aa72f8d4d6e7e3596a85feb&amp;chksm=c20fc57cf5784c6a7b6672de247776da516714403828d99ca877ff9f275bbde013166a0c7b01#rd" target="_blank" rel="noopener noreferrer" class="cd-st-label" data-astro-cid-j7pv25f6>一门生意</a> <span class="cd-st-sub" data-astro-cid-j7pv25f6>打造别人想要的东西 · 19 期</span> </div> </div> <div class="cd-legend" data-astro-cid-j7pv25f6> <div class="cd-legend-row" data-astro-cid-j7pv25f6> <span data-astro-cid-j7pv25f6><i class="cd-lit" data-astro-cid-j7pv25f6></i>五个站 = <b data-astro-cid-j7pv25f6>《写作并变现》19 期</b>，从头走到尾</span> <span data-astro-cid-j7pv25f6><i class="cd-dim" data-astro-cid-j7pv25f6></i>小灯 = <b data-astro-cid-j7pv25f6>《UAC 周刊》57 期</b>，每周一篇沿途输入</span> </div> </div> </div> <a href="https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzkyOTE4MDcyOA==&amp;action=getalbum&amp;album_id=3931407159660855300&amp;scene=126#wechat_redirect" target="_blank" rel="noopener noreferrer" class="cd-uac" aria-label="UAC 周刊" data-astro-cid-j7pv25f6> <span class="cd-screen" data-astro-cid-j7pv25f6> <span class="cd-scr-line" data-astro-cid-j7pv25f6>有哪些<em class="r" data-astro-cid-j7pv25f6>你认为很重要</em></span> <span class="cd-scr-line" data-astro-cid-j7pv25f6>但，90%的人<em class="g" data-astro-cid-j7pv25f6>不知道</em></span> <span class="cd-scr-line" data-astro-cid-j7pv25f6>或，他们<em class="g" data-astro-cid-j7pv25f6>忽略</em>的知识</span> </span> <span class="cd-screen-base" data-astro-cid-j7pv25f6></span> <span class="cd-uac-name" data-astro-cid-j7pv25f6>UAC 周刊</span> <span class="cd-uac-sub" data-astro-cid-j7pv25f6><b class="cd-num" data-astro-cid-j7pv25f6>57</b> 期</span> </a> </div> <div class="cd-cta" data-astro-cid-j7pv25f6> <a href="/columns" class="cd-btn" data-astro-cid-j7pv25f6> <svg class="cd-lock" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-j7pv25f6> <rect x="4" y="11" width="16" height="10" rx="2" data-astro-cid-j7pv25f6></rect> <path d="M8 11V7a4 4 0 0 1 8 0v4" data-astro-cid-j7pv25f6></path> </svg>
+从一句话走到第一笔收入 →
+</a> <span class="cd-note" data-astro-cid-j7pv25f6>76 期全部可读 · 每周四更新<b class="cd-em" data-astro-cid-j7pv25f6> · 每！周！四！</b></span> </div> </div> </div> </section>  <div class="letter-gap" data-astro-cid-j7pv25f6> <div class="rdl-wrap">  <div class="rdl-bg" aria-hidden="true"></div>  <div class="rdl-bg-ov" aria-hidden="true"></div>  <div class="rdl-ct">  <div class="rdl-headbar"> <div class="rdl-ic">✉</div> <h2 class="rdl-h2">《致读者的一封信》</h2> <p class="rdl-sub">关于免费资料、AI 时代的用法，以及怎么找到我</p> </div>  <div class="rdl-stage"> <div class="rdl-scene" id="rdl-scene"> <div class="rdl-env"> <div class="rdl-face"> <div class="rdl-back"></div> <div class="rdl-lpeek"> <span class="rdl-lp-tag">✈ 致读者的一封信</span> <div class="rdl-lp-title">“我”读完，就让 <em>AI</em> 读。<br>把资源变成资产。</div> <span class="rdl-lp-hint">点 击 展 开 阅 读</span> </div> <div class="rdl-flap"></div> <div class="rdl-pocket"></div> <div class="rdl-wax">启</div> <div class="rdl-qinqi">亲启</div> <div class="rdl-addr"><em>TO · READER</em><i></i><i></i></div> <div class="rdl-via">VIA AIR MAIL</div> </div> </div> </div> <div class="rdl-hint">— 点 击 拆 信 —</div> </div> </div> </div>  <div class="rdl-ov" id="rdl-ov" role="dialog" aria-modal="true" aria-label="致读者的一封信"> <div class="rdl-shade" id="rdl-shade"></div> <div class="rdl-sheet" id="rdl-sheet"> <button class="rdl-close" id="rdl-close" type="button" aria-label="关闭">✕</button> <div class="rdl-sheet-top"><span>FROM · 像企业家一样写作</span><span>№ 001 · VIA AIR MAIL</span></div> <div class="rdl-paper" id="rdl-paper"></div> </div> </div> <template id="rdl-tpl">  <h3 class="rdl-title">把资源变成资产：<em>每一个书籍，都给你「PDF + Markdown」双版本</em></h3> <p class="rdl-emph">「我」读完，就让 AI 读。</p> <p class="rdl-p">你好，我是「种一个梦」公众号的主理人，《闭环：在你睡觉时赚钱》等书，我写完了，但我更希望它不只是一本被"读完"的书，而是一套能被你<b>拿走、改造、复用</b>的资产。</p> <p class="rdl-p">你不是拥有阅读权。</p> <h4>一、你能拿到什么？</h4> <p class="rdl-p">网站上的每一个书籍，我都为你准备了两套版本：</p> <ul class="rdl-list"> <li><b>精美 PDF 版</b>：排版精致，适合深度阅读、收藏保存、打印成册。</li> <li><b>本地 Markdown 文件包</b>：纯文本、无平台绑定，是 AI 时代真正属于你的<b>核心知识资产</b>。</li> </ul> <figure class="rdl-fig"> <img src="/images/letter-kb-books.jpg" alt="知识库：《闭环》《选择改变命运》的 Markdown 与 PDF 文件" loading="lazy"> <figcaption>放进你的知识库，让 AI 随时调用它</figcaption> </figure> <h4>二、拿到手怎么用？（三选一，马上见效）</h4> <p class="rdl-p"><b class="rdl-num">①</b><b>让 AI 替你读</b>。把 PDF 文件直接丢给豆包、元宝、ChatGPT——让它帮你提炼重点、压缩成一张知识地图、结合你的工作分析"哪些能直接用、怎么用"。或，放进你自己的阅读器（微信读书、kindle、平板）慢慢读。</p> <p class="rdl-p"><b class="rdl-num">②</b><b>构建你的专属知识库。</b>把整套 Markdown 文件放进 Obsidian 等「知识库」工具，用 Agent（workbuddy、Qclaw、Hermes…）去阅读、编辑、拆解、<b>二创</b>，把一本书拆成你的知识库、Prompt 提示词、自动化工作流，又或者任何你需要的生产力工具，甚至一个产品。</p> <p class="rdl-p">因为——<a href="https://mp.weixin.qq.com/s/82u-7l75Z04l7ohQzQTQLg" target="_blank" rel="noopener">文章即代码</a>。总之，没有限制，发挥你的想象力，你不只是拥有阅读权限。</p> <p class="rdl-p">不只是「读书」，还要「<a href="https://mp.weixin.qq.com/s/P3riaxxextfinvu-YBm8-g" target="_blank" rel="noopener">写书</a>」。我写完这篇文章，我希望这些内容不只是被你“读过”，而是希望它能真正被你拿走、重构、迭代、用起来，变成你自己的资产。</p> <figure class="rdl-fig"> <img src="/images/letter-write-book.png" alt="混合笔记系统：纸质笔记本与手机数字笔记" loading="lazy"> </figure> <p class="rdl-p"><b class="rdl-num">③</b><b>打印成纸质版</b></p> <p class="rdl-p">《闭环》已做过排版与视觉优化，打印质感极佳，优先推荐这两本。</p> <h4>三、如何领取？（3 选 1，30 秒搞定）</h4> <div class="rdl-claim"> <div class="rdl-claim-row"> <div class="rdl-claim-txt"> <b>方式一：加微信（最直接且高效）</b> <ul class="rdl-list rdl-dot"> <li>微信号：<code>gusang211800</code>，或者点击<button type="button" class="rdl-qr-btn" id="rdl-qr-btn">二维码</button>扫二维码添加我的微信，回复「资料包」领取完整版资料。</li> </ul> <span class="rdl-ps">PS：专栏内容为付费内容，仅对付费读者开放。</span> </div> </div> <div class="rdl-claim-row"> <div class="rdl-claim-txt"> <b>方式二：I 人极速通道（无需加好友）</b> <ul class="rdl-list rdl-dot"> <li>公众号后台回复关键词即可领取：回复关键词——「闭环」｜「选择改变命运」｜「格雷厄姆文集」</li> </ul> </div> </div> <div class="rdl-claim-row"> <div class="rdl-claim-txt"> <b>方式三：付费读者专属「专栏」内容</b> <ul class="rdl-list rdl-dot"> <li>专栏内容为付费读者专属，凭文章<b>最底部</b>的专属暗号，添加微信领取。<b>暗号在哪里</b>？这个文章的最底部——<a href="https://mp.weixin.qq.com/s/QnwuoIzN_dxPYM5W5hsWMA" target="_blank" rel="noopener">介绍信</a>。</li> </ul> </div> </div> </div>  <div class="rdl-sign">—— 写给你的，种一个梦</div> </template>  <script>
+(function () {
+  var scene = document.getElementById('rdl-scene');
+  var ov = document.getElementById('rdl-ov');
+  var paper = document.getElementById('rdl-paper');
+  if (!scene || !ov || !paper) return;
+  paper.appendChild(document.getElementById('rdl-tpl').content.cloneNode(true));
+
+  var qrBtn = document.getElementById('rdl-qr-btn');
+  if (qrBtn) qrBtn.addEventListener('click', function () {
+    var t = document.getElementById('wechat-qr-trigger');
+    if (t) t.click(); // 复用页脚二维码弹层
+  });
+
+  function open() {
+    ov.classList.add('show');
+    document.body.classList.add('rdl-locked');
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { ov.classList.add('in'); });
+    });
+  }
+  function close() {
+    ov.classList.remove('in');
+    setTimeout(function () {
+      ov.classList.remove('show');
+      document.body.classList.remove('rdl-locked');
+    }, 320);
+  }
+
+  scene.addEventListener('click', open);
+  document.getElementById('rdl-close').addEventListener('click', close);
+  document.getElementById('rdl-shade').addEventListener('click', close);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && ov.classList.contains('show')) close();
+  });
+})();
+</script> </div>  </main> <footer> <div class="footer-inner"> <p>© 2026 像企业家一样写作</p> <div class="footer-links"> <button type="button" class="footer-link-btn" id="wechat-qr-trigger">网站有bug，“码”上办，联系本人。</button> </div> </div> </footer> <!-- 微信名片二维码浮层 --> <div id="wechat-qr-overlay" class="wechat-qr-overlay" aria-hidden="true"> <div class="wechat-qr-modal"> <button type="button" class="wechat-qr-close" id="wechat-qr-close" aria-label="关闭">✕</button> <img src="/images/wechat-qr.png" alt="微信名片二维码"> <p class="wechat-qr-cap">微信扫一扫，联系本人</p> </div> </div> <script>
+    (function () {
+      var trigger = document.getElementById('wechat-qr-trigger');
+      var overlay = document.getElementById('wechat-qr-overlay');
+      var closeBtn = document.getElementById('wechat-qr-close');
+      if (!trigger || !overlay) return;
+      function openQr() {
+        overlay.classList.add('active');
+        overlay.setAttribute('aria-hidden', 'false');
+      }
+      function closeQr() {
+        overlay.classList.remove('active');
+        overlay.setAttribute('aria-hidden', 'true');
+      }
+      trigger.addEventListener('click', openQr);
+      if (closeBtn) closeBtn.addEventListener('click', closeQr);
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeQr();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeQr();
+      });
+    })();
+  </script>  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    let _searchIndex = null;
+
+    async function loadSearchIndex() {
+      if (_searchIndex) return _searchIndex;
+      try {
+        const resp = await fetch('/search.json?t=' + Date.now());
+        _searchIndex = await resp.json();
+      } catch (e) {
+        console.warn('search.json load failed', e);
+        _searchIndex = { posts: [], books: [] };
+      }
+      return _searchIndex;
+    }
+
+    function openSearch(initialQuery) {
+      const overlay = document.getElementById('search-overlay');
+      const input = document.getElementById('search-input');
+      overlay.classList.add('active');
+      input.value = initialQuery || '';
+      input.focus();
+      renderResults(input.value);
+    }
+
+    function closeSearch() {
+      document.getElementById('search-overlay').classList.remove('active');
+    }
+
+    function getSnippet(text, keyword, radius) {
+      radius = radius || 30;
+      if (!text) return '';
+      const idx = text.toLowerCase().indexOf(keyword.toLowerCase());
+      if (idx === -1) return text.substring(0, 80);
+      const start = Math.max(0, idx - radius);
+      const end = Math.min(text.length, idx + keyword.length + radius);
+      let s = text.substring(start, end);
+      if (start > 0) s = '…' + s;
+      if (end < text.length) s = s + '…';
+      return s;
+    }
+
+    function escapeHtml(s) {
+      return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    function escapeReg(s) {
+      return (s || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+    function highlight(text, q) {
+      const safe = escapeHtml(text);
+      if (!q) return safe;
+      try {
+        const re = new RegExp('(' + escapeReg(q) + ')', 'gi');
+        return safe.replace(re, '<mark>$1</mark>');
+      } catch (e) { return safe; }
+    }
+    function matchScore(item, q) {
+      const t = (item.title || '').toLowerCase();
+      const d = (item.desc || '').toLowerCase();
+      const c = (item.content || '').toLowerCase();
+      if (t.includes(q)) return 3;
+      if (d.includes(q)) return 2;
+      if (c.includes(q)) return 1;
+      return 0;
+    }
+    function resultItemHtml(item, q, href, isBook) {
+      const snippet = getSnippet(item.content || '', q, 40);
+      const contentHit = (item.content || '').toLowerCase().includes(q);
+      const desc = (contentHit && snippet) ? snippet : (item.desc || snippet || '');
+      return '<a href="' + href + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+        '<div class="search-result-title"><span class="search-result-type' + (isBook ? ' book' : '') + '">' + (isBook ? '书籍' : '章节') + '</span>' + highlight(item.title, q) + '</div>' +
+        '<div class="search-result-desc">' + highlight(desc, q) + '</div>' +
+      '</a>';
+    }
+
+    // 专栏条目：外链到微信公众号（不加 ?q=）
+    function columnItemHtml(col, q) {
+      return '<a href="' + escapeHtml(col.url) + '" target="_blank" rel="noopener noreferrer" class="search-result-item">' +
+        '<div class="search-result-title"><span class="search-result-type column">专栏</span>' + highlight(col.title, q) + '</div>' +
+        '<div class="search-result-desc">' + highlight(col.desc || col.columnName, q) + '</div>' +
+      '</a>';
+    }
+
+    function renderResults(query) {
+      const container = document.getElementById('search-results');
+      if (!query.trim()) {
+        container.innerHTML = '<div class="search-empty">输入关键词搜索书籍、章节与专栏…</div>';
+        return;
+      }
+      const q = query.toLowerCase();
+      const index = _searchIndex || { posts: [], books: [], columns: [] };
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      const matchedColumns = (index.columns || []).filter(c =>
+        c.title.toLowerCase().includes(q) ||
+        c.columnName.toLowerCase().includes(q) ||
+        c.rawTitle.toLowerCase().includes(q) ||
+        String(c.issue).includes(q)
+      );
+      if (matchedPosts.length === 0 && matchedBooks.length === 0 && matchedColumns.length === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        return;
+      }
+      const bookBySeries = {};
+      index.books.forEach(b => { if (b.series) bookBySeries[b.series] = b.title; });
+
+      let html = '';
+      // 书籍命中 → 单独作为「书籍」结果
+      if (matchedBooks.length) {
+        matchedBooks.sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        matchedBooks.forEach(b => { html += resultItemHtml(b, q, '/book/' + b.slug, true); });
+      }
+      // 章节按书籍分组
+      const groups = {};
+      matchedPosts.forEach(p => { const k = p.series || ''; (groups[k] = groups[k] || []).push(p); });
+      Object.keys(groups).forEach(series => {
+        const title = bookBySeries[series] || series || '其他';
+        groups[series].sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(title) + '》</div>';
+        groups[series].forEach(p => { html += resultItemHtml(p, q, '/blog/' + p.slug, false); });
+        html += '</div>';
+      });
+      // 专栏按专栏名分组（外链到微信）
+      const colGroups = {};
+      matchedColumns.forEach(c => { const k = c.columnName || ''; (colGroups[k] = colGroups[k] || []).push(c); });
+      Object.keys(colGroups).forEach(name => {
+        colGroups[name].sort((a, b) => a.issue - b.issue);
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(name) + '》· 专栏</div>';
+        colGroups[name].forEach(c => { html += columnItemHtml(c, q); });
+        html += '</div>';
+      });
+      container.innerHTML = html;
+    }
+
+    // ===== Hero 内联搜索（方案 B） =====
+    function closeHeroSearch() {
+      const dropdown = document.getElementById('hero-search-dropdown');
+      if (dropdown) { dropdown.classList.remove('show'); dropdown.innerHTML = ''; }
+    }
+
+    async function renderHeroResults(query) {
+      const container = document.getElementById('hero-search-dropdown');
+      if (!container) return;
+      if (!query.trim()) { closeHeroSearch(); return; }
+      const index = await loadSearchIndex();
+      const q = query.toLowerCase();
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      const matchedColumns = (index.columns || []).filter(c =>
+        c.title.toLowerCase().includes(q) ||
+        c.columnName.toLowerCase().includes(q) ||
+        c.rawTitle.toLowerCase().includes(q) ||
+        String(c.issue).includes(q)
+      );
+      const total = matchedPosts.length + matchedBooks.length + matchedColumns.length;
+      if (total === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        container.classList.add('show');
+        return;
+      }
+      const bookBySeries = {};
+      index.books.forEach(b => { if (b.series) bookBySeries[b.series] = b.title; });
+      let html = '';
+      if (matchedBooks.length) {
+        matchedBooks.slice(0, 2).sort((a, b) => matchScore(b, q) - matchScore(a, q)).forEach(b => {
+          html += resultItemHtml(b, q, '/book/' + b.slug, true);
+        });
+      }
+      const groups = {};
+      matchedPosts.forEach(p => { const k = p.series || ''; (groups[k] = groups[k] || []).push(p); });
+      let shown = 0;
+      Object.keys(groups).slice(0, 3).forEach(series => {
+        const title = bookBySeries[series] || series || '其他';
+        groups[series].sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(title) + '》</div>';
+        groups[series].slice(0, 3).forEach(p => { html += resultItemHtml(p, q, '/blog/' + p.slug, false); shown++; });
+        html += '</div>';
+      });
+      // 专栏命中（外链到微信）
+      const colGroups = {};
+      matchedColumns.forEach(c => { const k = c.columnName || ''; (colGroups[k] = colGroups[k] || []).push(c); });
+      Object.keys(colGroups).slice(0, 2).forEach(name => {
+        colGroups[name].sort((a, b) => a.issue - b.issue);
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(name) + '》· 专栏</div>';
+        colGroups[name].slice(0, 3).forEach(c => { html += columnItemHtml(c, q); shown++; });
+        html += '</div>';
+      });
+      if (total > shown + Math.min(matchedBooks.length, 2)) {
+        html += '<a href="#" class="hero-search-all" data-q="' + encodeURIComponent(q) + '">查看全部 ' + total + ' 条结果 →</a>';
+      }
+      container.innerHTML = html;
+      container.classList.add('show');
+    }
+
+    function initHeroSearch() {
+      const input = document.getElementById('hero-search-input');
+      const dropdown = document.getElementById('hero-search-dropdown');
+      const goBtn = document.getElementById('hero-search-go');
+      if (!input || !dropdown) return;
+
+      let inputTimeout;
+      input.addEventListener('input', () => {
+        clearTimeout(inputTimeout);
+        inputTimeout = setTimeout(() => renderHeroResults(input.value), 120);
+      });
+      input.addEventListener('focus', () => { if (input.value.trim()) renderHeroResults(input.value); });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(input.value); });
+        }
+        if (e.key === 'Escape') { closeHeroSearch(); input.blur(); }
+      });
+
+      if (goBtn) {
+        goBtn.addEventListener('click', () => {
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(input.value); });
+        });
+      }
+
+      dropdown.addEventListener('click', (e) => {
+        const all = e.target.closest('.hero-search-all');
+        if (all) {
+          e.preventDefault();
+          const q = decodeURIComponent(all.getAttribute('data-q') || '');
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(q); });
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.hero-search')) closeHeroSearch();
+      });
+    }
+
+    initHeroSearch();
+
+    // ===== 导航搜索图标（全站兜底入口） =====
+    const navSearchBtn = document.getElementById('nav-search-btn');
+    if (navSearchBtn) {
+      navSearchBtn.addEventListener('click', () => {
+        loadSearchIndex().then(() => openSearch());
+      });
+    }
+
+    document.getElementById('search-close').addEventListener('click', closeSearch);
+    document.getElementById('search-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeSearch();
+    });
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      renderResults(e.target.value);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+    });
+    });
+  </script> <!-- 页面关键词高亮（从搜索结果跳转过来时） --> <script>
+    (function() {
+      function getQueryParam(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name) || '';
+      }
+
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function highlightKeyword(keyword) {
+        if (!keyword.trim()) return;
+        const main = document.querySelector('main');
+        if (!main) return;
+
+        const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, null, false);
+        const nodesToReplace = [];
+        const regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
+
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node.parentElement && node.parentElement.tagName === 'MARK') continue;
+          if (regex.test(node.textContent)) {
+            nodesToReplace.push(node);
+          }
+        }
+
+        let firstMark = null;
+        nodesToReplace.forEach(textNode => {
+          const span = document.createElement('span');
+          span.innerHTML = textNode.textContent.replace(regex, '<mark class="search-highlight">$1</mark>');
+          const marks = span.querySelectorAll('mark');
+          if (marks.length > 0 && !firstMark) {
+            firstMark = marks[0];
+          }
+          const fragment = document.createDocumentFragment();
+          while (span.firstChild) {
+            fragment.appendChild(span.firstChild);
+          }
+          textNode.parentNode.replaceChild(fragment, textNode);
+        });
+
+        if (firstMark) {
+          firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(function() {
+            const marks = main.querySelectorAll('mark.search-highlight');
+            marks.forEach(function(m) {
+              const parent = m.parentNode;
+              parent.replaceChild(document.createTextNode(m.textContent), m);
+              parent.normalize();
+            });
+          }, 6000);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          highlightKeyword(getQueryParam('q'));
+        });
+      } else {
+        highlightKeyword(getQueryParam('q'));
+      }
+    })();
+  </script> <!-- 代码块复制按钮 --> <script>
+    (function() {
+      function initCopyButtons() {
+        document.querySelectorAll('.prose pre').forEach(function(pre) {
+          if (pre.querySelector('.copy-btn')) return;
+          var btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.textContent = '复制';
+          btn.setAttribute('aria-label', '复制代码');
+          btn.addEventListener('click', function() {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+              btn.textContent = '已复制';
+              btn.classList.add('copied');
+              setTimeout(function() {
+                btn.textContent = '复制';
+                btn.classList.remove('copied');
+              }, 2000);
+            }).catch(function() {
+              btn.textContent = '失败';
+              setTimeout(function() { btn.textContent = '复制'; }, 2000);
+            });
+          });
+          pre.style.position = 'relative';
+          pre.appendChild(btn);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCopyButtons);
+      } else {
+        initCopyButtons();
+      }
+    })();
+  </script> <!-- 选中文字：复制 / 生成金句卡片 --> <div class="sel-bubble" id="sel-bubble"> <span class="sb-act sb-copy" id="sbCopy">复制</span> <span class="sb-sep"></span> <span class="sb-act sb-card" id="sbCard">金句卡片</span> </div> <!-- 金句卡片弹层 --> <div class="qc-overlay" id="qcOverlay"> <div class="qc-modal"> <button class="qc-close" id="qcClose" aria-label="关闭">×</button> <div class="qc-stage"> <div class="qc a" id="qcCard"> <div class="qc-mark">“</div> <div class="qc-quote" id="qcQuote">先写完，再改清楚。</div> <div class="qc-foot"> <img class="qc-logo" src="/images/logo-180x180.png" alt="logo"> <div class="qc-src"> <div class="qc-site" id="qcSite">像企业家一样写作</div> <div class="qc-from" id="qcFrom">—— 选自正文</div> <div class="qc-url">gusangciren.github.io</div> </div> </div> </div> <div class="qc-tip">样式会记住你上次的选择</div> </div> <div class="qc-side"> <h3>金句卡片</h3> <p class="qc-sub">选好样式后下载或复制图片</p> <div class="qc-styles" id="qcStyles"> <div class="qc-style active" data-s="b"><div class="sw b"></div><div><div class="t">A · 深色品牌</div><div class="d">信息流吸睛</div></div></div> <div class="qc-style" data-s="a"><div class="sw a"></div><div><div class="t">B · 极简暖白</div><div class="d">站点默认，最协调</div></div></div> <div class="qc-style" data-s="c"><div class="sw c"></div><div><div class="t">C · 杂志书页</div><div class="d">书卷气</div></div></div> </div> <div class="qc-actions"> <div class="qc-act primary" data-act="copyimg">复制图片</div> <div class="qc-act" data-act="download">下载图片</div> </div> </div> </div> </div> <!-- 交互增强：阅读进度条 / 暗色模式 / 划词复制 / 金句卡片 --> <script>
+    (function () {
+      // ===== 划词气泡：复制 / 金句卡片 =====
+      var bubble = document.getElementById('sel-bubble');
+      var sbCopy = document.getElementById('sbCopy');
+      var sbCard = document.getElementById('sbCard');
+      var overlay = document.getElementById('qcOverlay');
+      var card = document.getElementById('qcCard');
+      var qQuote = document.getElementById('qcQuote');
+      var qSite = document.getElementById('qcSite');
+      var qFrom = document.getElementById('qcFrom');
+      var stylesBox = document.getElementById('qcStyles');
+      var lastText = '';
+
+      function hideBubble() { bubble.classList.remove('show'); }
+      function getSource() {
+        var h = document.querySelector('.article-header h1, .book-details h1, .prose h1, .community-hero h1');
+        var name = h ? h.textContent.trim() : document.title.trim();
+        try {
+          // 去掉标题尾部与站名重复的「— 像企业家一样写作」
+          name = name.replace(new RegExp('\\s*[—–-]\\s*' + getSite() + '\\s*$'), '');
+        } catch (e) {}
+        return name;
+      }
+      function getSite() {
+        var m = document.querySelector('meta[property="og:site_name"]');
+        return m ? m.content : '像企业家一样写作';
+      }
+
+      if (bubble) {
+        var SKIP = 'input,textarea,pre,code,.search-overlay,.wechat-qr-overlay,.rdl-ov,button,a,img';
+        document.addEventListener('mouseup', function () {
+          setTimeout(function () {
+            var sel = window.getSelection();
+            if (!sel || sel.isCollapsed) { hideBubble(); return; }
+            var text = sel.toString().trim();
+            var node = sel.anchorNode;
+            if (text.length < 2 || !node || !node.parentElement || node.parentElement.closest(SKIP)) { hideBubble(); return; }
+            var rect = sel.getRangeAt(0).getBoundingClientRect();
+            bubble.style.left = (rect.left + rect.width / 2) + 'px';
+            bubble.style.top = (rect.top - 6) + 'px';
+            lastText = text;
+            bubble.classList.add('show');
+          }, 10);
+        });
+        document.addEventListener('mousedown', function (e) { if (!bubble.contains(e.target)) hideBubble(); });
+        window.addEventListener('scroll', hideBubble, { passive: true });
+
+        sbCopy.addEventListener('click', function (ev) {
+          ev.stopPropagation();
+          var t = lastText;
+          function ok() {
+            sbCopy.textContent = '已复制 ✓'; sbCopy.classList.add('copied');
+            setTimeout(function () { sbCopy.textContent = '复制'; sbCopy.classList.remove('copied'); hideBubble(); }, 1200);
+          }
+          function fb() {
+            var i = document.createElement('textarea'); i.value = t; document.body.appendChild(i); i.select();
+            try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(i); ok();
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).then(ok).catch(fb); }
+          else { fb(); }
+        });
+        sbCard.addEventListener('click', function (ev) { ev.stopPropagation(); openCard(lastText); });
+      }
+
+      function openCard(text) {
+        qQuote.textContent = text || '先写完，再改清楚。';
+        var len = qQuote.textContent.length;
+        qQuote.style.fontSize = (len > 100 ? 18 : len > 60 ? 20 : 22) + 'px';
+        qSite.textContent = getSite();
+        qFrom.textContent = '—— 选自《' + getSource() + '》';
+        var saved = 'b';
+        try { saved = localStorage.getItem('qcStyle') || 'b'; } catch (e) {}
+        setStyle(saved);
+        overlay.classList.add('show');
+      }
+      var currentStyle = 'a';
+      function setStyle(s) {
+        currentStyle = s;
+        card.className = 'qc ' + s;
+        document.querySelectorAll('.qc-style').forEach(function (o) { o.classList.toggle('active', o.dataset.s === s); });
+        try { localStorage.setItem('qcStyle', s); } catch (e) {}
+      }
+      stylesBox.addEventListener('click', function (e) {
+        var o = e.target.closest('.qc-style'); if (o) setStyle(o.dataset.s);
+      });
+      document.getElementById('qcClose').addEventListener('click', function () { overlay.classList.remove('show'); });
+      overlay.addEventListener('click', function (e) { if (e.target === overlay) overlay.classList.remove('show'); });
+
+      // ===== 导出为图片（html2canvas） =====
+      function ensureH2C(cb) {
+        if (window.html2canvas) { cb(); return; }
+        var s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+        s.onload = cb;
+        s.onerror = function () { alert('金句卡片图片组件加载失败，请检查网络后重试'); };
+        document.head.appendChild(s);
+      }
+      // 每套样式的底色：填满圆角外区域，避免相册把透明像素渲染成黑角
+      var QC_BG = { a: '#ffffff', b: '#1c1917', c: '#f3ede1' };
+      var fontCssPromise = null;
+      function getFontCss() {
+        if (!fontCssPromise) {
+          fontCssPromise = fetch('https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-webfont/1.7.0/lxgwwenkai-regular.css')
+            .then(function (r) { return r.ok ? r.text() : ''; })
+            .catch(function () { return ''; });
+        }
+        return fontCssPromise;
+      }
+      function capture() {
+        return document.fonts.ready.then(function () {
+          return getFontCss().then(function (css) {
+            return html2canvas(card, {
+              scale: 2,
+              backgroundColor: QC_BG[currentStyle] || '#ffffff',
+              useCORS: true,
+              logging: false,
+              onclone: function (doc) {
+                // 导出环境可能没等到文楷加载完，主动注入字体 CSS 兜底；
+                // 即使仍回退，整卡统一衬线栈（楷体），上下字体也一致
+                if (css) {
+                  var st = doc.createElement('style');
+                  st.textContent = css;
+                  doc.head.appendChild(st);
+                }
+              }
+            });
+          });
+        });
+      }
+      function flash(btn, txt) { var o = btn.textContent; btn.textContent = txt; setTimeout(function () { btn.textContent = o; }, 1400); }
+
+      document.querySelectorAll('.qc-act').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var act = btn.dataset.act;
+          ensureH2C(function () {
+            capture().then(function (canvas) {
+              if (act === 'download') {
+                var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png';
+                a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已下载 ✓');
+              } else if (act === 'copyimg') {
+                canvas.toBlob(function (blob) {
+                  if (blob && navigator.clipboard && window.ClipboardItem) {
+                    navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
+                      .then(function () { flash(btn, '已复制 ✓'); })
+                      .catch(function () { var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png'; a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已保存 ✓'); });
+                  } else {
+                    var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png'; a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已保存 ✓');
+                  }
+                });
+              }
+            });
+          });
+        });
+      });
+    })();
+  </script> </body></html>

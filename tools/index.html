@@ -1,0 +1,1818 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="像企业家一样写作 —— 把写作当成一门生意。免费读完《选择改变命运》《闭环：在你睡觉时赚钱》与 YC 创业课中文版，以及 UAC 周刊全部往期。"><link rel="canonical" href="https://gusangciren.github.io/tools/"><title>工具箱 · 像企业家一样写作</title><!-- 社交分享卡片（微信 / 微博 / X 等抓取标题、描述与缩略图） --><meta property="og:type" content="website"><meta property="og:site_name" content="像企业家一样写作"><meta property="og:title" content="工具箱 · 像企业家一样写作"><meta property="og:description" content="像企业家一样写作 —— 把写作当成一门生意。免费读完《选择改变命运》《闭环：在你睡觉时赚钱》与 YC 创业课中文版，以及 UAC 周刊全部往期。"><meta property="og:image" content="https://gusangciren.github.io/images/logo-180x180.png"><meta property="og:url" content="https://gusangciren.github.io/tools/"><meta property="og:locale" content="zh_CN"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="工具箱 · 像企业家一样写作"><meta name="twitter:description" content="像企业家一样写作 —— 把写作当成一门生意。免费读完《选择改变命运》《闭环：在你睡觉时赚钱》与 YC 创业课中文版，以及 UAC 周刊全部往期。"><meta name="twitter:image" content="https://gusangciren.github.io/images/logo-180x180.png"><link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml"><link rel="sitemap" type="application/xml" href="/sitemap-index.xml"><!-- Static CSS — no build hash, safe for incremental deploys --><link rel="stylesheet" href="/global.css"><!-- 金句卡片导出为图片（同 origin，无 CORS 风险） --><script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script><!-- 中文字体：经 BootCDN 加载（国内可访问，不走被墙的 Google Fonts）。
+         用 preload + onload 切换，去掉 @import 的渲染阻塞；字体未到位时先用系统衬线字体（等同 font-display:swap） --><link rel="preload" as="style" href="/fonts/fonts.css" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/fonts/fonts.css"></noscript><link rel="stylesheet" href="/_astro/BaseLayout.Bu4xGSCj.css">
+<link rel="stylesheet" href="/_astro/tools.Ck6TrzMH.css"></head> <body> <nav class="navbar"> <div class="nav-inner"> <div class="nav-lead">  <a href="/" class="logo"> <img src="/images/logo-header.png" alt="Logo" class="logo-img"> <span>像企业家一样写作</span> </a> </div> <div class="nav-links" id="nav-pill"> <span class="nav-slider" id="nav-slider"></span> <a href="/book">书籍</a> <a href="/columns">专栏</a> <a href="/tools" class="nav-tools">工具</a> </div> </div> </nav> <!-- 搜索浮窗 --> <div id="search-overlay" class="search-overlay"> <div class="search-modal"> <div class="search-header"> <input id="search-input" type="text" placeholder="搜索书籍、章节或关键词…" autocomplete="off"> <button id="search-close" class="search-close-btn" aria-label="关闭搜索">✕</button> </div> <div id="search-results" class="search-results"></div> </div> </div> <!-- 分享按钮：点开菜单 → 复制链接（导航旁 + 文章底部共用一套逻辑与样式） --> <script>
+      (function () {
+        function flash(btn, txt, ok) {
+          var span = btn.querySelector('.share-item-text');
+          if (!span) return;
+          var old = span.textContent;
+          span.textContent = txt;
+          btn.classList.toggle('done', !!ok);
+          setTimeout(function () { span.textContent = old; btn.classList.remove('done'); }, 1600);
+        }
+        function closeAll(except) {
+          document.querySelectorAll('.share-btn.open').forEach(function (b) {
+            if (b === except) return;
+            b.classList.remove('open');
+            var t = b.querySelector('.share-trigger');
+            if (t) t.setAttribute('aria-expanded', 'false');
+          });
+        }
+
+        document.addEventListener('click', function (e) {
+          var root = e.target.closest ? e.target.closest('.share-btn') : null;
+
+          /* 点菜单项 → 复制链接 */
+          var item = e.target.closest ? e.target.closest('.share-item') : null;
+          if (item) {
+            var url = window.location.href;
+            var done = function () { flash(item, '已复制 ✓', true); };
+            var fail = function () { flash(item, '复制失败', false); };
+            var fallback = function () {
+              try {
+                var ta = document.createElement('textarea');
+                ta.value = url;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                done();
+              } catch (err) { fail(); }
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(url).then(done).catch(fallback);
+            } else { fallback(); }
+            closeAll(null);
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+          }
+
+          /* 点触发器 → 开合菜单 */
+          var trig = e.target.closest ? e.target.closest('.share-trigger') : null;
+          if (trig) {
+            var box = trig.closest('.share-btn');
+            var wasOpen = box.classList.contains('open');
+            closeAll(box);
+            if (!wasOpen) {
+              box.classList.add('open');
+              trig.setAttribute('aria-expanded', 'true');
+            } else {
+              trig.setAttribute('aria-expanded', 'false');
+            }
+            e.preventDefault();
+            return;
+          }
+
+          /* 点别处 → 全部收起 */
+          if (!root) closeAll(null);
+        });
+
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') closeAll(null);
+        });
+      })();
+    </script> <!-- 导航胶囊滑块（仿 iOS 相册 视频/照片 切换动态） --> <script>
+      (function () {
+        var pill = document.getElementById('nav-pill');
+        var slider = document.getElementById('nav-slider');
+        if (!pill || !slider) return;
+        var links = Array.prototype.slice.call(pill.querySelectorAll('a'));
+        var path = window.location.pathname.replace(/\/+$/, '') || '/';
+        var activeIdx = -1;
+        links.forEach(function (a, i) {
+          var href = (a.getAttribute('href') || '').replace(/\/+$/, '') || '/';
+          var match = (href === '/') ? (path === '/') : (path === href || path.indexOf(href + '/') === 0);
+          if (match) activeIdx = i;
+        });
+        if (activeIdx < 0) { slider.style.opacity = '0'; return; }
+        links[activeIdx].classList.add('active');
+        function move(idx, animate) {
+          var a = links[idx];
+          if (!a) return;
+          if (!animate) slider.style.transition = 'none';
+          slider.style.width = a.offsetWidth + 'px';
+          slider.style.transform = 'translateX(' + a.offsetLeft + 'px)';
+          if (!animate) {
+            void slider.offsetWidth; /* 强制回流，让下一次位移产生过渡动画 */
+            slider.style.transition = '';
+          }
+        }
+        /* iOS 动态：先停在另一项上，再滑到当前项 */
+        move(activeIdx === 0 ? 1 : 0, false);
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () { move(activeIdx, true); });
+        });
+        window.addEventListener('resize', function () { move(activeIdx, false); });
+      })();
+    </script> <main>  <div class="tools-layout"> <aside class="side"> <div class="side-title">工具箱</div> <ul id="side-menu"> <li data-pane="pane-write"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg></span><span class="lab">书写伙伴</span></li> <li data-pane="pane-cover" class="active"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="m21 15-5-5L5 21"></path></svg></span><span class="lab">公众号封面</span></li> <li data-pane="pane-quote"><span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 7h5v6H8.5C8.5 16 11 18 14 18v2c-5 0-9-3-9-9Zm9 0h5v6h-3.5C17.5 16 20 18 23 18v2c-5 0-9-3-9-9Z"></path></svg></span><span class="lab">句子卡片</span></li> <li data-pane="pane-shop"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 4.5 4h15L21 9.5"></path><path d="M3 9.5a2 2 0 0 0 4 0 2 2 0 0 0 4 0 2 2 0 0 0 4 0 2 2 0 0 0 4 0"></path><path d="M5 11v9h14v-9"></path><path d="M9.5 20v-5h5v5"></path></svg></span><span class="lab">橱窗画廊</span></li> </ul> </aside> <main class="workspace"> <button class="side-handle" id="sideToggle" type="button" aria-label="收起侧边栏" aria-expanded="true" title="收起侧边栏（Ctrl+G）" data-tip="收起侧边栏 · Ctrl+G"> <svg class="chev" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <polyline points="10 3 4 8 10 13"></polyline> </svg> <span class="lbl">工具箱</span> </button> <!-- 1) 公众号封面制作 --> <section class="pane" id="pane-cover"> <div class="cover-editor"> <!-- 预览列 --> <div class="pv-col"> <div class="cv-wrap" id="wrap90"><!-- cover90 --></div> <p class="pv-tip"><b>拿到图片：</b>点「下载图片」直接下高清图，公众号后台上传即可；或点「复制图片」后 Ctrl+V 粘贴。<br>封面文案<b>直接在卡片上写</b>；想让某词橙红加粗，用 <b>**文字**</b> 包住（如 <b>**价值**</b>），写完后点一下别处高亮即生效。</p> </div> <!-- 设置区（封面下方 · 全宽三栏网格） --> <div class="set-col"> <div class="set-group composer"> <div class="cmp-cell"> <span class="fld-label">边框颜色</span> <div class="fr-dots" id="seg-frame"> <button class="fr-dot c-red on" data-v="#F53F3F" title="红" aria-label="红"></button> <button class="fr-dot c-ora" data-v="#F55000" title="橙" aria-label="橙"></button> <button class="fr-dot c-none" data-v="" title="无">无</button> </div> <span class="fld-label" style="margin-top:14px">版式 · 一键换排版</span> <div class="lay-seg" id="seg-layout"> <button class="lay-btn on" data-l="a" title="经典：大字居左、垂直居中">经典</button> <button class="lay-btn" data-l="b" title="居中：标题与落款全部居中">居中</button> </div> <div class="cv-ex-row"> <button class="ex-btn copy" data-t="90">复制图片</button> <button class="ex-btn dl" data-t="90">下载图片</button> </div> </div> <div class="cmp-cell"> <span class="fld-label">品牌行</span> <div class="brand-line"> <label class="tg"><input type="checkbox" id="tg-avatar" checked><span class="sw"></span><span class="tl">头像</span></label> <button id="btn-avatar" class="avatar-btn" title="上传头像图片"> <img id="avatar-thumb" src="/images/logo-180x180.png" alt="头像"> <span>上传头像</span> </button> <input type="file" id="f-avatar" accept="image/*" hidden> </div> <div class="brand-line"> <label class="tg"><input type="checkbox" id="tg-name" checked><span class="sw"></span><span class="tl">名称</span></label> <input id="f-name" class="inp name-inp" type="text" maxlength="14" value="像企业家一样写作"> </div> <div class="brand-line"> <span class="tl" style="min-width:42px">网站</span> <input id="f-url" class="inp url-inp" type="text" maxlength="40" value="gusangciren.github.io" placeholder="你的网站（选填，不填则不显示）"> </div> <div class="cmp-hint">头像 / 名称全关时，品牌行整体收起；上传的头像本机记住，下次不用重传。</div> </div> </div> </div> </div> <!-- 离屏导出舞台（原生尺寸，避免缩放干扰 html2canvas；放在 pane 内以复用作用域样式） --> <div id="export-stage"></div> </section> <!-- 2) 句子卡片制作（推文截图风 · 双栏工作台） --> <section class="pane" id="pane-quote" hidden> <div class="ws"> <!-- 左：画布（预览区） --> <div class="canvas"> <div class="canvas-dot"> <div class="card-fit" id="qcFit"> <div class="tcard v-light r34" id="qcCard"> <span class="t-glow" aria-hidden="true"></span> <div class="t-head" id="qcHead"> <div class="t-ava" id="qcAva"><span class="ph">人</span></div> <div class="t-id"> <div class="t-namerow"> <span class="t-name" id="qcName">古思</span> <span class="t-check" id="qcCheck"><svg viewBox="0 0 24 24"><path d="M22.25 12c0-1.43-.88-2.67-2.19-3.34.46-1.39.2-2.9-.81-3.91s-2.52-1.27-3.91-.81C14.67 2.63 13.43 1.75 12 1.75s-2.67.88-3.33 2.19c-1.4-.46-2.91-.2-3.92.81S3.56 7.27 4.03 8.66C2.72 9.33 1.85 10.57 1.85 12s.87 2.67 2.18 3.34c-.47 1.39-.21 2.9.8 3.91s2.52 1.26 3.91.81c.67 1.31 1.91 2.19 3.34 2.19s2.68-.88 3.34-2.19c1.39.45 2.9.2 3.91-.81s1.27-2.52.81-3.91c1.31-.66 2.19-1.9 2.19-3.34zm-11.71 4.2L6.8 12.46l1.41-1.42 2.26 2.26 4.8-5.23 1.47 1.36-6.2 6.77z"></path></svg></span> </div> <div class="t-handle" id="qcHandle">@Gusang</div> </div> </div> <div class="t-text" id="qcText" contenteditable="true" spellcheck="false" data-ph="今天想分享什么？"></div> </div> </div> </div> </div> <!-- 右：属性 --> <aside class="props"> <div class="field"> <label class="fld-label">卡片尺寸</label> <div class="seg" id="qcSize"> <button class="seg-btn on" data-r="r34">3:4 竖版</button> <button class="seg-btn" data-r="r11">1:1 方形</button> </div> </div> <div class="field"> <label class="fld-label">风格</label> <div class="seg" id="qcStyle"> <button class="seg-btn on" data-v="v-light">亮白</button> <button class="seg-btn" data-v="v-dark">纯黑</button> <button class="seg-btn" data-v="v-paper">暖纸</button> <button class="seg-btn" data-v="v-brand">深色</button> </div> </div> <div class="field"> <label class="fld-label">灵感</label> <button class="btn sm" id="qcDice" style="width:100%">🎲 随机一句</button> </div> <div class="field"> <label class="fld-label">头像</label> <div class="ava-row"> <div class="ava-prev" id="qcAvaPrev"><span>人</span></div> <div class="ava-btns"> <button class="btn sm" id="qcAvaUp">上传头像</button> <button class="btn sm" id="qcAvaClr" style="display:none">移除</button> </div> </div> <input type="file" id="qcAvaFile" accept="image/*" hidden> <div class="cmp-hint">头像和名字自动记住，下次不用重传。</div> </div> <div class="field"> <label class="fld-label">名字</label> <input type="text" id="qcName-in" class="f-input" value="古思" placeholder="显示名称"> </div> <div class="field"> <label class="fld-label">Handle</label> <input type="text" id="qcHandle-in" class="f-input" value="@Gusang" placeholder="@username"> </div> <div class="field"> <label class="check-row"><input type="checkbox" id="qcCheck-in" checked> 显示认证徽章</label> </div> <div class="export"> <div class="export-row"> <button class="btn primary big" id="qcCopy">复制图片</button> <button class="btn big" id="qcDown">下载图片</button> </div> <a class="btn qc-art" href="https://mp.weixin.qq.com/s/w786NBLYHBsjUcu165zZBQ" target="_blank" rel="noopener">推荐文章</a> <div class="qc-art-note">每次一句话，就可以写文章/书。</div> </div> </aside> </div> <div id="qc-stage"></div> <div class="toast" id="qcToast"></div> </section> <!-- 3) 书写伙伴（白噪音 + 专注时间 + 即时排版） --> <section class="pane" id="pane-write" hidden> <div class="wp-wrap"> <div class="wp-hero" id="wpPlayer"> <div class="wp-row1"> <div class="wp-left"> <button class="wp-play" id="wpPlay">▶</button> <div class="wp-title" id="wpTitle">耀斑 · 25 分钟专注</div> </div> <b class="wp-remain" id="wpRemain">25:00</b> <div class="wp-timer"> <svg class="wp-clock" viewBox="0 0 24 24" aria-hidden="true"> <circle cx="12" cy="12" r="10" fill="none" stroke="rgba(245,234,217,.35)" stroke-width="2"></circle> <line id="wpHand" x1="12" y1="12" x2="12" y2="4.5" stroke="#F55000" stroke-width="2.4" stroke-linecap="round" transform="rotate(0 12 12)"></line> </svg> <span class="wp-durbox" id="wpDur">25 分钟</span> </div> </div> <div class="wp-bar"><i id="wpFill"></i></div> <div class="wp-row2"> <span id="wpSoundSeg"> <button class="wp-chip on" data-sound="forest">耀斑</button> <button class="wp-chip" data-sound="rain">静默之重</button> <button class="wp-chip" data-sound="music">吉他二重奏</button> </span> <span class="wp-sep"></span> <span id="wpDurSeg"> <button class="wp-chip on" data-dur="25">25 分钟</button> <button class="wp-chip" data-dur="50">50 分钟</button> </span> <button class="wp-chip on" id="wpKeySnd" title="打字键盘音 · 机械轻音（点击开 / 关）">⌨ 键盘音</button> <button class="wp-focus" id="wpFocus" title="全屏专注写作（Esc 退出）">⛶ 专注模式</button> <button class="wp-reset" id="wpReset">↺ 重置</button> </div> </div> <div class="wp-paper"> <div id="wpEditor"></div> <div class="wp-foot"> <button class="wp-copymd start" id="wpStart" title="清空示例，一键开始记录">马上写一篇</button> <button class="wp-copymd ghost" id="wpCopyHtml">复制 HTML</button> <button class="wp-copymd ghost" id="wpCopyMd">复制 Markdown</button> <span class="wp-wc" id="wpWc">0 字</span> </div> </div> </div> </section> <!-- 4) 橱窗（商品陈列 · 数据同 /shop 页） --> <section class="pane" id="pane-shop" hidden> <div class="shop-wrap"> <p class="shop-tip">衣服上写什么，鼠标悬停就能看 · 点 + 扫码去微信小店下单</p> <div class="shop-grid"> <div class="shop-card" data-qr="/images/shop/qr-wechat-store.jpg" data-name="山隱"> <div class="shop-stage"> <img class="shop-layer shop-fabric" src="/images/shop/design-gourd.jpg" alt="山隱 印花面料" loading="lazy"> <img class="shop-layer shop-tee" src="/images/shop/tee-navy-gourd.png" alt="山隱 藏青 T 恤" loading="lazy"> <button class="shop-plus" type="button" aria-label="购买 山隱">+</button> </div> <div class="shop-info"> <div class="shop-line1"> <span class="sm-name">山隱</span> <span class="sm-dots" aria-hidden="true"></span> <span class="sm-color">藏青</span> <button class="sm-plus" type="button" aria-label="购买 山隱">+</button> </div> <div class="shop-line2"> <span class="sm-tag">葫芦里装着看不清的答案</span> <span class="sm-price">¥ 59</span> </div> </div> </div><div class="shop-card" data-qr="/images/shop/qr-wechat-store.jpg" data-name="山里人"> <div class="shop-stage"> <img class="shop-layer shop-fabric" src="/images/shop/design-heart-chair.jpg" alt="山里人 印花面料" loading="lazy"> <img class="shop-layer shop-tee" src="/images/shop/tee-black.jpg" alt="山里人 黑 T 恤" loading="lazy"> <button class="shop-plus" type="button" aria-label="购买 山里人">+</button> </div> <div class="shop-info"> <div class="shop-line1"> <span class="sm-name">山里人</span> <span class="sm-dots" aria-hidden="true"></span> <span class="sm-color">黑</span> <button class="sm-plus" type="button" aria-label="购买 山里人">+</button> </div> <div class="shop-line2"> <span class="sm-tag">心里人，不请自来</span> <span class="sm-price">¥ 59</span> </div> </div> </div><div class="shop-card" data-qr="/images/shop/qr-wechat-store.jpg" data-name="有点人情世故"> <div class="shop-stage"> <img class="shop-layer shop-fabric" src="/images/shop/design-world.jpg" alt="有点人情世故 印花面料" loading="lazy"> <img class="shop-layer shop-tee" src="/images/shop/tee-wine.jpg" alt="有点人情世故 酒红 T 恤" loading="lazy"> <button class="shop-plus" type="button" aria-label="购买 有点人情世故">+</button> </div> <div class="shop-info"> <div class="shop-line1"> <span class="sm-name">有点人情世故</span> <span class="sm-dots" aria-hidden="true"></span> <span class="sm-color">酒红</span> <button class="sm-plus" type="button" aria-label="购买 有点人情世故">+</button> </div> <div class="shop-line2"> <span class="sm-tag">不世故，讲点故事人情</span> <span class="sm-price">¥ 59</span> </div> </div> </div><div class="shop-card" data-qr="/images/shop/qr-wechat-store.jpg" data-name="晚风"> <div class="shop-stage"> <img class="shop-layer shop-fabric" src="/images/shop/design-evening.jpg" alt="晚风 印花面料" loading="lazy"> <img class="shop-layer shop-tee" src="/images/shop/tee-navy.jpg" alt="晚风 藏青 T 恤" loading="lazy"> <button class="shop-plus" type="button" aria-label="购买 晚风">+</button> </div> <div class="shop-info"> <div class="shop-line1"> <span class="sm-name">晚风</span> <span class="sm-dots" aria-hidden="true"></span> <span class="sm-color">藏青</span> <button class="sm-plus" type="button" aria-label="购买 晚风">+</button> </div> <div class="shop-line2"> <span class="sm-tag">晚风里坐着一位老朋友</span> <span class="sm-price">¥ 59</span> </div> </div> </div> </div> <p class="shop-hint">样品实拍</p> </div>  <div class="qr-overlay" id="qrOverlayShop" hidden> <div class="qr-modal" role="dialog" aria-modal="true" aria-label="扫码购买"> <button class="qr-close" id="qrCloseShop" type="button" aria-label="关闭">×</button> <img class="qr-img" id="qrImgShop" src="" alt="微信扫码下单"> <p class="qr-tip">微信扫码，跳转到小程序下单</p> </div> </div> </section> <div class="tools-toast" id="toolsToast"></div> </main> </div> <script>
+    (function () {
+      // ===== 侧边栏切换 =====
+      var menu = document.getElementById('side-menu');
+      menu.querySelectorAll('li[data-pane]').forEach(function (li) {
+        li.addEventListener('click', function () {
+          menu.querySelectorAll('li[data-pane]').forEach(function (x) { x.classList.remove('active'); });
+          li.classList.add('active');
+          document.querySelectorAll('.pane').forEach(function (p) { p.hidden = p.id !== li.dataset.pane; });
+          window.dispatchEvent(new Event('resize'));
+        });
+      });
+
+      // ===== 橱窗：点 + 弹购买二维码 =====
+      (function () {
+        var pane = document.getElementById('pane-shop');
+        var overlay = document.getElementById('qrOverlayShop');
+        var qrImg = document.getElementById('qrImgShop');
+        var closeBtn = document.getElementById('qrCloseShop');
+        if (!pane || !overlay || !qrImg) return;
+
+        function openQr(card) {
+          var src = card.getAttribute('data-qr');
+          if (src) qrImg.setAttribute('src', src);
+          overlay.removeAttribute('hidden');
+          document.body.style.overflow = 'hidden';
+        }
+        function closeQr() {
+          overlay.setAttribute('hidden', '');
+          document.body.style.overflow = '';
+        }
+
+        pane.addEventListener('click', function (e) {
+          var plus = e.target.closest ? e.target.closest('.shop-plus, .sm-plus') : null;
+          if (plus) {
+            var card = plus.closest('.shop-card');
+            if (card) { e.preventDefault(); e.stopPropagation(); openQr(card); }
+            return;
+          }
+          /* 触屏：点卡片空白处切换面料图 / T 恤图 */
+          var c = e.target.closest ? e.target.closest('.shop-card') : null;
+          if (c && window.matchMedia('(hover: none)').matches) c.classList.toggle('tap');
+        });
+
+        overlay.addEventListener('click', function (e) { if (e.target === overlay) closeQr(); });
+        closeBtn.addEventListener('click', closeQr);
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeQr(); });
+      })();
+    })();
+
+      // ===== 全局轻提示（toast）：复制 / 导出 / 保存等反馈统一走这里 =====
+      // 位置在屏幕顶部居中：底部 toast 在小屏 / 导出坞在右下时看不见
+      function gToast(msg) {
+        var t = document.getElementById('toolsToast'); if (!t) return;
+        t.textContent = msg; t.classList.add('show'); clearTimeout(t._t);
+        t._t = setTimeout(function () { t.classList.remove('show'); }, 1900);
+      }
+
+      // ===== 中央确认卡（方案 B）：生成中 / 已复制 / 已下载 等强反馈 =====
+      var bigcardEl = null, bigcardT = null;
+      var BIG_ICONS = {
+        wait: '<svg viewBox="0 0 24 24" class="bigspin"><circle cx="12" cy="12" r="9" fill="none" stroke="#e7e5e4" stroke-width="2.5"/><path d="M12 3a9 9 0 0 1 9 9" fill="none" stroke="#F53F3F" stroke-width="2.5" stroke-linecap="round"/></svg>',
+        ok: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#EAF3DE"/><path d="M7.5 12.5 10.5 15.5 16.5 8.5" fill="none" stroke="#3B6D11" stroke-width="2" stroke-linecap="round"/></svg>',
+        err: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#FCEBEB"/><path d="M8.5 8.5l7 7M15.5 8.5l-7 7" stroke="#A32D2D" stroke-width="2" stroke-linecap="round"/></svg>'
+      };
+      function bigCard(msg, kind, sticky) {
+        if (!bigcardEl) {
+          bigcardEl = document.createElement('div');
+          bigcardEl.className = 'bigcard';
+          bigcardEl.innerHTML = '<div class="bigcard-box"><span class="bigcard-ic"></span><span class="bigcard-msg"></span></div>';
+          document.body.appendChild(bigcardEl);
+        }
+        bigcardEl.classList.add('show');
+        bigcardEl.setAttribute('data-kind', kind);
+        bigcardEl.querySelector('.bigcard-ic').innerHTML = BIG_ICONS[kind] || BIG_ICONS.ok;
+        bigcardEl.querySelector('.bigcard-msg').textContent = msg;
+        clearTimeout(bigcardT);
+        if (!sticky) bigcardT = setTimeout(function () { bigcardEl.classList.remove('show'); }, 1600);
+      }
+      function bigWait(msg) { bigCard(msg, 'wait', true); }   // 生成中：常驻，直到 bigDone 替换
+      function bigDone(msg, ok) { bigCard(msg, ok === false ? 'err' : 'ok', false); }
+
+      // ===== 行内 Markdown（**加粗** / *斜体*）：金句卡正文与封面标题共用 =====
+      function escHtml(s) {
+        return String(s).replace(/[&<>"]/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+        });
+      }
+      function mdInline1(s) {
+        return String(s).split(/(\*[^*]+\*)/g).map(function (p) {
+          return /^\*[^*]+\*$/.test(p) ? '<em>' + escHtml(p.slice(1, -1)) + '</em>' : escHtml(p);
+        }).join('');
+      }
+      function mdInline(raw) {
+        return String(raw || '').split(/(\*\*[^*]+\*\*)/g).map(function (p) {
+          return /^\*\*[^*]+\*\*$/.test(p) ? '<strong>' + mdInline1(p.slice(2, -2)) + '</strong>' : mdInline1(p);
+        }).join('');
+      }
+      function stripMd(raw) { return String(raw || '').replace(/\*/g, ''); }
+
+      // contenteditable 里把选区（或占位词）包进标记：走 execCommand('insertText')，可 Ctrl+Z 撤销
+      function mdWrapSel(el, before, after, fallback) {
+        el.focus();
+        var sel = window.getSelection && window.getSelection();
+        if (!sel || !sel.rangeCount) return;
+        var inner = sel.toString() || fallback;
+        document.execCommand('insertText', false, before + inner + after);
+      }
+
+      // ===== 纯文本粘贴：拦截 paste，只取 text/plain，杜绝外部字体/背景/白底一起带进来 =====
+      function bindPlainTextPaste(el) {
+        el.addEventListener('paste', function (e) {
+          e.preventDefault();
+          var t = (e.clipboardData || window.clipboardData).getData('text/plain');
+          if (t) document.execCommand('insertText', false, t);
+        });
+      }
+
+      // ===== 导出字体（金句 + 封面共用）：全字库子集文楷 → data URI 注入。
+      // html2canvas 克隆 iframe 里的网络字体有渲染竞态（导出偶发变黑体），
+      // 改用 jsDelivr 上 font-store 子集 woff2（CORS *）转 base64 内联，
+      // 克隆文档内字体解码无网络等待，导出字体稳定。
+      var exportFontCssPromise = null;
+      function getExportFontCss() {
+        if (!exportFontCssPromise) {
+          exportFontCssPromise = fetch('https://cdn.jsdelivr.net/gh/gusangciren/gusangciren.github.io@source/font-store/WenKaiSubset-Regular.woff2')
+            .then(function (r) { if (!r.ok) throw 0; return r.arrayBuffer(); })
+            .then(function (buf) {
+              var bytes = new Uint8Array(buf), bin = '';
+              for (var i = 0; i < bytes.length; i += 0x8000) {
+                bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+              }
+              return '@font-face{font-family:"WenKai Export";src:url(data:font/woff2;base64,' + btoa(bin) + ') format("woff2");}' +
+                '#qc-stage,#qc-stage *,#export-stage,#export-stage *{font-family:"WenKai Export","LXGW WenKai",serif !important;}';
+            })
+            .catch(function () { return ''; });
+        }
+        return exportFontCssPromise;
+      }
+
+      // ===== 句子卡片工具（推文截图风 · 双栏工作台） =====
+      (function () {
+        var BG = { 'v-light': '#ffffff', 'v-dark': '#000000', 'v-paper': '#f7f3ec', 'v-brand': '#1c1917' };
+        var state = { scheme: 'v-light', ratio: 'r34', text: '', name: '', handle: '', check: true, avatar: '/images/logo-180x180.png' };
+
+        var $ = function (s) { return document.querySelector(s); };
+        var card = document.getElementById('qcCard');
+        var textEl = document.getElementById('qcText');
+        var nameIn = document.getElementById('qcName-in');
+        var handleIn = document.getElementById('qcHandle-in');
+        var checkIn = document.getElementById('qcCheck-in');
+
+        function saveProfile() {
+          try { localStorage.setItem('tools.qc.profile', JSON.stringify({ name: state.name, handle: state.handle, avatar: state.avatar })); } catch (e) {}
+        }
+        try {
+          var p = JSON.parse(localStorage.getItem('tools.qc.profile') || 'null');
+          if (p) {
+            if (p.name) { state.name = p.name; nameIn.value = p.name; }
+            if (p.handle) { state.handle = p.handle; handleIn.value = p.handle; }
+            if (p.avatar) state.avatar = p.avatar;
+          }
+        } catch (e) {}
+
+        function textSize(len) { return len <= 30 ? 40 : len <= 60 ? 34 : len <= 100 ? 28 : len <= 160 ? 24 : 20; }
+
+        function render() {
+          card.className = 'tcard ' + state.scheme + ' ' + state.ratio;
+          if (document.activeElement !== textEl) {
+            /* 失焦态把 **加粗** / *斜体* 渲染成样式；编辑中显示原文 */
+            textEl.innerHTML = mdInline(state.text || '');
+            textEl.classList.toggle('is-empty', !/\S/.test(state.text || ''));
+          }
+          $('#qcName').textContent = state.name || '名字';
+          $('#qcHandle').textContent = state.handle || '@handle';
+          $('#qcCheck').style.display = state.check ? 'flex' : 'none';
+          var ava = $('#qcAva');
+          ava.innerHTML = state.avatar ? '<img src="' + state.avatar + '">' : '<span class="ph">人</span>';
+          var prev = $('#qcAvaPrev');
+          prev.innerHTML = state.avatar ? '<img src="' + state.avatar + '">' : '<span>人</span>';
+          $('#qcAvaClr').style.display = state.avatar ? '' : 'none';
+          textEl.style.fontSize = textSize(stripMd(state.text || '').length) + 'px';
+          fit();
+        }
+
+        /* 预览缩放：按中栏可用宽度把 540px 卡片等比缩小显示 */
+        function fit() {
+          var canvas = document.querySelector('#pane-quote .canvas');
+          var fitEl = document.getElementById('qcFit');
+          if (!canvas || !fitEl) return;
+          var cw = canvas.clientWidth;
+          if (cw < 60) return; /* 面板隐藏时跳过 */
+          var avail = cw - 32 - 80 - 4; /* canvas 左右 padding 32 + 点阵 padding 80 */
+          var s = Math.max(0.3, Math.min(1, avail / 540));
+          fitEl.style.setProperty('--qc-s', s);
+          fitEl.style.width = Math.round(540 * s) + 'px';
+          fitEl.style.height = Math.round((state.ratio === 'r11' ? 540 : 720) * s) + 'px';
+        }
+        window.addEventListener('resize', fit);
+
+        // 直接在卡片上编辑（所见即所得）：同步状态，但不整卡重渲染以保住光标
+        textEl.addEventListener('input', function () {
+          var raw = textEl.innerText.replace(/\n$/, '');
+          state.text = /\S/.test(raw) ? raw : '';
+          textEl.classList.toggle('is-empty', !/\S/.test(textEl.textContent));
+          textEl.style.fontSize = textSize(stripMd(state.text).length) + 'px';
+        });
+        /* 纯文本粘贴：从微信/网页复制过来时只取文字，不带外部字体与背景 */
+        bindPlainTextPaste(textEl);
+        /* 文字快捷键：Ctrl/Cmd+B 加粗（**）、Ctrl/Cmd+I 斜体（*），与书写伙伴一致 */
+        textEl.addEventListener('keydown', function (e) {
+          var mod = e.ctrlKey || e.metaKey;
+          if (mod && (e.key === 'b' || e.key === 'B')) { e.preventDefault(); mdWrapSel(textEl, '**', '**', '加粗文字'); return; }
+          if (mod && (e.key === 'i' || e.key === 'I')) { e.preventDefault(); mdWrapSel(textEl, '*', '*', '斜体文字'); return; }
+        });
+        /* 重新进入编辑时还原原文（把渲染好的粗体/斜体还原成 ** / * 标记，改起来不丢） */
+        textEl.addEventListener('focusin', function () {
+          if (/<strong|<em/.test(textEl.innerHTML)) textEl.textContent = state.text || '';
+        });
+        /* 失焦后把 **加粗** / *斜体* 渲染成样式（与封面标题行为一致） */
+        textEl.addEventListener('blur', function () { render(); });
+        nameIn.addEventListener('input', function () { state.name = nameIn.value; render(); saveProfile(); });
+        handleIn.addEventListener('input', function () { state.handle = handleIn.value; render(); saveProfile(); });
+        checkIn.addEventListener('change', function () { state.check = checkIn.checked; render(); });
+
+        /* 随机金句：内置句库（网站抓取句已下架，后续按用户提供的句子卡片扩充） */
+        var QUOTES = [
+          '写作，是把混乱的想法一个字一个字排好队。',
+          '你不需要灵感，你需要坐下来。',
+          '每天写一点，比偶尔写一篇更有力量。',
+          '写完，比写得好更重要。',
+          '别人买的不是你的文字，是你看世界的方式。',
+          '先把故事讲清楚，再谈技巧。',
+          '真正的专业，是把简单的事重复做。',
+          '你的经历，就是你最深的护城河。',
+          '别等准备好，边做边准备。',
+          '写作是思考的显影液。',
+          '一句话能说清的事，不要用一段话。',
+          '慢就是快，少就是多。',
+          '作品会替你说话，在你不在场的时候。',
+          '把注意力放在一件事上，你就已经赢了一半。',
+          '公开写作，是给自己的思考装上一个截止日期。',
+          '你写的每一篇，都在为下一篇铺路。',
+          '好文章是改出来的，不是等出来的。',
+          '真诚比技巧更难，也更值钱。',
+          '别追热点，去追那些十年后还有人在意的问题。',
+          '先写给自己，再写给世界。',
+          '一个人能持续做下去的事，才叫事业。',
+          '复杂是敌人，清楚是善意。',
+          '你今天写下的字，是明天别人的路标。',
+          '想法不值钱，做完才值钱。'
+          ];
+        var lastQ = -1;
+        document.getElementById('qcDice').addEventListener('click', function () {
+          var i = lastQ;
+          if (QUOTES.length > 1) { while (i === lastQ) { i = Math.floor(Math.random() * QUOTES.length); } }
+          else { i = 0; }
+          lastQ = i;
+          if (document.activeElement === textEl) textEl.blur();
+          state.text = QUOTES[i];
+          render();
+          toast('换了一句 · 可继续点，或直接在卡片上改');
+        });
+
+        document.getElementById('qcAvaUp').addEventListener('click', function () { document.getElementById('qcAvaFile').click(); });
+        document.getElementById('qcAvaFile').addEventListener('change', function (e) {
+          var f = e.target.files && e.target.files[0]; if (!f) return;
+          var rd = new FileReader();
+          rd.onload = function () { state.avatar = rd.result; render(); saveProfile(); toast('头像已更新并记住'); };
+          rd.readAsDataURL(f); e.target.value = '';
+        });
+        document.getElementById('qcAvaClr').addEventListener('click', function () { state.avatar = null; render(); saveProfile(); toast('已移除头像'); });
+
+        document.querySelectorAll('#qcSize .seg-btn').forEach(function (b) {
+          b.addEventListener('click', function () {
+            state.ratio = b.dataset.r;
+            document.querySelectorAll('#qcSize .seg-btn').forEach(function (x) { x.classList.toggle('on', x === b); });
+            render();
+          });
+        });
+        document.querySelectorAll('#qcStyle .seg-btn').forEach(function (b) {
+          b.addEventListener('click', function () {
+            state.scheme = b.dataset.v;
+            document.querySelectorAll('#qcStyle .seg-btn').forEach(function (x) { x.classList.toggle('on', x === b); });
+            render();
+          });
+        });
+
+        function toast(m) { gToast(m); } /* 统一走顶部轻提示（原底部 toast 小屏看不见） */
+        var qcBusy = false;
+        async function exportCanvas() {
+          if (!window.html2canvas) { bigDone('图片组件未加载，请稍候重试', false); return null; }
+          var stage = document.getElementById('qc-stage');
+          var clone = card.cloneNode(true);
+          clone.style.transform = 'none';
+          stage.appendChild(clone);
+          try {
+            await document.fonts.ready;
+            var fontCss = await getExportFontCss();
+            return await html2canvas(clone, { backgroundColor: BG[state.scheme], scale: 2, useCORS: true, logging: false,
+              onclone: function (doc) {
+                if (fontCss) { var st = doc.createElement('style'); st.textContent = fontCss; doc.head.appendChild(st); }
+                /* 导出时把 **标记** 渲染成粗体/斜体（编辑中卡片显示的是原文） */
+                var t = doc.querySelector('.t-text');
+                if (t) { t.innerHTML = mdInline(state.text || ''); }
+              } });
+          } finally {
+            if (clone.parentNode === stage) stage.removeChild(clone);
+          }
+        }
+        document.getElementById('qcCopy').addEventListener('click', function () {
+          if (qcBusy) return; qcBusy = true;
+          bigWait('正在生成图片…');
+          exportCanvas().then(function (cv) {
+            qcBusy = false;
+            if (!cv) return;
+            cv.toBlob(function (blob) {
+              if (blob && navigator.clipboard && window.ClipboardItem) {
+                navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
+                  .then(function () { bigDone('已复制，可直接粘贴'); })
+                  .catch(function () { bigDone('复制失败，请改用下载', false); });
+              } else { bigDone('当前环境不支持复制图片', false); }
+            });
+          });
+        });
+        document.getElementById('qcDown').addEventListener('click', function () {
+          if (qcBusy) return; qcBusy = true;
+          bigWait('正在生成图片…');
+          exportCanvas().then(function (cv) {
+            qcBusy = false;
+            if (!cv) return;
+            var a = document.createElement('a');
+            a.download = '句子卡片.png'; a.href = cv.toDataURL('image/png');
+            document.body.appendChild(a); a.click(); a.remove(); bigDone('图片已下载');
+          });
+        });
+
+        state.text = textEl.textContent;
+        state.name = nameIn.value; state.handle = handleIn.value;
+        render();
+      })();
+
+    // ===== 公众号封面制作工具 =====
+    (function () {
+      var DEFAULT_AVATAR = '/images/logo-180x180.png';
+      var DEFAULT_NAME = '像企业家一样写作';
+
+      var headlineRaw = '';
+      var nameEl = document.getElementById('f-name');
+      var urlEl = document.getElementById('f-url');
+      var tgAvatar = document.getElementById('tg-avatar');
+      var tgName = document.getElementById('tg-name');
+      var avatarThumb = document.getElementById('avatar-thumb');
+      var btnAvatar = document.getElementById('btn-avatar');
+      var fileAvatar = document.getElementById('f-avatar');
+      var wrap90 = document.getElementById('wrap90');
+      var frameVal = '#F53F3F';
+      var layoutVal = 'a';
+      var avatar = avatarThumb.src || DEFAULT_AVATAR;
+
+      try {
+        var savedA = localStorage.getItem('tools.cv.avatar');
+        if (savedA) { avatar = savedA; avatarThumb.src = savedA; }
+        var savedN = localStorage.getItem('tools.cv.name');
+        if (savedN) { nameEl.value = savedN; }
+        var savedU = localStorage.getItem('tools.cv.url');
+        if (savedU !== null) { urlEl.value = savedU; }
+      } catch (e) {}
+
+      function esc(s) {
+        return String(s).replace(/[&<>"]/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+        });
+      }
+      function cleanHL(raw) { return (raw || '').replace(/\*/g, ''); }
+      function normHL(el) { return (el.innerText || '').replace(/\n+$/, ''); }
+      function titleSize(t) { // 按最长行自适应：信息流里封面缩到 ~0.38 倍，44px 只剩 ~17px 看不清
+        var lines = (stripMd(t || '')).split('\n'), n = 0;
+        for (var i = 0; i < lines.length; i++) n = Math.max(n, lines[i].replace(/\s/g, '').length);
+        if (n <= 6) return 60;
+        if (n <= 11) return 54;
+        if (n <= 16) return 48;
+        return 44;
+      }
+      function renderTitle(raw) {
+        if (!raw) return '';
+        return raw.split('\n').slice(0, 3).map(function (line) { // 最多 3 行
+          if (!line) return '';
+          return mdInline(line); // **加粗** / *斜体* 统一解析（与句子卡片一致）
+        }).join('<br>');
+      }
+      function data() {
+        return {
+          headline: headlineRaw,
+          frameColor: frameVal,
+          avatar: avatar,
+          name: nameEl.value || DEFAULT_NAME,
+          url: urlEl.value.trim(),
+          showAvatar: tgAvatar.checked,
+          showName: tgName.checked,
+          layout: layoutVal
+        };
+      }
+      function build90(d) {
+        var raw = d.headline || '';
+        var el = document.createElement('div'); el.className = 'cover90 lay-' + (d.layout || 'a');
+        var frame = d.frameColor ? '<div class="frame" style="border-color:' + esc(d.frameColor) + '"></div>' : '';
+        var brand = '';
+        if (d.showAvatar || d.showName) {
+          brand = '<div class="brandrow">';
+          if (d.showAvatar) brand += '<img class="clogo" src="' + esc(d.avatar) + '" alt="logo"/>';
+          if (d.showName) brand += '<div class="bt"><div class="bn">' + esc(d.name) + '</div>' + (d.url ? '<div class="bu">' + esc(d.url) + '</div>' : '') + '</div>';
+          brand += '</div>';
+        }
+        el.innerHTML = '<div class="glow"></div>' + frame +
+          '<div class="cv-inner"><h1 class="ctitle" id="ctitle90" contenteditable="true" spellcheck="false" data-ph="我的**标题**····" style="font-size:' + titleSize(cleanHL(raw)) + 'px">' + renderTitle(raw) + '</h1>' + brand + '</div>';
+        return el;
+      }
+      function render() {
+        var ae = document.activeElement;
+        if (ae && ae.classList && ae.classList.contains('ctitle')) return; // 卡片聚焦时不覆盖，保光标
+        wrap90.innerHTML = ''; var el = build90(data()); wrap90.appendChild(el);
+        if (!headlineRaw.trim()) { var ct = el.querySelector('.ctitle'); if (ct) ct.classList.add('is-empty'); }
+      }
+      function fit() {
+        var w = wrap90.parentElement.clientWidth || 900;
+        var s = Math.max(0.32, Math.min(1, (w - 8) / 900));
+        wrap90.style.setProperty('--s', s);
+      }
+      function exportEl(builder) {
+        var stage = document.getElementById('export-stage');
+        var el = builder(data());
+        el.style.transform = 'none';
+        el.style.position = 'static';
+        stage.appendChild(el);
+        return { el: el, done: function () { stage.removeChild(el); } };
+      }
+      async function renderArt(el) {
+        await document.fonts.ready;
+        var css = await getExportFontCss();
+        return html2canvas(el, {
+          backgroundColor: '#1c1917', scale: 2, useCORS: true, logging: false,
+          onclone: function (doc) {
+            // 导出字体统一走 getExportFontCss（data URI 注入，克隆环境零网络等待）
+            if (css) { var st = doc.createElement('style'); st.textContent = css; doc.head.appendChild(st); }
+          }
+        });
+      }
+      async function copyArt(btn, builder) {
+        var t = btn.textContent; btn.disabled = true; btn.textContent = '生成中…';
+        bigWait('正在生成封面…');
+        try {
+          var x = exportEl(builder); var c = await renderArt(x.el); x.done();
+          var blob = await new Promise(function (r) { c.toBlob(r, 'image/png'); });
+          await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+          btn.textContent = '已复制 ✓'; bigDone('已复制，可直接粘贴');
+        } catch (e) { console.error(e); btn.textContent = '复制失败'; bigDone('复制失败，请改用下载', false); }
+        setTimeout(function () { btn.textContent = t; btn.disabled = false; }, 1800);
+      }
+      async function downloadArt(btn, builder, name) {
+        var t = btn.textContent; btn.disabled = true; btn.textContent = '生成中…';
+        bigWait('正在生成封面…');
+        try {
+          var x = exportEl(builder); var c = await renderArt(x.el); x.done();
+          var a = document.createElement('a'); a.href = c.toDataURL('image/png'); a.download = name + '.png';
+          document.body.appendChild(a); a.click(); a.remove();
+          btn.textContent = '已下载 ✓'; bigDone('封面图片已下载');
+        } catch (e) { console.error(e); btn.textContent = '下载失败'; bigDone('下载失败，请重试', false); }
+        setTimeout(function () { btn.textContent = t; btn.disabled = false; }, 1800);
+      }
+
+      wrap90.addEventListener('input', function (e) {
+        if (e.target && e.target.classList && e.target.classList.contains('ctitle')) {
+          headlineRaw = normHL(e.target);
+          e.target.classList.toggle('is-empty', headlineRaw.trim().length === 0);
+        }
+      });
+      /* ctitle 动态创建，粘贴/快捷键/还原统一用委托 */
+      wrap90.addEventListener('paste', function (e) {
+        if (!(e.target && e.target.classList && e.target.classList.contains('ctitle'))) return;
+        e.preventDefault();
+        var t = (e.clipboardData || window.clipboardData).getData('text/plain');
+        if (t) document.execCommand('insertText', false, t);
+      });
+      wrap90.addEventListener('keydown', function (e) {
+        if (!(e.target && e.target.classList && e.target.classList.contains('ctitle'))) return;
+        var mod = e.ctrlKey || e.metaKey;
+        if (mod && (e.key === 'b' || e.key === 'B')) { e.preventDefault(); mdWrapSel(e.target, '**', '**', '加粗文字'); return; }
+        if (mod && (e.key === 'i' || e.key === 'I')) { e.preventDefault(); mdWrapSel(e.target, '*', '*', '斜体文字'); return; }
+        if (e.key === 'Enter') { // 标题最多 3 行：满 3 行后拦截回车
+          if (normHL(e.target).split('\n').length >= 3) e.preventDefault();
+        }
+      });
+      wrap90.addEventListener('focusin', function (e) { // 进入编辑时还原 ** / * 原文，避免加粗被洗掉
+        if (e.target && e.target.classList && e.target.classList.contains('ctitle') && /<strong|<em/.test(e.target.innerHTML)) {
+          e.target.textContent = headlineRaw;
+        }
+      });
+      wrap90.addEventListener('focusout', function (e) {
+        if (e.target && e.target.classList && e.target.classList.contains('ctitle')) {
+          headlineRaw = normHL(e.target); render(); // 失焦后把 **强调** 渲染成橙红 <em>
+        }
+      });
+      document.querySelectorAll('#seg-frame .fr-dot').forEach(function (b) {
+        b.addEventListener('click', function () {
+          document.querySelectorAll('#seg-frame .fr-dot').forEach(function (x) { x.classList.remove('on'); });
+          b.classList.add('on');
+          frameVal = b.dataset.v || '';
+          render();
+        });
+      });
+      document.querySelectorAll('#seg-layout .lay-btn').forEach(function (b) {
+        b.addEventListener('click', function () {
+          document.querySelectorAll('#seg-layout .lay-btn').forEach(function (x) { x.classList.remove('on'); });
+          b.classList.add('on');
+          layoutVal = b.dataset.l || 'a';
+          render();
+        });
+      });
+      tgAvatar.addEventListener('change', render);
+      tgName.addEventListener('change', render);
+      nameEl.addEventListener('input', function () {
+        try { localStorage.setItem('tools.cv.name', nameEl.value); } catch (e) {}
+        render();
+      });
+      urlEl.addEventListener('input', function () {
+        try { localStorage.setItem('tools.cv.url', urlEl.value); } catch (e) {}
+        render();
+      });
+      btnAvatar.addEventListener('click', function () { fileAvatar.click(); });
+      fileAvatar.addEventListener('change', function () {
+        var f = fileAvatar.files && fileAvatar.files[0];
+        if (!f) return;
+        var rd = new FileReader();
+        rd.onload = function () {
+          var img = new Image();
+          img.onload = function () {
+            var max = 256, w = img.width, h = img.height;
+            var k = Math.min(1, max / Math.max(w, h));
+            var cv = document.createElement('canvas');
+            cv.width = Math.round(w * k); cv.height = Math.round(h * k);
+            cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+            avatar = cv.toDataURL('image/png');
+            avatarThumb.src = avatar;
+            try { localStorage.setItem('tools.cv.avatar', avatar); } catch (e) {}
+            render();
+          };
+          img.src = rd.result;
+        };
+        rd.readAsDataURL(f);
+        fileAvatar.value = '';
+      });
+      document.querySelectorAll('.ex-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          if (btn.classList.contains('copy')) copyArt(btn, build90);
+          else downloadArt(btn, build90, '封面-头条');
+        });
+      });
+      window.addEventListener('resize', fit);
+      fit();
+      render(); // 首次渲染
+    })();
+
+    // ===== 侧边栏收起/展开（边界抽屉把手 · Ctrl+G · 记忆状态） =====
+    (function () {
+      var layout = document.querySelector('.tools-layout');
+      var btn = document.getElementById('sideToggle');
+      if (!layout || !btn) return;
+      function apply(hid) {
+        layout.classList.toggle('side-hidden', hid);
+        btn.setAttribute('aria-expanded', hid ? 'false' : 'true');
+        btn.setAttribute('aria-label', hid ? '展开侧边栏' : '收起侧边栏');
+        btn.title = hid ? '展开侧边栏 · Ctrl+G' : '收起侧边栏 · Ctrl+G';
+        btn.setAttribute('data-tip', hid ? '展开侧边栏 · Ctrl+G' : '收起侧边栏 · Ctrl+G');
+      }
+      btn.addEventListener('click', function () {
+        apply(!layout.classList.contains('side-hidden'));
+      });
+      document.addEventListener('keydown', function (ev) {
+        var tg = ev.target;
+        if (tg && (tg.tagName === 'TEXTAREA' || tg.tagName === 'INPUT' || tg.isContentEditable)) return;
+        if ((ev.ctrlKey || ev.metaKey) && (ev.key === 'g' || ev.key === 'G')) {
+          ev.preventDefault();
+          btn.click();
+        }
+      });
+      /* 默认展开：加载时侧边栏始终打开（不再记忆收起状态） */
+      apply(false);
+    })();
+
+    // ===== 书写伙伴（白噪音 + 专注时间 + 即时排版） =====
+    (function () {
+      // 声音引擎：真实音频优先（/audio/xx.mp3），缺文件自动回退合成
+      var AC = window.AudioContext || window.webkitAudioContext;
+      var ctx = null, master = null, whiteBuf = null;
+      function ensure() {
+        if (ctx) { if (ctx.state === 'suspended') ctx.resume(); return true; }
+        if (!AC) return false;
+        ctx = new AC(); master = ctx.createGain(); master.gain.value = 0.9; master.connect(ctx.destination);
+        var len = ctx.sampleRate * 2; whiteBuf = ctx.createBuffer(1, len, ctx.sampleRate);
+        var d = whiteBuf.getChannelData(0); for (var i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+        return true;
+      }
+      function cont(ftype, freq, q) {
+        var s = ctx.createBufferSource(); s.buffer = whiteBuf; s.loop = true;
+        var f = ctx.createBiquadFilter(); f.type = ftype; f.frequency.value = freq; if (q) f.Q.value = q;
+        var g = ctx.createGain(); g.gain.value = 0; s.connect(f); f.connect(g); g.connect(master); s.start();
+        return g;
+      }
+      var synthG = null, chirpTimer = null;
+      function stopSynth() {
+        if (chirpTimer) { clearTimeout(chirpTimer); chirpTimer = null; }
+        if (synthG && ctx) { var g = synthG; synthG = null; try { g.gain.cancelScheduledValues(ctx.currentTime); g.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.4); } catch (e) {} }
+        else synthG = null;
+      }
+      function startSynth(kind) {
+        if (!ensure()) return;
+        stopSynth();
+        synthG = kind === 'rain' ? cont('highpass', 600) : kind === 'forest' ? cont('bandpass', 420, 0.8) : cont('lowpass', 220);
+        synthG.gain.linearRampToValueAtTime(kind === 'rain' ? 0.5 : 0.32, ctx.currentTime + 0.8);
+        if (kind === 'forest') {
+          (function chirp() {
+            chirpTimer = setTimeout(function () {
+              if (!ctx || !synthG) return;
+              var t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain();
+              o.type = 'sine'; o.frequency.setValueAtTime(2100 + Math.random() * 900, t);
+              o.frequency.linearRampToValueAtTime(3000 + Math.random() * 900, t + 0.09);
+              g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.045, t + 0.02); g.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+              o.connect(g); g.connect(master); o.start(t); o.stop(t + 0.22);
+              chirp();
+            }, 900 + Math.random() * 2600);
+          })();
+        }
+      }
+      var audioEl = null, usingFile = false;
+      function tryFile(url) {
+        return new Promise(function (res) {
+          var a = new Audio(); var done = false;
+          var fin = function (ok) { if (done) return; done = true; a.oncanplaythrough = null; a.onerror = null; res(ok); };
+          a.oncanplaythrough = function () { fin(true); };
+          a.onerror = function () { fin(false); };
+          a.preload = 'auto'; a.src = url; a.load();
+          setTimeout(function () { fin(false); }, 5000);
+        });
+      }
+      function applySound(name) {
+        if (audioEl) { audioEl.pause(); audioEl = null; }
+        stopSynth(); usingFile = false;
+        tryFile('/audio/' + name + '.mp3').then(function (ok) {
+          if (ok) {
+            usingFile = true;
+            audioEl = new Audio('/audio/' + name + '.mp3'); audioEl.loop = true; audioEl.volume = 0.85;
+            if (sessionOn) audioEl.play();
+          } else if (sessionOn) {
+            startSynth(name);
+          }
+          updateTitle();
+        });
+      }
+      function pauseSound() { if (audioEl) audioEl.pause(); stopSynth(); }
+      function resumeSound() { if (usingFile && audioEl) { audioEl.play(); } else { startSynth(curSound); } }
+      /* ===== 打字键盘音（机械键盘·轻音）：Web Audio 实时合成，无音频文件 =====
+         参数与「打字音试听」页完全一致：噪声脉冲过带通 + 低频体腔共鸣，
+         每下音高随机 ±5% 去机械重复感，连续按键 18ms 节流；空格为独立闷响音色。 */
+      var wpKeysnd = (function () {
+        var ctx = null, master = null, noiseBuf = null, lastAt = 0;
+        var vol = 0.40;
+        var AC = window.AudioContext || window.webkitAudioContext;
+        function ac() {
+          if (!AC) return null;
+          if (!ctx) {
+            ctx = new AC();
+            master = ctx.createGain();
+            master.gain.value = vol * 0.6;
+            master.connect(ctx.destination);
+          }
+          if (ctx.state === 'suspended') ctx.resume();
+          return ctx;
+        }
+        function noise() {
+          var c = ac();
+          if (!noiseBuf) {
+            var len = Math.floor(c.sampleRate * 0.5);
+            noiseBuf = c.createBuffer(1, len, c.sampleRate);
+            var d = noiseBuf.getChannelData(0);
+            for (var i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+          }
+          var s = c.createBufferSource(); s.buffer = noiseBuf; return s;
+        }
+        function env(g, t, peak, dur) {
+          g.gain.setValueAtTime(0.0001, t);
+          g.gain.exponentialRampToValueAtTime(peak, t + 0.002);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+        }
+        function hit(t, freq, q, dur, peak, type) {
+          var c = ac(); if (!c) return;
+          var s = noise(), f = c.createBiquadFilter(), g = c.createGain();
+          f.type = type || 'bandpass'; f.frequency.value = freq; f.Q.value = q || 1;
+          s.connect(f); f.connect(g); g.connect(master);
+          env(g, t, peak, dur);
+          s.start(t); s.stop(t + dur + 0.05);
+        }
+        function r() { return 1 + (Math.random() - 0.5) * 0.10; }
+        function play(kind) {
+          var now = performance.now();
+          if (now - lastAt < 18) return; lastAt = now;
+          var c = ac(); if (!c) return;
+          var t = c.currentTime + 0.002;
+          if (kind === 'space') { hit(t, 760 * r(), 1.6, 0.05, 0.28); hit(t, 180, 2, 0.09, 0.16); }
+          else { hit(t, 2500 * r(), 1.1, 0.022, 0.50); hit(t, 420 * r(), 2, 0.05, 0.20); }
+        }
+        return { play: play, ac: ac };
+      })();
+      var ksOn = true;
+      try { if (localStorage.getItem('wpKeySnd') === '0') ksOn = false; } catch (e) {}
+      function keyclick(key) {
+        if (!ksOn) return;
+        wpKeysnd.play(key === ' ' ? 'space' : 'key');
+      }
+
+      var wpPlay = document.getElementById('wpPlay'), wpTitle = document.getElementById('wpTitle'),
+          wpFill = document.getElementById('wpFill'), wpDur = document.getElementById('wpDur'),
+          wpRemain = document.getElementById('wpRemain'), wpHand = document.getElementById('wpHand');
+      var SOUND_NAME = { rain: '静默之重', forest: '耀斑', music: '吉他二重奏' };
+      var curSound = 'forest', durMin = 25, totalSec = durMin * 60, remainSec = totalSec;
+      var sessionOn = false, timerId = null, endAt = 0, FAST = false;
+      function fmt(s) { s = Math.max(0, Math.round(s)); var m = Math.floor(s / 60); return (m < 10 ? '0' : '') + m + ':' + ((s % 60) < 10 ? '0' : '') + (s % 60); }
+      function updateTitle() {
+        var fileTag = usingFile ? '' : '（合成演示 · 待上传真实音频）';
+        var fastTag = FAST ? ' ⏩' : '';
+        if (sessionOn) { wpTitle.textContent = SOUND_NAME[curSound] + ' · 专注中' + fileTag + fastTag; }
+        else if (remainSec <= 0) { wpTitle.textContent = '专注完成 · ' + durMin + ' 分钟 ✓'; }
+        else { wpTitle.textContent = SOUND_NAME[curSound] + ' · ' + durMin + ' 分钟专注' + fileTag + fastTag; }
+      }
+      function paint() {
+        wpDur.textContent = durMin + ' 分钟';
+        wpRemain.textContent = fmt(remainSec);
+        var p = totalSec ? (1 - remainSec / totalSec) : 0;
+        wpFill.style.width = (p * 100) + '%';
+        wpHand.setAttribute('transform', 'rotate(' + (p * 360) + ' 12 12)');
+      }
+      function tick() {
+        var rate = FAST ? 60 : 1;
+        remainSec = (endAt - Date.now()) / 1000 * rate;
+        if (remainSec <= 0) { remainSec = 0; paint(); finish(); return; }
+        paint();
+      }
+      function startPlay() {
+        if (!ensure()) return;
+        sessionOn = true;
+        resumeSound();
+        var rate = FAST ? 60 : 1;
+        endAt = Date.now() + remainSec / rate * 1000;
+        timerId = setInterval(tick, 200);
+        wpPlay.textContent = '❚❚';
+        wpPlay.classList.add('playing');
+        updateTitle();
+      }
+      function pausePlay() {
+        sessionOn = false;
+        if (timerId) { clearInterval(timerId); timerId = null; }
+        var rate = FAST ? 60 : 1;
+        remainSec = Math.max(0, (endAt - Date.now()) / 1000 * rate);
+        pauseSound();
+        wpPlay.textContent = '▶';
+        wpPlay.classList.remove('playing');
+        updateTitle(); paint();
+      }
+      /* 专注全程不被打断 → 礼炮：从屏幕左右下角喷出彩纸（横幅已按需求去掉） */
+      function celebrate(min) {
+        var layer = document.createElement('div');
+        layer.className = 'wp-confetti';
+        document.body.appendChild(layer);
+        var colors = ['#F55000', '#ff8a3d', '#ffd166', '#ffffff', '#ffb703', '#ff5c5c', '#ffd9b3'];
+        var canAnim = typeof Element.prototype.animate === 'function';
+        if (canAnim) {
+          for (var i = 0; i < 120; i++) {
+            var p = document.createElement('i');
+            p.className = 'cf-piece';
+            var fromLeft = i % 2 === 0;
+            p.style.background = colors[(Math.random() * colors.length) | 0];
+            p.style.left = (fromLeft ? (1 + Math.random() * 6) : (93 + Math.random() * 6)) + '%';
+            p.style.width = (6 + Math.random() * 6) + 'px';
+            p.style.height = (10 + Math.random() * 10) + 'px';
+            layer.appendChild(p);
+            var dx = (fromLeft ? 1 : -1) * (140 + Math.random() * 300);
+            var dy = -(300 + Math.random() * 340);
+            var rot = Math.random() * 900 - 450;
+            p.animate([
+              { transform: 'translate(0,0) rotate(0deg)', opacity: 1 },
+              { transform: 'translate(' + dx + 'px,' + dy + 'px) rotate(' + rot + 'deg)', opacity: 1, offset: .5 },
+              { transform: 'translate(' + (dx * 1.2) + 'px,' + (dy + 520) + 'px) rotate(' + (rot * 1.7) + 'deg)', opacity: 0 }
+            ], { duration: 1500 + Math.random() * 1100, delay: Math.random() * 320, easing: 'cubic-bezier(.15,.7,.3,1)', fill: 'forwards' });
+          }
+        }
+        setTimeout(function () { if (layer.parentNode) layer.parentNode.removeChild(layer); }, 3400);
+      }
+      function finish() {
+        sessionOn = false;
+        if (timerId) { clearInterval(timerId); timerId = null; }
+        pauseSound();
+        wpPlay.textContent = '▶';
+        wpPlay.classList.remove('playing');
+        updateTitle();
+        celebrate(durMin);
+      }
+      function resetSession() {
+        sessionOn = false;
+        if (timerId) { clearInterval(timerId); timerId = null; }
+        pauseSound();
+        totalSec = durMin * 60; remainSec = totalSec;
+        wpPlay.textContent = '▶';
+        wpPlay.classList.remove('playing');
+        updateTitle(); paint();
+      }
+      wpPlay.addEventListener('click', function () {
+        if (sessionOn) { pausePlay(); return; }
+        if (remainSec <= 0) resetSession();
+        startPlay();
+      });
+      document.getElementById('wpReset').addEventListener('click', resetSession);
+      var wpSoundSeg = document.getElementById('wpSoundSeg');
+      wpSoundSeg.querySelectorAll('button').forEach(function (b) {
+        b.addEventListener('click', function () {
+          wpSoundSeg.querySelectorAll('button').forEach(function (x) { x.classList.remove('on'); });
+          b.classList.add('on');
+          curSound = b.dataset.sound;
+          applySound(curSound);
+          if (!sessionOn) updateTitle();
+        });
+      });
+      var wpDurSeg = document.getElementById('wpDurSeg');
+      wpDurSeg.querySelectorAll('button').forEach(function (b) {
+        b.addEventListener('click', function () {
+          wpDurSeg.querySelectorAll('button').forEach(function (x) { x.classList.remove('on'); });
+          b.classList.add('on');
+          durMin = parseInt(b.dataset.dur, 10);
+          resetSession();
+        });
+      });
+      /* 打字键盘音开关（机械轻音），状态记忆到 localStorage */
+      var wpKeySnd = document.getElementById('wpKeySnd');
+      function syncKeySnd() { wpKeySnd.classList.toggle('on', ksOn); }
+      wpKeySnd.addEventListener('click', function () {
+        ksOn = !ksOn;
+        try { localStorage.setItem('wpKeySnd', ksOn ? '1' : '0'); } catch (e) {}
+        syncKeySnd();
+        if (ksOn) wpKeysnd.ac();
+      });
+      syncKeySnd();
+      /* 专注模式：优先原生全屏；被 iframe/权限拦截时自动降级为伪全屏（fixed 铺满视口） */
+      var wpFocus = document.getElementById('wpFocus');
+      function wpWrapEl() { return document.querySelector('#pane-write .wp-wrap'); }
+      function paintFocusBtn() {
+        var on = document.fullscreenElement || (wpWrapEl() && wpWrapEl().classList.contains('wp-fs'));
+        wpFocus.textContent = on ? '✕ 退出专注' : '⛶ 专注模式';
+      }
+      function pseudoFs(on) { var el = wpWrapEl(); if (el) el.classList.toggle('wp-fs', on); paintFocusBtn(); }
+      function exitFocus() {
+        if (document.fullscreenElement && document.exitFullscreen) { document.exitFullscreen(); }
+        pseudoFs(false);
+      }
+      wpFocus.addEventListener('click', function () {
+        var el = wpWrapEl();
+        if (!el) return;
+        if (document.fullscreenElement || el.classList.contains('wp-fs')) { exitFocus(); return; }
+        if (document.fullscreenEnabled && el.requestFullscreen) {
+          try {
+            var p = el.requestFullscreen();
+            if (p && p.catch) p.catch(function () { pseudoFs(true); });
+          } catch (e) { pseudoFs(true); }
+          setTimeout(function () { if (!document.fullscreenElement) pseudoFs(true); }, 350);
+        } else {
+          pseudoFs(true);
+        }
+      });
+      document.addEventListener('fullscreenchange', paintFocusBtn);
+      document.addEventListener('keydown', function (ev) {
+        if (ev.key === 'Escape' && !document.fullscreenElement) {
+          var el = wpWrapEl();
+          if (el && el.classList.contains('wp-fs')) pseudoFs(false);
+        }
+      });
+      document.addEventListener('keydown', function (ev) {
+        var tg = ev.target;
+        if (tg && (tg.tagName === 'TEXTAREA' || tg.tagName === 'INPUT')) return;
+        if (ev.key === 't' || ev.key === 'T') {
+          FAST = !FAST;
+          if (sessionOn) { endAt = Date.now() + remainSec / (FAST ? 60 : 1) * 1000; }
+          updateTitle();
+        }
+      });
+      /* 初始化即加载默认曲目（耀斑）真实音频：修复点播放键走合成演示、标题误标「待上传真实音频」 */
+      applySound(curSound);
+      updateTitle(); paint();
+
+      // Markdown 解析
+      function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+      /* 公众号专用：全部内联样式（公众号会剥掉 <style> 与外部 class，只认 style 属性） */
+      var WX = {
+        p: 'margin:0 0 20px;font-size:16px;line-height:1.8;color:#3f3f3f;letter-spacing:.03em;text-align:justify;word-break:break-word;',
+        h: 'font-weight:700;color:#1a1a1a;line-height:1.45;margin:32px 0 16px;letter-spacing:.02em;',
+        bq: 'border-left:3px solid #d6d3d1;background:transparent;padding:2px 0 2px 16px;margin:0 0 20px;color:#44403c;font-size:15px;line-height:1.8;border-radius:0;',
+        ul: 'margin:0 0 20px;padding-left:24px;color:#3f3f3f;font-size:16px;line-height:1.85;',
+        li: 'margin:0 0 8px;',
+        pre: 'background:#1f1b18;color:#ece5de;padding:15px 16px;border-radius:8px;font-size:13px;line-height:1.75;white-space:pre-wrap;word-break:break-all;margin:0 0 20px;font-family:Menlo,Consolas,monospace;',
+        code: 'background:#f4f0ec;padding:2px 6px;border-radius:4px;font-size:14px;color:#b1541f;',
+        hr: 'height:1px;background:#ebe5df;margin:30px 0;font-size:0;line-height:0;',
+        a: 'color:#F55000;text-decoration:none;border-bottom:1px solid rgba(245,80,0,.45);',
+        strong: 'font-weight:700;color:#F55000;'
+      };
+      function inline(t, wx) {
+        t = esc(t);
+        if (wx) {
+          t = t.replace(/`([^`]+)`/g, '<span style="' + WX.code + '">$1</span>');
+          t = t.replace(/\*\*([^*]+)\*\*/g, '<strong style="' + WX.strong + '">$1</strong>');
+          t = t.replace(/(^|[^*\w])\*([^*\n]+)\*/g, '$1<em style="font-style:italic;">$2</em>');
+          t = t.replace(/~~([^~]+)~~/g, '<span style="text-decoration:line-through;color:#999;">$1</span>');
+          t = t.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" style="' + WX.a + '">$1</a>');
+          return t;
+        }
+        t = t.replace(/`([^`]+)`/g, '<code>$1</code>');
+        t = t.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+        t = t.replace(/(^|[^*\w])\*([^*\n]+)\*/g, '$1<em>$2</em>');
+        t = t.replace(/~~([^~]+)~~/g, '<del>$1</del>');
+        t = t.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+        return t;
+      }
+      function parse(md, wx) {
+        var lines = md.split('\n'), html = '', i = 0;
+        while (i < lines.length) {
+          var line = lines[i];
+          if (/^```/.test(line)) {
+            var buf = []; i++;
+            while (i < lines.length && !/^```/.test(lines[i])) { buf.push(lines[i]); i++; }
+            i++;
+            html += wx
+              ? '<section style="' + WX.pre + '">' + esc(buf.join('\n')).replace(/\n/g, '<br>') + '</section>'
+              : '<pre><code>' + esc(buf.join('\n')) + '</code></pre>';
+            continue;
+          }
+          if (/^\s*---+\s*$/.test(line)) { html += wx ? '<section style="' + WX.hr + '"></section>' : '<hr>'; i++; continue; }
+          var h = line.match(/^(#{1,6})\s+(.*)$/);
+          if (h) {
+            var lv = h[1].length;
+            var hs = [26, 22, 19, 17, 16, 16][lv - 1];
+            html += wx
+              ? '<section style="font-size:' + hs + 'px;' + WX.h + '">' + inline(h[2], true) + '</section>'
+              : '<h' + lv + '>' + inline(h[2]) + '</h' + lv + '>';
+            i++; continue;
+          }
+          if (/^\s*>\s?/.test(line)) {
+            var q = [];
+            while (i < lines.length && /^\s*>\s?/.test(lines[i])) { q.push(lines[i].replace(/^\s*>\s?/, '')); i++; }
+            html += wx
+              ? '<section style="' + WX.bq + '">' + inline(q.join('<br>'), true) + '</section>'
+              : '<blockquote>' + inline(q.join('<br>')) + '</blockquote>';
+            continue;
+          }
+          if (/^\s*[-*]\s+/.test(line)) {
+            var ul = [];
+            while (i < lines.length && /^\s*[-*]\s+/.test(lines[i])) { ul.push(inline(lines[i].replace(/^\s*[-*]\s+/, ''), wx)); i++; }
+            html += wx
+              ? '<ul style="' + WX.ul + '">' + ul.map(function (x) { return '<li style="' + WX.li + '">' + x + '</li>'; }).join('') + '</ul>'
+              : '<ul>' + ul.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul>';
+            continue;
+          }
+          if (/^\s*\d+\.\s+/.test(line)) {
+            var ol = [];
+            while (i < lines.length && /^\s*\d+\.\s+/.test(lines[i])) { ol.push(inline(lines[i].replace(/^\s*\d+\.\s+/, ''), wx)); i++; }
+            html += wx
+              ? '<ol style="' + WX.ul + '">' + ol.map(function (x) { return '<li style="' + WX.li + '">' + x + '</li>'; }).join('') + '</ol>'
+              : '<ol>' + ol.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ol>';
+            continue;
+          }
+          if (line.trim() === '') { i++; continue; }
+          var p = [];
+          while (i < lines.length && lines[i].trim() !== '' && !/^(#{1,6})\s/.test(lines[i]) && !/^\s*>\s?/.test(lines[i]) && !/^\s*[-*]\s+/.test(lines[i]) && !/^\s*\d+\.\s+/.test(lines[i]) && !/^```/.test(lines[i]) && !/^\s*---+\s*$/.test(lines[i])) { p.push(inline(lines[i], wx)); i++; }
+          if (p.length) html += wx ? '<section style="' + WX.p + '">' + p.join('<br>') + '</section>' : '<p>' + p.join('<br>') + '</p>';
+        }
+        return html || '<p class="ph">写点什么…（点此编辑）</p>';
+      }
+
+      // 块编辑器
+      var wpEditor = document.getElementById('wpEditor'), wpWc = document.getElementById('wpWc');
+      function fit(ta) { ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'; }
+      function countWords() { var n = 0; wpEditor.querySelectorAll('.blk').forEach(function (b) { n += (b.dataset.md || '').replace(/\s/g, '').length; }); wpWc.textContent = n + ' 字'; }
+      function renderBlock(b) {
+        var md = b.dataset.md || '';
+        b.querySelector('.rendered').innerHTML = md.trim() === '' ? '<p class="ph">' + (b.dataset.ph || '写点什么…（点此编辑）') + '</p>' : parse(md);
+        b.classList.remove('editing');
+        countWords();
+      }
+      function enterEdit(b) {
+        var ta = b.querySelector('.src'); ta.value = b.dataset.md || '';
+        ta.placeholder = b.dataset.ph || '';
+        b.classList.add('editing'); fit(ta); ta.focus();
+        var v = ta.value; ta.setSelectionRange(v.length, v.length);
+      }
+      function commit(b) { b.dataset.md = b.querySelector('.src').value; renderBlock(b); }
+      function newBlock(after) {
+        var b = makeBlock('');
+        after.parentNode.insertBefore(b, after.nextSibling);
+        enterEdit(b);
+      }
+      function makeBlock(md) {
+        var b = document.createElement('div'); b.className = 'blk'; b.dataset.md = md || '';
+        b.innerHTML = '<div class="rendered"></div><textarea class="src" rows="1"></textarea>';
+        b.querySelector('.rendered').addEventListener('click', function () { enterEdit(b); });
+        var ta = b.querySelector('.src');
+        ta.addEventListener('input', function () { b.dataset.md = ta.value; fit(ta); countWords(); });
+        ta.addEventListener('blur', function () { commit(b); });
+        /* Markdown 快捷键：把选区（或占位词）包进语法标记 */
+        function wrapSel(before, after, fallback) {
+          var s = ta.selectionStart, e = ta.selectionEnd, v = ta.value;
+          var sel = v.slice(s, e);
+          var has = sel.length > 0, inner = has ? sel : fallback;
+          ta.value = v.slice(0, s) + before + inner + after + v.slice(e);
+          b.dataset.md = ta.value; fit(ta); countWords();
+          var a = s + before.length;
+          ta.setSelectionRange(a, a + inner.length);
+          ta.focus();
+        }
+        ta.addEventListener('keydown', function (ev) {
+          var mod = ev.ctrlKey || ev.metaKey;
+          if (mod && (ev.key === 'b' || ev.key === 'B')) { ev.preventDefault(); wrapSel('**', '**', '加粗文字'); return; }
+          if (mod && (ev.key === 'i' || ev.key === 'I')) { ev.preventDefault(); wrapSel('*', '*', '斜体文字'); return; }
+          if (mod && (ev.key === 'k' || ev.key === 'K')) { ev.preventDefault(); wrapSel('[', '](https://)', '链接文字'); return; }
+          if (ev.key === 'Enter' && !ev.shiftKey) {
+            ev.preventDefault();
+            if (ta.value.trim() === '') return;
+            commit(b); newBlock(b);
+          } else if (ev.key === 'Backspace' && ta.selectionStart === 0 && ta.selectionEnd === 0) {
+            var prev = b.previousElementSibling;
+            if (prev && prev.classList.contains('blk')) { ev.preventDefault(); b.remove(); enterEdit(prev); }
+          }
+        });
+        return b;
+      }
+
+      var seed = [
+        '# 白噪音+专注时间+排版',
+        '### 这是一个集三者一起的工具。',
+        '你可以在这里写作、听白噪音、专注写作25分钟。',
+        '* 它支持Markdown格式',
+        '- 写完就排版完。Markdown教程以及，读一读：[《工具箱 2：AI时代，写作就是编程。》](https://mp.weixin.qq.com/s/82u-7l75Z04l7ohQzQTQLg)',
+        '比如引用',
+        '> 我是一个引用',
+        '我是**加粗**过的',
+        '还有列表、代码块等等。换行要 Shift+Enter；快捷键：Ctrl+B 加粗、Ctrl+I 斜体、Ctrl+K 链接，全选/复制和平时一样。',
+        '你可以复制`Markdown`格式，也可以复制`HTML`直接插入到公众号文章中。',
+        '对了，有任何bug，通过首页底部的联系方式告诉我。**让我们一起做好创作**。',
+        ''
+      ];
+      seed.forEach(function (md) { wpEditor.appendChild(makeBlock(md)); });
+      wpEditor.querySelectorAll('.blk').forEach(function (b) { renderBlock(b); });
+      var wpLast = wpEditor.lastElementChild; if (wpLast && (wpLast.dataset.md || '').trim() === '') enterEdit(wpLast);
+
+      wpEditor.addEventListener('keydown', function (ev) {
+        if (ev.target && ev.target.classList && ev.target.classList.contains('src')) {
+          /* 字符键（含空格）发声；中文输入法组合键（key==='Process'）同样计一下；
+             回车 / 退格 / 方向键不响，与试听页一致 */
+          if (ev.key.length === 1 || ev.key === 'Process') keyclick(ev.key);
+        }
+      });
+
+      // 复制 Markdown / 复制 HTML
+      function copyText(text, btn, label, toastMsg) {
+        function ok() { btn.textContent = '已复制 ✓'; gToast(toastMsg || '已复制到剪贴板'); setTimeout(function () { btn.textContent = label; }, 1600); }
+        function legacy() {
+          var ta = document.createElement('textarea'); ta.value = text;
+          ta.style.position = 'fixed'; ta.style.opacity = '0';
+          document.body.appendChild(ta); ta.select();
+          try { document.execCommand('copy'); ok(); } catch (e) {}
+          document.body.removeChild(ta);
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(ok, legacy); }
+        else legacy();
+      }
+      function collectMd() {
+        var parts = [];
+        wpEditor.querySelectorAll('.blk').forEach(function (b) {
+          var v = (b.dataset.md || '').replace(/\s+$/, '');
+          if (v.trim() !== '') parts.push(v);
+        });
+        return parts.join('\n\n');
+      }
+      function collectHtml() {
+        var parts = [];
+        wpEditor.querySelectorAll('.blk').forEach(function (b) {
+          if ((b.dataset.md || '').trim() === '') return;
+          parts.push(b.querySelector('.rendered').innerHTML);
+        });
+        return parts.join('\n');
+      }
+      var wpCopyMd = document.getElementById('wpCopyMd');
+      wpCopyMd.addEventListener('click', function () { copyText(collectMd(), wpCopyMd, '复制 Markdown'); });
+      /* 公众号专用 HTML：全部内联样式，粘进公众号后台不丢排版 */
+      function collectWxHtml() {
+        var parts = [];
+        wpEditor.querySelectorAll('.blk').forEach(function (b) {
+          var md = b.dataset.md || '';
+          if (md.trim() === '') return;
+          parts.push(parse(md, true));
+        });
+        return parts.join('\n');
+      }
+      var wpCopyHtml = document.getElementById('wpCopyHtml');
+      /* 公众号粘贴专用：必须把 HTML 以 text/html 写入剪贴板——
+         只写 text/plain 时，公众号编辑器会把 <section> 标签当纯文本原样显示（即"乱码"）。
+         首选 ClipboardItem 双格式；降级用隐藏 contenteditable 选中 + execCommand('copy')（公众号排版工具的标准做法）。 */
+      function copyRichHtml(html, btn, label) {
+        function ok() { btn.textContent = '已复制 ✓'; gToast('已复制公众号排版，去公众号正文 Ctrl+V 粘贴'); setTimeout(function () { btn.textContent = label; }, 1600); }
+        function legacy() {
+          var box = document.createElement('div');
+          box.contentEditable = 'true';
+          box.style.cssText = 'position:fixed;left:-9999px;top:0;opacity:0;';
+          box.innerHTML = html;
+          document.body.appendChild(box);
+          var range = document.createRange();
+          range.selectNodeContents(box);
+          var sel = window.getSelection();
+          sel.removeAllRanges(); sel.addRange(range);
+          var done = false;
+          try { done = document.execCommand('copy'); } catch (e) {}
+          sel.removeAllRanges();
+          document.body.removeChild(box);
+          if (done) ok(); else btn.textContent = '复制失败';
+        }
+        if (window.ClipboardItem && navigator.clipboard && navigator.clipboard.write) {
+          try {
+            var item = new ClipboardItem({
+              'text/html': new Blob([html], { type: 'text/html' }),
+              'text/plain': new Blob([html], { type: 'text/plain' })
+            });
+            navigator.clipboard.write([item]).then(ok, legacy);
+            return;
+          } catch (e) { /* 走降级 */ }
+        }
+        legacy();
+      }
+      wpCopyHtml.addEventListener('click', function () { copyRichHtml(collectWxHtml(), wpCopyHtml, '复制 HTML'); });
+      /* 马上写一篇：一键清空全部示例占位语，只剩「我要记录···」，开始打字自动覆盖 */
+      var wpStart = document.getElementById('wpStart');
+      wpStart.addEventListener('click', function () {
+        wpEditor.innerHTML = '';
+        var b = makeBlock('');
+        b.dataset.ph = '我要记录···';
+        wpEditor.appendChild(b);
+        enterEdit(b);
+        countWords();
+      });
+    })();
+
+  </script>  </main> <footer> <div class="footer-inner"> <p>© 2026 像企业家一样写作</p> <div class="footer-links"> <button type="button" class="footer-link-btn" id="wechat-qr-trigger">网站有bug，“码”上办，联系本人。</button> </div> </div> </footer> <!-- 微信名片二维码浮层 --> <div id="wechat-qr-overlay" class="wechat-qr-overlay" aria-hidden="true"> <div class="wechat-qr-modal"> <button type="button" class="wechat-qr-close" id="wechat-qr-close" aria-label="关闭">✕</button> <img src="/images/wechat-qr.png" alt="微信名片二维码"> <p class="wechat-qr-cap">微信扫一扫，联系本人</p> </div> </div> <script>
+    (function () {
+      var trigger = document.getElementById('wechat-qr-trigger');
+      var overlay = document.getElementById('wechat-qr-overlay');
+      var closeBtn = document.getElementById('wechat-qr-close');
+      if (!trigger || !overlay) return;
+      function openQr() {
+        overlay.classList.add('active');
+        overlay.setAttribute('aria-hidden', 'false');
+      }
+      function closeQr() {
+        overlay.classList.remove('active');
+        overlay.setAttribute('aria-hidden', 'true');
+      }
+      trigger.addEventListener('click', openQr);
+      if (closeBtn) closeBtn.addEventListener('click', closeQr);
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeQr();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeQr();
+      });
+    })();
+  </script>  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    let _searchIndex = null;
+
+    async function loadSearchIndex() {
+      if (_searchIndex) return _searchIndex;
+      try {
+        const resp = await fetch('/search.json?t=' + Date.now());
+        _searchIndex = await resp.json();
+      } catch (e) {
+        console.warn('search.json load failed', e);
+        _searchIndex = { posts: [], books: [] };
+      }
+      return _searchIndex;
+    }
+
+    function openSearch(initialQuery) {
+      const overlay = document.getElementById('search-overlay');
+      const input = document.getElementById('search-input');
+      overlay.classList.add('active');
+      input.value = initialQuery || '';
+      input.focus();
+      renderResults(input.value);
+    }
+
+    function closeSearch() {
+      document.getElementById('search-overlay').classList.remove('active');
+    }
+
+    function getSnippet(text, keyword, radius) {
+      radius = radius || 30;
+      if (!text) return '';
+      const idx = text.toLowerCase().indexOf(keyword.toLowerCase());
+      if (idx === -1) return text.substring(0, 80);
+      const start = Math.max(0, idx - radius);
+      const end = Math.min(text.length, idx + keyword.length + radius);
+      let s = text.substring(start, end);
+      if (start > 0) s = '…' + s;
+      if (end < text.length) s = s + '…';
+      return s;
+    }
+
+    function escapeHtml(s) {
+      return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    function escapeReg(s) {
+      return (s || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+    function highlight(text, q) {
+      const safe = escapeHtml(text);
+      if (!q) return safe;
+      try {
+        const re = new RegExp('(' + escapeReg(q) + ')', 'gi');
+        return safe.replace(re, '<mark>$1</mark>');
+      } catch (e) { return safe; }
+    }
+    function matchScore(item, q) {
+      const t = (item.title || '').toLowerCase();
+      const d = (item.desc || '').toLowerCase();
+      const c = (item.content || '').toLowerCase();
+      if (t.includes(q)) return 3;
+      if (d.includes(q)) return 2;
+      if (c.includes(q)) return 1;
+      return 0;
+    }
+    function resultItemHtml(item, q, href, isBook) {
+      const snippet = getSnippet(item.content || '', q, 40);
+      const contentHit = (item.content || '').toLowerCase().includes(q);
+      const desc = (contentHit && snippet) ? snippet : (item.desc || snippet || '');
+      return '<a href="' + href + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+        '<div class="search-result-title"><span class="search-result-type' + (isBook ? ' book' : '') + '">' + (isBook ? '书籍' : '章节') + '</span>' + highlight(item.title, q) + '</div>' +
+        '<div class="search-result-desc">' + highlight(desc, q) + '</div>' +
+      '</a>';
+    }
+
+    // 专栏条目：外链到微信公众号（不加 ?q=）
+    function columnItemHtml(col, q) {
+      return '<a href="' + escapeHtml(col.url) + '" target="_blank" rel="noopener noreferrer" class="search-result-item">' +
+        '<div class="search-result-title"><span class="search-result-type column">专栏</span>' + highlight(col.title, q) + '</div>' +
+        '<div class="search-result-desc">' + highlight(col.desc || col.columnName, q) + '</div>' +
+      '</a>';
+    }
+
+    function renderResults(query) {
+      const container = document.getElementById('search-results');
+      if (!query.trim()) {
+        container.innerHTML = '<div class="search-empty">输入关键词搜索书籍、章节与专栏…</div>';
+        return;
+      }
+      const q = query.toLowerCase();
+      const index = _searchIndex || { posts: [], books: [], columns: [] };
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      const matchedColumns = (index.columns || []).filter(c =>
+        c.title.toLowerCase().includes(q) ||
+        c.columnName.toLowerCase().includes(q) ||
+        c.rawTitle.toLowerCase().includes(q) ||
+        String(c.issue).includes(q)
+      );
+      if (matchedPosts.length === 0 && matchedBooks.length === 0 && matchedColumns.length === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        return;
+      }
+      const bookBySeries = {};
+      index.books.forEach(b => { if (b.series) bookBySeries[b.series] = b.title; });
+
+      let html = '';
+      // 书籍命中 → 单独作为「书籍」结果
+      if (matchedBooks.length) {
+        matchedBooks.sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        matchedBooks.forEach(b => { html += resultItemHtml(b, q, '/book/' + b.slug, true); });
+      }
+      // 章节按书籍分组
+      const groups = {};
+      matchedPosts.forEach(p => { const k = p.series || ''; (groups[k] = groups[k] || []).push(p); });
+      Object.keys(groups).forEach(series => {
+        const title = bookBySeries[series] || series || '其他';
+        groups[series].sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(title) + '》</div>';
+        groups[series].forEach(p => { html += resultItemHtml(p, q, '/blog/' + p.slug, false); });
+        html += '</div>';
+      });
+      // 专栏按专栏名分组（外链到微信）
+      const colGroups = {};
+      matchedColumns.forEach(c => { const k = c.columnName || ''; (colGroups[k] = colGroups[k] || []).push(c); });
+      Object.keys(colGroups).forEach(name => {
+        colGroups[name].sort((a, b) => a.issue - b.issue);
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(name) + '》· 专栏</div>';
+        colGroups[name].forEach(c => { html += columnItemHtml(c, q); });
+        html += '</div>';
+      });
+      container.innerHTML = html;
+    }
+
+    // ===== Hero 内联搜索（方案 B） =====
+    function closeHeroSearch() {
+      const dropdown = document.getElementById('hero-search-dropdown');
+      if (dropdown) { dropdown.classList.remove('show'); dropdown.innerHTML = ''; }
+    }
+
+    async function renderHeroResults(query) {
+      const container = document.getElementById('hero-search-dropdown');
+      if (!container) return;
+      if (!query.trim()) { closeHeroSearch(); return; }
+      const index = await loadSearchIndex();
+      const q = query.toLowerCase();
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      const matchedColumns = (index.columns || []).filter(c =>
+        c.title.toLowerCase().includes(q) ||
+        c.columnName.toLowerCase().includes(q) ||
+        c.rawTitle.toLowerCase().includes(q) ||
+        String(c.issue).includes(q)
+      );
+      const total = matchedPosts.length + matchedBooks.length + matchedColumns.length;
+      if (total === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        container.classList.add('show');
+        return;
+      }
+      const bookBySeries = {};
+      index.books.forEach(b => { if (b.series) bookBySeries[b.series] = b.title; });
+      let html = '';
+      if (matchedBooks.length) {
+        matchedBooks.slice(0, 2).sort((a, b) => matchScore(b, q) - matchScore(a, q)).forEach(b => {
+          html += resultItemHtml(b, q, '/book/' + b.slug, true);
+        });
+      }
+      const groups = {};
+      matchedPosts.forEach(p => { const k = p.series || ''; (groups[k] = groups[k] || []).push(p); });
+      let shown = 0;
+      Object.keys(groups).slice(0, 3).forEach(series => {
+        const title = bookBySeries[series] || series || '其他';
+        groups[series].sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(title) + '》</div>';
+        groups[series].slice(0, 3).forEach(p => { html += resultItemHtml(p, q, '/blog/' + p.slug, false); shown++; });
+        html += '</div>';
+      });
+      // 专栏命中（外链到微信）
+      const colGroups = {};
+      matchedColumns.forEach(c => { const k = c.columnName || ''; (colGroups[k] = colGroups[k] || []).push(c); });
+      Object.keys(colGroups).slice(0, 2).forEach(name => {
+        colGroups[name].sort((a, b) => a.issue - b.issue);
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(name) + '》· 专栏</div>';
+        colGroups[name].slice(0, 3).forEach(c => { html += columnItemHtml(c, q); shown++; });
+        html += '</div>';
+      });
+      if (total > shown + Math.min(matchedBooks.length, 2)) {
+        html += '<a href="#" class="hero-search-all" data-q="' + encodeURIComponent(q) + '">查看全部 ' + total + ' 条结果 →</a>';
+      }
+      container.innerHTML = html;
+      container.classList.add('show');
+    }
+
+    function initHeroSearch() {
+      const input = document.getElementById('hero-search-input');
+      const dropdown = document.getElementById('hero-search-dropdown');
+      const goBtn = document.getElementById('hero-search-go');
+      if (!input || !dropdown) return;
+
+      let inputTimeout;
+      input.addEventListener('input', () => {
+        clearTimeout(inputTimeout);
+        inputTimeout = setTimeout(() => renderHeroResults(input.value), 120);
+      });
+      input.addEventListener('focus', () => { if (input.value.trim()) renderHeroResults(input.value); });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(input.value); });
+        }
+        if (e.key === 'Escape') { closeHeroSearch(); input.blur(); }
+      });
+
+      if (goBtn) {
+        goBtn.addEventListener('click', () => {
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(input.value); });
+        });
+      }
+
+      dropdown.addEventListener('click', (e) => {
+        const all = e.target.closest('.hero-search-all');
+        if (all) {
+          e.preventDefault();
+          const q = decodeURIComponent(all.getAttribute('data-q') || '');
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(q); });
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.hero-search')) closeHeroSearch();
+      });
+    }
+
+    initHeroSearch();
+
+    // ===== 导航搜索图标（全站兜底入口） =====
+    const navSearchBtn = document.getElementById('nav-search-btn');
+    if (navSearchBtn) {
+      navSearchBtn.addEventListener('click', () => {
+        loadSearchIndex().then(() => openSearch());
+      });
+    }
+
+    document.getElementById('search-close').addEventListener('click', closeSearch);
+    document.getElementById('search-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeSearch();
+    });
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      renderResults(e.target.value);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+    });
+    });
+  </script> <!-- 页面关键词高亮（从搜索结果跳转过来时） --> <script>
+    (function() {
+      function getQueryParam(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name) || '';
+      }
+
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function highlightKeyword(keyword) {
+        if (!keyword.trim()) return;
+        const main = document.querySelector('main');
+        if (!main) return;
+
+        const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, null, false);
+        const nodesToReplace = [];
+        const regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
+
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node.parentElement && node.parentElement.tagName === 'MARK') continue;
+          if (regex.test(node.textContent)) {
+            nodesToReplace.push(node);
+          }
+        }
+
+        let firstMark = null;
+        nodesToReplace.forEach(textNode => {
+          const span = document.createElement('span');
+          span.innerHTML = textNode.textContent.replace(regex, '<mark class="search-highlight">$1</mark>');
+          const marks = span.querySelectorAll('mark');
+          if (marks.length > 0 && !firstMark) {
+            firstMark = marks[0];
+          }
+          const fragment = document.createDocumentFragment();
+          while (span.firstChild) {
+            fragment.appendChild(span.firstChild);
+          }
+          textNode.parentNode.replaceChild(fragment, textNode);
+        });
+
+        if (firstMark) {
+          firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(function() {
+            const marks = main.querySelectorAll('mark.search-highlight');
+            marks.forEach(function(m) {
+              const parent = m.parentNode;
+              parent.replaceChild(document.createTextNode(m.textContent), m);
+              parent.normalize();
+            });
+          }, 6000);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          highlightKeyword(getQueryParam('q'));
+        });
+      } else {
+        highlightKeyword(getQueryParam('q'));
+      }
+    })();
+  </script> <!-- 代码块复制按钮 --> <script>
+    (function() {
+      function initCopyButtons() {
+        document.querySelectorAll('.prose pre').forEach(function(pre) {
+          if (pre.querySelector('.copy-btn')) return;
+          var btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.textContent = '复制';
+          btn.setAttribute('aria-label', '复制代码');
+          btn.addEventListener('click', function() {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+              btn.textContent = '已复制';
+              btn.classList.add('copied');
+              setTimeout(function() {
+                btn.textContent = '复制';
+                btn.classList.remove('copied');
+              }, 2000);
+            }).catch(function() {
+              btn.textContent = '失败';
+              setTimeout(function() { btn.textContent = '复制'; }, 2000);
+            });
+          });
+          pre.style.position = 'relative';
+          pre.appendChild(btn);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCopyButtons);
+      } else {
+        initCopyButtons();
+      }
+    })();
+  </script> <!-- 选中文字：复制 / 生成金句卡片 --> <div class="sel-bubble" id="sel-bubble"> <span class="sb-act sb-copy" id="sbCopy">复制</span> <span class="sb-sep"></span> <span class="sb-act sb-card" id="sbCard">金句卡片</span> </div> <!-- 金句卡片弹层 --> <div class="qc-overlay" id="qcOverlay"> <div class="qc-modal"> <button class="qc-close" id="qcClose" aria-label="关闭">×</button> <div class="qc-stage"> <div class="qc a" id="qcCard"> <div class="qc-mark">“</div> <div class="qc-quote" id="qcQuote">先写完，再改清楚。</div> <div class="qc-foot"> <img class="qc-logo" src="/images/logo-180x180.png" alt="logo"> <div class="qc-src"> <div class="qc-site" id="qcSite">像企业家一样写作</div> <div class="qc-from" id="qcFrom">—— 选自正文</div> <div class="qc-url">gusangciren.github.io</div> </div> </div> </div> <div class="qc-tip">样式会记住你上次的选择</div> </div> <div class="qc-side"> <h3>金句卡片</h3> <p class="qc-sub">选好样式后下载或复制图片</p> <div class="qc-styles" id="qcStyles"> <div class="qc-style active" data-s="b"><div class="sw b"></div><div><div class="t">A · 深色品牌</div><div class="d">信息流吸睛</div></div></div> <div class="qc-style" data-s="a"><div class="sw a"></div><div><div class="t">B · 极简暖白</div><div class="d">站点默认，最协调</div></div></div> <div class="qc-style" data-s="c"><div class="sw c"></div><div><div class="t">C · 杂志书页</div><div class="d">书卷气</div></div></div> </div> <div class="qc-actions"> <div class="qc-act primary" data-act="copyimg">复制图片</div> <div class="qc-act" data-act="download">下载图片</div> </div> </div> </div> </div> <!-- 交互增强：阅读进度条 / 暗色模式 / 划词复制 / 金句卡片 --> <script>
+    (function () {
+      // ===== 划词气泡：复制 / 金句卡片 =====
+      var bubble = document.getElementById('sel-bubble');
+      var sbCopy = document.getElementById('sbCopy');
+      var sbCard = document.getElementById('sbCard');
+      var overlay = document.getElementById('qcOverlay');
+      var card = document.getElementById('qcCard');
+      var qQuote = document.getElementById('qcQuote');
+      var qSite = document.getElementById('qcSite');
+      var qFrom = document.getElementById('qcFrom');
+      var stylesBox = document.getElementById('qcStyles');
+      var lastText = '';
+
+      function hideBubble() { bubble.classList.remove('show'); }
+      function getSource() {
+        var h = document.querySelector('.article-header h1, .book-details h1, .prose h1, .community-hero h1');
+        var name = h ? h.textContent.trim() : document.title.trim();
+        try {
+          // 去掉标题尾部与站名重复的「— 像企业家一样写作」
+          name = name.replace(new RegExp('\\s*[—–-]\\s*' + getSite() + '\\s*$'), '');
+        } catch (e) {}
+        return name;
+      }
+      function getSite() {
+        var m = document.querySelector('meta[property="og:site_name"]');
+        return m ? m.content : '像企业家一样写作';
+      }
+
+      if (bubble) {
+        var SKIP = 'input,textarea,pre,code,.search-overlay,.wechat-qr-overlay,.rdl-ov,button,a,img';
+        document.addEventListener('mouseup', function () {
+          setTimeout(function () {
+            var sel = window.getSelection();
+            if (!sel || sel.isCollapsed) { hideBubble(); return; }
+            var text = sel.toString().trim();
+            var node = sel.anchorNode;
+            if (text.length < 2 || !node || !node.parentElement || node.parentElement.closest(SKIP)) { hideBubble(); return; }
+            var rect = sel.getRangeAt(0).getBoundingClientRect();
+            bubble.style.left = (rect.left + rect.width / 2) + 'px';
+            bubble.style.top = (rect.top - 6) + 'px';
+            lastText = text;
+            bubble.classList.add('show');
+          }, 10);
+        });
+        document.addEventListener('mousedown', function (e) { if (!bubble.contains(e.target)) hideBubble(); });
+        window.addEventListener('scroll', hideBubble, { passive: true });
+
+        sbCopy.addEventListener('click', function (ev) {
+          ev.stopPropagation();
+          var t = lastText;
+          function ok() {
+            sbCopy.textContent = '已复制 ✓'; sbCopy.classList.add('copied');
+            setTimeout(function () { sbCopy.textContent = '复制'; sbCopy.classList.remove('copied'); hideBubble(); }, 1200);
+          }
+          function fb() {
+            var i = document.createElement('textarea'); i.value = t; document.body.appendChild(i); i.select();
+            try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(i); ok();
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).then(ok).catch(fb); }
+          else { fb(); }
+        });
+        sbCard.addEventListener('click', function (ev) { ev.stopPropagation(); openCard(lastText); });
+      }
+
+      function openCard(text) {
+        qQuote.textContent = text || '先写完，再改清楚。';
+        var len = qQuote.textContent.length;
+        qQuote.style.fontSize = (len > 100 ? 18 : len > 60 ? 20 : 22) + 'px';
+        qSite.textContent = getSite();
+        qFrom.textContent = '—— 选自《' + getSource() + '》';
+        var saved = 'b';
+        try { saved = localStorage.getItem('qcStyle') || 'b'; } catch (e) {}
+        setStyle(saved);
+        overlay.classList.add('show');
+      }
+      var currentStyle = 'a';
+      function setStyle(s) {
+        currentStyle = s;
+        card.className = 'qc ' + s;
+        document.querySelectorAll('.qc-style').forEach(function (o) { o.classList.toggle('active', o.dataset.s === s); });
+        try { localStorage.setItem('qcStyle', s); } catch (e) {}
+      }
+      stylesBox.addEventListener('click', function (e) {
+        var o = e.target.closest('.qc-style'); if (o) setStyle(o.dataset.s);
+      });
+      document.getElementById('qcClose').addEventListener('click', function () { overlay.classList.remove('show'); });
+      overlay.addEventListener('click', function (e) { if (e.target === overlay) overlay.classList.remove('show'); });
+
+      // ===== 导出为图片（html2canvas） =====
+      function ensureH2C(cb) {
+        if (window.html2canvas) { cb(); return; }
+        var s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+        s.onload = cb;
+        s.onerror = function () { alert('金句卡片图片组件加载失败，请检查网络后重试'); };
+        document.head.appendChild(s);
+      }
+      // 每套样式的底色：填满圆角外区域，避免相册把透明像素渲染成黑角
+      var QC_BG = { a: '#ffffff', b: '#1c1917', c: '#f3ede1' };
+      var fontCssPromise = null;
+      function getFontCss() {
+        if (!fontCssPromise) {
+          fontCssPromise = fetch('https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-webfont/1.7.0/lxgwwenkai-regular.css')
+            .then(function (r) { return r.ok ? r.text() : ''; })
+            .catch(function () { return ''; });
+        }
+        return fontCssPromise;
+      }
+      function capture() {
+        return document.fonts.ready.then(function () {
+          return getFontCss().then(function (css) {
+            return html2canvas(card, {
+              scale: 2,
+              backgroundColor: QC_BG[currentStyle] || '#ffffff',
+              useCORS: true,
+              logging: false,
+              onclone: function (doc) {
+                // 导出环境可能没等到文楷加载完，主动注入字体 CSS 兜底；
+                // 即使仍回退，整卡统一衬线栈（楷体），上下字体也一致
+                if (css) {
+                  var st = doc.createElement('style');
+                  st.textContent = css;
+                  doc.head.appendChild(st);
+                }
+              }
+            });
+          });
+        });
+      }
+      function flash(btn, txt) { var o = btn.textContent; btn.textContent = txt; setTimeout(function () { btn.textContent = o; }, 1400); }
+
+      document.querySelectorAll('.qc-act').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var act = btn.dataset.act;
+          ensureH2C(function () {
+            capture().then(function (canvas) {
+              if (act === 'download') {
+                var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png';
+                a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已下载 ✓');
+              } else if (act === 'copyimg') {
+                canvas.toBlob(function (blob) {
+                  if (blob && navigator.clipboard && window.ClipboardItem) {
+                    navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
+                      .then(function () { flash(btn, '已复制 ✓'); })
+                      .catch(function () { var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png'; a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已保存 ✓'); });
+                  } else {
+                    var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png'; a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已保存 ✓');
+                  }
+                });
+              }
+            });
+          });
+        });
+      });
+    })();
+  </script> </body></html>

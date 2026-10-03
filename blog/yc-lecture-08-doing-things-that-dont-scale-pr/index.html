@@ -1,0 +1,787 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="YC 创业课第8讲｜Walker Williams、Stanley Tang"><link rel="canonical" href="https://gusangciren.github.io/blog/yc-lecture-08-doing-things-that-dont-scale-pr/"><title>做那些无法规模化的事、公关，以及如何起步 — 像企业家一样写作</title><!-- 社交分享卡片（微信 / 微博 / X 等抓取标题、描述与缩略图） --><meta property="og:type" content="website"><meta property="og:site_name" content="像企业家一样写作"><meta property="og:title" content="做那些无法规模化的事、公关，以及如何起步 — 像企业家一样写作"><meta property="og:description" content="YC 创业课第8讲｜Walker Williams、Stanley Tang"><meta property="og:image" content="https://gusangciren.github.io/images/logo-180x180.png"><meta property="og:url" content="https://gusangciren.github.io/blog/yc-lecture-08-doing-things-that-dont-scale-pr/"><meta property="og:locale" content="zh_CN"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="做那些无法规模化的事、公关，以及如何起步 — 像企业家一样写作"><meta name="twitter:description" content="YC 创业课第8讲｜Walker Williams、Stanley Tang"><meta name="twitter:image" content="https://gusangciren.github.io/images/logo-180x180.png"><link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml"><link rel="sitemap" type="application/xml" href="/sitemap-index.xml"><!-- Static CSS — no build hash, safe for incremental deploys --><link rel="stylesheet" href="/global.css"><!-- 金句卡片导出为图片（同 origin，无 CORS 风险） --><script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script><!-- 中文字体：经 BootCDN 加载（国内可访问，不走被墙的 Google Fonts）。
+         用 preload + onload 切换，去掉 @import 的渲染阻塞；字体未到位时先用系统衬线字体（等同 font-display:swap） --><link rel="preload" as="style" href="/fonts/fonts.css" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="/fonts/fonts.css"></noscript><link rel="stylesheet" href="/_astro/BaseLayout.Bu4xGSCj.css">
+<link rel="stylesheet" href="/_astro/_..pIQ4IDMw.css"></head> <body> <nav class="navbar"> <div class="nav-inner"> <div class="nav-lead">  <a href="/" class="logo"> <img src="/images/logo-header.png" alt="Logo" class="logo-img"> <span>像企业家一样写作</span> </a> </div> <div class="nav-links" id="nav-pill"> <span class="nav-slider" id="nav-slider"></span> <a href="/book">书籍</a> <a href="/columns">专栏</a> <a href="/tools" class="nav-tools">工具</a> </div> </div> </nav> <!-- 搜索浮窗 --> <div id="search-overlay" class="search-overlay"> <div class="search-modal"> <div class="search-header"> <input id="search-input" type="text" placeholder="搜索书籍、章节或关键词…" autocomplete="off"> <button id="search-close" class="search-close-btn" aria-label="关闭搜索">✕</button> </div> <div id="search-results" class="search-results"></div> </div> </div> <!-- 分享按钮：点开菜单 → 复制链接（导航旁 + 文章底部共用一套逻辑与样式） --> <script>
+      (function () {
+        function flash(btn, txt, ok) {
+          var span = btn.querySelector('.share-item-text');
+          if (!span) return;
+          var old = span.textContent;
+          span.textContent = txt;
+          btn.classList.toggle('done', !!ok);
+          setTimeout(function () { span.textContent = old; btn.classList.remove('done'); }, 1600);
+        }
+        function closeAll(except) {
+          document.querySelectorAll('.share-btn.open').forEach(function (b) {
+            if (b === except) return;
+            b.classList.remove('open');
+            var t = b.querySelector('.share-trigger');
+            if (t) t.setAttribute('aria-expanded', 'false');
+          });
+        }
+
+        document.addEventListener('click', function (e) {
+          var root = e.target.closest ? e.target.closest('.share-btn') : null;
+
+          /* 点菜单项 → 复制链接 */
+          var item = e.target.closest ? e.target.closest('.share-item') : null;
+          if (item) {
+            var url = window.location.href;
+            var done = function () { flash(item, '已复制 ✓', true); };
+            var fail = function () { flash(item, '复制失败', false); };
+            var fallback = function () {
+              try {
+                var ta = document.createElement('textarea');
+                ta.value = url;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                done();
+              } catch (err) { fail(); }
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(url).then(done).catch(fallback);
+            } else { fallback(); }
+            closeAll(null);
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+          }
+
+          /* 点触发器 → 开合菜单 */
+          var trig = e.target.closest ? e.target.closest('.share-trigger') : null;
+          if (trig) {
+            var box = trig.closest('.share-btn');
+            var wasOpen = box.classList.contains('open');
+            closeAll(box);
+            if (!wasOpen) {
+              box.classList.add('open');
+              trig.setAttribute('aria-expanded', 'true');
+            } else {
+              trig.setAttribute('aria-expanded', 'false');
+            }
+            e.preventDefault();
+            return;
+          }
+
+          /* 点别处 → 全部收起 */
+          if (!root) closeAll(null);
+        });
+
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') closeAll(null);
+        });
+      })();
+    </script> <!-- 导航胶囊滑块（仿 iOS 相册 视频/照片 切换动态） --> <script>
+      (function () {
+        var pill = document.getElementById('nav-pill');
+        var slider = document.getElementById('nav-slider');
+        if (!pill || !slider) return;
+        var links = Array.prototype.slice.call(pill.querySelectorAll('a'));
+        var path = window.location.pathname.replace(/\/+$/, '') || '/';
+        var activeIdx = -1;
+        links.forEach(function (a, i) {
+          var href = (a.getAttribute('href') || '').replace(/\/+$/, '') || '/';
+          var match = (href === '/') ? (path === '/') : (path === href || path.indexOf(href + '/') === 0);
+          if (match) activeIdx = i;
+        });
+        if (activeIdx < 0) { slider.style.opacity = '0'; return; }
+        links[activeIdx].classList.add('active');
+        function move(idx, animate) {
+          var a = links[idx];
+          if (!a) return;
+          if (!animate) slider.style.transition = 'none';
+          slider.style.width = a.offsetWidth + 'px';
+          slider.style.transform = 'translateX(' + a.offsetLeft + 'px)';
+          if (!animate) {
+            void slider.offsetWidth; /* 强制回流，让下一次位移产生过渡动画 */
+            slider.style.transition = '';
+          }
+        }
+        /* iOS 动态：先停在另一项上，再滑到当前项 */
+        move(activeIdx === 0 ? 1 : 0, false);
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () { move(activeIdx, true); });
+        });
+        window.addEventListener('resize', function () { move(activeIdx, false); });
+      })();
+    </script> <main>   <div id="reading-progress" class="reading-progress"></div> <!-- 书籍系列：杂志章节页（方案 C 优化版） -->
+    <div class="reader"> <!-- 吸顶极简条：滚过章首后出现 --> <div class="reader-mini" id="reader-mini"> <a href="/book" class="reader-mini-back" aria-label="返回书架">←</a> <span class="reader-mini-book">YC 创业课</span> <span class="reader-mini-sep">·</span> <span class="reader-mini-chapter">做那些无法规模化的事、公关，以及如何起步</span> <span class="reader-mini-pct" id="mini-pct">0%</span> </div> <!-- 章首大标题区：超大章节号 + 居左内容 --> <header class="reader-hero"> <div class="reader-hero-inner"> <div class="reader-hero-num" aria-hidden="true">08</div> <div class="reader-hero-text"> <a href="/book" class="reader-hero-back">← 返回书架</a> <div class="reader-hero-book">《YC 创业课：如何创办初创公司》</div> <div class="reader-hero-chapter">第 8 章 / 共 20 章</div> <h1 class="reader-hero-title">做那些无法规模化的事、公关，以及如何起步</h1> <div class="reader-hero-meta"> <time>2026年6月27日</time> <span class="reader-hero-dot">·</span> <span>约 44 分钟阅读</span> </div> </div> </div> </header> <!-- 正文 + 时间线目录 --> <div class="reader-body"> <aside class="reader-toc" id="reader-toc"> <div class="reader-toc-inner"> <div class="reader-toc-book">《YC 创业课：如何创办初创公司》</div> <nav class="reader-toc-nav"> <div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-01-how-to-start-a-startup" class="reader-toc-item"> <span class="reader-toc-title">如何创办初创公司</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-02-ideas-products-teams-execution-part2" class="reader-toc-item"> <span class="reader-toc-title">创意、产品、团队与执行（第二部分）</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-03-counterintuitive-parts-and-how-to-have-ideas" class="reader-toc-item"> <span class="reader-toc-title">创业中反直觉的部分，以及如何产生创意</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-04-building-product-talking-to-users-and-growing" class="reader-toc-item"> <span class="reader-toc-title">打造产品、与用户对话、实现增长</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-05-business-strategy-and-monopoly-theory" class="reader-toc-item"> <span class="reader-toc-title">商业战略与垄断理论</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-06-growth" class="reader-toc-item"> <span class="reader-toc-title">增长</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-07-how-to-build-products-users-love" class="reader-toc-item"> <span class="reader-toc-title">如何打造用户热爱的产品（第一部分）</span> </a>  </div><div class="reader-toc-item-wrap active "> <a href="/blog/yc-lecture-08-doing-things-that-dont-scale-pr" class="reader-toc-item"> <span class="reader-toc-title">做那些无法规模化的事、公关，以及如何起步</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-09-how-to-raise-money" class="reader-toc-item"> <span class="reader-toc-title">如何融资</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-10-company-culture-and-building-a-team" class="reader-toc-item"> <span class="reader-toc-title">企业文化与团队建设（第一部分）</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-11-company-culture-and-building-a-team-part2" class="reader-toc-item"> <span class="reader-toc-title">企业文化与团队建设（第二部分）</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-12-sales-and-marketing" class="reader-toc-item"> <span class="reader-toc-title">销售与营销（面向企业客户）</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-13-how-to-be-a-great-founder" class="reader-toc-item"> <span class="reader-toc-title">如何成为一位伟大的创始人</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-14-how-to-operate" class="reader-toc-item"> <span class="reader-toc-title">如何运营</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-15-how-to-manage" class="reader-toc-item"> <span class="reader-toc-title">如何管理</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-16-how-to-run-a-user-interview" class="reader-toc-item"> <span class="reader-toc-title">如何进行用户访谈</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-17-how-to-build-products-users-love-part2" class="reader-toc-item"> <span class="reader-toc-title">如何打造用户热爱的产品（第二部分）</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-18-legal-finance-hr" class="reader-toc-item"> <span class="reader-toc-title">创业公司的法律、财务与人力机制</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-19-sales-marketing-pitch-investor-roleplaying" class="reader-toc-item"> <span class="reader-toc-title">销售、营销与融资路演</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-20-closing-thoughts-and-later-stage-advice" class="reader-toc-item"> <span class="reader-toc-title">收官思考与后期阶段建议</span> </a>  </div> </nav> </div> </aside> <main class="reader-main">  <article class="prose reader-prose"> <p><strong>YC 创业课第八讲 · Stanley Tang（DoorDash 联合创始人）、Walker Williams（Teespring 创始人兼首席执行官）、Justin Kan（Justin.tv 与 Twitch 创始人）</strong></p>
+<hr>
+<h2 id="stanley-tangdoordash-联合创始人">Stanley Tang（DoorDash 联合创始人）</h2>
+<h3 id="一张荒谬的照片">一张荒谬的照片</h3>
+<p>谢谢大家邀请我来！我是 Stanley，DoorDash 的创始人。今天能站在这里，我自己都觉得不可思议，因为没多久以前，我也坐在你们现在的位置上。我是 2014 届斯坦福计算机系的学生，我的联合创始人 Andy 也是。</p>
+<p>如果有人还不知道 DoorDash 是什么——我们做的事，是给本地城市搭建一个按需配送网络。我想先从几个月前我拍的一张照片讲起。那天晚上我们刚完成第一轮融资。我拍这张照片的时候，正走回我住的地方——那会儿我住在校内的 Roble 宿舍。我之所以拍下它，是因为我突然意识到，当时我手里攥着的那一堆东西组合起来有多荒谬：我的 CS247 作业、我的税表（那会儿是四月，得填税表）、那张黄色的超速罚单，而在最底下，是我刚从红杉资本签下来的那张价值 1500 万美元的纸。这张照片某种程度上概括了我们一路走来的荒谬旅程——在斯坦福读书的同时做这件事，再把它变成一家真正的创业公司。今天我想把这个故事讲给你们听。</p>
+<h3 id="一切始于一家马卡龙店">一切始于一家马卡龙店</h3>
+<p>这一切始于两年前的一家马卡龙店。那是我在斯坦福读大三的秋季学期。那时候，我对一件事特别有热情——为小企业主打造技术。我坐下来跟 Chloe 聊了聊，她是 Chantal Guillon 的老板，那是一家开在帕洛阿尔托的马卡龙店。我当时一边给她看我们一直在做的原型，一边想了解她平时到底遇到什么问题。</p>
+<p>就在那次会面里，Chloe 第一次提出了配送这个难题。我记得她搬下来一本特别特别厚的册子，翻给我看好几页的配送订单，其中很多订单她不得不拒掉，因为根本没办法完成。<strong>她没有司机，最后只能亲自去把所有这些订单都送掉。</strong> 对我们来说，那是一个特别有趣的瞬间。</p>
+<p>在接下来的几周里，我们跟大约一百五到两百个小企业主聊了聊。每次我们提起配送这个想法，他们都在点头认同，会说：“你看，我们根本没有配送的基础设施。这对我们来说是特别大的痛点。外面根本没有像样的解决方案。“这让我们开始纳闷：配送是这么常见、这么显而易见的一件事，<strong>为什么到现在还没人把它解决掉？</strong> 我们肯定漏掉了什么，对吧？</p>
+<p>我们当时的猜测是：也许以前有人试过，但失败了，因为当时消费者还没有这个需求。我们问自己：“<strong>那我们怎么验证这个假设呢？</strong>” 那会儿我们还只是一群大学生。我们没有卡车，没有配送的基础设施，什么都没有——我们总不可能一夜之间就建起一家配送公司吧？</p>
+<p>那我们要怎么验证自己手里的这个假设？</p>
+<h3 id="用最简陋的实验测试假设">用最简陋的实验测试假设</h3>
+<p>我们决定用餐厅配送做一个简单的实验。我们花了一个下午，匆匆拼出了一个落地页。我在网上找到了帕洛阿尔托几家餐厅的 PDF 菜单，<strong>把它们贴上去，在底部留了一个电话号码——其实那就是我们自己的手机号。就这样。</strong> 我们把它上线，起名叫 <code>`PaloAltoDelivery.com`</code>。这就是它当时的样子（幻灯片）：特别简单，丑得不行。说实话，我们当时根本没抱什么期待——只是把它发布了出去。我们想看的只是：<strong>会不会有人给我们打电话？如果打来的电话够多，那也许这个配送的点子值得继续做下去</strong>。</p>
+<p>于是我们把它挂了上去；我们没抱什么期待，突然之间，电话响了。<strong>有人打来了！他们想点泰国菜。</strong> 我们当时就琢磨：“这可是一笔真订单；我们得做点什么了。” 于是我们钻进车里，心想：“反正这会儿也没别的事，不如顺路去取一份泰式炒河粉，亲眼看看整个配送到底是怎么转起来的。” 我们真就这么干了。</p>
+<p>我把那份炒河粉送到了阿尔卑斯路上的一位顾客手上。我问他：“你是怎么听说我们的？你是干什么的？” 他告诉我他是个学者，然后递给我一张名片，说他自己写了一本书，叫《Weed the People》。那是我们完成的第一单配送。那大概是你所能想象的最棒的一单配送，也是最糟的一单配送。</p>
+<p>然后，第二天我们又接到了两个电话。<strong>再往后一天是五个，接着是七个，然后是十个。</strong> 很快，我们就借着 <code>`PaloAltoDelivery.com`</code> 在校园里有了起色——这想想都离谱，因为说白了：那不过是个落地页。你得自己翻 PDF 菜单才能下单，然后打电话进去。这绝对算不上最专业的网站，可我们一直在接到电话；一直在接到订单。就是那一刻，我们知道自己撞上了什么东西。<strong>我们知道，当人们愿意忍受这一切的时候，我们就找到了一个人们真正想要的需求。</strong></p>
+<h3 id="一小时内上线">一小时内上线</h3>
+<p>还有一点我觉得特别值得记住：我们大概用了一个小时就把这东西发布了出去。<strong>我们没有司机；没有算法；没有后端；没花六个月去搭一套花哨的调度系统</strong>——那些我们全都没有。我们只是发布了，因为起步阶段，一切都是为了验证想法、让这件事先飞起来，并搞清楚这是不是人们真正想要的东西。<strong>在刚开始的时候，把东西凑合着拼起来，完全没问题。</strong></p>
+<p>在 YC，我们很喜欢讲一个信条，叫做<strong>做那些无法规模化的事</strong>。所以在最开始，我们自己就是配送司机。我们上完课，就去送餐。我们自己就是客服——你们知道吗，有时候我不得不在上课的时候接电话。<strong>我们整个下午就沿着大学大道发传单，想方设法推广 DoorDash。</strong> 我们没有调度系统，所以只能靠 Square 来向所有顾客收钱；用 Google 文档来记我们的订单；用苹果的「查找朋友」功能来掌握所有司机的位置。<strong>就是这类事，把各种解决方案凑在一起，让这件事先飞起来</strong>。</p>
+<p>事实上，有一回我们涨得太快，Square 居然把我们封了，理由是我们涉嫌洗钱。你想想，我们不停收到一笔笔十五到二十美元的小额订单，而且来得特别密。好在，我的联合创始人 Tony 之前在 Square 干过，他给那儿的几个哥们发了封邮件，事情就解决了。</p>
+<h3 id="做无法规模化的事带来的好处">做无法规模化的事，带来的好处</h3>
+<p><strong>做那些无法规模化的事，还有一个好处：它能让你变成自己这门生意的专家。</strong> 比如说，亲自去送餐，帮我们弄懂了整条配送链路是怎么转的。我们把这当成一次机会，去跟顾客聊，去跟餐厅聊。我们做调度，这帮我们想明白——我们是人工给司机派单的，而这恰恰帮我们弄清楚，司机分配算法到底该长什么样。我们亲自做客服，从顾客那儿拿到实时反馈。</p>
+<p>我记得头几个月，每天晚上我们都会给每一位新顾客手动发邮件，问他们第一次配送体验怎么样、是怎么听说我们的。我们会把每封邮件都写得像私人来信：如果我看到谁在 Oren’s Hummus 点了一份鸡肉串，我们就会写”哦，我也超爱 Oren’s Hummus。你的鸡肉串怎么样？你是怎么听说我们的？” 这种反馈特别有价值，顾客也特别受用。</p>
+<p>我还记得有一次——那是在 YC 期间——我们刚跟一位餐厅合作伙伴开完会出来，听说大学大道上新开了一家叫 Cream 的冰淇淋店，想去尝尝。结果突然，留在办公室兼宿舍的联合创始人发短信来说：“哦，路上需要司机；需求一下子飙起来了。” 于是我们大概纠结了十秒钟：是去吃冰淇淋，还是去送餐。我们显然选了去送餐——但这件事后来反倒成了我们做规模化的动力：你们想，要是能规模化，下次不就能去吃那口冰淇淋了吗。</p>
+<p><strong>当然，现在我们跨城市规模化了。</strong> 现在要操心的是搭建自动化方案、搭建调度系统、琢磨怎么匹配需求和供给——所有那些花哨的技术活。但在最开始，这些都不重要，因为起步阶段，一切都是为了先让这件事飞起来，<strong>并努力找到产品市场匹配</strong>。</p>
+<h3 id="我从-doordash-学到的三件事">我从 DoorDash 学到的三件事</h3>
+<p>总结一下，做 DoorDash 这件事让我学到了三样东西。第一，<strong>验证你的假设。</strong> 你要像对待实验一样对待自己的创业点子。第二，<strong>快速发布。</strong> 我们靠一个特别简单的落地页，不到一小时就发布了。第三，<strong>做那些无法规模化的事，完全没问题。</strong> 做那些无法规模化的事，是你起步时最大的竞争优势之一；等你有了需求，再去想怎么规模化也不迟。<strong>也许等你真规模化了，就能去吃那口冰淇淋了。</strong> 谢谢大家。</p>
+<h3 id="问答环节stanley-tang">问答环节（Stanley Tang）</h3>
+<p><strong>问：你的第一个顾客是怎么听说你们的？</strong></p>
+<p><strong>答：</strong> 我们真正第一个顾客，我真的不知道。我们就是在帕洛阿尔托发布了，没做任何营销，所以我猜他应该就是在浏览器里敲了”帕洛阿尔托配送”然后搜到了我们。在那之后，我们也几乎没做什么营销。我想我当时给我宿舍的人发了一封邮件，大概就这样。全靠口口相传。这某种程度上也印证了我们找到的那个需求有多强——人们会主动谈论你，并且愿意忍受糟糕的用户体验、糟糕的设计，以及诸如此类的东西。</p>
+<p><strong>问：你起步的时候，这件事对你来说显而易见——你当时在想，为什么以前没人做过。现在回过头看，你的答案是什么？</strong></p>
+<p><strong>答：</strong> 回过头看，<strong>我觉得最关键的是移动设备。</strong> 现在每个人的口袋里都有一部手机，我们当时看到了这个趋势，就想：要是你能设计一套完全建立在移动端之上的配送系统，不需要任何基础设施、也不需要配送车队，会怎么样？与其全职雇司机、或者买车，不如去撬动一个更偏按需的、由独立承包商组成的池子，只在他们有空的时候把订单发给他们。这就是我们得到的那个洞察；一切都是通过移动端完成的。</p>
+<p><strong>问：你们当时就知道这会成为一家创业公司，还是一开始只是为了赚点钱？</strong></p>
+<p><strong>答：</strong> 那时候我们都对”为小企业主打造技术”这件事特别有热情，而这个配送的点子，显然是从那个落地页实验里长出来的。<strong>它真的是一个实验。我们什么都没期待，结果它自己起飞了，我们就顺着它走下去了</strong>。物流也是我们一直很有热情的方向，比如交通物流——通过配送帮到小企业主，是这两者完美的融合。</p>
+<p><strong>问：你们是先发布的移动端网站，还是桌面端网站？</strong></p>
+<p><strong>答：</strong> 我们就是从那个落地页开始的，大概花了一个小时发布。</p>
+<p><strong>问：DoorDash 在竞争这么激烈的市场里，是怎么脱颖而出的？</strong></p>
+<p><strong>答：</strong> 在最开始，消费者需求从来都不是问题，直到现在也一样。所以对我们来说，就是找到需求，然后专注于服务那个需求。<strong>在最开始，竞争其实根本不重要。</strong></p>
+<p><strong>问：你们花了多长时间才注册成公司？</strong></p>
+<p><strong>答：</strong> 我们在 2013 年一月发布，那年夏天就进了 YC。当我们决定把这个点子带进 YC 去做的时候，我们才注册了公司。</p>
+<p><strong>问：你们打算在做了食物配送之后，往什么方向走？</strong></p>
+<p><strong>答：</strong> 对我们来说，创办 DoorDash 的初心，始终是帮助小企业主，并想清楚怎么把这套服务用在任何一个本地商家身上——不管你是一家马卡龙店、一家餐厅，还是一家家具店。那至今仍是我们的重心，是我们的长期愿景。眼下我们只是把餐厅配送当作一种规模化的抓手，但最终，那才是我们想去的地方。</p>
+<h2 id="walker-williamsteespring-创始人兼首席执行官">Walker Williams（Teespring 创始人兼首席执行官）</h2>
+<h3 id="开场">开场</h3>
+<p>谢谢大家邀请我来！我叫 Walker，是 Teespring 的创始人兼首席执行官。如果有人还不知道 Teespring 是什么——我们是一个电商平台，让创业者无需承担风险、成本或妥协，就能推出自己的产品和服装品牌。<strong>今天公司有大约 180 名员工</strong>，我们每天发运数万件产品。我想跟你们聊的，是作为一家创业公司，你们拥有的最基础的一项优势，那就是：<strong>你们能够去做那些无法规模化的事。</strong></p>
+<p>我把”无法规模化的事”定义为：那些从根儿上就不可持续的事；它们撑不下去；它们带不来你的第 100 万个用户。它们会在哪里崩掉？通常是时间，但也可能是一堆别的因素。但它们确实是那些无法把你带到 100 万用户的增长策略。今天我想聚焦在三件事上。第一件是<strong>找到你的第一批用户</strong>。第二件是把那些用户变成<strong>拥护者</strong>。第三件是<strong>找到你的产品市场匹配</strong>。</p>
+<h3 id="找到你的第一批用户">找到你的第一批用户</h3>
+<p>说到找第一批用户，你要明白的第一件事是：<strong>用户获取没有银弹。</strong> 每个人——包括我刚起步那会儿——都在寻找那个梦中解决方案，那个投资回报率惊人的回形针式营销活动，那个能把你一把弹射进平流层的加速型合作或联盟协议；某个能替你把问题解决了的东西。但现实是，对绝大多数公司——事实上，对每一家我有机会跟其首席执行官聊过的公司——来说，那根本不可能。那些都是独角兽。绝大多数从外面看像是拥有那条梦幻增长曲线的公司，真相是：那第一批用户，来得艰难得难以想象。让我给你们讲讲这门荒谬地不可持续的生意的故事。</p>
+<p>这是 2012 年的 Teespring（幻灯片）。我们第一次发布的时候，这门生意糟糕得不能再糟糕了。那要好几天的会；我们得免费提供设计、好几天来回改；得自己把产品发布出去；得自己做社交媒体——而这一切，只是为了向一家本地非营利组织卖出大约 50 件 T 恤，产生大约 1000 美元的收入。任何一个从外面看的人都会说：“你们得放弃，这是个烂点子。” 但随着时间的推移，<strong>那些用户开始一点点累积起来</strong>，而我觉得你们必须明白的一点是：当你第一次发布一家公司的时候，仅仅因为这是一个新产品这个事实，你们在卖它这件事上就会很糟，对吧？你们完全不知道顾客真正的痛点在哪里。你们以前从没卖过那东西。你们没有任何成功案例可以指给人看，也没有任何推荐语。那第一批用户，永远是最难拿到的。</p>
+<p><strong>所以，作为创始人，尽一切努力把你的第一批用户拉进来，这是你的责任。</strong> 每家公司都不一样。但我听到的共同线索是：创始人需要亲自投入时间和精力，投入大量的个人时间和精力，自己去把那些用户拉进来。这可能意味着很多事——从每天发 100 封邮件，到拿起电话尽可能多地给人打，再到借斯坦福或 YC 这样的网络。任何能让你拿到第一个用户的法子都行。我真的把它比作<strong>推一块巨石上山</strong>。如果你想象一座平缓的山，刚开始爬的时候，坡度是最陡的，最开头的那几寸是最难的。但随你越走越远，坡度会慢慢稳下来，变得容易，最终你会到达一个节点：你站在山顶，那块石头开始<strong>自己滚下去</strong>。</p>
+<p>所以，对那第一批用户，你不能只盯着时间意义上的投资回报率。别指望花一个小时就能换回几千美元。也许 Stanley 是那些独角兽之一——那真是个不可思议的故事。但对我们大多数人来说，头两个用户需要大量的手把手带、大量的亲身投入，而这没问题——这对建起一家公司来说是必不可少的。这方面唯一要提醒的是：我不建议把你的产品免费送人。当然这条规矩有无数例外，但总的来说，砍价或者白送产品，是我不会推荐的不可持续策略。<strong>你得确保你的用户重视你的产品。</strong> 你们知道，人们对免费产品的态度，和对付费产品的态度截然不同，而且它常常会给你一种虚假的安全感，比如”哦，我们有这么多用户了；我们肯定能把他们转化成付费用户。“</p>
+<h3 id="把用户变成拥护者">把用户变成拥护者</h3>
+<p>第二个层面是：当你拿到那些用户之后，会发生什么？你怎么把那些用户变成拥护者？<strong>拥护者，是一个会谈论并为你产品站台的用户。</strong> 每一家拥有出色增长策略的公司，都有充当拥护者的用户。把一名用户变成拥护者最简的办法，是<strong>用一段他们会记住的体验去取悦他们</strong>——某种不寻常的、超出预期的东西——一种格外出彩的体验。</p>
+<p>在早期做到这一点最简的办法——同样是一件完全不可持续、没法永远规模化的事——就是<strong>去跟那些用户交谈</strong>。人们总把这句话挂在嘴边，这某种程度上是 YC 的核心信条，就是：和用户交谈。我怎么强调这件事的重要性都不为过——你们应该把一大块时间花在跟用户交谈上。你们应该持续地做，每一天，尽可能久地做。今天在 Teespring，我仍然是那个兜底邮箱的接收人，所以任何时候有人把”支持”邮箱的地址拼错、或者写了个根本不存在的邮箱地址，那封邮件都会进到我这儿。</p>
+<p>所以我每天仍然要处理大约十到二十个客服工单；每天晚上我要花几个小时读每一条推文，<strong>可能有点强迫症</strong>，但那没关系；我把 Teespring 所有的社区都读一遍。你们永远不会比真正去听真实用户说话，更能摸准自己的产品。特别是在早期，你们发布时带上的那个产品功能集，几乎可以肯定不会是你们用来规模化的那个功能集。所以你们越早跟用户聊、越早弄明白他们真正需要什么，就能越快到达那个节点。</p>
+<p>跟顾客交谈有三种方式。<strong>第一种，是自己做客服。</strong> 直到 Teespring 月营收做到大约十三万到十四万美元之前，我和我的联合创始人 Evan 包办了客服的一切。这件事会让人本能地想赶紧把它甩出去，原因就在于它太痛苦了。哪怕到今天，每当我打开我们的客服后台，都会有种情绪反应——胃一下子沉下去，因为跟那么多有过糟糕体验的用户交谈真的很糟，而且知道你搞砸了、或者有人没被好好对待，这本身就很痛，毕竟你对自己投入了这么多热情和心血的东西。但你们去经历那个过程、弄明白自己该造什么、该修什么，这太重要了。</p>
+<p><strong>第二步，是主动去联系现有用户和流失用户。</strong> 流失用户，就是已经离开的用户。这一步在追新用户的路上常常被丢在一边，但你们得确保自己的用户一直有稳定良好的体验；你们不想把现有用户当成理所当然。当一个用户真的离开你们的服务时，你们想联系他、弄明白原因，这既是因为那种个人化的主动联系能决定他是走还是留——有时候人们只是需要知道你们在乎，并且情况会好起来。即便你们拉不回他，也有机会从那些导致他离开的错误里学到东西，把它修好，这样以后就不会用同样的方式再流失用户了。</p>
+<p><strong>最后，可能是我最执着的一件事：社交媒体和社区。</strong> 你们得知道人们在怎么谈论你们的品牌。你们得尽量确保，当真有人有了糟糕的体验、并且在四处说的时候，<strong>你们去把它摆平。</strong> 问题是不可避免的：你们不会拥有完美的产品；东西会崩；事会出错。那不重要。重要的是永远去把它摆平，永远多走一英里，让那位顾客满意。<strong>一个在你们平台上有了糟糕体验的贬损者，足以抵消十个拥护者攒下的进展。</strong> 只需要一个人说一句”不，你不该因为某某原因去用那帮人的服务”，就能毁掉一大波势头。</p>
+<p>早期我们有过这样的例子：我们会搞砸大订单。印出来的颜色稍微不对；尺码错了；而那会占到我们那个月成交额的一半。我们知道自己搞砸了，顾客会不高兴，本能反应是想说”只是偏了一点点，又没完全错”，或者”那样也行”。但真相是，你们只能咬牙认下，确保它是对的。而那些一开始最沮丧的顾客，往往会变成最大的拥护者、最长期留在你们这里的用户。</p>
+<h3 id="找到产品市场匹配">找到产品市场匹配</h3>
+<p>我想讲的最后一件事，是<strong>找到产品市场匹配</strong>。我的意思是：<strong>你们发布时带上的那个产品，几乎可以肯定不会是带你们走向规模化的那个产品</strong>。所以你们在创业公司早期的工作，就是尽可能快地推进、迭代，去够到那个真正有市场匹配的产品。而作为工程师，你们的本能是去搭一个漂亮、代码干净、并且能够规模化的平台。<strong>你们不想写出那种用胶带粘起来的代码，那会越积越多的技术债。</strong> 但你们需要为速度做优化，而不是为规模化和干净的代码。</p>
+<p>这方面有个例子：早期，我们进来过几个企业客户，一些比较大的非营利组织，他们说：“嘿，我们真的很喜欢你们的服务，但你们缺了这些基础的东西，所以我们不会用。” 我们看了眼要搭出那些功能得花什么代价，也不确定它们长期到底行不行，但我们想试一试。</p>
+<p>我的联合创始人 Evan，他是我们的首席技术官，是个比我强一百万倍的开发者，他算了一下：如果我们用”正确”的方式做，大概要一个月才能把这些功能搭出来。<strong>一个月，对一家创业公司来说——你们活在狗年里——一个月就是一年，那根本不行。</strong> 所以他干脆把代码库复制了一份，把数据库也复制了一份，基本上另起炉灶搭了一个完全不同的产品，这样他就不用操心现有用户，也能去服务这些企业客户了。我们把工具交给他们，他们注册用了起来，并且带来了大量营收。最终我们弄清了哪些功能是核心，再把这些功能并回核心产品里。但本来要一个月的事，我们三四天就干完了。</p>
+<p><strong>一个很好的经验法则是：只操心下一个数量级。</strong> 所以当你有第 10 个用户时，你不该去想怎么服务 100 万用户。你该操心的是怎么够到 100。当你在 100 的时候，你该想 1000。这是那种”需求是发明之母”的事之一，所以当你撞上那个断裂点的时候（推特的”失败鲸”是个很好的例子），在 Teespring 有那么好几个月，网站每天晚上都崩——每天晚上。团队里每个人都把手机音量开到最大、塞在枕头底下睡觉，这样手机一响，我们就能赶紧重启服务器，然后回去睡；这事天天发生。<strong>但真相是，那一切都是值得的</strong>，你们最终会撞上这些巨大的痛点、背上所有这些技术债和遗憾，但为了让你们更快到达那个终点和产品匹配，那都值得。你们会让它跑起来的；你们会活下来的。那些颠簸只是减速带，而在早期，速度重要得不能再重要。</p>
+<h3 id="尽可能长久地去做那些无法规模化的事">尽可能长久地去做那些无法规模化的事</h3>
+<p>我最近一直在学的一个教训是：<strong>你们想尽可能长久地去做那些无法规模化的事。</strong> 没有一个神奇的瞬间；不是第一轮融资到账的时候，也不是你们达到某个营收里程碑的时候，你们就停下那些无法规模化的事。这是你们作为一家公司最大的优势之一，而你们一旦放手，就是把这份优势让给了那些更小、却仍然能做这些事的竞争对手。所以只要还力所能及，只要它还是一个净正值，你们就需要花时间去跟用户交谈，需要在开发里尽可能快地移动，但别主动放手；它应该是被人从你们手里硬抢走的。</p>
+<p>为了言行一致，我想把我的邮箱留给你们。如果你们有任何问题，想了解 Teespring，或者想印几件 T 恤（求好运），就给我发封邮件。我很乐意帮忙，也很乐意跟你们聊。</p>
+<p><code>`Walker@teespring.com`</code></p>
+<p>最后一件事：我们和 Sam 一起做了一款官方的”如何创办创业公司”T 恤。所有收益都会捐给 <code>`Watsi.org`</code>。我可不能错过这个推销的机会，所以如果你们想搞一件官方 T 恤，就去 <code>`teespring.com/startup`</code>；这是在支持一项很棒的事业。</p>
+<p>谢谢大家。</p>
+<h3 id="问答环节walker-williams">问答环节（Walker Williams）</h3>
+<p><strong>问：当你进入 T 恤印刷这个竞争这么激烈的市场时，是什么说服你入场的？</strong></p>
+<p><strong>答：</strong> 我觉得有两个因素。首先，我完全同意。从外面看，人们从第一天起、在我们跨过每一个数量级的时候，都在跟我们说这是个傻点子。人们会过来说：“这是个烂点子。你们干嘛要做那个？” 但我们当初做 Teespring，是因为<strong>我们撞上了一个个人的痛点。我们识别出了一个需求，并且发现目前根本没有像样的解决方案。</strong> 我当时是布朗大学的学生，想给一家被关掉的潜水酒吧做一件”记得那家酒吧”的 T 恤，我这才意识到，没有任何东西符合我的需求。所以，因为我知道自己有那个痛点，知道有市场匹配，也看到人们在采用这个产品，我就知道那儿有点东西。而且这也是那种你能隐约感觉到”背后有风推着你”的事——人们在飞快地采用这个产品。痛点显然就在那儿；那是个没被满足的需求。所以我会说，大多数时候，伟大的点子一开始看起来都像傻点子，然后你可以通过人们采用它的方式、以及能不能把客户拉进来，去感受那里是不是一门能规模化的生意。</p>
+<p><strong>问：非营利组织是你们最大的客户群吗？</strong></p>
+<p><strong>答：</strong> 不是，今天最大的客户群，是那些想建立品牌和生意的创业者。今天在 Teespring 上，有一千出头的人，靠着他们推出的品牌，拿到了全职收入。另一端是那些有影响力的人——比如 YouTube 上的红人、Reddit 社区、博主——他们想把产品周边当作一种建立品牌、并把这种喜爱变现的方式。那是我们最大的两个市场。我们仍然和很多非营利组织合作，也很喜欢跟他们合作。它们仍然是我们业务的一部分，但只是不再占多数了。</p>
+<p>谢谢大家。</p>
+<h2 id="justin-kanjustintv-与-twitch-创始人">Justin Kan（Justin.tv 与 Twitch 创始人）</h2>
+<h3 id="开场-1">开场</h3>
+<p>我创办过不少创业公司，但我想，你们已经听过很多很棒的”我是怎么起步的”故事了，所以我要讲点特别具体的东西——那是人们总有问题要问的，就是<strong>公关</strong>：你们怎么拿到报道，它又是怎么运作的？这某种程度上像是我们在 YC 聊的内容的缩略版。希望你们觉得有用。</p>
+<p>当大多数人刚开始创业时，他们对公关、对被媒体报道这件事的想象，是某种会<strong>魔法般发生</strong>的东西。他们想到外面的记者，在挖最好的故事——那像个精英治理的社会——而这绝对不是事实。</p>
+<h3 id="在考虑公关之前">在考虑公关之前</h3>
+<p><strong>在你们考虑公关之前，真正要想清楚的一件事是：你们想触达谁，以及你们的实际目标是什么。</strong> 我知道我刚起步的时候，想上新闻，因为我觉得一家重要的公司就该那么做。结果证明，如果你们没有任何目标，你们就实现不了它们——这话对几乎任何事都成立。而对公关来说，如果你们漫无目的地只想被报道，那对你们的创业公司一点用都没有。<strong>如果你们没有一个实际的商业目标，那就不值得花这个时间。</strong></p>
+<p>所以目标有很多种。拿 Socialcam 来说——那是 Justin.tv 的一个衍生品——我们的目标，是被人当成”视频版的 Instagram”，并在那种语境里被想起。当我们向硅谷的投资人和有影响力的人做推介的时候，我们真想拿到科技媒体的报道，并被定位成这款又新又火的社交应用。</p>
+<p>拿 Exec 来说，我的目标之一是获客。Exec 有点像一个本地清洁服务，我们的目标是让旧金山的人用上它。去拿全国性媒体的报道没用，因为那些人里 99% 都用不了它。所以我们一开始瞄准的是本地媒体，比如《旧金山纪事报》，他们会直接跟那些有可能用我们应用的人聊。</p>
+<p><strong>Twitch</strong>——你们大多数人可能都知道它——就像游戏玩家的 ESPN，某种程度上像个游戏玩家的直播社区。我们的目标是触达游戏产业。现在它大概有 5500 万独立访客，游戏圈里的人都知道它，但我们起步那会儿，根本没人知道；那不是个能打广告的地方，我们只是个很小的游戏社区。我们的目标是让游戏圈里的人——不管他们是开发者还是广告商——把我们看成一个有影响力的人扎堆的重要阵地。所以我们真去瞄准了行业贸易刊物和游戏开发博客。就是那些行业里的人读的东西。</p>
+<h3 id="什么才算一个故事">什么才算一个”故事”？</h3>
+<p>那么，什么才是一个真正的故事？我觉得故事有好几种类型，但这些是你们在创业公司里最常见的。</p>
+<ul>
+<li><strong>产品发布</strong>：当你们发布应用的不同版本时。</li>
+<li><strong>融资</strong>：出于某种原因，媒体就是爱写融资，哪怕它其实挺无聊的。所以如果你融了 100 万美元的种子轮，你基本就能让它见报。</li>
+<li><strong>里程碑</strong>：比如，如果你们做到了一周 100 万美元营收这样的指标。那家买下 Exec 的公司刚刚宣布他们做到了一周 100 万美元营收，而且被相当广泛地报道了。</li>
+<li><strong>商业故事</strong>：当你们已经是一家成功的公司时会发生，《纽约时报》《纽约客》或者《商业周刊》会想写你们的创业故事。你们在一开始不用操心这个。</li>
+<li><strong>我管它叫”噱头”的东西</strong>：我不知道你们还记不记得，但几年前，一家叫 WePay 的 YC 公司，在 PayPal 的开发者大会外头放了一块冰砖，里面冻着钱，因为 PayPal 当时正因为冻结各种开发者的账户而上新闻。那事被大范围报道了，因为它实在太有意思了——你们知道，它让他们挤进了那个故事，否则他们根本不会在 PayPal 的语境里被谈起。</li>
+<li><strong>招聘公告</strong>：如果你们是家足够大的公司，并且雇了个特别重要的人，人们会想写那件事。</li>
+<li><strong>最后，供稿文章</strong>：那是你们自己写某种行业综述或观点文章，也许投给一个科技博客，之类的东西。</li>
+</ul>
+<p>基本上，以上任何一样都能成为一个故事。人们在试图办一家创业公司时，常常没意识到的一件事是：<strong>你们创办公司时，觉得自己在做的每件事都很有趣，但对别人来说未必</strong>。你们真正需要客观问自己的是：如果我不是这家公司的创始人，我会想读一篇关于我正在推介的东西的故事吗？<strong>所以你们的增量功能发布、或者你们那个 2.01 版的功能发布，可能根本没意思，仅仅因为你们在 Facebook 上加了个”查找你的联系人”。</strong> 在你们投入时间去真的向记者推介一个故事之前，你们真该退后一步，想想：“真的会有人想读这个吗？” 记者和博主真正在找的，是人们真的想读的东西。</p>
+<p>另一件事是，你们其实不必非常有原创性——你们的公关不需要有原创性。它只需要做到我喜欢称之为”<strong>足够有原创性</strong>” 的程度。你们不想成为在 Kickstarter 上融了 500 万美元的第二酷的公司——风头全被第一个人抢走了。第一个在 Kickstarter 上融了 1000 万美元的游戏机，是个大新闻，因为他们是那个品类里的第一个，哪怕在此之前已经有很多人通过 Kickstarter 融了很多钱。在你们已经写过的其他东西的语境里，去想你们的故事够不够新，或者是不是刚在新闻里被写过的东西。</p>
+<h3 id="拿到报道的实际操作">拿到报道的实际操作</h3>
+<p>拿到报道的实际操作（这相当战术性），如果你们想让新闻见报，基本上有几步特别简单的路可以走：<strong>把拿报道想象成一个销售漏斗。</strong> 你们会跟很多人聊，但不会所有人都转化——所以当一个具体的人或记者没写你们的故事时，你们不该难过。</p>
+<p><strong>第一件事是：你们必须把它当成一个故事去想。</strong></p>
+<p><strong>第二件事是：你们想被引荐给任何一个会写你们这件事的记者，或者多个记者。</strong> 就像任何商务拓展一样，通过别人去联系他们，比冷邮件给他们要容易得多。</p>
+<p>最好的做法是：去找那些刚被报道过的创业者，或者刚在 TechCrunch 上露过脸的朋友，让他们把你们引荐给写了他们的那篇报道的记者。这样做的好处是：从创业者这边看，世界上最简单的事，就是把你们引荐给已经写过他们的记者。他们不需要从记者那儿再得到任何东西，而且如果故事有意思，他们其实是在帮那个记者一个忙；这不像你们在求人介绍投资人、或者他们想雇来当员工的人。而从记者这边看，他们被引荐给了一个他们已经审过、觉得有趣的人；他们从一个自己认为值得写的人那里拿到了引荐，所以顺着传递性，他们也会觉得你们大概挺有意思。</p>
+<p>于是你们从那人那儿收到一封邮件，把你们引荐给了记者，你们想跟他们接上头，并留出足够的时间让他们写故事——大概提前一周甚至更久通知他们，因为他们不会放下手头一切，只为了写你们的新闻。很多人，尤其是第一次创业的，会跑过来说：“Justin，我明天就要发布这个产品了。你能让我上 TechCrunch 吗？” 那大概不会发生，除非你们已经建立了关系。<strong>最好的做法是给自己留足提前量；提前拿到那个引荐。</strong></p>
+<p>所以当你们给新闻发布定了个日期——你们要在两周后发一个产品——你们有了这个引荐，约好了某种会面，你们真想让记者在你们身上投入时间和精力，因为这背后有个<strong>沉没成本谬误</strong>在起作用。基本上，他们花在你们身上的时间越多，写你们文章的可能性就越大。最好的做法是安排一次面对面会议。有些博主其实不想见面，但如果见不了，那就安排一通电话。<strong>最糟的做法是只靠邮件往来</strong>，因为对他们来说，太容易忘了或者干脆忽略掉。</p>
+<h3 id="怎么去推介">怎么去推介</h3>
+<p>下一步，是真正去向他们推介。我的做法是：把我想见报的那篇理想故事，用要点一条条写出来，然后背下来。当我和他们对话时——如果是当面——对话就按我的提纲走，他们会做笔记。然后他们会把那些笔记转写成一篇故事。所以基本上，我写的东西会被翻译成一篇真故事。<strong>通过准备，你们其实能更多地掌控对话</strong>，而不会漏掉关键的东西，比如提一句你们联合创始人的名字，或者你们应用里那些很棒的功能。</p>
+<p>如果我是打电话做这件事，我会确保把那张要点清单摆在面前，并确保走完一段涵盖所有这些要点的对话。所以你们做了一个推介，他们做笔记，而他们会在那个时候把故事写下来。接下来要做的是<strong>跟进</strong>——大概在你们新闻真发布的前几天或前一天。你们想发一封邮件给他们，说：“这是我们发应用的日期；感谢见面；如果你们想放任何视频、照片或截图，素材在这儿；怎么拼你们联合创始人的名字或你们自己的名字。” 我就把我在乎的所有信息都加粗放进去。然后就这样了。希望那一天到来，你们在 App Store 上按下发布键的同时，他们在 TechCrunch 上发出了他们的文章，然后你们就出名了。</p>
+<h3 id="关于公关公司">关于公关公司</h3>
+<p>很多人问我们关于<strong>公关公司</strong>的事。我觉得在一开始，这跟你们在创业公司里做的所有事一样——你们想自己来。而且这其实相当简单，尤其是跟科技媒体和那些一直需要新东西来写的博主打交道。我强烈鼓励大家自己先试，通过自己把流程摸熟了再雇人。有一件事我要说：公司只能帮你们处理联系人和后勤，但他们帮不了你们弄清自己公司有什么有意思的地方，或者——我还从没遇到过哪个人能告诉我，我正在做出来的故事到底是什么；他们只能给我一份我可能想联系的记者名单。<strong>所以你们真的得自己负责去想清楚：你们公司有什么有意思的地方、你们正在做什么——你们知道的，你们正在做的那些有意思的事情的路线图。</strong></p>
+<p>它们也真的很贵。我想我们当时每个月大约花五千到两万美元，而对公司来说，这是一大笔钱——对一家创业公司来说，对吧？ 这通常不是对钱的好用法，尤其是在早期。拿报道是一项大量工作，所以你们真该确保它值得。<strong>拿报道就像一种虚荣指标</strong>：它让你们觉得自己成功了，因为很多成功的公司，比如 Facebook，一直被媒体写着，但它其实并不意味着你们成功了；它其实并不意味着你们在赚钱、在获客、或者在让那些用户满意。</p>
+<p>有时候，它是拿到你们头一百、两百、一千个用户的一个很好的策略，但它真的不是一种能规模化的用户获取策略，所以它真的只是一种自力更生的手段；你们不能只让无数篇关于你们的文章被写出来。最终人们会听腻关于你们公司的消息，而且通常那来得特别快，对吧？ 新闻的拉点就在于它是新的，所以除非你们像 Google 那样，否则很难每周都上媒体。如果你们认定它值得，确实想保持一个规律的新闻节奏，你们就得去想：你们正在做的事，怎么跟那七种故事类型对上。我主要做营销和公关那阵子，会在日历上排一个时间表，看我们什么时候发东西，并确保把它们拉开间隔，但以规律的节奏出现，这样人们不会想忘了我们，我们也能最大化我们的报道面。</p>
+<p><strong>你们也想让你们的联系人保持新鲜；这真的是一门关系生意。</strong> 一旦有人写了你们，你们就该跟他们保持联系，因为他们将来有可能再写你们。你们更有可能为某人去做一件他们过去已经为你们做过的事。我会试着跟几个记者建立好关系，紧要关头可以去找他们爆料；如果你们够幸运，有人写了你们的负面东西，你们的关系会帮你们把你们这边的说法递出去，那可能在以后派上用场。</p>
+<p>最后一件事，某种程度上像一条黄金法则，或者更像”提前付出”：你们应该帮你们的创业伙伴拿到报道，因为他们会帮你们拿到报道。<strong>拿到报道最好的办法，真的就是通过这些引荐。</strong> 每当我跟记者见面，我会顺口抛几个我觉得对他们来说会是有趣故事的其他名字，而那通常会有回报。记者喜欢这样，因为你们在帮他们找有趣的故事，而你们更有可能从那些你们帮过的创业者那儿得到回报性的线索。</p>
+<h3 id="推荐资源">推荐资源</h3>
+<p>如果你们想多了解媒体报道这件事，这里有两个我非常喜欢的资源：Jason Kincaid，他是一位前 TechCrunch 记者，做了一份很棒的综述，涵盖了很多我讲得更深的东西。然后有一份某种程度上”邪恶的”资源，叫《Trust Me, I’m Lying》（《相信我，我在撒谎》），是一位前美国服饰营销人写的。他讲了他是怎么”邪恶地”操纵媒体的，但我觉得那是对故事如何在互联网上传播的心理的一次相当好的洞察；值得一看。好了，基本上就这些了。</p>
+<h3 id="问答环节justin-kan">问答环节（Justin Kan）</h3>
+<p><strong>问：什么时候才是开始完全操心媒体报道的合适时机？</strong></p>
+<p><strong>答：</strong> 我第一次发布我的第一家创业公司的时候，你们知道，我的头几个产品，很多都零关注，我们真不知道怎么才能拿到 100 个用户。我觉得那是拿到 100 个用户的一个非常好的办法，而且 YC 里很多公司第一次发产品的时候，我们会鼓励他们出去做一篇 TechCrunch 故事，让一些人看到它。练练手是好的。我非常早期的时候，不会痴迷于要拿到多个渠道的报道之类的事。</p>
+<p><strong>问：你们在让那个宝可梦的事传开这件事上，扮演了多大角色？</strong></p>
+<p><strong>答：</strong> Twitch 有个东西叫”Twitch 玩宝可梦”，开发者架了一个由聊天控制的宝可梦 Game Boy 游戏，于是数百万人会输入 A 或 B，角色就漫无目的地乱走。那是个巨大的新闻故事。我觉得我们做的事，是通过先铺好其他新闻故事做铺垫，这样 BBC 的人一搜”Twitch”，就会想：“Reddit 上所有人都在聊的这个疯狂的东西是什么？” 他们就会有点语境。另一件事是，Twitch 这个点子不是我们想出来的。那更像是个巧合，但我们通过让公司随时能接受记者采访、并建议做后续报道，帮它长了腿——不光是”Twitch 玩宝可梦”和十万人围观的故事，还有他们打通了游戏、或者 Twitch 玩水晶版（新的宝可梦版本）时的故事。<strong>故事不是我们起的头；是社区，我觉得真的是社区起的头。</strong></p>
+<p>好了，我想就这些了，非常感谢大家！</p> <div class="cta-box"> <p>觉得有用？继续阅读</p> <div class="cta-buttons"> <a href="/book" class="cta-btn cta-btn-primary">查看书籍</a>  </div> </div> </article> <!-- 底部导航 --> <nav class="reader-footnav"> <a href="/blog/yc-lecture-07-how-to-build-products-users-love" class="reader-prev"> <span class="reader-foot-label">← 上一章</span> <span class="reader-foot-title">如何打造用户热爱的产品（第一部分）</span> </a> <a href="/blog/yc-lecture-09-how-to-raise-money" class="reader-next"> <span class="reader-foot-label">继续阅读下一章 →</span> <span class="reader-foot-title">如何融资</span> </a> </nav> </main> </div> <!-- 移动端目录抽屉 --> <button class="reader-toc-toggle" id="reader-toc-toggle" aria-label="打开目录">目录</button> <div class="reader-toc-scrim" id="reader-toc-scrim"></div> </div> </main> <footer> <div class="footer-inner"> <p>© 2026 像企业家一样写作</p> <div class="footer-links"> <button type="button" class="footer-link-btn" id="wechat-qr-trigger">网站有bug，“码”上办，联系本人。</button> </div> </div> </footer> <!-- 微信名片二维码浮层 --> <div id="wechat-qr-overlay" class="wechat-qr-overlay" aria-hidden="true"> <div class="wechat-qr-modal"> <button type="button" class="wechat-qr-close" id="wechat-qr-close" aria-label="关闭">✕</button> <img src="/images/wechat-qr.png" alt="微信名片二维码"> <p class="wechat-qr-cap">微信扫一扫，联系本人</p> </div> </div> <script>
+    (function () {
+      var trigger = document.getElementById('wechat-qr-trigger');
+      var overlay = document.getElementById('wechat-qr-overlay');
+      var closeBtn = document.getElementById('wechat-qr-close');
+      if (!trigger || !overlay) return;
+      function openQr() {
+        overlay.classList.add('active');
+        overlay.setAttribute('aria-hidden', 'false');
+      }
+      function closeQr() {
+        overlay.classList.remove('active');
+        overlay.setAttribute('aria-hidden', 'true');
+      }
+      trigger.addEventListener('click', openQr);
+      if (closeBtn) closeBtn.addEventListener('click', closeQr);
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeQr();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeQr();
+      });
+    })();
+  </script>  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    let _searchIndex = null;
+
+    async function loadSearchIndex() {
+      if (_searchIndex) return _searchIndex;
+      try {
+        const resp = await fetch('/search.json?t=' + Date.now());
+        _searchIndex = await resp.json();
+      } catch (e) {
+        console.warn('search.json load failed', e);
+        _searchIndex = { posts: [], books: [] };
+      }
+      return _searchIndex;
+    }
+
+    function openSearch(initialQuery) {
+      const overlay = document.getElementById('search-overlay');
+      const input = document.getElementById('search-input');
+      overlay.classList.add('active');
+      input.value = initialQuery || '';
+      input.focus();
+      renderResults(input.value);
+    }
+
+    function closeSearch() {
+      document.getElementById('search-overlay').classList.remove('active');
+    }
+
+    function getSnippet(text, keyword, radius) {
+      radius = radius || 30;
+      if (!text) return '';
+      const idx = text.toLowerCase().indexOf(keyword.toLowerCase());
+      if (idx === -1) return text.substring(0, 80);
+      const start = Math.max(0, idx - radius);
+      const end = Math.min(text.length, idx + keyword.length + radius);
+      let s = text.substring(start, end);
+      if (start > 0) s = '…' + s;
+      if (end < text.length) s = s + '…';
+      return s;
+    }
+
+    function escapeHtml(s) {
+      return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    function escapeReg(s) {
+      return (s || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+    function highlight(text, q) {
+      const safe = escapeHtml(text);
+      if (!q) return safe;
+      try {
+        const re = new RegExp('(' + escapeReg(q) + ')', 'gi');
+        return safe.replace(re, '<mark>$1</mark>');
+      } catch (e) { return safe; }
+    }
+    function matchScore(item, q) {
+      const t = (item.title || '').toLowerCase();
+      const d = (item.desc || '').toLowerCase();
+      const c = (item.content || '').toLowerCase();
+      if (t.includes(q)) return 3;
+      if (d.includes(q)) return 2;
+      if (c.includes(q)) return 1;
+      return 0;
+    }
+    function resultItemHtml(item, q, href, isBook) {
+      const snippet = getSnippet(item.content || '', q, 40);
+      const contentHit = (item.content || '').toLowerCase().includes(q);
+      const desc = (contentHit && snippet) ? snippet : (item.desc || snippet || '');
+      return '<a href="' + href + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+        '<div class="search-result-title"><span class="search-result-type' + (isBook ? ' book' : '') + '">' + (isBook ? '书籍' : '章节') + '</span>' + highlight(item.title, q) + '</div>' +
+        '<div class="search-result-desc">' + highlight(desc, q) + '</div>' +
+      '</a>';
+    }
+
+    // 专栏条目：外链到微信公众号（不加 ?q=）
+    function columnItemHtml(col, q) {
+      return '<a href="' + escapeHtml(col.url) + '" target="_blank" rel="noopener noreferrer" class="search-result-item">' +
+        '<div class="search-result-title"><span class="search-result-type column">专栏</span>' + highlight(col.title, q) + '</div>' +
+        '<div class="search-result-desc">' + highlight(col.desc || col.columnName, q) + '</div>' +
+      '</a>';
+    }
+
+    function renderResults(query) {
+      const container = document.getElementById('search-results');
+      if (!query.trim()) {
+        container.innerHTML = '<div class="search-empty">输入关键词搜索书籍、章节与专栏…</div>';
+        return;
+      }
+      const q = query.toLowerCase();
+      const index = _searchIndex || { posts: [], books: [], columns: [] };
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      const matchedColumns = (index.columns || []).filter(c =>
+        c.title.toLowerCase().includes(q) ||
+        c.columnName.toLowerCase().includes(q) ||
+        c.rawTitle.toLowerCase().includes(q) ||
+        String(c.issue).includes(q)
+      );
+      if (matchedPosts.length === 0 && matchedBooks.length === 0 && matchedColumns.length === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        return;
+      }
+      const bookBySeries = {};
+      index.books.forEach(b => { if (b.series) bookBySeries[b.series] = b.title; });
+
+      let html = '';
+      // 书籍命中 → 单独作为「书籍」结果
+      if (matchedBooks.length) {
+        matchedBooks.sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        matchedBooks.forEach(b => { html += resultItemHtml(b, q, '/book/' + b.slug, true); });
+      }
+      // 章节按书籍分组
+      const groups = {};
+      matchedPosts.forEach(p => { const k = p.series || ''; (groups[k] = groups[k] || []).push(p); });
+      Object.keys(groups).forEach(series => {
+        const title = bookBySeries[series] || series || '其他';
+        groups[series].sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(title) + '》</div>';
+        groups[series].forEach(p => { html += resultItemHtml(p, q, '/blog/' + p.slug, false); });
+        html += '</div>';
+      });
+      // 专栏按专栏名分组（外链到微信）
+      const colGroups = {};
+      matchedColumns.forEach(c => { const k = c.columnName || ''; (colGroups[k] = colGroups[k] || []).push(c); });
+      Object.keys(colGroups).forEach(name => {
+        colGroups[name].sort((a, b) => a.issue - b.issue);
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(name) + '》· 专栏</div>';
+        colGroups[name].forEach(c => { html += columnItemHtml(c, q); });
+        html += '</div>';
+      });
+      container.innerHTML = html;
+    }
+
+    // ===== Hero 内联搜索（方案 B） =====
+    function closeHeroSearch() {
+      const dropdown = document.getElementById('hero-search-dropdown');
+      if (dropdown) { dropdown.classList.remove('show'); dropdown.innerHTML = ''; }
+    }
+
+    async function renderHeroResults(query) {
+      const container = document.getElementById('hero-search-dropdown');
+      if (!container) return;
+      if (!query.trim()) { closeHeroSearch(); return; }
+      const index = await loadSearchIndex();
+      const q = query.toLowerCase();
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      const matchedColumns = (index.columns || []).filter(c =>
+        c.title.toLowerCase().includes(q) ||
+        c.columnName.toLowerCase().includes(q) ||
+        c.rawTitle.toLowerCase().includes(q) ||
+        String(c.issue).includes(q)
+      );
+      const total = matchedPosts.length + matchedBooks.length + matchedColumns.length;
+      if (total === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        container.classList.add('show');
+        return;
+      }
+      const bookBySeries = {};
+      index.books.forEach(b => { if (b.series) bookBySeries[b.series] = b.title; });
+      let html = '';
+      if (matchedBooks.length) {
+        matchedBooks.slice(0, 2).sort((a, b) => matchScore(b, q) - matchScore(a, q)).forEach(b => {
+          html += resultItemHtml(b, q, '/book/' + b.slug, true);
+        });
+      }
+      const groups = {};
+      matchedPosts.forEach(p => { const k = p.series || ''; (groups[k] = groups[k] || []).push(p); });
+      let shown = 0;
+      Object.keys(groups).slice(0, 3).forEach(series => {
+        const title = bookBySeries[series] || series || '其他';
+        groups[series].sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(title) + '》</div>';
+        groups[series].slice(0, 3).forEach(p => { html += resultItemHtml(p, q, '/blog/' + p.slug, false); shown++; });
+        html += '</div>';
+      });
+      // 专栏命中（外链到微信）
+      const colGroups = {};
+      matchedColumns.forEach(c => { const k = c.columnName || ''; (colGroups[k] = colGroups[k] || []).push(c); });
+      Object.keys(colGroups).slice(0, 2).forEach(name => {
+        colGroups[name].sort((a, b) => a.issue - b.issue);
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(name) + '》· 专栏</div>';
+        colGroups[name].slice(0, 3).forEach(c => { html += columnItemHtml(c, q); shown++; });
+        html += '</div>';
+      });
+      if (total > shown + Math.min(matchedBooks.length, 2)) {
+        html += '<a href="#" class="hero-search-all" data-q="' + encodeURIComponent(q) + '">查看全部 ' + total + ' 条结果 →</a>';
+      }
+      container.innerHTML = html;
+      container.classList.add('show');
+    }
+
+    function initHeroSearch() {
+      const input = document.getElementById('hero-search-input');
+      const dropdown = document.getElementById('hero-search-dropdown');
+      const goBtn = document.getElementById('hero-search-go');
+      if (!input || !dropdown) return;
+
+      let inputTimeout;
+      input.addEventListener('input', () => {
+        clearTimeout(inputTimeout);
+        inputTimeout = setTimeout(() => renderHeroResults(input.value), 120);
+      });
+      input.addEventListener('focus', () => { if (input.value.trim()) renderHeroResults(input.value); });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(input.value); });
+        }
+        if (e.key === 'Escape') { closeHeroSearch(); input.blur(); }
+      });
+
+      if (goBtn) {
+        goBtn.addEventListener('click', () => {
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(input.value); });
+        });
+      }
+
+      dropdown.addEventListener('click', (e) => {
+        const all = e.target.closest('.hero-search-all');
+        if (all) {
+          e.preventDefault();
+          const q = decodeURIComponent(all.getAttribute('data-q') || '');
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(q); });
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.hero-search')) closeHeroSearch();
+      });
+    }
+
+    initHeroSearch();
+
+    // ===== 导航搜索图标（全站兜底入口） =====
+    const navSearchBtn = document.getElementById('nav-search-btn');
+    if (navSearchBtn) {
+      navSearchBtn.addEventListener('click', () => {
+        loadSearchIndex().then(() => openSearch());
+      });
+    }
+
+    document.getElementById('search-close').addEventListener('click', closeSearch);
+    document.getElementById('search-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeSearch();
+    });
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      renderResults(e.target.value);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+    });
+    });
+  </script> <!-- 页面关键词高亮（从搜索结果跳转过来时） --> <script>
+    (function() {
+      function getQueryParam(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name) || '';
+      }
+
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function highlightKeyword(keyword) {
+        if (!keyword.trim()) return;
+        const main = document.querySelector('main');
+        if (!main) return;
+
+        const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, null, false);
+        const nodesToReplace = [];
+        const regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
+
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node.parentElement && node.parentElement.tagName === 'MARK') continue;
+          if (regex.test(node.textContent)) {
+            nodesToReplace.push(node);
+          }
+        }
+
+        let firstMark = null;
+        nodesToReplace.forEach(textNode => {
+          const span = document.createElement('span');
+          span.innerHTML = textNode.textContent.replace(regex, '<mark class="search-highlight">$1</mark>');
+          const marks = span.querySelectorAll('mark');
+          if (marks.length > 0 && !firstMark) {
+            firstMark = marks[0];
+          }
+          const fragment = document.createDocumentFragment();
+          while (span.firstChild) {
+            fragment.appendChild(span.firstChild);
+          }
+          textNode.parentNode.replaceChild(fragment, textNode);
+        });
+
+        if (firstMark) {
+          firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(function() {
+            const marks = main.querySelectorAll('mark.search-highlight');
+            marks.forEach(function(m) {
+              const parent = m.parentNode;
+              parent.replaceChild(document.createTextNode(m.textContent), m);
+              parent.normalize();
+            });
+          }, 6000);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          highlightKeyword(getQueryParam('q'));
+        });
+      } else {
+        highlightKeyword(getQueryParam('q'));
+      }
+    })();
+  </script> <!-- 代码块复制按钮 --> <script>
+    (function() {
+      function initCopyButtons() {
+        document.querySelectorAll('.prose pre').forEach(function(pre) {
+          if (pre.querySelector('.copy-btn')) return;
+          var btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.textContent = '复制';
+          btn.setAttribute('aria-label', '复制代码');
+          btn.addEventListener('click', function() {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+              btn.textContent = '已复制';
+              btn.classList.add('copied');
+              setTimeout(function() {
+                btn.textContent = '复制';
+                btn.classList.remove('copied');
+              }, 2000);
+            }).catch(function() {
+              btn.textContent = '失败';
+              setTimeout(function() { btn.textContent = '复制'; }, 2000);
+            });
+          });
+          pre.style.position = 'relative';
+          pre.appendChild(btn);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCopyButtons);
+      } else {
+        initCopyButtons();
+      }
+    })();
+  </script> <!-- 选中文字：复制 / 生成金句卡片 --> <div class="sel-bubble" id="sel-bubble"> <span class="sb-act sb-copy" id="sbCopy">复制</span> <span class="sb-sep"></span> <span class="sb-act sb-card" id="sbCard">金句卡片</span> </div> <!-- 金句卡片弹层 --> <div class="qc-overlay" id="qcOverlay"> <div class="qc-modal"> <button class="qc-close" id="qcClose" aria-label="关闭">×</button> <div class="qc-stage"> <div class="qc a" id="qcCard"> <div class="qc-mark">“</div> <div class="qc-quote" id="qcQuote">先写完，再改清楚。</div> <div class="qc-foot"> <img class="qc-logo" src="/images/logo-180x180.png" alt="logo"> <div class="qc-src"> <div class="qc-site" id="qcSite">像企业家一样写作</div> <div class="qc-from" id="qcFrom">—— 选自正文</div> <div class="qc-url">gusangciren.github.io</div> </div> </div> </div> <div class="qc-tip">样式会记住你上次的选择</div> </div> <div class="qc-side"> <h3>金句卡片</h3> <p class="qc-sub">选好样式后下载或复制图片</p> <div class="qc-styles" id="qcStyles"> <div class="qc-style active" data-s="b"><div class="sw b"></div><div><div class="t">A · 深色品牌</div><div class="d">信息流吸睛</div></div></div> <div class="qc-style" data-s="a"><div class="sw a"></div><div><div class="t">B · 极简暖白</div><div class="d">站点默认，最协调</div></div></div> <div class="qc-style" data-s="c"><div class="sw c"></div><div><div class="t">C · 杂志书页</div><div class="d">书卷气</div></div></div> </div> <div class="qc-actions"> <div class="qc-act primary" data-act="copyimg">复制图片</div> <div class="qc-act" data-act="download">下载图片</div> </div> </div> </div> </div> <!-- 交互增强：阅读进度条 / 暗色模式 / 划词复制 / 金句卡片 --> <script>
+    (function () {
+      // ===== 划词气泡：复制 / 金句卡片 =====
+      var bubble = document.getElementById('sel-bubble');
+      var sbCopy = document.getElementById('sbCopy');
+      var sbCard = document.getElementById('sbCard');
+      var overlay = document.getElementById('qcOverlay');
+      var card = document.getElementById('qcCard');
+      var qQuote = document.getElementById('qcQuote');
+      var qSite = document.getElementById('qcSite');
+      var qFrom = document.getElementById('qcFrom');
+      var stylesBox = document.getElementById('qcStyles');
+      var lastText = '';
+
+      function hideBubble() { bubble.classList.remove('show'); }
+      function getSource() {
+        var h = document.querySelector('.article-header h1, .book-details h1, .prose h1, .community-hero h1');
+        var name = h ? h.textContent.trim() : document.title.trim();
+        try {
+          // 去掉标题尾部与站名重复的「— 像企业家一样写作」
+          name = name.replace(new RegExp('\\s*[—–-]\\s*' + getSite() + '\\s*$'), '');
+        } catch (e) {}
+        return name;
+      }
+      function getSite() {
+        var m = document.querySelector('meta[property="og:site_name"]');
+        return m ? m.content : '像企业家一样写作';
+      }
+
+      if (bubble) {
+        var SKIP = 'input,textarea,pre,code,.search-overlay,.wechat-qr-overlay,.rdl-ov,button,a,img';
+        document.addEventListener('mouseup', function () {
+          setTimeout(function () {
+            var sel = window.getSelection();
+            if (!sel || sel.isCollapsed) { hideBubble(); return; }
+            var text = sel.toString().trim();
+            var node = sel.anchorNode;
+            if (text.length < 2 || !node || !node.parentElement || node.parentElement.closest(SKIP)) { hideBubble(); return; }
+            var rect = sel.getRangeAt(0).getBoundingClientRect();
+            bubble.style.left = (rect.left + rect.width / 2) + 'px';
+            bubble.style.top = (rect.top - 6) + 'px';
+            lastText = text;
+            bubble.classList.add('show');
+          }, 10);
+        });
+        document.addEventListener('mousedown', function (e) { if (!bubble.contains(e.target)) hideBubble(); });
+        window.addEventListener('scroll', hideBubble, { passive: true });
+
+        sbCopy.addEventListener('click', function (ev) {
+          ev.stopPropagation();
+          var t = lastText;
+          function ok() {
+            sbCopy.textContent = '已复制 ✓'; sbCopy.classList.add('copied');
+            setTimeout(function () { sbCopy.textContent = '复制'; sbCopy.classList.remove('copied'); hideBubble(); }, 1200);
+          }
+          function fb() {
+            var i = document.createElement('textarea'); i.value = t; document.body.appendChild(i); i.select();
+            try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(i); ok();
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).then(ok).catch(fb); }
+          else { fb(); }
+        });
+        sbCard.addEventListener('click', function (ev) { ev.stopPropagation(); openCard(lastText); });
+      }
+
+      function openCard(text) {
+        qQuote.textContent = text || '先写完，再改清楚。';
+        var len = qQuote.textContent.length;
+        qQuote.style.fontSize = (len > 100 ? 18 : len > 60 ? 20 : 22) + 'px';
+        qSite.textContent = getSite();
+        qFrom.textContent = '—— 选自《' + getSource() + '》';
+        var saved = 'b';
+        try { saved = localStorage.getItem('qcStyle') || 'b'; } catch (e) {}
+        setStyle(saved);
+        overlay.classList.add('show');
+      }
+      var currentStyle = 'a';
+      function setStyle(s) {
+        currentStyle = s;
+        card.className = 'qc ' + s;
+        document.querySelectorAll('.qc-style').forEach(function (o) { o.classList.toggle('active', o.dataset.s === s); });
+        try { localStorage.setItem('qcStyle', s); } catch (e) {}
+      }
+      stylesBox.addEventListener('click', function (e) {
+        var o = e.target.closest('.qc-style'); if (o) setStyle(o.dataset.s);
+      });
+      document.getElementById('qcClose').addEventListener('click', function () { overlay.classList.remove('show'); });
+      overlay.addEventListener('click', function (e) { if (e.target === overlay) overlay.classList.remove('show'); });
+
+      // ===== 导出为图片（html2canvas） =====
+      function ensureH2C(cb) {
+        if (window.html2canvas) { cb(); return; }
+        var s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+        s.onload = cb;
+        s.onerror = function () { alert('金句卡片图片组件加载失败，请检查网络后重试'); };
+        document.head.appendChild(s);
+      }
+      // 每套样式的底色：填满圆角外区域，避免相册把透明像素渲染成黑角
+      var QC_BG = { a: '#ffffff', b: '#1c1917', c: '#f3ede1' };
+      var fontCssPromise = null;
+      function getFontCss() {
+        if (!fontCssPromise) {
+          fontCssPromise = fetch('https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-webfont/1.7.0/lxgwwenkai-regular.css')
+            .then(function (r) { return r.ok ? r.text() : ''; })
+            .catch(function () { return ''; });
+        }
+        return fontCssPromise;
+      }
+      function capture() {
+        return document.fonts.ready.then(function () {
+          return getFontCss().then(function (css) {
+            return html2canvas(card, {
+              scale: 2,
+              backgroundColor: QC_BG[currentStyle] || '#ffffff',
+              useCORS: true,
+              logging: false,
+              onclone: function (doc) {
+                // 导出环境可能没等到文楷加载完，主动注入字体 CSS 兜底；
+                // 即使仍回退，整卡统一衬线栈（楷体），上下字体也一致
+                if (css) {
+                  var st = doc.createElement('style');
+                  st.textContent = css;
+                  doc.head.appendChild(st);
+                }
+              }
+            });
+          });
+        });
+      }
+      function flash(btn, txt) { var o = btn.textContent; btn.textContent = txt; setTimeout(function () { btn.textContent = o; }, 1400); }
+
+      document.querySelectorAll('.qc-act').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var act = btn.dataset.act;
+          ensureH2C(function () {
+            capture().then(function (canvas) {
+              if (act === 'download') {
+                var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png';
+                a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已下载 ✓');
+              } else if (act === 'copyimg') {
+                canvas.toBlob(function (blob) {
+                  if (blob && navigator.clipboard && window.ClipboardItem) {
+                    navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
+                      .then(function () { flash(btn, '已复制 ✓'); })
+                      .catch(function () { var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png'; a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已保存 ✓'); });
+                  } else {
+                    var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png'; a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已保存 ✓');
+                  }
+                });
+              }
+            });
+          });
+        });
+      });
+    })();
+  </script> </body></html>  <script type="module">(function(){const n=document.getElementById("reading-progress"),r=document.getElementById("reader-mini"),d=document.getElementById("mini-pct"),i=document.querySelector(".reader-hero");function c(){const e=window.scrollY||document.documentElement.scrollTop,t=document.documentElement.scrollHeight-document.documentElement.clientHeight,o=t>0?Math.min(100,Math.max(0,e/t*100)):0,u=Math.round(o);n&&(n.style.width=o+"%",n.classList.toggle("show",e>50)),d&&(d.textContent=u+"%"),r&&i&&r.classList.toggle("show",e>i.offsetHeight+20)}window.addEventListener("scroll",c,{passive:!0}),window.addEventListener("resize",c),c();const s=document.getElementById("reader-toc-toggle"),l=document.getElementById("reader-toc-scrim"),m=document.getElementById("reader-toc");function a(){document.body.classList.remove("toc-open")}s&&s.addEventListener("click",()=>document.body.classList.toggle("toc-open")),l&&l.addEventListener("click",a),m&&m.querySelectorAll("a").forEach(e=>e.addEventListener("click",a)),document.addEventListener("keydown",e=>{if(e.target&&/^(INPUT|TEXTAREA)$/.test(e.target.tagName))return;const t=document.querySelector(".reader-prev[href]"),o=document.querySelector(".reader-next[href]");e.key==="ArrowLeft"&&t&&(window.location.href=t.getAttribute("href")),e.key==="ArrowRight"&&o&&(window.location.href=o.getAttribute("href"))})})();</script> <script type="module">(function(){var o=[1,1.25,1.5,2];function l(t){t=Math.max(0,Math.round(t));var a=Math.floor(t/60),e=t%60;return(a<10?"0":"")+a+":"+(e<10?"0":"")+e}function d(t){return"audio:"+t}document.querySelectorAll(".aplayer").forEach(function(t){var a=t.getAttribute("data-audio");if(!a)return;var e=t.querySelector("audio"),E=t.querySelector(".aplayer-play"),s=t.querySelector(".aplayer-bar"),m=t.querySelector(".aplayer-bar i"),v=t.querySelector(".aplayer-now"),y=t.querySelector(".aplayer-rate"),f=t.querySelector(".aplayer-label"),i=0,p=!1;e.src=a,e.addEventListener("loadedmetadata",function(){if(!p&&isFinite(e.duration)&&e.duration>0){p=!0,f.textContent=f.textContent+" · "+l(e.duration);try{var n=parseFloat(localStorage.getItem(d(a)));!isNaN(n)&&n>1&&n<e.duration-2&&(e.currentTime=n,v.textContent=l(n),m.style.width=n/e.duration*100+"%")}catch{}}});function u(){var n=e.duration||0,r=n?e.currentTime/n:0;m.style.width=Math.min(100,r*100)+"%",v.textContent=l(e.currentTime),t.classList.toggle("playing",!e.paused)}E.addEventListener("click",function(){e.paused?(e.currentTime>=(e.duration||0)-.3&&(e.currentTime=0),e.play().catch(function(){})):e.pause()}),e.addEventListener("play",u),e.addEventListener("pause",u),e.addEventListener("timeupdate",function(){u();try{localStorage.setItem(d(a),e.currentTime)}catch{}}),e.addEventListener("ended",function(){try{localStorage.removeItem(d(a))}catch{}m.style.width="0%",v.textContent="00:00",t.classList.remove("playing")}),y.addEventListener("click",function(){i=(i+1)%o.length,e.playbackRate=o[i],y.textContent="倍速 "+o[i]+"x"});function h(n){var r=s.getBoundingClientRect(),c=Math.min(1,Math.max(0,(n.clientX-r.left)/r.width));e.duration&&(e.currentTime=c*e.duration,u())}s.addEventListener("mousedown",function(n){h(n);function r(L){h(L)}function c(){document.removeEventListener("mousemove",r),document.removeEventListener("mouseup",c)}document.addEventListener("mousemove",r),document.addEventListener("mouseup",c)})})})();</script>
