@@ -54,7 +54,7 @@ function titleWithBrackets(name) {
 
 ---
 
-<BaseLayout title="像企业家一样写作" shareCorner>
+<BaseLayout title="像企业家一样写作">
   <!-- Hero -->
   <section class="hero">
     <div class="hero-inner">
@@ -251,30 +251,62 @@ function titleWithBrackets(name) {
         <h3 class="cd-title">写作这门生意，<em>我把每一步都走给你看</em>。</h3>
         <p class="cd-sub">买一份合集，两个专栏一起解锁——1）周刊每周给你新的东西读，2）书籍陪你走到第一笔收入。</p>
 
-        <div class="cd-path">
-          <span class="cd-lamp" style="left:20%"></span>
-          <span class="cd-lamp" style="left:40%"></span>
-          <span class="cd-lamp" style="left:60%"></span>
-          <span class="cd-lamp" style="left:80%"></span>
-          {stations.map((s) => (
-            <div class="cd-st">
-              <span class="cd-dot"></span>
-              <a href={s.url} target="_blank" rel="noopener noreferrer" class="cd-st-label">{s.label}</a>
-              <span class="cd-st-sub">{s.sub}</span>
+        <div class="cd-body">
+          <a href={columnsHref} class="cd-book" aria-label="《写作并变现》">
+            <img src="/images/book-xiezuobianxian-cover.jpg" alt="《写作并变现》封面" loading="lazy" />
+            <span class="cd-book-name">《写作并变现》</span>
+            <span class="cd-book-sub">书籍 · <b class="cd-num">{writeCount}</b> 期</span>
+          </a>
+          <div class="cd-right">
+            <div class="cd-path">
+              <span class="cd-lamp" style="left:20%"></span>
+              <span class="cd-lamp" style="left:40%"></span>
+              <span class="cd-lamp" style="left:60%"></span>
+              <span class="cd-lamp" style="left:80%"></span>
+              {stations.map((s) => (
+                <div class="cd-st">
+                  <span class="cd-dot"></span>
+                  <a href={s.url} target="_blank" rel="noopener noreferrer" class="cd-st-label">{s.label}</a>
+                  <span class="cd-st-sub">{s.sub}</span>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        <div class="cd-legend">
-          <div class="cd-legend-row">
-            <span><i class="cd-lit"></i>五个站 = <b>《写作并变现》{writeCount} 期</b>，从头走到尾</span>
-            <span><i class="cd-dim"></i>小灯 = <b>《UAC 周刊》{uacCount} 期</b>，每周一篇沿途输入</span>
+            <div class="cd-legend">
+              <div class="cd-legend-row">
+                <span><i class="cd-lit"></i>五个站 = <b>《写作并变现》{writeCount} 期</b>，从头走到尾</span>
+                <span><i class="cd-dim"></i>小灯 = <b>《UAC 周刊》{uacCount} 期</b>，每周一篇沿途输入</span>
+              </div>
+            </div>
           </div>
+
+          <a
+            href={uacCol?.albumUrl || columnsHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="cd-uac"
+            aria-label="UAC 周刊"
+          >
+            <span class="cd-screen">
+              <span class="cd-scr-line">有哪些<em class="r">你认为很重要</em></span>
+              <span class="cd-scr-line">但，90%的人<em class="g">不知道</em></span>
+              <span class="cd-scr-line">或，他们<em class="g">忽略</em>的知识</span>
+            </span>
+            <span class="cd-screen-base"></span>
+            <span class="cd-uac-name">UAC 周刊</span>
+            <span class="cd-uac-sub"><b class="cd-num">{uacCount}</b> 期</span>
+          </a>
         </div>
 
         <div class="cd-cta">
-          <a href={columnsHref} class="cd-btn">从一句话走到第一笔收入 →</a>
-          <span class="cd-note">{totalIssues} 期全部可读 · 每周更新</span>
+          <a href={columnsHref} class="cd-btn">
+            <svg class="cd-lock" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="4" y="11" width="16" height="10" rx="2"></rect>
+              <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+            </svg>
+            从一句话走到第一笔收入 →
+          </a>
+          <span class="cd-note">{totalIssues} 期全部可读 · 每周四更新<b class="cd-em"> · 每！周！四！</b></span>
         </div>
       </div>
     </div>
@@ -287,7 +319,24 @@ function titleWithBrackets(name) {
     .cd-title{position:relative;text-align:center;font-size:2.2rem;font-weight:700;line-height:1.55;color:#f7f1e4;max-width:1000px;margin:0 auto}
     .cd-title em{font-style:normal;color:#e8a04c;text-shadow:0 0 26px rgba(232,160,76,.35)}
     .cd-sub{position:relative;text-align:center;font-size:14px;color:#a89e8d;margin-top:12px;max-width:760px;margin-left:auto;margin-right:auto}
-    .cd-path{position:relative;max-width:1360px;margin:52px auto 0;display:flex;justify-content:space-between}
+    .cd-body{position:relative;display:flex;align-items:center;gap:56px;margin-top:52px}
+    .cd-book{flex:none;width:188px;display:block;text-align:center;text-decoration:none}
+    .cd-book img{width:188px;height:auto;display:block;border-radius:6px;border:1px solid rgba(232,160,76,.28);box-shadow:0 26px 54px rgba(0,0,0,.55),0 0 36px rgba(232,160,76,.13);transform:rotate(-2.5deg);transition:transform .2s,box-shadow .2s}
+    .cd-book:hover img{transform:rotate(0) translateY(-4px);box-shadow:0 32px 62px rgba(0,0,0,.6),0 0 48px rgba(232,160,76,.22)}
+    .cd-book-name,.cd-uac-name{display:block;margin-top:16px;font-size:15px;font-weight:700;color:#ece3d2;transition:color .2s}
+    .cd-book:hover .cd-book-name,.cd-uac:hover .cd-uac-name{color:#e8a04c}
+    .cd-book-sub,.cd-uac-sub{display:block;margin-top:4px;font-size:11.5px;color:#9a8f7d}
+    .cd-num{font-family:Georgia,var(--font-serif);font-size:19px;font-weight:700;color:#e8a04c;line-height:1;padding:0 1px}
+    .cd-uac{flex:none;width:236px;display:flex;flex-direction:column;align-items:center;text-decoration:none}
+    .cd-screen{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:9px;width:236px;height:148px;padding:0 14px;background:linear-gradient(180deg,#0c0a07,#151109);border:1px solid rgba(240,233,220,.15);border-radius:10px 10px 3px 3px;box-shadow:0 14px 34px rgba(0,0,0,.45),0 0 30px rgba(232,160,76,.09),inset 0 0 46px rgba(0,0,0,.55);transition:box-shadow .25s,border-color .25s}
+    .cd-scr-line{font-size:12.5px;line-height:1.5;color:#ddd4c2;letter-spacing:.06em;white-space:nowrap}
+    .cd-scr-line em{font-style:normal}
+    .cd-scr-line .r{color:#d94f3d}
+    .cd-scr-line .g{color:#e8a04c}
+    .cd-screen-base{display:block;width:262px;height:7px;margin-top:1px;background:linear-gradient(180deg,#2b2620,#14110c);border:1px solid rgba(240,233,220,.1);border-radius:2px 2px 9px 9px}
+    .cd-uac:hover .cd-screen{border-color:rgba(232,160,76,.4);box-shadow:0 16px 40px rgba(0,0,0,.5),0 0 46px rgba(232,160,76,.2),inset 0 0 46px rgba(0,0,0,.55)}
+    .cd-right{flex:1;min-width:0}
+    .cd-path{position:relative;max-width:1360px;margin:0 auto;display:flex;justify-content:space-between}
     .cd-path::before{content:'';position:absolute;top:7px;left:10%;right:10%;height:1px;background:linear-gradient(90deg,rgba(232,160,76,.18),rgba(232,160,76,.5))}
     .cd-st{position:relative;flex:1;text-align:center;padding:0 6px}
     .cd-dot{display:block;width:15px;height:15px;border-radius:50%;background:#181308;border:2px solid #a8763a;margin:0 auto;position:relative;z-index:1;transition:.2s}
@@ -306,13 +355,23 @@ function titleWithBrackets(name) {
     .cd-dim{width:7px;height:7px;background:rgba(232,160,76,.38)}
     .cd-legend b{color:#d8cfbb;font-weight:600}
     .cd-cta{position:relative;text-align:center;margin-top:30px}
-    .cd-btn{display:inline-block;background:linear-gradient(180deg,#e8a04c,#d98a30);color:#17130d;font-weight:700;font-size:14px;border-radius:9px;padding:12px 34px;text-decoration:none;box-shadow:0 10px 26px rgba(232,160,76,.3);transition:.15s}
+    .cd-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(180deg,#e8a04c,#d98a30);color:#17130d;font-weight:700;font-size:14px;border-radius:9px;padding:12px 34px;text-decoration:none;box-shadow:0 10px 26px rgba(232,160,76,.3);transition:.15s}
+    .cd-btn .cd-lock{flex:none;opacity:.85}
     .cd-btn:hover{transform:translateY(-1px);box-shadow:0 14px 32px rgba(232,160,76,.42)}
     .cd-note{display:block;font-size:12px;color:#9a8f7d;margin-top:10px}
+    .cd-note .cd-em{color:#e8a04c;font-weight:700}
     .letter-gap{margin-top:72px}
     @media(max-width:860px){
       .cd-title{font-size:1.6rem}
-      .cd-path{flex-direction:column;gap:24px;align-items:flex-start;max-width:320px}
+      .cd-body{display:grid;grid-template-columns:auto auto;justify-content:center;align-items:center;column-gap:28px;row-gap:44px}
+      .cd-book{grid-row:1;grid-column:1;width:128px}
+      .cd-book img{width:128px}
+      .cd-uac{grid-row:1;grid-column:2;width:168px}
+      .cd-screen{width:168px;height:106px;gap:6px}
+      .cd-scr-line{font-size:9.5px}
+      .cd-screen-base{width:186px}
+      .cd-right{grid-row:2;grid-column:1/-1;width:100%;max-width:320px;justify-self:center}
+      .cd-path{flex-direction:column;gap:24px;align-items:flex-start;max-width:320px;margin:0}
       .cd-path::before{left:7px;right:auto;top:8px;bottom:8px;width:1px;height:auto;background:linear-gradient(180deg,rgba(232,160,76,.18),rgba(232,160,76,.5))}
       .cd-st{display:flex;align-items:center;gap:14px;text-align:left;padding:0;width:100%}
       .cd-dot{margin:0;flex:none}
