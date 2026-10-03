@@ -48,6 +48,11 @@ const nextPost = currentIndex >= 0 && currentIndex < seriesPosts.length - 1 ? se
 const seriesTotal = seriesPosts.length;
 const seriesOrder = currentIndex >= 0 ? currentIndex + 1 : 0;
 
+// 有声书：书籍配置了 audioBase 且当前是系列章节时，按「第 N 章」拼出音频地址
+const audioBase = currentBook?.data.audioBase;
+const audioUrl = (audioBase && seriesOrder) ? `${audioBase}/第${seriesOrder}章.mp3` : '';
+const hasAudio = audioUrl !== '';
+
 // 阅读时长估算（中文约 350 字/分钟）
 const rawLen = (post.body || '').length;
 const readingMin = Math.max(1, Math.round(rawLen / 350));
@@ -90,6 +95,21 @@ function cleanTitle(t: string, s: string) {
               <span class="reader-hero-dot">·</span>
               <span>约 {readingMin} 分钟阅读</span>
             </div>
+
+            {hasAudio && (
+              <div class="aplayer" data-audio={audioUrl}>
+                <button class="aplayer-play" type="button" aria-label="播放 / 暂停">▶</button>
+                <div class="aplayer-mid">
+                  <div class="aplayer-top">
+                    <span class="aplayer-label">第 {seriesOrder} 章 · 听书</span>
+                    <button class="aplayer-rate" type="button">倍速 1.0x</button>
+                  </div>
+                  <div class="aplayer-bar"><i></i></div>
+                </div>
+                <span class="aplayer-now">00:00</span>
+                <audio preload="metadata"></audio>
+              </div>
+            )}
           </div>
         </div>
       </header>
@@ -268,6 +288,45 @@ function cleanTitle(t: string, s: string) {
     font-size: 13px; color: #78716c;
   }
   .reader-hero-dot { color: #d6d3d1; }
+
+  /* ===== 有声书 · 内联极简播放器（方案 A·②） ===== */
+  .aplayer {
+    display: flex; align-items: center; gap: 11px;
+    background: #f4f1ec; border-radius: 12px;
+    padding: 9px 14px; margin: 16px 0 2px;
+    max-width: 680px;
+  }
+  .aplayer-play {
+    width: 34px; height: 34px; border-radius: 50%;
+    border: none; background: #fff; color: var(--color-accent, #f55000);
+    font-size: 13px; flex: none; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    box-shadow: 0 1px 4px rgba(28,25,23,0.12);
+    transition: transform 0.15s;
+  }
+  .aplayer-play:hover { transform: scale(1.06); }
+  .aplayer-mid { flex: 1; min-width: 0; }
+  .aplayer-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .aplayer-label { color: #57534e; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .aplayer-rate {
+    border: none; background: none; color: #78716c;
+    font-size: 12px; cursor: pointer; padding: 0; font-family: inherit;
+    flex: none; white-space: nowrap;
+  }
+  .aplayer-rate:hover { color: var(--color-accent, #f55000); }
+  .aplayer-bar {
+    height: 3px; border-radius: 99px; background: #e0d9cf;
+    cursor: pointer; position: relative; margin-top: 6px;
+  }
+  .aplayer-bar i {
+    position: absolute; left: 0; top: 0; bottom: 0; width: 0%;
+    border-radius: 99px; background: var(--color-accent, #f55000);
+  }
+  .aplayer-now { color: #a8a29e; font-size: 11px; flex: none; width: 38px; text-align: right; }
+  @media (max-width: 640px) {
+    .aplayer { margin: 14px 0 2px; padding: 8px 12px; }
+    .aplayer-play { width: 32px; height: 32px; }
+  }
 
   /* 超大章节号（V4 左对齐版） */
   .reader-hero-num {
@@ -487,6 +546,103 @@ function cleanTitle(t: string, s: string) {
       const next = document.querySelector('.reader-next[href]');
       if (e.key === 'ArrowLeft' && prev) { window.location.href = prev.getAttribute('href'); }
       if (e.key === 'ArrowRight' && next) { window.location.href = next.getAttribute('href'); }
+    });
+  })();
+</script>
+
+<script>
+  // ===== 有声书 · 内联极简播放器 =====
+  (function () {
+    var RATES = [1, 1.25, 1.5, 2];
+    function fmt(s) {
+      s = Math.max(0, Math.round(s));
+      var m = Math.floor(s / 60);
+      var r = s % 60;
+      return (m < 10 ? '0' : '') + m + ':' + (r < 10 ? '0' : '') + r;
+    }
+    function key(url) { return 'audio:' + url; }
+
+    document.querySelectorAll('.aplayer').forEach(function (root) {
+      var url = root.getAttribute('data-audio');
+      if (!url) return;
+      var audio = root.querySelector('audio');
+      var play = root.querySelector('.aplayer-play');
+      var bar = root.querySelector('.aplayer-bar');
+      var fill = root.querySelector('.aplayer-bar i');
+      var now = root.querySelector('.aplayer-now');
+      var rate = root.querySelector('.aplayer-rate');
+      var label = root.querySelector('.aplayer-label');
+      var ri = 0, durSet = false;
+
+      audio.src = url;
+
+      audio.addEventListener('loadedmetadata', function () {
+        if (!durSet && isFinite(audio.duration) && audio.duration > 0) {
+          durSet = true;
+          label.textContent = label.textContent + ' · ' + fmt(audio.duration);
+          // 续播：恢复上次听到位置
+          try {
+            var saved = parseFloat(localStorage.getItem(key(url)));
+            if (!isNaN(saved) && saved > 1 && saved < audio.duration - 2) {
+              audio.currentTime = saved;
+              now.textContent = fmt(saved);
+              fill.style.width = (saved / audio.duration * 100) + '%';
+            }
+          } catch (e) {}
+        }
+      });
+
+      function render() {
+        var d = audio.duration || 0;
+        var p = d ? audio.currentTime / d : 0;
+        fill.style.width = Math.min(100, p * 100) + '%';
+        now.textContent = fmt(audio.currentTime);
+        play.textContent = audio.paused ? '▶' : '⏸';
+      }
+
+      play.addEventListener('click', function () {
+        if (audio.paused) {
+          // 暂停在结尾则重头播
+          if (audio.currentTime >= (audio.duration || 0) - 0.3) audio.currentTime = 0;
+          audio.play().catch(function () {});
+        } else {
+          audio.pause();
+        }
+      });
+      audio.addEventListener('play', render);
+      audio.addEventListener('pause', render);
+      audio.addEventListener('timeupdate', function () {
+        render();
+        try { localStorage.setItem(key(url), audio.currentTime); } catch (e) {}
+      });
+      audio.addEventListener('ended', function () {
+        try { localStorage.removeItem(key(url)); } catch (e) {}
+        fill.style.width = '0%';
+        now.textContent = '00:00';
+        play.textContent = '▶';
+      });
+
+      rate.addEventListener('click', function () {
+        ri = (ri + 1) % RATES.length;
+        audio.playbackRate = RATES[ri];
+        rate.textContent = '倍速 ' + RATES[ri] + 'x';
+      });
+
+      function seek(e) {
+        var r = bar.getBoundingClientRect();
+        var p = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+        if (audio.duration) {
+          audio.currentTime = p * audio.duration;
+          render();
+        }
+      }
+      bar.addEventListener('mousedown', function (e) {
+        seek(e);
+        function mv(e2) { seek(e2); }
+        function up() { document.removeEventListener('mousemove', mv); document.removeEventListener('mouseup', up); }
+        document.addEventListener('mousemove', mv);
+        document.addEventListener('mouseup', up);
+      });
     });
   })();
 </script>
