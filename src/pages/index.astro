@@ -410,14 +410,19 @@ function titleWithBrackets(name) {
       align-items: center;
       gap: 10px;
       padding: 6px 6px 6px 18px;
-      border: 2px solid var(--color-border);
+      border: 1px solid rgba(255, 255, 255, 0.28);
       border-radius: 12px;
-      background: #fff;
-      transition: border-color .2s, box-shadow .2s;
+      /* 毛玻璃：半透明白底 + 背景模糊，让 Hero 夜景透出来 */
+      background: rgba(255, 255, 255, 0.12);
+      -webkit-backdrop-filter: blur(14px) saturate(150%);
+      backdrop-filter: blur(14px) saturate(150%);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+      transition: border-color .2s, box-shadow .2s, background .2s;
     }
     .hero-search-box:focus-within {
-      border-color: var(--color-accent);
-      box-shadow: 0 4px 20px rgba(245,80,0,0.12);
+      border-color: rgba(255, 255, 255, 0.55);
+      background: rgba(255, 255, 255, 0.18);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.25);
     }
     #hero-search-input {
       flex: 1;
@@ -427,11 +432,11 @@ function titleWithBrackets(name) {
       font-size: 1.05rem;
       padding: 14px 0;
       font-family: inherit;
-      color: var(--color-text);
+      color: rgba(255, 255, 255, 0.95);
       background: transparent;
     }
     #hero-search-input::placeholder {
-      color: var(--color-text-secondary);
+      color: rgba(255, 255, 255, 0.65);
     }
     .hero-search-go {
       display: inline-flex;
