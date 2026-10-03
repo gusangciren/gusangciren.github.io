@@ -53,7 +53,7 @@ const bundleAlbumUrl = columns.find((c) => c.albumUrl)?.albumUrl;
         {columns.map((column) => {
           const latest = column.issues[0];
           return (
-            <section class="col-block" id={column.id}>
+            <section class:list={["col-block", column.id]} id={column.id}>
               {/* 专栏头部 */}
               <div class="col-hero">
                 <div class="col-count"><b>{column.issueCount}</b><span>期</span></div>
@@ -457,6 +457,8 @@ const bundleAlbumUrl = columns.find((c) => c.albumUrl)?.albumUrl;
 
   @media (max-width: 900px) {
     .col-grid { grid-template-columns: 1fr; gap: 28px; }
+    /* 手机单列堆叠时：写作并变现排在前（数据源里 UAC 在前，桌面双栏不受影响） */
+    .col-block.write-like-entrepreneur { order: -1; }
     .feat { grid-template-columns: 1fr; }
     .grp-row .go { display: none; }
   }

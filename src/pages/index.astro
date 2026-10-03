@@ -82,7 +82,7 @@ function titleWithBrackets(name) {
     <div class="section-inner">
       <div class="books-cf">
         <div class="cf-head">
-          <div class="cf-title">书籍<span class="hl">作品</span></div>
+          <div class="cf-title"><svg class="cf-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>书籍<span class="hl">作品</span></div>
           <div class="cf-sub">我这辈子遇到的聪明人，没有一个不每天阅读的——没有，一个都没有。（查理·芒格）</div>
         </div>
         <div class="cf-wrap" id="books-deck">
@@ -378,6 +378,8 @@ function titleWithBrackets(name) {
       .cd-st-label{margin-top:0}
       .cd-lamp{display:none}
       .cd-st-sub{white-space:normal}
+      /* 移动端隐藏图例两行（五个站=…／小灯=…），桌面端保留 */
+      .cd-legend{display:none}
     }
     /* 极小屏（iPhone SE 等 ≤340px）：书+屏并排收一档，避免横向溢出 */
     @media(max-width:340px){
@@ -484,15 +486,15 @@ function titleWithBrackets(name) {
     }
     .hero-search-all:hover { background: rgba(245,80,0,0.08); }
 
-    /* ===== 移动端专属提醒（桌面隐藏）===== 只在手机显示，做成安静的暗色小字 */
+    /* ===== 移动端专属提醒（桌面隐藏）===== 用户要求凸显且用橙色：主橙 + 加粗 */
     .mobile-tip {
       display: none;
       text-align: center;
-      font-size: 12px;
-      font-weight: 400;
-      color: rgba(240, 233, 220, 0.6);
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--color-accent);
       margin: 12px auto 0;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
     }
     @media (max-width: 768px) {
       .mobile-tip { display: block; }
@@ -553,6 +555,13 @@ function titleWithBrackets(name) {
       color: var(--color-text); letter-spacing: .02em; margin-bottom: 8px;
     }
     .cf-title .hl { color: var(--color-accent); }
+    /* 书籍作品标题前的书籍图标：与 /book 页 SectionHeader 的 book 图标同款 */
+    .cf-title .cf-ico {
+      width: .88em; height: .88em;
+      color: var(--color-accent);
+      vertical-align: -0.07em;
+      margin-right: 10px;
+    }
     .cf-sub { font-size: .92rem; color: var(--color-text-secondary); margin-bottom: 22px; }
     .cf-wrap { position: relative; height: 486px; margin-top: 30px; overflow-x: clip; }
     .deck-card {

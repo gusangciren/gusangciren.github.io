@@ -52,6 +52,7 @@ function titleWithBrackets(name: string) {
       const firstChapter = firstChapterMap.get(featured.id);
       const chapterCount = chapterCountMap.get(featured.id) || 0;
       const unit = getUnit(featured);
+      const meta = chapterCount > 0 ? `${chapterCount} ${unit} · 免费` : '免费读完';
       const readHref = firstChapter ? `/blog/${firstChapter}` : `/book/${slug}`;
       const title = titleWithBrackets(
         featured.data.subtitle ? `${featured.data.title}：${featured.data.subtitle}` : featured.data.title
@@ -76,6 +77,7 @@ function titleWithBrackets(name: string) {
               </ul>
             )}
             <div class="bf-acts">
+              <span class="bf-meta">{meta}</span>
               <a class="bf-btn" href={readHref}>开始阅读 →</a>
               <a class="bf-btn ghost" href={`/book/${slug}`}>看完整目录</a>
             </div>
@@ -265,6 +267,8 @@ function titleWithBrackets(name: string) {
     flex-wrap: wrap;
     margin-top: auto;
   }
+  /* 「N 章 · 免费」标注：桌面隐藏（桌面主打卡不显示），移动端小卡化时显示 */
+  .bf-meta { display: none; }
   .bf-btn {
     font-size: 14px;
     font-weight: 600;
@@ -413,13 +417,29 @@ function titleWithBrackets(name: string) {
   }
   @media (max-width: 600px) {
     .book-page { padding: 80px 16px 60px; }
-    .book-grid { grid-template-columns: 1fr; max-width: 360px; margin: 0 auto; }
+    /* 手机端：小卡与主打卡（闭环）同宽——去掉 360px 居中限制，全宽单列 */
+    .book-grid { grid-template-columns: 1fr; }
     .bc-cover img { width: 50%; }
+    /* 手机端：主打卡降为与下方小卡同款观感——封面居中收窄、隐藏口号/权益条、行式 CTA（仅移动端，桌面不动） */
     .book-feat { flex-direction: column; }
-    .bf-cover { flex-basis: auto; padding: 22px 16px; }
-    .bf-cover img { width: 100%; height: auto; }
-    .bf-body { padding: 20px 20px 24px; }
-    .bf-acts { width: 100%; }
-    .bf-btn { flex: 1; text-align: center; }
+    .bf-cover { flex-basis: auto; background: #f7f6f4; padding: 20px 18px; }
+    .bf-cover img {
+      width: 58%; max-width: 168px; height: auto;
+      aspect-ratio: 210 / 297; object-fit: cover;
+      border-radius: 4px; box-shadow: 0 4px 14px rgba(0,0,0,.16);
+    }
+    .bf-cover:hover img { transform: none; }
+    .bf-kicker, .bf-motto, .bf-bnf { display: none; }
+    .bf-body { padding: 16px 18px; }
+    .bf-title { font-size: 1.02rem; text-align: center; line-height: 1.5; margin: 0 0 8px; }
+    .bf-desc {
+      font-size: .85rem; line-height: 1.65; margin-bottom: 12px;
+      display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .bf-acts { width: 100%; justify-content: space-between; border-top: 1px solid var(--color-border); padding-top: 11px; margin-top: auto; }
+    .bf-meta { display: inline; font-size: 12px; color: var(--color-text-secondary); }
+    .bf-btn { flex: none; background: none; border: none; color: var(--color-accent); font-weight: 600; font-size: 13px; padding: 0; }
+    .bf-btn:hover { transform: none; box-shadow: none; background: none; }
+    .bf-btn.ghost { display: none; }
   }
 </style>
