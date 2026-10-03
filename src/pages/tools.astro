@@ -195,6 +195,7 @@ import { shopItems } from '../data/shop';
                 <button class="wp-chip on" data-dur="25">25 分钟</button>
                 <button class="wp-chip" data-dur="50">50 分钟</button>
               </span>
+              <button class="wp-chip on" id="wpKeySnd" title="打字键盘音 · 机械轻音（点击开 / 关）">⌨ 键盘音</button>
               <button class="wp-focus" id="wpFocus" title="全屏专注写作（Esc 退出）">⛶ 专注模式</button>
               <button class="wp-reset" id="wpReset">↺ 重置</button>
             </div>
@@ -921,8 +922,63 @@ import { shopItems } from '../data/shop';
       }
       function pauseSound() { if (audioEl) audioEl.pause(); stopSynth(); }
       function resumeSound() { if (usingFile && audioEl) { audioEl.play(); } else { startSynth(curSound); } }
-      function keyclick() {
-        /* 打字音已按需求整体关闭 */
+      /* ===== 打字键盘音（机械键盘·轻音）：Web Audio 实时合成，无音频文件 =====
+         参数与「打字音试听」页完全一致：噪声脉冲过带通 + 低频体腔共鸣，
+         每下音高随机 ±5% 去机械重复感，连续按键 18ms 节流；空格为独立闷响音色。 */
+      var wpKeysnd = (function () {
+        var ctx = null, master = null, noiseBuf = null, lastAt = 0;
+        var vol = 0.40;
+        var AC = window.AudioContext || window.webkitAudioContext;
+        function ac() {
+          if (!AC) return null;
+          if (!ctx) {
+            ctx = new AC();
+            master = ctx.createGain();
+            master.gain.value = vol * 0.6;
+            master.connect(ctx.destination);
+          }
+          if (ctx.state === 'suspended') ctx.resume();
+          return ctx;
+        }
+        function noise() {
+          var c = ac();
+          if (!noiseBuf) {
+            var len = Math.floor(c.sampleRate * 0.5);
+            noiseBuf = c.createBuffer(1, len, c.sampleRate);
+            var d = noiseBuf.getChannelData(0);
+            for (var i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+          }
+          var s = c.createBufferSource(); s.buffer = noiseBuf; return s;
+        }
+        function env(g, t, peak, dur) {
+          g.gain.setValueAtTime(0.0001, t);
+          g.gain.exponentialRampToValueAtTime(peak, t + 0.002);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+        }
+        function hit(t, freq, q, dur, peak, type) {
+          var c = ac(); if (!c) return;
+          var s = noise(), f = c.createBiquadFilter(), g = c.createGain();
+          f.type = type || 'bandpass'; f.frequency.value = freq; f.Q.value = q || 1;
+          s.connect(f); f.connect(g); g.connect(master);
+          env(g, t, peak, dur);
+          s.start(t); s.stop(t + dur + 0.05);
+        }
+        function r() { return 1 + (Math.random() - 0.5) * 0.10; }
+        function play(kind) {
+          var now = performance.now();
+          if (now - lastAt < 18) return; lastAt = now;
+          var c = ac(); if (!c) return;
+          var t = c.currentTime + 0.002;
+          if (kind === 'space') { hit(t, 760 * r(), 1.6, 0.05, 0.28); hit(t, 180, 2, 0.09, 0.16); }
+          else { hit(t, 2500 * r(), 1.1, 0.022, 0.50); hit(t, 420 * r(), 2, 0.05, 0.20); }
+        }
+        return { play: play, ac: ac };
+      })();
+      var ksOn = true;
+      try { if (localStorage.getItem('wpKeySnd') === '0') ksOn = false; } catch (e) {}
+      function keyclick(key) {
+        if (!ksOn) return;
+        wpKeysnd.play(key === ' ' ? 'space' : 'key');
       }
 
       var wpPlay = document.getElementById('wpPlay'), wpTitle = document.getElementById('wpTitle'),
@@ -1045,6 +1101,16 @@ import { shopItems } from '../data/shop';
           resetSession();
         });
       });
+      /* 打字键盘音开关（机械轻音），状态记忆到 localStorage */
+      var wpKeySnd = document.getElementById('wpKeySnd');
+      function syncKeySnd() { wpKeySnd.classList.toggle('on', ksOn); }
+      wpKeySnd.addEventListener('click', function () {
+        ksOn = !ksOn;
+        try { localStorage.setItem('wpKeySnd', ksOn ? '1' : '0'); } catch (e) {}
+        syncKeySnd();
+        if (ksOn) wpKeysnd.ac();
+      });
+      syncKeySnd();
       /* 专注模式：优先原生全屏；被 iframe/权限拦截时自动降级为伪全屏（fixed 铺满视口） */
       var wpFocus = document.getElementById('wpFocus');
       function wpWrapEl() { return document.querySelector('#pane-write .wp-wrap'); }
@@ -1255,7 +1321,9 @@ import { shopItems } from '../data/shop';
 
       wpEditor.addEventListener('keydown', function (ev) {
         if (ev.target && ev.target.classList && ev.target.classList.contains('src')) {
-          if (ev.key.length === 1 || ev.key === 'Enter' || ev.key === 'Backspace') keyclick();
+          /* 字符键（含空格）发声；中文输入法组合键（key==='Process'）同样计一下；
+             回车 / 退格 / 方向键不响，与试听页一致 */
+          if (ev.key.length === 1 || ev.key === 'Process') keyclick(ev.key);
         }
       });
 
