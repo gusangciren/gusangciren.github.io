@@ -596,9 +596,14 @@ import { shopItems } from '../data/shop';
           exportCanvas().then(function (cv) {
             qcBusy = false;
             if (!cv) return;
-            var a = document.createElement('a');
-            a.download = '句子卡片.png'; a.href = cv.toDataURL('image/png');
-            document.body.appendChild(a); a.click(); a.remove(); bigDone('图片已下载');
+            cv.toBlob(function (blob) {
+              var url = URL.createObjectURL(blob);
+              var a = document.createElement('a');
+              a.download = '句子卡片.png'; a.href = url;
+              document.body.appendChild(a); a.click(); a.remove();
+              setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+              bigDone('图片已下载');
+            });
           });
         });
 
@@ -729,8 +734,11 @@ import { shopItems } from '../data/shop';
         bigWait('正在生成封面…');
         try {
           var x = exportEl(builder); var c = await renderArt(x.el); x.done();
-          var a = document.createElement('a'); a.href = c.toDataURL('image/png'); a.download = name + '.png';
+          var blob = await new Promise(function (r) { c.toBlob(r, 'image/png'); });
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement('a'); a.href = url; a.download = name + '.png';
           document.body.appendChild(a); a.click(); a.remove();
+          setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
           btn.textContent = '已下载 ✓'; bigDone('封面图片已下载');
         } catch (e) { console.error(e); btn.textContent = '下载失败'; bigDone('下载失败，请重试', false); }
         setTimeout(function () { btn.textContent = t; btn.disabled = false; }, 1800);

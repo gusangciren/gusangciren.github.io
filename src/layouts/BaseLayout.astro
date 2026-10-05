@@ -42,8 +42,9 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
     <meta name="twitter:description" content={pageDesc} />
     <meta name="twitter:image" content={ogImageURL} />
 
-    <link rel="icon" type="image/png" sizes="32x32" href="/images/logo-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/images/logo-32x32.png" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png" />
     <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml" />
     <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
@@ -1074,17 +1075,24 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
           var act = btn.dataset.act;
           ensureH2C(function () {
             capture().then(function (canvas) {
+              function doDownload() {
+                canvas.toBlob(function (blob) {
+                  var url = URL.createObjectURL(blob);
+                  var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png';
+                  a.href = url; document.body.appendChild(a); a.click(); a.remove();
+                  setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+                });
+              }
               if (act === 'download') {
-                var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png';
-                a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已下载 ✓');
+                doDownload(); flash(btn, '已下载 ✓');
               } else if (act === 'copyimg') {
                 canvas.toBlob(function (blob) {
                   if (blob && navigator.clipboard && window.ClipboardItem) {
                     navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
                       .then(function () { flash(btn, '已复制 ✓'); })
-                      .catch(function () { var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png'; a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已保存 ✓'); });
+                      .catch(function () { doDownload(); flash(btn, '已保存 ✓'); });
                   } else {
-                    var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png'; a.href = canvas.toDataURL('image/png'); a.click(); flash(btn, '已保存 ✓');
+                    doDownload(); flash(btn, '已保存 ✓');
                   }
                 });
               }
