@@ -5,6 +5,9 @@ import ReaderLetter from '../components/ReaderLetter.astro';
 import { getCollection } from 'astro:content';
 import { columns } from '../data/columns';
 
+// 首屏最大元素（Hero 夜空背景是 CSS 背景图）提前拉取，改善 LCP 观感
+const HERO_BG = '/images/hero-night.jpg';
+
 const writeCol = columns.find((c) => c.id === 'write-like-entrepreneur');
 const uacCol = columns.find((c) => c.id === 'uac-weekly');
 const stationDefs = [
@@ -55,6 +58,7 @@ function titleWithBrackets(name) {
 ---
 
 <BaseLayout title="像企业家一样写作">
+  <link slot="head" rel="preload" as="image" href={HERO_BG} fetchpriority="high" />
   <!-- Hero -->
   <section class="hero">
     <div class="hero-inner">

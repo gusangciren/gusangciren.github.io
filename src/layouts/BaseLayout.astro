@@ -50,12 +50,13 @@ const ogImageURL = new URL(ogImage, SITE_URL).href;
     <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
     <!-- Static CSS — no build hash, safe for incremental deploys -->
     <link rel="stylesheet" href="/global.css" />
-    <!-- 金句卡片导出为图片（同 origin，无 CORS 风险） -->
-    <script is:inline src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-    <!-- 中文字体：经 BootCDN 加载（国内可访问，不走被墙的 Google Fonts）。
-         用 preload + onload 切换，去掉 @import 的渲染阻塞；字体未到位时先用系统衬线字体（等同 font-display:swap） -->
-    <link rel="preload" as="style" href="/fonts/fonts.css" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="/fonts/fonts.css"></noscript>
+    <!-- 金句卡导出用到的 html2canvas 不再全站预加载：导出时由 ensureH2C() 按需注入（省下每页 45KB + 一次公网往返） -->
+    <!-- 中文字体：直连 BootCDN，去掉 /fonts/fonts.css → @import → CDN 的串行两跳；仍在渲染后用 preload+onload 切换。
+         preconnect 提前完成 DNS/TLS（字体文件走 CORS 通道，故带 crossorigin）；CDN CSS 自带 font-display:swap。 -->
+    <link rel="preconnect" href="https://cdn.bootcdn.net" crossorigin />
+    <link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-webfont/1.7.0/lxgwwenkai-regular.css" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-webfont/1.7.0/lxgwwenkai-regular.css"></noscript>
+    <slot name="head" />
   </head>
   <body>
     <nav class="navbar">

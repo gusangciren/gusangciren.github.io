@@ -264,6 +264,22 @@ import { shopItems } from '../data/shop';
 
   <script is:inline>
     (function () {
+      // html2canvas 改为「导出时才加载」：原先由 BaseLayout 在 head 全站预载（约 45KB + 一次公网往返），
+      // 现在只有真正导出图片时才注入，失败会回落提示。
+      var h2cPromise = null;
+      function ensureH2C() {
+        if (window.html2canvas) return Promise.resolve(true);
+        if (!h2cPromise) {
+          h2cPromise = new Promise(function (resolve, reject) {
+            var s = document.createElement('script');
+            s.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+            s.onload = function () { resolve(true); };
+            s.onerror = function () { reject(new Error('h2c load fail')); };
+            document.head.appendChild(s);
+          }).catch(function () { return false; });
+        }
+        return h2cPromise;
+      }
       // ===== 侧边栏切换 =====
       var menu = document.getElementById('side-menu');
       menu.querySelectorAll('li[data-pane]').forEach(function (li) {
@@ -556,7 +572,7 @@ import { shopItems } from '../data/shop';
         function toast(m) { gToast(m); } /* 统一走顶部轻提示（原底部 toast 小屏看不见） */
         var qcBusy = false;
         async function exportCanvas() {
-          if (!window.html2canvas) { bigDone('图片组件未加载，请稍候重试', false); return null; }
+          if (!(await ensureH2C())) { bigDone('图片组件加载失败，请检查网络后重试', false); return null; }
           var stage = document.getElementById('qc-stage');
           var clone = card.cloneNode(true);
           clone.style.transform = 'none';
@@ -708,6 +724,7 @@ import { shopItems } from '../data/shop';
         return { el: el, done: function () { stage.removeChild(el); } };
       }
       async function renderArt(el) {
+        if (!(await ensureH2C())) { throw new Error('图片组件加载失败，请检查网络后重试'); }
         await document.fonts.ready;
         var css = await getExportFontCss();
         return html2canvas(el, {
