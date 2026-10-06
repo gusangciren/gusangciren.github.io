@@ -280,6 +280,8 @@ import { shopItems } from '../data/shop';
         }
         return h2cPromise;
       }
+      // 导出封面与导出句子卡片分属两个 IIFE，确保后者也能调用
+      window.ensureH2C = ensureH2C;
       // ===== 侧边栏切换 =====
       var menu = document.getElementById('side-menu');
       menu.querySelectorAll('li[data-pane]').forEach(function (li) {
