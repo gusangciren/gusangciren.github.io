@@ -331,11 +331,27 @@ body.recording-clean #blocked{display:none !important}
 @keyframes countIn{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
 
 /* 设置面板 */
-/* 专供 canvas 取帧的摄像头源：必须「保持渲染」而不是 display:none，
-   否则浏览器停止向它送帧，气泡就画不出来。所以移到屏幕外 + 缩到 1px + 透明。 */
+/* camSrc 已不再用于取帧（移出视口的 video 会被浏览器挂起、不送帧），
+   保留元素只为兼容旧引用，样式上彻底移出渲染路径。 */
 #camSrc{
-  position:fixed;left:-10px;top:-10px;width:1px;height:1px;
-  opacity:.001;pointer-events:none;z-index:-1;
+  position:fixed;left:0;top:0;width:1px;height:1px;
+  opacity:0;pointer-events:none;z-index:-1;visibility:hidden;
+}
+
+/* screenSrc：屏幕流的取帧源。
+   两个约束必须同时满足，否则要么画面黑、要么遮住演示：
+   ① **必须在视口内被真正渲染** —— 移到视口外 / display:none / visibility:hidden
+      都会被浏览器挂起（paused=true，readyState 仍显示 4，但不送新帧），
+      canvas 就一直画到空白，头像也不会出现。
+   ② **绝不能铺满** —— 它和 #stage 同为 position:fixed;inset:0，DOM 里又排在
+      #stage 之后，铺满就会把演示图卡整个盖住（成片还带套娃回显）。
+   做法：贴在左上角的一个 8×8 小方块，opacity:0 让它在视觉上完全消失，
+   但既不 visibility:hidden 也不 display:none，所以仍在渲染、稳定送帧。
+   opacity:0 在这里是安全的：Chrome 只对 display:none / visibility:hidden 做
+   渲染跳过，opacity:0 的 video 照常解码出帧，drawImage 能正常取到。 */
+#screenSrc{
+  position:fixed;left:0;top:0;width:8px;height:8px;
+  opacity:0;pointer-events:none;z-index:0;
 }
 
 .rec-panel{
@@ -466,6 +482,57 @@ body.recording-clean #blocked{display:none !important}
 }
 #recBar button:hover{background:#d94700}
 #recBar button:active{transform:scale(.96)}
+
+/* 录制中的摄像头实时小窗：让你随时看到自己。
+   位置跟随面板里选的「画面位置」，canvas 里同步画的是同一个气泡，
+   所以「小窗」和「成片里的头像」始终一致，不会对不上。 */
+.rec-pip{
+  position:fixed;z-index:26;width:180px;height:180px;
+  border-radius:50%;overflow:hidden;
+  border:3px solid #FF5B4A;
+  box-shadow:0 8px 32px rgba(0,0,0,.36);
+  background:#1c1917;
+}
+.rec-pip[hidden]{display:none}
+.rec-pip.square{border-radius:20px}
+.rec-pip video{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transform:scaleX(-1);            /* 镜像，符合自拍直觉 */
+}
+/* 录制中 PIP 切成「裸画面」：边框 / 阴影 / REC / 时长全部去掉。
+   因为 PIP 在屏幕上会被屏幕流一起录进成片 —— 留着这些装饰，成片右下角就会
+   出现一个带红框和「REC」字样的窗口。去掉后成片里是干净头像，
+   再由 canvas 里画的气泡盖在同一位置，两者重合，成片只有一个头像。 */
+.rec-pip.pip-bare{
+  border:0;box-shadow:none;background:#000;
+}
+.rec-pip.pip-bare .pip-time,
+.rec-pip.pip-bare .pip-rec{display:none}
+
+.pip-time{
+  position:absolute;left:0;right:0;bottom:0;
+  padding:4px 0 5px;text-align:center;
+  font-size:11px;letter-spacing:.06em;
+  color:#fff;background:linear-gradient(to top,rgba(0,0,0,.62),transparent);
+}
+/* REC 标记要放在圆内。PIP 是正圆（overflow:hidden + border-radius:50%），
+   左上角 8px 处到圆心的距离 ≈1.27R > R，会被圆角裁掉 —— 所以改为顶部居中的
+   胶囊：横向居中保证落在圆内，纵向留 14px 余量。 */
+.pip-rec{
+  position:absolute;top:14px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:5px;
+  height:20px;padding:0 9px 0 7px;border-radius:20px;
+  background:rgba(20,16,14,.52);
+}
+.pip-rec::before{
+  content:'';width:8px;height:8px;border-radius:50%;
+  background:#FF5B4A;box-shadow:0 0 0 2px rgba(255,91,74,.3);
+}
+.pip-rec::after{
+  content:'REC';
+  font-size:10px;line-height:1;color:#fff;letter-spacing:.1em;
+  text-shadow:0 1px 2px rgba(0,0,0,.5);
+}
 
 /* 录制完成 */
 .rec-done{

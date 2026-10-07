@@ -65,9 +65,14 @@
 
 <!-- 离屏合成画布：录屏画面 + 摄像头气泡 + 音频 → MediaRecorder -->
 <canvas id="recCanvas" hidden></canvas>
-<!-- 专供 canvas 取帧的摄像头源。不能用面板里那个 <video>：面板 hidden 时
-     它是 display:none，隐藏的 video 可能停止送帧，气泡就画不出来。 -->
+<!-- 专供 canvas 取帧的摄像头源。保留仅为兼容旧引用。
+     真正在用的是 #pipVideo（可见、稳定送帧）；移出视口的 video 会被浏览器挂起。 -->
 <video id="camSrc" autoplay muted playsinline aria-hidden="true"></video>
+
+<!-- 屏幕流取帧源：getDisplayMedia 返回的是 MediaStream，
+     而 canvas.drawImage 不接受 MediaStream —— 必须先挂到 video 上由它出帧。
+     这个元素是 draw() 能工作的前提，缺了它画面就是全黑、摄像头气泡也不会出现。 -->
+<video id="screenSrc" autoplay muted playsinline aria-hidden="true"></video>
 
 <!-- 录制设置面板 -->
 <div id="recPanel" class="rec-panel" hidden>
@@ -83,11 +88,17 @@
         </div>
         <div class="rp-meter"><i id="rpLevel"></i></div>
         <div class="rp-note" id="rpNote">
-          点「开始录制」后，浏览器会问你要共享哪一块画面 —— 选<b>「当前标签页」</b>最干净。开始前有 <b>3 秒倒计时</b>，倒计时结束就进入录制：<b>工具栏会自动全部隐藏</b>，画面只剩内容本身。要停就按 <b>R</b> 或 <b>Esc</b>（也可以用浏览器自带的「停止共享」）。
+          <b>图片卡片走「画布合成」</b>：成片 = 图卡满屏 + 你的头像，<b>不共享屏幕</b> —— 没有浏览器提示条、没有白边，头像大小位置由下面几项直接控制。翻到网页 / 文档卡片时自动退回屏幕共享（那时浏览器会问共享哪块画面，选<b>「当前标签页」</b>）。录制中右下角小窗是实时预览（图片卡模式下它不会出现在成片里，成片头像由画布绘制）。开始前有 <b>3 秒倒计时</b>，要停按 <b>R</b> 或 <b>Esc</b>。
         </div>
       </div>
 
       <div class="rp-right">
+        <label class="rp-row">
+          <span class="rp-lab">全屏录制</span>
+          <input type="checkbox" id="rpFs" checked>
+          <i class="sw"></i>
+        </label>
+
         <label class="rp-row">
           <span class="rp-lab">显示摄像头画面</span>
           <input type="checkbox" id="rpCam" checked>
@@ -112,8 +123,8 @@
         </div>
 
         <div class="rp-row rp-range-row">
-          <span class="rp-lab">大小 <span class="rp-val" id="rpSizeVal">180px</span></span>
-          <input type="range" id="rpSize" min="80" max="320" step="10" value="180">
+          <span class="rp-lab">大小 <span class="rp-val" id="rpSizeVal">260px</span></span>
+          <input type="range" id="rpSize" min="80" max="420" step="10" value="260">
           <div class="rp-range-lab"><span>小</span><span>大</span></div>
         </div>
 
@@ -157,6 +168,13 @@
 
 <!-- 录制倒计时：在真正开始写入前显示，不计入成片 -->
 <div id="recCount" class="rec-count" hidden><span>3</span></div>
+
+<!-- 录制中的摄像头实时画面（小窗）。它本身就是摄像头气泡的样子，
+     让你能实时看到自己；canvas 里同步画了同一个气泡，所以成片里也有。 -->
+<div id="recPip" class="rec-pip" hidden>
+  <video id="pipVideo" autoplay muted playsinline></video>
+  <span class="pip-time" id="pipTime">00:00</span>
+</div>
 
 <!-- 录制完成 -->
 <div id="recDone" class="rec-done" hidden>

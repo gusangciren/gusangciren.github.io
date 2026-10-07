@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>图卡演示 · 录屏预览</title>
+<link rel="stylesheet" href="/fonts/fonts.css">
+<style>
+  body {
+    margin: 0; min-height: 100vh;
+    font-family: "LXGW WenKai", "PingFang SC", sans-serif;
+    background: #12100b; color: #e8e4da;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 48px 24px; box-sizing: border-box;
+  }
+  h1 { font-size: 26px; margin: 0 0 10px; color: #e8a04c; font-weight: 600; }
+  p.sub { margin: 0 0 32px; color: #9a9384; font-size: 15px; line-height: 1.9; }
+  .steps {
+    max-width: 620px; width: 100%;
+    display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px;
+  }
+  .step {
+    display: flex; gap: 14px; align-items: flex-start;
+    background: rgba(232,160,76,.06); border: 1px solid rgba(232,160,76,.18);
+    border-radius: 12px; padding: 16px 18px;
+  }
+  .n {
+    flex: none; width: 24px; height: 24px; border-radius: 50%;
+    background: #e8a04c; color: #12100b;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+  }
+  .t { font-size: 15px; line-height: 1.8; }
+  .t b { color: #e8a04c; font-weight: 600; }
+  .acts { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+  button {
+    font-family: inherit; font-size: 15px; cursor: pointer;
+    padding: 13px 30px; border-radius: 999px;
+    border: 1px solid rgba(232,160,76,.4); background: transparent; color: #e8a04c;
+    transition: all .18s ease;
+  }
+  button:hover { background: rgba(232,160,76,.12); }
+  button.primary { background: #e8a04c; color: #12100b; border-color: transparent; font-weight: 600; }
+  button.primary:hover { background: #f0b062; }
+  button[disabled] { opacity: .45; cursor: default; }
+  #msg { margin-top: 22px; font-size: 14px; color: #9a9384; min-height: 22px; }
+  a { color: #e8a04c; }
+</style>
+</head>
+<body>
+
+<h1>图卡演示 · 录屏预览</h1>
+<p class="sub">这个页面只做一件事：给你灌入 3 张示例图卡，方便直接试录屏。<br>
+录屏在演示页里点底部的「录屏」按钮进入。</p>
+
+<div class="steps">
+  <div class="step"><span class="n">1</span><span class="t">先点下面的<b>「填入示例图卡」</b>，给浏览器写入 3 张演示图（只存在你本机，不上传）</span></div>
+  <div class="step"><span class="n">2</span><span class="t">点<b>「打开演示页」</b>，页面会自动全屏并显示第 1 张</span></div>
+  <div class="step"><span class="n">3</span><span class="t">把鼠标移到<b>底部</b>唤出工具栏 → 点中间橙色的<b>「录屏」</b> → 面板里保持<b>「全屏录制」</b>开启 → 点<b>「开始录制」</b></span></div>
+  <div class="step"><span class="n">4</span><span class="t">浏览器问共享哪块画面时选<b>「当前标签页」</b>；3 秒倒计时后正式开录，工具栏自动隐藏</span></div>
+  <div class="step"><span class="n">5</span><span class="t">要停就按 <b>R</b> 或 <b>Esc</b>，会弹出「录好了」面板，可回看和保存</span></div>
+</div>
+
+<div class="acts">
+  <button id="seed">填入示例图卡</button>
+  <button id="open" class="primary" disabled>打开演示页</button>
+  <button id="clear">清空示例</button>
+</div>
+
+<div id="msg"></div>
+
+<script>
+  var seeded = false;
+  var msg = document.getElementById('msg');
+
+  function makeImg(bg1, bg2, fg, lines) {
+    var c = document.createElement('canvas');
+    c.width = 1600; c.height = 900;
+    var x = c.getContext('2d');
+    var g = x.createLinearGradient(0, 0, 1600, 900);
+    g.addColorStop(0, bg1); g.addColorStop(1, bg2);
+    x.fillStyle = g; x.fillRect(0, 0, 1600, 900);
+
+    x.strokeStyle = 'rgba(232,160,76,.35)'; x.lineWidth = 1.5;
+    x.strokeRect(60, 60, 1480, 780);
+
+    x.fillStyle = fg;
+    x.font = '600 96px "LXGW WenKai", sans-serif';
+    x.textAlign = 'center'; x.textBaseline = 'middle';
+    lines.forEach(function (ln, i) {
+      x.fillText(ln, 800, 450 + (i - (lines.length - 1) / 2) * 140);
+    });
+
+    x.fillStyle = '#e8a04c';
+    x.fillRect(740, 690, 120, 4);
+
+    x.fillStyle = 'rgba(255,255,255,.42)';
+    x.font = '30px "LXGW WenKai", sans-serif';
+    x.fillText('图卡演示 · 录屏示例', 800, 780);
+
+    return new Promise(function (res) { c.toBlob(function (b) { res(b); }, 'image/png'); });
+  }
+
+  var SPECS = [
+    [['#2b2320', '#4a2c12'], '#f5efe6', ['一次只讲一件事']],
+    [['#1c1917', '#3a1a00'], '#f0c9a0', ['满屏录制', '不带站点框架']],
+    [['#26221f', '#5a3218'], '#f7e3cd', ['工具栏已自动隐藏']]
+  ];
+
+  document.getElementById('seed').addEventListener('click', function () {
+    msg.textContent = '正在生成并写入…';
+    Promise.all(SPECS.map(function (s) { return makeImg(s[0][0], s[0][1], s[1], s[2]); }))
+      .then(function (blobs) {
+        return openDb().then(function (db) {
+          return new Promise(function (res, rej) {
+            var tx = db.transaction(['img', 'meta'], 'readwrite');
+            var img = tx.objectStore('img');
+            var ids = [];
+            blobs.forEach(function (b, i) {
+              var id = 'demo-' + i;
+              ids.push(id);
+              img.put(b, id);
+            });
+            tx.objectStore('meta').put(ids, 'order');
+            tx.oncomplete = function () { res(ids); };
+            tx.onerror = function () { rej(tx.error); };
+          });
+        });
+      })
+      .then(function (ids) {
+        seeded = true;
+        document.getElementById('open').disabled = false;
+        msg.innerHTML = '✅ 已写入 ' + ids.length + ' 张示例图卡，现在点「打开演示页」。';
+      })
+      ['catch'](function (e) { msg.textContent = '写入失败：' + e; });
+  });
+
+  document.getElementById('open').addEventListener('click', function () {
+    if (!seeded) { msg.textContent = '请先填入示例图卡。'; return; }
+    location.href = '/deck/deck.html';
+  });
+
+  document.getElementById('clear').addEventListener('click', function () {
+    openDb().then(function (db) {
+      return new Promise(function (res) {
+        var tx = db.transaction(['img', 'meta'], 'readwrite');
+        var img = tx.objectStore('img');
+        ['demo-0', 'demo-1', 'demo-2', 'seed-0', 'seed-1', 'seed-2'].forEach(function (id) {
+          img['delete'](id);
+        });
+        tx.objectStore('meta')['delete']('order');
+        tx.oncomplete = function () { res(); };
+      });
+    }).then(function () {
+      seeded = false;
+      document.getElementById('open').disabled = true;
+      msg.textContent = '已清空示例图卡。';
+    });
+  });
+
+  /* ?auto=1：填入示例图卡后直接跳演示页。
+     给预览用 —— 省掉「先点一次填入、再点一次打开」两步，打开就能录。 */
+  if (/[?&]auto=1/.test(location.search)) {
+    document.getElementById('seed').click();
+    var wait = setInterval(function () {
+      if (seeded) { clearInterval(wait); location.href = '/deck/deck.html'; }
+    }, 200);
+  }
+
+  function openDb() {
+    return new Promise(function (res, rej) {
+      var q = indexedDB.open('imgdeck');
+      q.onsuccess = function () { res(q.result); };
+      q.onerror = function () { rej(q.error); };
+      q.onupgradeneeded = function () {
+        var d = q.result;
+        ['img', 'web', 'doc', 'meta'].forEach(function (n) {
+          if (!d.objectStoreNames.contains(n)) d.createObjectStore(n);
+        });
+      };
+    });
+  }
+</script>
+</body>
+</html>
