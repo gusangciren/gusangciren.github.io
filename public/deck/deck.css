@@ -125,39 +125,66 @@ body.show-web.loading #webLoad{display:flex}
 .bar{position:fixed;top:0;left:0;right:0;height:2px;background:rgba(28,25,23,.14);z-index:4}
 .bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s ease}
 
-/* 左右箭头：做成整列点击区（宽度 15%），点两侧任意位置都能翻页。
-   这是「点进 PDF/网页后翻页失效」的兜底出口——不用先退出内嵌内容也能翻。 */
+/* 左右箭头：吸附在屏幕两侧的半圆按钮。
+   默认完全隐藏且不接鼠标（pointer-events:none），鼠标横向移近该侧才淡入滑出——
+   这样既不挡画面，也不会把「点内容」误判成「点翻页」。
+   靠近哪一侧由 deck.js 的 mousemove 决定，给 body 加 .near-l / .near-r。 */
 .nav{
-  position:fixed;top:0;bottom:0;width:15%;z-index:5;
-  display:flex;align-items:center;justify-content:center;
-  background:none;border:none;
-  opacity:0;transition:opacity .2s;
+  position:fixed;top:0;bottom:0;width:72px;z-index:5;
+  display:flex;align-items:center;
+  background:none;border:none;padding:0;
+  pointer-events:none;
 }
-.nav.prev{left:0}
-.nav.next{right:0}
+.nav.prev{left:0;justify-content:flex-start}
+.nav.next{right:0;justify-content:flex-end}
 .nav .nd{
-  width:46px;height:46px;border-radius:50%;
-  background:rgba(255,255,255,.1);color:#fff;font-size:19px;
+  width:38px;height:74px;
   display:flex;align-items:center;justify-content:center;
-  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-  transition:background .2s,transform .15s;
+  font-size:19px;line-height:1;
+  color:#fff;background:rgba(28,25,23,.42);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  box-shadow:0 4px 18px rgba(0,0,0,.22);
+  opacity:0;
+  transition:opacity .24s ease,transform .28s cubic-bezier(.22,.61,.36,1),
+             background .2s ease,box-shadow .2s ease;
+  pointer-events:none;
 }
-.nav:hover .nd{background:rgba(245,80,0,.5)}
-.nav:active .nd{transform:scale(.92)}
-body.awake .nav{opacity:1}
-body.strip-on .nav{opacity:0}
-.nav[disabled]{opacity:0!important;pointer-events:none}
+.nav.prev .nd{border-radius:0 19px 19px 0;transform:translateX(-100%)}
+.nav.next .nd{border-radius:19px 0 0 19px;transform:translateX(100%)}
+.nav .nd:hover{background:rgba(245,80,0,.72)}
+.nav .nd:active{background:rgba(245,80,0,.9)}
 
-/* 底部控制条 */
+body.near-l .nav.prev .nd,
+body.near-r .nav.next .nd{opacity:1;transform:translateX(0);pointer-events:auto}
+
+/* 触屏没有 hover，直接常亮（仍不抢内容点击） */
+@media (hover:none){
+  .nav .nd{opacity:1;transform:translateX(0);pointer-events:auto}
+  .nav.prev .nd{transform:none}
+  .nav.next .nd{transform:none}
+}
+
+body.strip-on .nav .nd{opacity:0;transform:translateX(0);pointer-events:none}
+body.show-blocked .nav .nd{opacity:0;pointer-events:none}
+.nav[disabled] .nd{opacity:0!important;pointer-events:none}
+
+/* 底部控制条：录屏居中，翻页在左，页码/退出在右
+   用三列 grid 而不是 space-between：左右两组宽度不同（翻页 2 个 vs 退出+页码），
+   space-between 会把中间的录屏按钮挤偏，必须让中间列真正居中。 */
 .hud{
   position:fixed;left:0;right:0;bottom:0;z-index:6;
-  display:flex;align-items:center;justify-content:center;gap:6px;
+  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px;
   padding:14px 18px;
   background:linear-gradient(to top,rgba(28,25,23,.62),rgba(28,25,23,0));
   opacity:0;transition:.25s;pointer-events:none;
 }
 body.awake .hud{opacity:1;pointer-events:auto}
 body.strip-on .hud{opacity:0;pointer-events:none}
+.hud-l,.hud-r{
+  display:flex;align-items:center;gap:6px;
+}
+.hud-l{justify-self:start}
+.hud-r{justify-self:end}
 .hud button{
   width:34px;height:34px;border-radius:8px;color:#fff;
   display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .15s;
@@ -244,3 +271,217 @@ body.strip-on .hud{opacity:0;pointer-events:none}
 }
 #none .btn:hover{background:#d94700;transform:translateY(-1px)}
 #none .btn:active{transform:scale(.97)}
+
+/* ============ 录制 ============ */
+/* 面板按钮：作用域限定在录制面板内。
+   不能写成全局 .btn —— 会覆盖封面上同为单类选择器的 .cover-back，
+   把深色背景上的浅色按钮文字变成不可见。 */
+.rec-panel .btn,.rec-done .btn{
+  padding:10px 20px;border-radius:9px;font-size:14px;font-weight:500;
+  color:#1c1917;background:#f0ece6;transition:all .16s ease;white-space:nowrap;
+}
+.rec-panel .btn:hover,.rec-done .btn:hover{background:#e7e2db;transform:translateY(-1px)}
+.rec-panel .btn:active,.rec-done .btn:active{transform:scale(.97)}
+.rec-panel .btn.primary,.rec-done .btn.primary{
+  background:var(--accent);color:#fff;box-shadow:0 6px 18px rgba(245,80,0,.28);
+}
+.rec-panel .btn.primary:hover,.rec-done .btn.primary:hover{
+  background:#d94700;box-shadow:0 8px 24px rgba(245,80,0,.36);
+}
+.rec-panel .btn.ghost,.rec-done .btn.ghost{background:transparent;color:#78716c;box-shadow:none}
+.rec-panel .btn.ghost:hover,.rec-done .btn.ghost:hover{background:#f0ece6;color:#1c1917}
+
+/* 录制键：带文字的胶囊按钮，不能只靠一个红点 */
+.hud #hRec{
+  width:auto;min-width:64px;height:30px;padding:0 11px 0 7px;
+  border-radius:999px;gap:5px;
+  display:inline-flex;align-items:center;
+  font-size:12px;font-weight:600;color:#fff;
+  background:rgba(255,91,74,.18);border:1px solid rgba(255,91,74,.45);
+}
+.hud #hRec::before{
+  content:"";width:8px;height:8px;border-radius:50%;background:#ff5b4a;
+  box-shadow:0 0 0 2px rgba(255,91,74,.25);
+}
+.hud #hRec:hover{background:rgba(255,91,74,.34);border-color:rgba(255,91,74,.65)}
+.hud #hRec.recording{background:var(--accent)!important;border-color:transparent}
+.hud #hRec.recording::before{background:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.35)}
+
+/* 纯净录制模式：把所有自有 UI 都隐藏，避免录进控制条/按钮/提示 */
+body.recording-clean .hud,
+body.recording-clean #fsBig,
+body.recording-clean .nav,
+body.recording-clean #recBar,
+body.recording-clean .tips,
+body.recording-clean #webHint,
+body.recording-clean .strip,
+body.recording-clean #blocked{display:none !important}
+
+/* 录制倒计时 */
+.rec-count{
+  position:fixed;inset:0;z-index:30;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(28,25,23,.55);
+  color:#fff;font-size:96px;font-weight:700;
+  text-shadow:0 12px 40px rgba(0,0,0,.45);
+  pointer-events:none;
+}
+.rec-count[hidden]{display:none}
+.rec-count span{animation:countIn .35s ease}
+@keyframes countIn{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+
+/* 设置面板 */
+/* 专供 canvas 取帧的摄像头源：必须「保持渲染」而不是 display:none，
+   否则浏览器停止向它送帧，气泡就画不出来。所以移到屏幕外 + 缩到 1px + 透明。 */
+#camSrc{
+  position:fixed;left:-10px;top:-10px;width:1px;height:1px;
+  opacity:.001;pointer-events:none;z-index:-1;
+}
+
+.rec-panel{
+  position:fixed;inset:0;z-index:24;display:none;
+  align-items:center;justify-content:center;padding:24px;
+  background:rgba(28,25,23,.55);backdrop-filter:blur(4px);
+}
+.rec-panel:not([hidden]){display:flex}
+.rp-card{
+  width:780px;max-width:92vw;max-height:88vh;overflow:auto;
+  background:#FFFDF8;color:#1c1917;
+  border-radius:16px;padding:24px;box-shadow:0 24px 70px rgba(0,0,0,.34);
+}
+.rp-body{
+  display:grid;grid-template-columns:280px 1fr;gap:24px;
+}
+.rp-left{
+  display:flex;flex-direction:column;gap:14px;
+}
+.rp-right{
+  display:flex;flex-direction:column;gap:10px;
+}
+@media (max-width:700px){
+  .rp-card{width:auto;padding:18px}
+  .rp-body{grid-template-columns:1fr;gap:18px}
+}
+.rp-head{
+  display:flex;align-items:center;gap:9px;
+  font-size:17px;font-weight:600;margin-bottom:18px;
+}
+.rp-dot{width:11px;height:11px;border-radius:50%;background:#ff5b4a;flex:none}
+/* 摄像头预览 */
+.rp-cam{
+  position:relative;width:100%;aspect-ratio:4/3;
+  border-radius:12px;overflow:hidden;background:#1c1917;
+}
+.rp-cam video{width:100%;height:100%;object-fit:cover;display:block}
+.rp-cam-off{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,.5);font-size:13.5px;
+}
+/* 作者样式的 display:flex 会盖掉 UA 的 [hidden]{display:none}，这里补回来 */
+.rp-cam-off[hidden]{display:none}
+/* 行 */
+.rp-row{
+  display:flex;align-items:center;gap:12px;cursor:pointer;
+}
+.rp-lab{font-size:14px;flex:none;width:110px}
+/* 开关：只隐藏 checkbox 本身（滑块是它兄弟节点）。
+   注意必须限定 type=checkbox，否则会把 range 滑块也藏掉。 */
+.rp-row input[type=checkbox]{position:absolute;opacity:0;pointer-events:none}
+.rp-row .sw{
+  position:relative;width:40px;height:23px;border-radius:999px;
+  background:#d6d3d1;transition:background .18s;flex:none;
+}
+.rp-row .sw::after{
+  content:"";position:absolute;top:2.5px;left:2.5px;width:18px;height:18px;
+  border-radius:50%;background:#fff;transition:transform .18s;
+  box-shadow:0 1px 3px rgba(0,0,0,.2);
+}
+.rp-row input[type=checkbox]:checked + .sw{background:var(--accent)}
+.rp-row input[type=checkbox]:checked + .sw::after{transform:translateX(17px)}
+/* 位置分段 */
+.rp-seg{display:flex;gap:5px;margin-left:auto}
+.rp-seg button{
+  padding:6px 11px;border-radius:7px;font-size:12.5px;
+  color:#78716c;transition:all .15s;
+}
+.rp-seg button:hover{background:#f0ece6}
+.rp-seg button.on{background:var(--accent);color:#fff}
+
+/* 设备选择下拉 */
+.rp-select{
+  margin-left:auto;padding:7px 10px;border-radius:7px;
+  font-size:13px;color:#1c1917;background:#fff;
+  border:1px solid #d6d3d1;min-width:0;flex:1;max-width:260px;
+  text-overflow:ellipsis;
+}
+/* 大小滑块 */
+.rp-range-row{flex-direction:column;align-items:stretch;gap:6px;cursor:default}
+.rp-range-row .rp-lab{display:flex;justify-content:space-between;width:auto}
+.rp-val{font-size:13px;color:#78716c;font-weight:500}
+.rp-range-row input[type=range]{
+  width:100%;height:5px;border-radius:3px;background:#e7e5e4;
+  outline:none;-webkit-appearance:none;appearance:none;
+}
+.rp-range-row input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:16px;height:16px;border-radius:50%;
+  background:var(--accent);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.25);
+  cursor:pointer;
+}
+.rp-range-row input[type=range]::-moz-range-thumb{
+  width:16px;height:16px;border-radius:50%;border:2px solid #fff;
+  background:var(--accent);box-shadow:0 1px 4px rgba(0,0,0,.25);
+  cursor:pointer;
+}
+.rp-range-lab{display:flex;justify-content:space-between;font-size:12px;color:#a8a29e}
+/* 麦克风电平 */
+.rp-meter{
+  height:5px;border-radius:3px;background:#e7e5e4;overflow:hidden;
+}
+.rp-meter i{display:block;height:100%;width:0;background:var(--accent);transition:width .1s}
+.rp-note{
+  font-size:12.5px;line-height:1.7;color:#78716c;
+  background:#f7f3ed;border-radius:9px;padding:11px 13px;
+}
+.rp-note b{color:var(--accent)}
+.rp-acts{display:flex;gap:9px;justify-content:flex-end;margin-top:auto;padding-top:8px}
+
+/* 录制中悬浮条 */
+#recBar{
+  position:fixed;left:50%;bottom:74px;transform:translateX(-50%);z-index:23;
+  display:flex;align-items:center;gap:12px;
+  padding:10px 14px 10px 16px;border-radius:999px;
+  background:rgba(28,25,23,.94);border:1px solid rgba(255,91,74,.4);
+  box-shadow:0 12px 40px rgba(0,0,0,.4);
+  color:#fff;font-size:13px;
+}
+#recBar[hidden]{display:none}
+.rb-dot{width:10px;height:10px;border-radius:50%;background:#ff5b4a;animation:rbPulse 1.2s ease-in-out infinite}
+@keyframes rbPulse{0%,100%{opacity:1}50%{opacity:.25}}
+.rb-time{font-variant-numeric:tabular-nums;font-size:15px;font-weight:600;letter-spacing:.03em}
+.rb-tip{color:rgba(255,255,255,.6);font-size:12px}
+.rb-tip b{color:#fff;font-weight:600}
+#recBar button{
+  padding:7px 15px;border-radius:999px;background:var(--accent);color:#fff;
+  font-size:12.5px;font-weight:600;transition:all .15s;
+}
+#recBar button:hover{background:#d94700}
+#recBar button:active{transform:scale(.96)}
+
+/* 录制完成 */
+.rec-done{
+  position:fixed;inset:0;z-index:25;display:none;
+  align-items:center;justify-content:center;padding:24px;
+  background:rgba(28,25,23,.62);backdrop-filter:blur(4px);
+}
+.rec-done:not([hidden]){display:flex}
+.rd-card{
+  width:600px;max-width:100%;background:#FFFDF8;color:#1c1917;
+  border-radius:16px;padding:24px;box-shadow:0 24px 70px rgba(0,0,0,.4);
+}
+.rd-t{font-size:18px;font-weight:600;margin-bottom:6px}
+.rd-info{font-size:13px;color:#78716c;margin-bottom:16px}
+.rd-card video{
+  width:100%;max-height:44vh;border-radius:11px;background:#1c1917;
+  display:block;margin-bottom:18px;
+}
+.rd-acts{display:flex;gap:9px;justify-content:flex-end}

@@ -19,16 +19,17 @@
 </div>
 
 <div class="hud">
-  <button id="hFirst" title="第一张 Home">⏮</button>
-  <button id="hPrev" title="上一张 ←">‹</button>
-  <span class="pager" id="pager">1 / 1</span>
-  <button id="hNext" title="下一张 →">›</button>
-  <button id="hLast" title="最后一张 End">⏭</button>
-  <span class="sep"></span>
-  <button id="hFit" title="完整 / 铺满">⤢</button>
-  <button id="hGrid" title="总览 G">▦</button>
-  <button id="hOpen" title="在新标签页打开当前页">↗</button>
-  <button id="hExit" class="exit" title="退出演示 Esc">退出演示</button>
+  <div class="hud-l">
+    <button id="hPrev" title="上一张 ←">‹</button>
+    <button id="hNext" title="下一张 →">›</button>
+  </div>
+  <button id="hRec" title="录制：摄像头 + 麦克风 + 屏幕（R 结束）">录屏</button>
+  <div class="hud-r">
+    <button id="hOpen" title="在新标签页打开当前页">↗</button>
+    <span class="sep"></span>
+    <span class="pager" id="pager">1 / 1</span>
+    <button id="hExit" class="exit" title="退出演示 Esc">退出演示</button>
+  </div>
 </div>
 
 <button id="fsBig" title="全屏（F）">
@@ -62,10 +63,118 @@
 
 <div class="strip" id="strip"></div>
 
+<!-- 离屏合成画布：录屏画面 + 摄像头气泡 + 音频 → MediaRecorder -->
+<canvas id="recCanvas" hidden></canvas>
+<!-- 专供 canvas 取帧的摄像头源。不能用面板里那个 <video>：面板 hidden 时
+     它是 display:none，隐藏的 video 可能停止送帧，气泡就画不出来。 -->
+<video id="camSrc" autoplay muted playsinline aria-hidden="true"></video>
+
+<!-- 录制设置面板 -->
+<div id="recPanel" class="rec-panel" hidden>
+  <div class="rp-card">
+    <div class="rp-head">
+      <span class="rp-dot"></span>录制设置
+    </div>
+    <div class="rp-body">
+      <div class="rp-left">
+        <div class="rp-cam">
+          <video id="rpPrev" autoplay muted playsinline></video>
+          <div class="rp-cam-off" id="rpCamOff">摄像头未开启</div>
+        </div>
+        <div class="rp-meter"><i id="rpLevel"></i></div>
+        <div class="rp-note" id="rpNote">
+          点「开始录制」后，浏览器会问你要共享哪一块画面 —— 选<b>「当前标签页」</b>最干净。开始前有 <b>3 秒倒计时</b>，倒计时结束就进入录制：<b>工具栏会自动全部隐藏</b>，画面只剩内容本身。要停就按 <b>R</b> 或 <b>Esc</b>（也可以用浏览器自带的「停止共享」）。
+        </div>
+      </div>
+
+      <div class="rp-right">
+        <label class="rp-row">
+          <span class="rp-lab">显示摄像头画面</span>
+          <input type="checkbox" id="rpCam" checked>
+          <i class="sw"></i>
+        </label>
+
+        <div class="rp-row">
+          <span class="rp-lab">摄像头设备</span>
+          <select class="rp-select" id="rpCamDevice">
+            <option value="">系统默认</option>
+          </select>
+        </div>
+
+        <div class="rp-row">
+          <span class="rp-lab">画面位置</span>
+          <div class="rp-seg" id="rpPos">
+            <button data-p="br" class="on">右下</button>
+            <button data-p="bl">左下</button>
+            <button data-p="tr">右上</button>
+            <button data-p="tl">左上</button>
+          </div>
+        </div>
+
+        <div class="rp-row rp-range-row">
+          <span class="rp-lab">大小 <span class="rp-val" id="rpSizeVal">180px</span></span>
+          <input type="range" id="rpSize" min="80" max="320" step="10" value="180">
+          <div class="rp-range-lab"><span>小</span><span>大</span></div>
+        </div>
+
+        <div class="rp-row">
+          <span class="rp-lab">形状</span>
+          <div class="rp-seg" id="rpShape">
+            <button data-s="circle" class="on">圆形</button>
+            <button data-s="square">方形</button>
+          </div>
+        </div>
+
+        <div class="rp-row">
+          <span class="rp-lab">麦克风设备</span>
+          <select class="rp-select" id="rpMicDevice">
+            <option value="">系统默认</option>
+          </select>
+        </div>
+
+        <label class="rp-row">
+          <span class="rp-lab">录制人声</span>
+          <input type="checkbox" id="rpMic" checked>
+          <i class="sw"></i>
+        </label>
+
+        <div class="rp-acts">
+          <button class="btn ghost" id="rpCancel" type="button">取消</button>
+          <button class="btn primary" id="rpStart" type="button">开始录制</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 录制中的悬浮条 -->
+<div id="recBar" hidden>
+  <span class="rb-dot"></span>
+  <span class="rb-time" id="recTime">00:00</span>
+  <span class="rb-tip">再按一次 <b>R</b> 或点「结束」</span>
+  <button id="recStop">结束</button>
+</div>
+
+<!-- 录制倒计时：在真正开始写入前显示，不计入成片 -->
+<div id="recCount" class="rec-count" hidden><span>3</span></div>
+
+<!-- 录制完成 -->
+<div id="recDone" class="rec-done" hidden>
+  <div class="rd-card">
+    <div class="rd-t">录好了</div>
+    <div class="rd-info" id="recInfo"></div>
+    <video id="rdPrev" controls playsinline></video>
+    <div class="rd-acts">
+      <button class="btn ghost" id="rdAgain" type="button">再录一次</button>
+      <button class="btn primary" id="rdSave" type="button">保存到本地</button>
+    </div>
+  </div>
+</div>
+
 <div class="tips" id="tips">
   <span><b>← →</b>翻页</span>
   <span><b>↑ ↓</b>滚动内容</span>
-  <span><b>点两侧</b>也能翻页</span>
+  <span><b>移近左右边缘</b>出现箭头</span>
   <span><b>Esc</b>退出</span>
 </div>
 
@@ -86,6 +195,7 @@
 </div>
 
 <script src="lib/store.js"></script>
+<script src="rec.js"></script>
 <script src="deck.js"></script>
 </body>
 </html>

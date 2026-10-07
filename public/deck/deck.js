@@ -3,6 +3,8 @@
   'use strict';
 
   var slides = [], cur = 0, ready = false, awakeTimer = null, wheelLock = 0;
+  var EDGE = 72;   /* 边缘感应宽度，和 .nav 的 width 保持一致 */
+  var BAND = 104;  /* 底部感应高度：鼠标进入这条带才唤出工具栏 */
   var $ = function (id) { return document.getElementById(id); };
   var slide = $('slide');
   var frame = $('web');
@@ -142,20 +144,23 @@
 
     $('pager').textContent = (cur + 1) + ' / ' + slides.length;
     $('fill').style.width = ((cur + 1) / slides.length * 100) + '%';
-    $('navPrev').disabled = $('hPrev').disabled = $('hFirst').disabled = (cur === 0);
-    $('navNext').disabled = $('hNext').disabled = $('hLast').disabled = (cur === slides.length - 1);
+    $('navPrev').disabled = $('hPrev').disabled = (cur === 0);
+    $('navNext').disabled = $('hNext').disabled = (cur === slides.length - 1);
     markStrip();
     reclaimFocus();   /* 翻页后把焦点抢回父页面，← → 立刻恢复可用 */
   }
   function next() { show(cur + 1); }
   function prev() { show(cur - 1); }
 
+  /* 工具栏只在鼠标靠近底部时亮着。停在底部就一直显示，移开立刻收起——
+     不再靠 2.6s 空闲计时器，免得鼠标明明停在那儿却自己消失了。 */
   function wake() {
     document.body.classList.add('awake');
     clearTimeout(awakeTimer);
-    awakeTimer = setTimeout(function () {
-      if (!$('strip').classList.contains('on')) document.body.classList.remove('awake');
-    }, 2600);
+  }
+  function sleep() {
+    clearTimeout(awakeTimer);
+    document.body.classList.remove('awake');
   }
   function flashTips() {
     $('tips').classList.add('on');
@@ -188,13 +193,6 @@
       its[cur].scrollIntoView({ block: 'nearest', inline: 'center' });
     }
   }
-  function toggleStrip() {
-    var st = $('strip');
-    st.classList.toggle('on');
-    document.body.classList.toggle('strip-on', st.classList.contains('on'));
-    markStrip();
-  }
-
   function quit() {
     try { window.close(); } catch (e) {}
     location.href = 'home.html';
@@ -258,10 +256,7 @@
   $('navNext').addEventListener('click', function () { reclaimFocus(); next(); });
   $('hPrev').addEventListener('click', function () { reclaimFocus(); prev(); });
   $('hNext').addEventListener('click', function () { reclaimFocus(); next(); });
-  $('hFirst').addEventListener('click', function () { show(0); });
-  $('hLast').addEventListener('click', function () { show(slides.length - 1); });
   $('hExit').addEventListener('click', quit);
-  $('hGrid').addEventListener('click', toggleStrip);
   $('hOpen').addEventListener('click', openCurrent);
   $('hintOpen').addEventListener('click', openCurrent);
   $('bkOpen').addEventListener('click', openCurrent);
@@ -272,9 +267,6 @@
   document.addEventListener('fullscreenchange', function () {
     document.body.classList.toggle('fs-on', !!document.fullscreenElement);
   });
-  $('hFit').addEventListener('click', function () {
-    document.body.classList.toggle('fit-cover');
-  });
   $('btnHome').addEventListener('click', function () {
     location.href = 'home.html';
   });
@@ -284,11 +276,22 @@
     location.href = 'home.html';
   });
 
-  document.addEventListener('mousemove', wake);
+  document.addEventListener('mousemove', function (e) {
+    /* 录制中一律不响应：录制画面里不能出现工具栏、箭头这些自有 UI */
+    if (document.body.classList.contains('recording-clean')) { sleep(); return; }
+    /* 边缘感应：鼠标横向进入左右 72px 才显示对应那颗箭头。
+       只切 class，不注册热区，所以内容区的点击完全不受影响。 */
+    var w = document.documentElement.clientWidth;
+    var h = document.documentElement.clientHeight;
+    document.body.classList.toggle('near-l', e.clientX <= EDGE);
+    document.body.classList.toggle('near-r', e.clientX >= w - EDGE);
+    /* 底部工具栏与左右箭头互不干扰：只有真的移到底部才亮，碰左右边不会误弹 */
+    if (e.clientY >= h - BAND) wake(); else sleep();
+  });
+  document.addEventListener('mouseleave', sleep);
 
   $('web').addEventListener('load', function () { clearLoading(); bridgeKeys(); });
   $('web').addEventListener('error', clearLoading);
-  $('web').addEventListener('mouseenter', wake);
 
   /* 滚轮：在图片页翻页；鼠标悬在内嵌 PDF / 网页上时，交给内容自己滚动 */
   window.addEventListener('wheel', function (e) {
@@ -333,13 +336,10 @@
       e.preventDefault(); next();
     } else if (k === 'ArrowLeft' || k === 'PageUp' || k === 'p') {
       e.preventDefault(); prev();
-    } else if (k === 'Home') { e.preventDefault(); show(0); }
-    else if (k === 'End') { e.preventDefault(); show(slides.length - 1); }
-    else if (k === 'Escape') {
+    } else if (k === 'Escape') {
       e.preventDefault();
       if (document.fullscreenElement) document.exitFullscreen(); else quit();
     }
-    else if (k === 'g' || k === 'G') { toggleStrip(); }
     else if (k === 'f' || k === 'F') {
       if (document.fullscreenElement) document.exitFullscreen(); else enterFs();
     }
