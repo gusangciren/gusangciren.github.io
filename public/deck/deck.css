@@ -1,0 +1,246 @@
+:root{
+  --accent:#F55000;
+  --font:"LXGW WenKai","LXGW WenKai Screen","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  background:#fafaf9;color:#fff;font-family:var(--font);
+  overflow:hidden;user-select:none;cursor:default;
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+
+/* 舞台 */
+#stage{
+  position:fixed;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  padding:34px 62px;overflow:hidden;
+}
+#stage img{
+  max-width:100%;max-height:100%;object-fit:contain;
+  opacity:0;transition:opacity .22s ease;
+  box-shadow:0 12px 44px rgba(28,25,23,.22);
+}
+#stage img.in{opacity:1}
+/* 非铺满时加轻微缩放 + 位移，翻页更有推进感 */
+body:not(.fit-cover) #stage img{transform:scale(1.05) translateY(10px);transition:opacity .22s ease, transform .32s ease}
+body:not(.fit-cover) #stage img.in{opacity:1;transform:none}
+body.fit-cover #stage img{width:100%;height:100%;object-fit:cover;box-shadow:none;transform:none}
+.bar{background:rgba(28,25,23,.14)}
+
+/* 网页幻灯片：iframe 铺满可用区域 */
+#web{
+  display:none;width:100%;height:100%;border:0;background:#fff;
+}
+body.show-web #web{display:block}
+body.show-web #slide{display:none}
+
+/* 右上角常驻的全屏按钮：品牌色实心胶囊 + 文字常驻，一眼就看到、随手就点 */
+#fsBig{
+  position:fixed;top:16px;right:16px;z-index:9;
+  display:flex;align-items:center;gap:8px;
+  padding:11px 18px;border-radius:999px;
+  background:var(--accent);color:#fff;font-size:14px;font-weight:600;
+  letter-spacing:.02em;
+  border:1px solid rgba(255,255,255,.22);
+  box-shadow:0 6px 22px rgba(245,80,0,.34);
+  transition:transform .16s ease,box-shadow .16s ease,background .16s ease;
+}
+#fsBig:hover{background:#d94700;box-shadow:0 8px 28px rgba(245,80,0,.42)}
+#fsBig:active{transform:scale(.96)}
+#fsBig .ico{font-size:17px;line-height:1}
+#fsBig .lab{white-space:nowrap}
+/* 已进全屏时收敛成小圆点，把画面让给内容，鼠标移上去再展开 */
+body.fs-on #fsBig{padding:11px;border-radius:999px}
+body.fs-on #fsBig .lab{
+  max-width:0;overflow:hidden;opacity:0;
+  transition:max-width .22s ease,opacity .22s;
+}
+body.fs-on #fsBig:hover{padding:11px 18px}
+body.fs-on #fsBig:hover .lab{max-width:52px;opacity:1}
+
+/* 禁止嵌入时的兜底出口：低调挂在右下角，鼠标移上去才展开 */
+#webHint{
+  position:fixed;right:16px;bottom:66px;z-index:7;
+  display:none;align-items:center;
+  background:rgba(28,25,23,.62);border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;color:#fff;overflow:hidden;
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  opacity:.26;transition:opacity .2s;
+}
+body.show-web.kind-web #webHint{display:flex}
+#webHint:hover{opacity:1}
+#webHint .lab{
+  padding:8px 0 8px 14px;font-size:12.5px;white-space:nowrap;
+  max-width:0;overflow:hidden;transition:max-width .25s ease;
+}
+#webHint:hover .lab{max-width:240px;padding-right:10px}
+#webHint .btn{padding:8px 13px;font-size:12.5px;white-space:nowrap}
+#webHint .btn:hover{background:rgba(255,255,255,.16)}
+
+/* 禁嵌提示卡：替代浏览器的失败页。
+   容器本身不拦截鼠标（pointer-events:none），只有卡片可点——
+   这样底部控制条、右上角全屏按钮、左右箭头在提示页依然能点，能翻页能退出。 */
+#blocked{
+  position:fixed;inset:0;z-index:12;display:none;
+  align-items:center;justify-content:center;padding:40px;
+  pointer-events:none;
+}
+body.show-blocked #blocked{display:flex}
+.bk-card{
+  max-width:540px;text-align:center;
+  background:rgba(255,253,248,.97);color:#1c1917;
+  border-radius:16px;padding:38px 34px;
+  box-shadow:0 24px 70px rgba(0,0,0,.32);
+  pointer-events:auto;   /* 只有卡片接鼠标 */
+}
+.bk-ico{color:var(--accent);margin-bottom:16px;display:flex;justify-content:center}
+.bk-title{font-size:22px;margin-bottom:8px}
+.bk-domain{font-size:14px;color:var(--accent);margin-bottom:26px;word-break:break-all}
+.bk-acts{display:flex;justify-content:center}
+.bk-keys{margin-top:18px;font-size:12px;color:#a8a29e}
+.bk-keys b{color:#78716c;font-weight:600}
+.bk-acts button{
+  padding:14px 36px;border-radius:999px;font-size:16.5px;font-weight:600;
+  background:var(--accent);color:#fff;transition:all .16s ease;
+  box-shadow:0 8px 24px rgba(245,80,0,.32);
+}
+.bk-acts button:hover{background:#d94700;transform:translateY(-1px);box-shadow:0 10px 28px rgba(245,80,0,.4)}
+.bk-acts button:active{transform:scale(.97)}
+#webLoad{
+  position:absolute;inset:0;display:none;
+  flex-direction:column;gap:14px;
+  align-items:center;justify-content:center;
+  color:rgba(28,25,23,.4);font-size:13.5px;letter-spacing:.02em;
+}
+body.show-web.loading #webLoad{display:flex}
+#webLoad::before{
+  content:"";width:30px;height:30px;border-radius:50%;
+  border:3px solid rgba(28,25,23,.16);border-top-color:var(--accent);
+  animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* 顶部进度 */
+.bar{position:fixed;top:0;left:0;right:0;height:2px;background:rgba(28,25,23,.14);z-index:4}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s ease}
+
+/* 左右箭头：做成整列点击区（宽度 15%），点两侧任意位置都能翻页。
+   这是「点进 PDF/网页后翻页失效」的兜底出口——不用先退出内嵌内容也能翻。 */
+.nav{
+  position:fixed;top:0;bottom:0;width:15%;z-index:5;
+  display:flex;align-items:center;justify-content:center;
+  background:none;border:none;
+  opacity:0;transition:opacity .2s;
+}
+.nav.prev{left:0}
+.nav.next{right:0}
+.nav .nd{
+  width:46px;height:46px;border-radius:50%;
+  background:rgba(255,255,255,.1);color:#fff;font-size:19px;
+  display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  transition:background .2s,transform .15s;
+}
+.nav:hover .nd{background:rgba(245,80,0,.5)}
+.nav:active .nd{transform:scale(.92)}
+body.awake .nav{opacity:1}
+body.strip-on .nav{opacity:0}
+.nav[disabled]{opacity:0!important;pointer-events:none}
+
+/* 底部控制条 */
+.hud{
+  position:fixed;left:0;right:0;bottom:0;z-index:6;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:14px 18px;
+  background:linear-gradient(to top,rgba(28,25,23,.62),rgba(28,25,23,0));
+  opacity:0;transition:.25s;pointer-events:none;
+}
+body.awake .hud{opacity:1;pointer-events:auto}
+body.strip-on .hud{opacity:0;pointer-events:none}
+.hud button{
+  width:34px;height:34px;border-radius:8px;color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .15s;
+}
+.hud button:hover{background:rgba(245,80,0,.5)}
+.hud button:active{transform:scale(.92)}
+.hud .pager{
+  font-size:13px;color:rgba(255,255,255,.85);min-width:74px;
+  text-align:center;letter-spacing:.04em;
+}
+.hud .sep{width:1px;height:18px;background:rgba(255,255,255,.22);margin:0 6px}
+.hud .exit{
+  width:auto;height:auto;padding:7px 13px;border-radius:999px;
+  background:rgba(245,80,0,.78);color:#fff;font-size:12.5px;font-weight:500;
+  margin-left:4px;transition:all .15s ease;
+}
+.hud .exit:hover{background:#d94700;transform:translateY(-1px)}
+.hud .exit:active{transform:scale(.95)}
+
+/* 总览缩略图条 */
+.strip{
+  position:fixed;left:0;right:0;bottom:0;z-index:7;
+  display:none;gap:8px;padding:14px 18px;overflow-x:auto;
+  background:rgba(28,25,23,.94);border-top:1px solid rgba(255,255,255,.1);
+}
+.strip.on{display:flex}
+.strip .it{
+  flex:none;width:104px;height:64px;border-radius:6px;overflow:hidden;
+  border:2px solid transparent;background:#1A1A1B center/contain no-repeat;
+  opacity:.55;cursor:pointer;transition:.15s;
+}
+.strip .it:hover{opacity:.9}
+.strip .it.cur{border-color:var(--accent);opacity:1}
+.strip .it.web{
+  display:flex;align-items:center;justify-content:center;background:#1E1E20;
+  color:rgba(255,255,255,.62);font-size:10.5px;text-align:center;
+  padding:0 6px;word-break:break-all;line-height:1.3;
+}
+
+/* 快捷键提示 */
+.tips{
+  position:fixed;left:50%;bottom:74px;transform:translateX(-50%);z-index:6;
+  background:rgba(28,25,23,.9);border:1px solid rgba(255,255,255,.12);
+  border-radius:10px;padding:10px 16px;font-size:12.5px;color:rgba(255,255,255,.8);
+  display:flex;gap:14px;opacity:0;transition:.4s;pointer-events:none;
+}
+.tips.on{opacity:1}
+.tips span{white-space:nowrap}
+.tips b{
+  font-weight:normal;color:#fff;background:rgba(255,255,255,.13);
+  border-radius:4px;padding:1px 6px;margin-right:4px;
+}
+
+/* 封面（只有没进全屏窗口时才出现）：改用站点品牌深色渐变，并把「点击开始」做成清晰胶囊 */
+#cover,#none{
+  position:fixed;inset:0;z-index:20;display:none;
+  flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  background:linear-gradient(140deg,#1c1917 0%,#292524 55%,#3a1a00 100%);
+  cursor:pointer;padding:24px;
+}
+#cover.on,#none.on{display:flex}
+.cv-t{font-size:28px;margin-bottom:18px;letter-spacing:.02em;color:#fff}
+#cover .cv-s{
+  display:inline-block;font-size:14px;color:#fff;
+  border:1px solid rgba(245,80,0,.65);background:rgba(245,80,0,.14);
+  padding:11px 26px;border-radius:999px;letter-spacing:.02em;
+  transition:background .2s,border-color .2s,transform .2s;
+}
+#cover:hover .cv-s{background:rgba(245,80,0,.26);transform:translateY(-1px)}
+.cover-back{
+  margin-top:22px;padding:8px 18px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.25);color:#fff;
+  background:rgba(255,255,255,.08);font-size:13.5px;
+  transition:all .16s ease;pointer-events:auto;
+}
+.cover-back:hover{background:rgba(245,80,0,.25);border-color:rgba(245,80,0,.65);transform:translateY(-1px)}
+.cover-back:active{transform:scale(.97)}
+#none{cursor:default}
+#none .cv-s{display:block;font-size:14px;color:rgba(255,255,255,.6);margin-bottom:6px}
+#none .btn{
+  margin-top:22px;padding:9px 20px;border-radius:8px;
+  background:var(--accent);color:#fff;font-size:14px;transition:all .16s ease;
+  box-shadow:0 6px 18px rgba(245,80,0,.3);
+}
+#none .btn:hover{background:#d94700;transform:translateY(-1px)}
+#none .btn:active{transform:scale(.97)}

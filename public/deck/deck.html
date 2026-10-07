@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>演示中 · 图卡演示</title>
+<link rel="stylesheet" href="/fonts/fonts.css">
+<link rel="stylesheet" href="deck.css">
+</head>
+<body>
+
+<div id="stage">
+  <div class="bar"><i id="fill"></i></div>
+  <img id="slide" alt="">
+  <iframe id="web" title="网页"
+    allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+  <div id="webLoad">网页载入中…</div>
+  <button class="nav prev" id="navPrev" title="上一张（← 键，或点这一列）"><span class="nd">‹</span></button>
+  <button class="nav next" id="navNext" title="下一张（→ 键，或点这一列）"><span class="nd">›</span></button>
+</div>
+
+<div class="hud">
+  <button id="hFirst" title="第一张 Home">⏮</button>
+  <button id="hPrev" title="上一张 ←">‹</button>
+  <span class="pager" id="pager">1 / 1</span>
+  <button id="hNext" title="下一张 →">›</button>
+  <button id="hLast" title="最后一张 End">⏭</button>
+  <span class="sep"></span>
+  <button id="hFit" title="完整 / 铺满">⤢</button>
+  <button id="hGrid" title="总览 G">▦</button>
+  <button id="hOpen" title="在新标签页打开当前页">↗</button>
+  <button id="hExit" class="exit" title="退出演示 Esc">退出演示</button>
+</div>
+
+<button id="fsBig" title="全屏（F）">
+  <span class="ico">⛶</span><span class="lab">全屏</span>
+</button>
+
+<div id="webHint">
+  <span class="lab">网页打不开？</span>
+  <button class="btn" id="hintOpen">在新标签页打开</button>
+</div>
+
+<div id="blocked">
+  <div class="bk-card">
+    <div class="bk-ico">
+      <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor"
+        stroke-width="1.6" stroke-linecap="round">
+        <path d="M14.5 4.2c1.2-.5 2.6-.2 3.5.8s1.2 2.3.7 3.5"/>
+        <path d="M9.5 19.8c-1.2.5-2.6.2-3.5-.8s-1.2-2.3-.7-3.5"/>
+        <path d="M9.5 14.5l5-5"/>
+        <circle cx="12" cy="12" r="9.4"/>
+      </svg>
+    </div>
+    <div class="bk-title" id="bkTitle">这个网页打不开</div>
+    <div class="bk-domain" id="bkDomain"></div>
+    <div class="bk-acts">
+      <button id="bkOpen" class="primary">↗ 在新标签页打开</button>
+    </div>
+    <div class="bk-keys">网页里按 <b>←</b> 返回演示 · 这里按 <b>→</b> 去网页</div>
+  </div>
+</div>
+
+<div class="strip" id="strip"></div>
+
+<div class="tips" id="tips">
+  <span><b>← →</b>翻页</span>
+  <span><b>↑ ↓</b>滚动内容</span>
+  <span><b>点两侧</b>也能翻页</span>
+  <span><b>Esc</b>退出</span>
+</div>
+
+<div id="cover">
+  <div class="cv">
+    <div class="cv-t">图卡演示</div>
+    <div class="cv-s" id="cvS">点击任意处开始全屏</div>
+    <button class="btn cover-back" id="coverBack" type="button">← 返回编辑</button>
+  </div>
+</div>
+
+<div id="none">
+  <div class="cv">
+    <div class="cv-t">还没有图片</div>
+    <div class="cv-s">先去插件主页添加几张图片，再点「开始演示」</div>
+    <button class="btn" id="btnHome">去添加图片</button>
+  </div>
+</div>
+
+<script src="lib/store.js"></script>
+<script src="deck.js"></script>
+</body>
+</html>
