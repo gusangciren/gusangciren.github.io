@@ -74,6 +74,16 @@
      这个元素是 draw() 能工作的前提，缺了它画面就是全黑、摄像头气泡也不会出现。 -->
 <video id="screenSrc" autoplay muted playsinline aria-hidden="true"></video>
 
+<!-- 画笔层：录制中按 D 开启，笔迹按 D 之外的时间自动淡出（或设成常驻）。
+     它只是「绘制层」，成片里的笔迹由 draw() 把它合成进录制画布 ——
+     所以画布模式下屏幕上看得见、成片里也有，两边一致；
+     屏幕模式下不启用（画在屏幕上会被屏幕流录进去，再合成一次就成了重影）。 -->
+<canvas id="inkLayer" class="ink-layer" hidden></canvas>
+
+<!-- 提词器：面板里写的备注，录制时显示在底部给你看，**不入成片**
+     （画布模式的成片只从录制画布来，屏幕上任何浮层都不会进画面）。 -->
+<div id="recTele" class="rec-tele" hidden></div>
+
 <!-- 录制设置面板 -->
 <div id="recPanel" class="rec-panel" hidden>
   <div class="rp-card">
@@ -88,7 +98,13 @@
         </div>
         <div class="rp-meter"><i id="rpLevel"></i></div>
         <div class="rp-note" id="rpNote">
-          <b>图片卡片走「画布合成」</b>：成片 = 图卡满屏 + 你的头像，<b>不共享屏幕</b> —— 没有浏览器提示条、没有白边，头像大小位置由下面几项直接控制。翻到网页 / 文档卡片时自动退回屏幕共享（那时浏览器会问共享哪块画面，选<b>「当前标签页」</b>）。录制中右下角小窗是实时预览（图片卡模式下它不会出现在成片里，成片头像由画布绘制）。开始前有 <b>3 秒倒计时</b>，要停按 <b>R</b> 或 <b>Esc</b>。
+          <b>图片卡片走「画布合成」</b>：成片 = 图卡满屏 + 你的头像，<b>不共享屏幕</b> —— 没有浏览器提示条、没有白边，头像大小位置由下面几项直接控制。翻到网页 / 文档卡片时自动退回屏幕共享（那时浏览器会问共享哪块画面，选<b>「当前标签页」</b>）。开始前有 <b>3 秒倒计时</b>。
+        </div>
+        <textarea class="rp-tele" id="rpTele" rows="3"
+          placeholder="提词器（不入成片）：写你要讲的话&#10;用单独一行 --- 分隔下一页，翻页时自动跟着换"></textarea>
+        <div class="rp-keys">
+          录制中快捷键：<b>空格</b>暂停/继续 · <b>D</b>画笔 · <b>1/2/3</b>头像布局 ·
+          <b>T</b>提词 · <b>R</b>结束 · <b>X</b>丢弃重来
         </div>
       </div>
 
@@ -110,6 +126,15 @@
           <select class="rp-select" id="rpCamDevice">
             <option value="">系统默认</option>
           </select>
+        </div>
+
+        <div class="rp-row">
+          <span class="rp-lab">头像布局 <span class="rp-hint">录中按 1/2/3</span></span>
+          <div class="rp-seg" id="rpLayout">
+            <button data-l="corner" class="on">角落</button>
+            <button data-l="side">侧边</button>
+            <button data-l="full">全屏</button>
+          </div>
         </div>
 
         <div class="rp-row">
@@ -149,6 +174,18 @@
           <i class="sw"></i>
         </label>
 
+        <label class="rp-row">
+          <span class="rp-lab">画笔（录中按 D）</span>
+          <input type="checkbox" id="rpInk">
+          <i class="sw"></i>
+        </label>
+
+        <label class="rp-row">
+          <span class="rp-lab">不说话时头像缩小</span>
+          <input type="checkbox" id="rpQuiet" checked>
+          <i class="sw"></i>
+        </label>
+
         <div class="rp-acts">
           <button class="btn ghost" id="rpCancel" type="button">取消</button>
           <button class="btn primary" id="rpStart" type="button">开始录制</button>
@@ -182,7 +219,9 @@
     <div class="rd-t">录好了</div>
     <div class="rd-info" id="recInfo"></div>
     <video id="rdPrev" controls playsinline></video>
+    <div class="rd-chapters" id="rdChapters" hidden></div>
     <div class="rd-acts">
+      <button class="btn ghost" id="rdCancel" type="button">取消</button>
       <button class="btn ghost" id="rdAgain" type="button">再录一次</button>
       <button class="btn primary" id="rdSave" type="button">保存到本地</button>
     </div>
@@ -194,14 +233,6 @@
   <span><b>↑ ↓</b>滚动内容</span>
   <span><b>移近左右边缘</b>出现箭头</span>
   <span><b>Esc</b>退出</span>
-</div>
-
-<div id="cover">
-  <div class="cv">
-    <div class="cv-t">图卡演示</div>
-    <div class="cv-s" id="cvS">点击任意处开始全屏</div>
-    <button class="btn cover-back" id="coverBack" type="button">← 返回编辑</button>
-  </div>
 </div>
 
 <div id="none">

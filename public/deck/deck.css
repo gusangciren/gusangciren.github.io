@@ -238,30 +238,15 @@ body.strip-on .hud{opacity:0;pointer-events:none}
   border-radius:4px;padding:1px 6px;margin-right:4px;
 }
 
-/* 封面（只有没进全屏窗口时才出现）：改用站点品牌深色渐变，并把「点击开始」做成清晰胶囊 */
-#cover,#none{
+/* 空状态（还没有图卡时）：站点品牌深色渐变 */
+#none{
   position:fixed;inset:0;z-index:20;display:none;
   flex-direction:column;align-items:center;justify-content:center;text-align:center;
   background:linear-gradient(140deg,#1c1917 0%,#292524 55%,#3a1a00 100%);
-  cursor:pointer;padding:24px;
+  padding:24px;
 }
-#cover.on,#none.on{display:flex}
+#none.on{display:flex}
 .cv-t{font-size:28px;margin-bottom:18px;letter-spacing:.02em;color:#fff}
-#cover .cv-s{
-  display:inline-block;font-size:14px;color:#fff;
-  border:1px solid rgba(245,80,0,.65);background:rgba(245,80,0,.14);
-  padding:11px 26px;border-radius:999px;letter-spacing:.02em;
-  transition:background .2s,border-color .2s,transform .2s;
-}
-#cover:hover .cv-s{background:rgba(245,80,0,.26);transform:translateY(-1px)}
-.cover-back{
-  margin-top:22px;padding:8px 18px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.25);color:#fff;
-  background:rgba(255,255,255,.08);font-size:13.5px;
-  transition:all .16s ease;pointer-events:auto;
-}
-.cover-back:hover{background:rgba(245,80,0,.25);border-color:rgba(245,80,0,.65);transform:translateY(-1px)}
-.cover-back:active{transform:scale(.97)}
 #none{cursor:default}
 #none .cv-s{display:block;font-size:14px;color:rgba(255,255,255,.6);margin-bottom:6px}
 #none .btn{
@@ -274,8 +259,7 @@ body.strip-on .hud{opacity:0;pointer-events:none}
 
 /* ============ 录制 ============ */
 /* 面板按钮：作用域限定在录制面板内。
-   不能写成全局 .btn —— 会覆盖封面上同为单类选择器的 .cover-back，
-   把深色背景上的浅色按钮文字变成不可见。 */
+   不能写成全局 .btn —— 深色卡片和浅色卡片各自有自己的按钮配色，全局类会互相污染。 */
 .rec-panel .btn,.rec-done .btn{
   padding:10px 20px;border-radius:9px;font-size:14px;font-weight:500;
   color:#1c1917;background:#f0ece6;transition:all .16s ease;white-space:nowrap;
@@ -495,6 +479,10 @@ body.recording-clean #blocked{display:none !important}
 }
 .rec-pip[hidden]{display:none}
 .rec-pip.square{border-radius:20px}
+/* 气泡可以按住拖到任意位置（想放哪就放哪） */
+.rec-pip.draggable{cursor:grab;touch-action:none}
+.rec-pip.draggable.dragging{cursor:grabbing}
+.rec-pip.pip-off{cursor:default}
 .rec-pip video{
   width:100%;height:100%;object-fit:cover;display:block;
   transform:scaleX(-1);            /* 镜像，符合自拍直觉 */
@@ -551,4 +539,66 @@ body.recording-clean #blocked{display:none !important}
   width:100%;max-height:44vh;border-radius:11px;background:#1c1917;
   display:block;margin-bottom:18px;
 }
+/* 章节：翻页时间点，点一下跳过去回看 */
+.rd-chapters{margin-bottom:18px}
+.rd-chapters[hidden]{display:none}
+.rc-t{font-size:12px;color:#78716c;margin-bottom:8px}
+.rc-list{display:flex;flex-wrap:wrap;gap:7px}
+.rc-item{
+  display:flex;align-items:baseline;gap:6px;cursor:pointer;
+  font-family:inherit;font-size:12px;
+  padding:6px 11px;border-radius:999px;
+  border:1px solid rgba(232,160,76,.42);background:rgba(232,160,76,.08);
+  color:#1c1917;transition:background .16s ease;
+}
+.rc-item:hover{background:rgba(232,160,76,.2)}
+.rc-item b{font-weight:600;color:#b45309}
+.rc-item span{color:#78716c}
 .rd-acts{display:flex;gap:9px;justify-content:flex-end}
+
+/* 画笔层：铺满视口，默认不吃指针事件，D 键开启后才接管 */
+.ink-layer{
+  position:fixed;inset:0;z-index:24;
+  pointer-events:none;touch-action:none;
+}
+.ink-layer[hidden]{display:none}
+.ink-layer.on{pointer-events:auto;cursor:crosshair}
+
+/* 提词器：只给你看，不入成片（画布模式的成片只从录制画布来） */
+.rec-tele{
+  position:fixed;left:0;right:0;bottom:0;z-index:24;
+  padding:22px 8vw 26px;
+  font:22px/1.75 "LXGW WenKai",system-ui,sans-serif;
+  color:#f2e6d2;text-align:center;white-space:pre-wrap;
+  background:linear-gradient(to top,rgba(18,16,11,.9),rgba(18,16,11,.55) 62%,transparent);
+  pointer-events:none;
+}
+.rec-tele[hidden]{display:none}
+
+/* 面板里的提词器输入框 + 快捷键说明 */
+.rp-tele{
+  width:100%;box-sizing:border-box;margin-top:10px;
+  font:13px/1.6 "LXGW WenKai",system-ui,sans-serif;
+  color:#e8dcc6;background:rgba(0,0,0,.24);
+  border:1px solid rgba(232,160,76,.24);border-radius:9px;
+  padding:9px 10px;resize:vertical;
+}
+.rp-tele:focus{outline:none;border-color:rgba(232,160,76,.55)}
+.rp-tele::placeholder{color:#7c7367}
+.rp-keys{
+  margin-top:8px;font-size:11.5px;line-height:1.9;color:#8a8277;
+}
+.rp-keys b{color:#e8a04c;font-weight:600}
+.rp-hint{margin-left:6px;font-size:11px;color:#8a8277}
+.rp-row.off{opacity:.42}
+
+/* 侧边 / 全屏布局下，角落小窗不再需要 —— 但必须保持渲染（否则停止送帧），
+   所以用 opacity 让它隐形，绝不用 display:none / visibility:hidden */
+.rec-pip.pip-off{opacity:0;pointer-events:none}
+.rec-pip.paused{filter:grayscale(.55)}
+.rec-pip.paused::after{
+  content:'已暂停';position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;color:#fff;background:rgba(20,16,14,.42);
+  letter-spacing:.08em;
+}

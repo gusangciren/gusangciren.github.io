@@ -43,28 +43,39 @@
       var start = parseInt((location.hash || '').replace('#', ''), 10);
       show(isNaN(start) ? 0 : Math.max(0, Math.min(start, slides.length - 1)));
       flashTips();
-      checkCover();
+      /* 进演示页直接出画面，不再有「点击任意处开始全屏」的中间确认封面。
+         真·浏览器全屏尽力而为：手势传不过来的环境里静默失败，
+         画面照样铺满视口，需要时可按 F 或点 ⛶ 再进全屏。 */
+      enterFs();
+      /* 落地同步一次全屏状态（从管理页撑宿主 iframe 全屏后跳过来时，
+         fullscreenchange 不会在新文档里补发） */
+      syncFsState();
+      /* 管理页点的是「录屏」（?rec=1）：授权已提前拿过，直接开录 */
+      if (/[?&]rec=1/.test(location.search) && window.__recAutoStart) {
+        window.__recAutoStart();
+      }
     });
   });
 
-  /* 网站里没有"全屏窗口"概念：没进全屏就给一层封面，点一下用浏览器全屏 API 进入 */
-  function checkCover() {
-    if (!document.fullscreenElement) $('cover').classList.add('on');
+  function enterFs() {
+    if (document.fullscreenElement || hostFs()) return;
+    try {
+      var p = document.documentElement.requestFullscreen &&
+              document.documentElement.requestFullscreen();
+      if (p && p.catch) p.catch(function () {});
+    } catch (e) {}
   }
 
-  function enterFs() {
-    var el = document.documentElement;
-    $('cover').classList.remove('on');
-    if (document.fullscreenElement) return;
+  /* 嵌在 /tools 里时，全屏元素是父页面的宿主 iframe——
+     Chrome 不会把这个状态传播进 iframe 内部文档，只能自己从 frameElement 探 */
+  function hostFs() {
     try {
-      var p = el.requestFullscreen && el.requestFullscreen();
-      if (p && p.catch) {
-        p.catch(function () { $('cover').classList.add('on'); });
-      }
-    } catch (e) {
-      $('cover').classList.add('on');
-    }
+      var fe = window.frameElement;
+      return !!(fe && fe.ownerDocument.fullscreenElement === fe);
+    } catch (e) { return false; }
   }
+  window.__deckHostFs = hostFs;   /* rec.js 也要用（取消成片时退宿主全屏） */
+  window.__deckQuit = quit;       /* rec.js 也要用（Esc 结束录屏后回管理页） */
 
   function openCurrent() {
     var s = slides[cur];
@@ -261,18 +272,43 @@
   $('hintOpen').addEventListener('click', openCurrent);
   $('bkOpen').addEventListener('click', openCurrent);
   function toggleFs() {
-    if (document.fullscreenElement) document.exitFullscreen(); else enterFs();
+    if (document.fullscreenElement) { document.exitFullscreen(); return; }
+    /* 全屏元素是父页面的宿主 iframe 时，从宿主侧退出 */
+    try {
+      var fe = window.frameElement;
+      if (fe && fe.ownerDocument.fullscreenElement === fe) {
+        fe.ownerDocument.exitFullscreen();
+        return;
+      }
+    } catch (e) {}
+    enterFs();
   }
   $('fsBig').addEventListener('click', toggleFs);
-  document.addEventListener('fullscreenchange', function () {
-    document.body.classList.toggle('fs-on', !!document.fullscreenElement);
-  });
+
+  /* 全屏状态单一出口：同步 ⛶ 形态；退出全屏 = 结束演示，直接回管理页，
+     不留「半全屏还停在演示页」的中间态。
+     录制中 / 成片面板还开着时不跳走——Esc 停录触发的全屏退出不能把刚录完的东西带丢。 */
+  var fsState = false;
+  function syncFsState() {
+    var fs = !!document.fullscreenElement || hostFs();
+    document.body.classList.toggle('fs-on', fs);
+    /* 录屏面板开着时也不跳走：万一授权框把演示踢出全屏，
+       不该顺手把人送回管理页（那正是「点录屏就退回管理页」的老毛病）。 */
+    var rp = document.getElementById('recPanel');
+    var recBusy = document.body.classList.contains('recording-clean') ||
+      (document.getElementById('recDone') && !document.getElementById('recDone').hidden) ||
+      (rp && !rp.hidden);
+    if (fsState && !fs && !recBusy) quit();
+    fsState = fs;
+  }
+  document.addEventListener('fullscreenchange', syncFsState);
+  /* 全屏元素是父页面的宿主 iframe 时，fullscreenchange 只在父文档发——同源补挂一份 */
+  try {
+    if (window.parent && window.parent !== window) {
+      window.parent.document.addEventListener('fullscreenchange', syncFsState);
+    }
+  } catch (e) {}
   $('btnHome').addEventListener('click', function () {
-    location.href = 'home.html';
-  });
-  $('cover').addEventListener('click', enterFs);
-  $('coverBack').addEventListener('click', function (e) {
-    e.stopPropagation();
     location.href = 'home.html';
   });
 
@@ -338,10 +374,12 @@
       e.preventDefault(); prev();
     } else if (k === 'Escape') {
       e.preventDefault();
-      if (document.fullscreenElement) document.exitFullscreen(); else quit();
+      if (document.fullscreenElement) document.exitFullscreen();
+      else if (hostFs()) toggleFs();   /* 退出宿主全屏，syncFsState 会接手回管理页 */
+      else quit();
     }
     else if (k === 'f' || k === 'F') {
-      if (document.fullscreenElement) document.exitFullscreen(); else enterFs();
+      toggleFs();
     }
   });
 })();
