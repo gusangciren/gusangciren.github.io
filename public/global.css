@@ -845,11 +845,11 @@ html { scroll-behavior: smooth; }
 .see-all:hover { text-decoration: underline; }
 
 /* ========== Responsive ========== */
-/* 工具入口：仅电脑/平板显示，手机（≤640px）隐藏（2026-09-29） */
-@media (max-width: 640px) {
+/* 工具入口：仅电脑/平板显示，手机（≤767px，对齐 TDesign sm 断点）隐藏（2026-09-29） */
+@media (max-width: 767px) {
   .nav-links a.nav-tools { display: none; }
 }
-@media (max-width: 640px) {
+@media (max-width: 767px) {
   .nav-inner {
     padding: 0 16px;
   }
@@ -998,7 +998,9 @@ html { scroll-behavior: smooth; }
   max-width: 920px; width: 100%; max-height: 92vh; overflow: auto;
   padding: 28px; display: grid; grid-template-columns: minmax(300px, 1fr) 320px; gap: 28px;
 }
-@media (max-width: 760px) { .qc-modal { grid-template-columns: 1fr; } }
+/* 断点对齐腾讯 TDesign：sm 768 / md 992 / lg 1200。
+   手机统一到 ≤767；520、600 作为手机区间内的窄屏细分保留。 */
+@media (max-width: 767px) { .qc-modal { grid-template-columns: 1fr; } }
 .qc-close {
   position: absolute; top: 14px; right: 18px; font-size: 22px;
   color: var(--color-text-secondary); background: none; border: none; cursor: pointer; line-height: 1;
@@ -1051,7 +1053,7 @@ html { scroll-behavior: smooth; }
 .qc .qc-src { font-size: 12.5px; line-height: 1.4; }
 .qc .qc-src .qc-site { font-weight: 600; }
 .qc .qc-src .qc-from { opacity: .7; }
-.qc .qc-src .qc-url { font-size: 10.5px; opacity: .55; letter-spacing: .03em; margin-top: 1px; }
+.qc .qc-src .qc-url { font-size: 12px; opacity: .55; letter-spacing: .03em; margin-top: 1px; }
 
 /* A 极简暖白 */
 .qc.a { background: #fff; border: 1px solid var(--color-border); }
@@ -1179,4 +1181,62 @@ html { scroll-behavior: smooth; }
 @media (max-width: 600px) {
   .share-trigger-text { display: none; }
   .share-trigger { padding: 8px 10px; }
+}
+
+/* ==========================================================
+   iOS 安全区（Apple HIG：顶部 44/59pt，底部 34pt）
+   需配合 <meta viewport-fit=cover>：否则 iPhone 的 Home Indicator
+   会压住页面底部内容。桌面端 env() 恒为 0，不影响现有布局。
+   ========================================================== */
+body {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ==========================================================
+   触控目标（Apple HIG：可点击区域 ≥44×44pt）
+   原则：视觉可以小，命中区必须够大。
+   ① 文字类按钮 → 抬到 44px 高（外观基本不变）
+   ② 小圆形控件 → 用伪元素撑出 44px 隐形热区（外观完全不变）
+   ========================================================== */
+@media (max-width: 767px) {
+  .nav-links a,
+  .logo,
+  .site-url-btn,
+  .cd-st-label,
+  .footer-link-btn,
+  .lay-btn,
+  .avatar-btn,
+  .hero-search-go,
+  .bf-btn,
+  /* 输入控件同样要够大才好点、好填 */
+  .inp,
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  textarea,
+  select {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+/* 小圆形 / 小图标控件的隐形热区（桌面端同样生效，macOS 建议 ≥20pt，这里给 44 更宽裕） */
+.fr-dot, .shop-plus, .sm-plus { position: relative; }
+.fr-dot::after, .shop-plus::after, .sm-plus::after {
+  content: '';
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 44px; height: 44px;
+  transform: translate(-50%, -50%);
+}
+/* 桌面端小按钮本身的尺寸下限 */
+.shop-plus, .sm-plus {
+  min-width: 24px; min-height: 24px;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.intro-qr-btn, a.latest, .bf-btn {
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
 }

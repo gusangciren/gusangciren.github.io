@@ -467,7 +467,8 @@ function cleanTitle(t: string, s: string) {
   /* 移动端目录抽屉 */
   .reader-toc-toggle {
     display: none;
-    position: fixed; right: 18px; bottom: 22px;
+    /* iOS 安全区：避开底部 Home Indicator(34pt) 与横向刘海 */
+    position: fixed; right: calc(18px + env(safe-area-inset-right)); bottom: calc(22px + env(safe-area-inset-bottom));
     width: 48px; height: 48px; border-radius: 50%;
     background: var(--color-accent); color: #fff; border: none;
     font-size: 13px; font-weight: 600;
