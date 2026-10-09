@@ -298,7 +298,7 @@
     var recBusy = document.body.classList.contains('recording-clean') ||
       (document.getElementById('recDone') && !document.getElementById('recDone').hidden) ||
       (rp && !rp.hidden);
-    if (fsState && !fs && !recBusy) quit();
+    if (fsState && !fs && !recBusy && !window.__recActive) quit();
     fsState = fs;
   }
   document.addEventListener('fullscreenchange', syncFsState);
@@ -373,6 +373,10 @@
     } else if (k === 'ArrowLeft' || k === 'PageUp' || k === 'p') {
       e.preventDefault(); prev();
     } else if (k === 'Escape') {
+      /* 录屏中 / 预览面板开着时，Esc 交给 rec.js 处理（结束录屏或关闭预览），
+         这里不要再 quit 把演示页关回首页。 */
+      if (window.__recActive) { e.preventDefault(); return; }
+      if (document.getElementById('recDone') && !document.getElementById('recDone').hidden) { e.preventDefault(); return; }
       e.preventDefault();
       if (document.fullscreenElement) document.exitFullscreen();
       else if (hostFs()) toggleFs();   /* 退出宿主全屏，syncFsState 会接手回管理页 */

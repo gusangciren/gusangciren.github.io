@@ -24,8 +24,9 @@
     camDevice: $('rpCamDevice'), micDevice: $('rpMicDevice'),
     size: $('rpSize'), sizeVal: $('rpSizeVal'), shape: $('rpShape'),
     fs: $('rpFs'),
-    layout: $('rpLayout'), inkChk: $('rpInk'), quietChk: $('rpQuiet'),
+    layout: $('rpLayout'),     inkChk: $('rpInk'),
     teleIn: $('rpTele'), tele: $('recTele'),
+    live: $('recLive'), liveTime: $('recLiveTime'),
     ink: $('inkLayer'), inkCtx: $('inkLayer') ? $('inkLayer').getContext('2d') : null,
     chapters: $('rdChapters')
   };
@@ -63,9 +64,6 @@
     /* 画笔：笔迹带时间戳，FADE 之后淡出；常驻模式不淡出 */
     inkOn: false, inkKeep: false, inkStrokes: [],
     INK_FADE: 4000,
-    /* 沉默让位：麦克风安静超过 QUIET_MS，气泡缩到 62% 并半透明 */
-    quiet: false, quietSince: 0, voiceTimer: 0,
-    QUIET_MS: 1200,
     mime: '', ext: 'webm'
   };
 
@@ -144,7 +142,7 @@
     var on = R.cam.checked && st.cam;
     R.pip.hidden = !on;
     if (!on) return;
-    R.pipVideo.srcObject = st.cam;
+    if (R.pipVideo.srcObject !== st.cam) R.pipVideo.srcObject = st.cam;
     R.pip.classList.toggle('square', st.camShape === 'square');
     /* 侧边 / 全屏布局下，屏幕上不需要那个角落小窗了 —— 但**不能真的隐藏**：
        camSource() 正是靠这个可见的 video 取帧，display:none / visibility:hidden
@@ -156,7 +154,7 @@
        draw() 用的是「半径 r + 边距 min(w,h)*3%」，这里换算成屏幕像素后必须一致，
        所以 PIP 的 left/top 也要按「直径 + 边距」算，而不是用 right/bottom 贴边。 */
     /* 上限跟滑块一致（420），否则拉到最大时预览比成片小一圈 */
-    var d = Math.round(Math.max(64, Math.min(420, st.camSize)) * (st.quiet ? 0.62 : 1));
+    var d = Math.round(Math.max(64, Math.min(420, st.camSize)));
     /* 用「屏幕流的高」而不是视口高来算纵向位置：PIP 是靠被屏幕流录进成片
        才成为成片头像的，所以必须落在流的范围内。视口（浏览器窗口）通常比
        屏幕流（整个屏幕）矮，按视口贴底算出来的 PIP 可能整个掉到录制区域外，
@@ -183,6 +181,18 @@
     }
   }
 
+  /* 画布合成模式下，录制中是否把合成画布铺到前台（所见即所得）：
+     侧边 / 全屏布局的摄像头在屏幕上本不可见（角落小窗被 pip-off 隐去），
+     必须把合成画布显示出来，用户才能实时看到成片构图；
+     角落布局下角落小窗就是摄像头预览，画布再铺上来会成重影，所以保持隐藏、只用小窗。 */
+  function syncCanvasVis() {
+    var show = st.mode === 'canvas' && st.layout !== 'corner' && (st.busy || st.recording);
+    canvas.hidden = !show;
+    /* 侧边 / 全屏布局的角落小窗被隐去，用户看不到任何「正在录」的反馈，
+       这里用纯屏幕浮层（不入成片）补一个 REC 指示 + 计时。 */
+    if (R.live) R.live.hidden = !show;
+  }
+
   /* ---------- 气泡自由拖动：想放哪就放哪 ----------
      按住气泡拖，中心点记成 0~1 的比例坐标（跟着画面尺寸走）；
      预览小窗、成片画布、管理页迷你舞台三处共用 camCenter 一套公式，
@@ -194,9 +204,13 @@
     R.pip.classList.add('draggable');
     R.pip.addEventListener('pointerdown', function (e) {
       if (st.layout !== 'corner') return;   /* 侧边 / 全屏布局没有可拖的气泡 */
-      var vw = window.innerWidth, vh = st.screenH || window.innerHeight;
-      var c = camCenter(vw, vh, 0, 0);
-      moving = true; sx = e.clientX; sy = e.clientY; ox = c.cx; oy = c.cy;
+      /* 拖动手感 1:1 的关键：锚点必须是**气泡当前的真实中心**。
+         以前用 camCenter(vw,vh,0,0) —— 吸附态（freeX/freeY 为空）时它返回的是
+         屏幕角点 (w,h)，锚点差了半个气泡，光标移 240px 气泡只挪 ~85px，
+         非常不跟手。直接读矩形中心，吸附态 / 自由态都精确跟手。 */
+      var rc = R.pip.getBoundingClientRect();
+      moving = true; sx = e.clientX; sy = e.clientY;
+      ox = rc.left + rc.width / 2; oy = rc.top + rc.height / 2;
       try { R.pip.setPointerCapture(e.pointerId); } catch (err) {}
       R.pip.classList.add('dragging');
       e.preventDefault();
@@ -216,6 +230,52 @@
     };
     R.pip.addEventListener('pointerup', up);
     R.pip.addEventListener('pointercancel', up);
+
+    /* ---------- 缩放手柄：拉右下角圆点直接调大小 ----------
+       拖多远直径多大（手柄在气泡边缘，起点 ≈ 当前尺寸），中心点不动；
+       中心每帧从 PIP 实际矩形取（pipSync 摆好的位置），吸附态 / 自由态都成立；
+       成片画布每帧读 st.camSize，拖的时候成片里的头像实时跟着变。
+       面板滑块与数值同步更新，松手 saveSettings 走同一条持久化路。 */
+    var grip = R.pip.querySelector('.pip-grip');
+    if (!grip) return;
+    var resizing = false, s0 = 0, d0 = 0, g0 = null;
+    function gripCenter() {
+      var rc = R.pip.getBoundingClientRect();
+      return { cx: rc.left + rc.width / 2, cy: rc.top + rc.height / 2 };
+    }
+    grip.addEventListener('pointerdown', function (e) {
+      if (st.layout !== 'corner') return;
+      s0 = st.camSize;
+      g0 = gripCenter();
+      d0 = Math.max(1, Math.hypot(e.clientX - g0.cx, e.clientY - g0.cy));
+      resizing = true;
+      try { grip.setPointerCapture(e.pointerId); } catch (err) {}
+      R.pip.classList.add('resizing');
+      e.stopPropagation();   /* 别让气泡的「拖动」也接手 */
+      e.preventDefault();
+    });
+    grip.addEventListener('pointermove', function (e) {
+      if (!resizing) return;
+      /* 中心用**按下瞬间锁定**的锚点：吸附态下气泡中心随直径向角点平移，
+         若逐帧取当前中心，缩小 → 中心跑位 → 距离反弹 → 又变大，来回振荡；
+         固定锚点保证「往里拉单调变小、往外拉单调变大」，松手后 pipSync
+         会按最终尺寸把一切摆正。 */
+      var dist = Math.hypot(e.clientX - g0.cx, e.clientY - g0.cy);
+      /* 比例缩放：抓取瞬间不跳变（初始距离对应初始尺寸），往外拉变大 */
+      var size = Math.round(Math.max(80, Math.min(420, s0 * dist / d0)));
+      st.camSize = size;
+      if (R.size) R.size.value = size;
+      if (R.sizeVal) R.sizeVal.textContent = size + 'px';
+      pipSync();
+    });
+    var gripUp = function () {
+      if (!resizing) return;
+      resizing = false;
+      R.pip.classList.remove('resizing');
+      saveSettings();
+    };
+    grip.addEventListener('pointerup', gripUp);
+    grip.addEventListener('pointercancel', gripUp);
   }
   pipBindDrag();
 
@@ -516,33 +576,11 @@
     return mr;
   }
 
-  /* ---------- 沉默让位 ----------
-     麦克风安静一会儿就把头像缩小、压暗，开口立刻恢复 —— 画面重心让给内容。
-     电平循环用 setInterval 而不是 rAF：录屏时浏览器会把标签页判为非活跃，
-     rAF 会被挂起（面板里那个电平条之前一直不动就是这个原因）。 */
-  function startVoiceWatch() {
-    stopVoiceWatch();
-    st.quiet = false; st.quietSince = 0;
-    if (!R.quietChk || !R.quietChk.checked || !analyser) return;
-    st.voiceTimer = setInterval(function () {
-      if (!analyser || st.paused) return;
-      analyser.getByteFrequencyData(micBuf);
-      var sum = 0;
-      for (var i = 0; i < micBuf.length; i++) sum += micBuf[i];
-      var loud = sum / micBuf.length > 8;          /* 经验阈值：说话时远高于此 */
-      var now = Date.now();
-      if (loud) { st.quiet = false; st.quietSince = 0; }
-      else {
-        if (!st.quietSince) st.quietSince = now;
-        if (now - st.quietSince > st.QUIET_MS) st.quiet = true;
-      }
-      /* 屏幕模式下 PIP 本身就是成片头像，尺寸必须跟着变，否则和画布对不上 */
-      if (st.quiet !== st.lastQuiet) { st.lastQuiet = st.quiet; pipSync(); }
-    }, 120);
-  }
+  /* 沉默让位（不说话时头像缩小 / 压暗）已移除：录制中头像尺寸保持稳定，
+     不再随音量忽大忽小。保留空函数仅作占位，避免改动其它调用点。 */
+  function startVoiceWatch() { stopVoiceWatch(); }
   function stopVoiceWatch() {
     clearInterval(st.voiceTimer); st.voiceTimer = 0;
-    st.quiet = false; st.quietSince = 0;
   }
 
   /* ---------- 章节标记 ----------
@@ -796,14 +834,15 @@
       st.paused = false;
       startVoiceWatch();
 
-      st.recording = true;
       setCleanMode(true);
+      syncCanvasVis();
       R.bar.hidden = true;
       $('hRec').classList.add('recording');
       pipSync();
 
       return countdown(3).then(function () {
         st.recording = true;
+        window.__recActive = true;
         st.t0 = Date.now();
         st.rec.start(1000);
         tickTime();
@@ -910,6 +949,7 @@
 
       return countdown(3).then(function () {
         st.recording = true;
+        window.__recActive = true;
         st.t0 = Date.now();
         mr.start(1000);
         tickTime();
@@ -1077,15 +1117,11 @@
     var r = Math.round(st.camSize / 2);
     var maxR = Math.round(Math.min(w, h) / 2);
     if (r > maxR) r = maxR;
-    /* 沉默让位：安静一会儿就缩小压暗，把画面重心还给内容 */
-    var k = st.quiet ? 0.62 : 1;
-    r = Math.round(r * k);
     var pad = Math.round(Math.min(w, h) * 0.03);
     var c = camCenter(w, h, r, pad);
     var cx = c.cx, cy = c.cy;
 
     ctx.save();
-    if (st.quiet) ctx.globalAlpha = 0.62;
     ctx.beginPath();
     if (st.camShape === 'square') {
       ctx.rect(cx - r, cy - r, r * 2, r * 2);
@@ -1099,7 +1135,6 @@
     ctx.restore();
 
     ctx.save();
-    if (st.quiet) ctx.globalAlpha = 0.62;
     ctx.beginPath();
     if (st.camShape === 'square') {
       ctx.rect(cx - r, cy - r, r * 2, r * 2);
@@ -1121,6 +1156,7 @@
                 String(s % 60).padStart(2, '0');
       R.time.textContent = txt;
       if (R.pipTime) R.pipTime.textContent = txt;
+      if (R.liveTime) R.liveTime.textContent = txt;
     }, 500);
   }
 
@@ -1137,6 +1173,7 @@
      所以退出信号要从 fullscreenchange 接：全屏丢了 + 录制中 = 用户要结束。
      结束 = 停录 + 成片自动存到「下载」（不丢这一条）+ 回管理页，无中间步骤。 */
   function backHome() {
+    window.__recActive = false;
     if (document.fullscreenElement) { document.exitFullscreen(); return; }
     var fe = null;
     try { fe = window.frameElement; } catch (e) {}
@@ -1155,13 +1192,14 @@
     } catch (e) { return false; }
   }
   function stopAndSave() {
-    /* paused 也算在录（MediaRecorder 暂停时 state 是 'paused'）：
-       不能把暂停中的录制误判成「还没开始」整条丢掉 */
-    var recActive = st.rec && (st.rec.state === 'recording' || st.rec.state === 'paused');
-    if (recActive && st.recording) { st.autoSave = true; stop(); return; }
-    if (!st.recording && !st.busy) return;
+    /* 录制中（含暂停）：交给 stop() → finish() 弹「录好了」预览面板。
+       st.recording 只在 rec.start() 之后才置真，所以倒计时 3 秒里按 Esc
+       不会误判成「在录」而走这条，也不会因为 recorder 还是 inactive 漏判成「没录」直接回首页。
+       stop() 内部会再确认 st.rec / st.recording，安全。 */
+    if (st.recording) { stop(); return; }
     /* 倒计时里就退出了（还没真正开始写帧）：不出片，直接收尾回管理页 */
-    st.recording = false; st.busy = false;
+    if (!st.busy) return;
+    st.busy = false;
     recUiOff();
     cleanup();
     backHome();
@@ -1191,6 +1229,9 @@
     clearInterval(st.timer);
     if (R.pip) R.pip.classList.add('paused');
     if (R.pipTime) R.pipTime.textContent = '⏸ ' + (R.pipTime.textContent || '00:00');
+    /* 侧边 / 全屏布局的小窗是隐藏的（pip-off），只有顶部 REC 浮层能告诉用户
+       「已经暂停了」—— 不给反馈的话，按了空格画面静止，会以为卡死。 */
+    if (R.live) { R.live.classList.add('paused'); R.live.setAttribute('title', '已暂停'); }
     teleSync();
   }
   function resume() {
@@ -1200,6 +1241,7 @@
     /* 把暂停的时长补回起点，计时不把暂停算进去 */
     if (st.pausedAt) { st.t0 += Date.now() - st.pausedAt; st.pausedAt = 0; }
     if (R.pip) R.pip.classList.remove('paused');
+    if (R.live) { R.live.classList.remove('paused'); R.live.removeAttribute('title'); }
     st.dtimer = setInterval(draw, 33);
     tickTime();
     teleSync();
@@ -1224,6 +1266,8 @@
     inkShow(false);
     if (R.tele) R.tele.hidden = true;
     if (R.pip) { R.pip.hidden = true; R.pip.classList.remove('paused', 'pip-off'); }
+    canvas.hidden = true;   /* 收尾把合成画布交还给 #stage 图卡展示 */
+    if (R.live) { R.live.hidden = true; R.live.classList.remove('paused'); }
     R.bar.hidden = true;
     $('hRec').classList.remove('recording');
     st.paused = false;
@@ -1254,18 +1298,8 @@
     var secs = Math.max(1, Math.round((Date.now() - st.t0) / 1000));
     var fmt = /mp4/i.test(type) ? 'MP4' : 'WebM';
 
-    /* Esc 结束：不弹成片面板（用户明确不要中间步骤）——
-       成片直接存进「下载」文件夹，然后回管理页。 */
-    if (st.autoSave) {
-      st.autoSave = false;
-      var a = document.createElement('a');
-      a.href = st.blobUrl;
-      a.download = '演示录制-' + new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-') + '.' + (st.ext || 'webm');
-      document.body.appendChild(a); a.click(); a.remove();
-      cleanup(); st.busy = false;
-      backHome();
-      return;
-    }
+    /* Esc / R 结束录制后，先弹「录好了」成片面板让用户预览，
+       再决定保存到本地 / 再录一次 / 放弃。 */
 
     R.info.textContent = '时长约 ' + Math.floor(secs / 60) + ' 分 ' + (secs % 60) + ' 秒 · ' +
       (blob.size / 1048576).toFixed(1) + ' MB · ' + fmt + ' · 只存在你本机，不上传';
@@ -1390,6 +1424,7 @@
       st.layout = b.dataset.l;
       Array.prototype.forEach.call(this.children, function (x) { x.classList.toggle('on', x === b); });
       pipSync();
+      syncCanvasVis();
       saveSettings();
     });
   }
@@ -1397,11 +1432,6 @@
     R.inkChk.addEventListener('change', function () {
       st.inkKeep = false;                 /* 每次重新打开画笔都回到「会淡出」 */
       if (!R.inkChk.checked) inkShow(false);
-    });
-  }
-  if (R.quietChk) {
-    R.quietChk.addEventListener('change', function () {
-      if (!R.quietChk.checked) { st.quiet = false; pipSync(); }
     });
   }
   if (R.teleIn) R.teleIn.addEventListener('input', teleParse);
@@ -1420,6 +1450,7 @@
     st.layout = btns[n].dataset.l;
     Array.prototype.forEach.call(btns, function (x) { x.classList.toggle('on', x === btns[n]); });
     pipSync();
+    syncCanvasVis();
   }
 
   $('rdSave').addEventListener('click', function () {
@@ -1428,9 +1459,12 @@
     a.href = st.blobUrl;
     a.download = '演示录制-' + new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-') + '.' + (st.ext || 'webm');
     document.body.appendChild(a); a.click(); a.remove();
+    /* 保存后回到管理页（用户要的是「先预览、再保存、再回管理页」） */
+    setTimeout(function () { backHome(); }, 400);
   });
   $('rdAgain').addEventListener('click', function () {
     R.done.hidden = true;
+    if (st.blobUrl) { try { URL.revokeObjectURL(st.blobUrl); } catch (e) {} st.blobUrl = ''; }
     autoStart();          /* 再录一次 = 直接重新开录，不再弹设置面板 */
   });
   /* 取消：不要这条成片了 → 丢弃并退回管理页。
@@ -1453,12 +1487,13 @@
     var feed = camSource();
     return {
       recording: st.recording,
+      recState: st.rec ? st.rec.state : 'NULL',
       mode: st.mode,
       paused: st.paused,
       layout: st.layout,
       chapters: st.chapters.length,
       inkOn: st.inkOn, inkStrokes: st.inkStrokes.length,
-      quiet: st.quiet, telePages: st.telePages.length,
+      telePages: st.telePages.length,
       mime: st.mime, ext: st.ext,
       composite: st.composite,
       compErr: st.compErr,
@@ -1534,6 +1569,7 @@
     waitSlide(function () { start(); });
   }
   window.__recAutoStart = autoStart;
+  window.__recActive = false;   /* deck.js 据它判断「录屏中 / 预览中」，避免全屏变化误关回首页 */
 
   inkBind();
   applySettings();

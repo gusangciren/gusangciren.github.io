@@ -494,8 +494,76 @@ body.recording-clean #blocked{display:none !important}
 .rec-pip.pip-bare{
   border:0;box-shadow:none;background:#000;
 }
+/* 录制合成画布：画布模式下录制时铺到前台，让用户实时看到成片构图
+   （侧边 / 全屏布局也在内，不再「只能看到图卡看不到摄像头」）。
+   object-fit:contain 与舞台图卡同款，避免被视口拉伸变形；
+   录制源是 canvas.captureStream()，取的是画布原始分辨率，不受此展示缩放影响。 */
+#recCanvas{
+  position:fixed;inset:0;width:100%;height:100%;
+  z-index:6;background:#151210;object-fit:contain;object-position:center;
+}
+
+/* 画布合成模式 · 侧边 / 全屏布局的实时录制指示：屏幕浮层，绝不在成片里
+   （成片只来自录制画布）。置于画布之上、角落小窗之下，顶部居中避开头像。 */
+.rec-live{
+  position:fixed;top:14px;left:50%;transform:translateX(-50%);
+  z-index:22;display:flex;align-items:center;gap:8px;
+  padding:6px 12px;border-radius:999px;
+  background:rgba(20,18,16,.55);backdrop-filter:blur(6px);
+  color:#f2e6d2;font:600 13px/1 system-ui,sans-serif;
+  pointer-events:none;user-select:none;
+}
+.rec-live .rl-dot{
+  width:9px;height:9px;border-radius:50%;background:#FF5B4A;
+  box-shadow:0 0 0 0 rgba(255,91,74,.6);
+  animation:rl-pulse 1.4s ease-out infinite;
+}
+.rec-live .rl-time{font-variant-numeric:tabular-nums;letter-spacing:.3px}
+/* 暂停态：侧边 / 全屏布局下这是屏幕上唯一的「已暂停」反馈
+   （角落小窗那份被 pip-off 隐去了），红点变琥珀色暂停方块并停掉呼吸。 */
+.rec-live.paused{background:rgba(20,18,16,.72)}
+.rec-live.paused .rl-dot{
+  border-radius:2px;background:#e8a04c;animation:none;
+  box-shadow:0 0 0 3px rgba(232,160,76,.22);
+}
+@keyframes rl-pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,91,74,.55)}
+  70%{box-shadow:0 0 0 7px rgba(255,91,74,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,91,74,0)}
+}
+/* 作者样式的 display:flex 会盖掉 UA 的 [hidden]{display:none}，这里补回来（同 #recBar 的做法） */
+#recLive[hidden]{display:none}
+body.recording-clean .rec-live:not([hidden]){display:flex}   /* 干净模式下也保留这一处反馈 */
 .rec-pip.pip-bare .pip-time,
 .rec-pip.pip-bare .pip-rec{display:none}
+/* 可拖提示：只在画布模式（气泡=预览、不入成片）显示；屏幕模式气泡会被录进成片，
+   提示文字若留下会进视频，所以 pip-bare 下隐藏。 */
+.rec-pip .pip-tip{
+  position:absolute;left:0;right:0;top:8px;
+  text-align:center;font-size:11px;letter-spacing:.04em;color:#fff;
+  background:rgba(20,16,14,.5);padding:3px 0;pointer-events:none;
+  opacity:0;transition:opacity .3s;
+}
+.rec-pip.draggable .pip-tip{opacity:.92}
+.rec-pip.dragging .pip-tip{opacity:0}
+.rec-pip.pip-bare .pip-tip{display:none}
+
+/* 缩放手柄：拖它直接改头像大小（比例缩放，松手即存本机）。
+   PIP 是正圆（overflow:hidden + border-radius:50%），手柄放盒子外会被整圆裁掉
+   （同下面 pip-rec 的坑）；right/bottom 各内缩 16% 时，手柄圆心到气泡圆心的
+   距离 √2·(0.34d−11) + 11 < 0.5d 对**任意直径**都成立 —— 永远完整落在圆内。
+   只在角落布局（draggable 且非 pip-off）出现；
+   屏幕共享模式小窗整体会被录进成片，手柄跟着 pip-bare 藏掉，免得进画面。 */
+.rec-pip .pip-grip{
+  position:absolute;right:16%;bottom:16%;width:22px;height:22px;
+  border-radius:50%;background:#f55000;border:2px solid #fff;
+  box-shadow:0 2px 8px rgba(0,0,0,.35);
+  cursor:nwse-resize;touch-action:none;display:none;
+}
+.rec-pip.draggable:not(.pip-off) .pip-grip{display:block}
+.rec-pip.pip-bare .pip-grip{display:none}
+.rec-pip.dragging .pip-grip{opacity:.45}
+.rec-pip.resizing .pip-tip{opacity:0}
 
 .pip-time{
   position:absolute;left:0;right:0;bottom:0;

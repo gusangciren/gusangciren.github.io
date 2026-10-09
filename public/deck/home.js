@@ -571,8 +571,8 @@
     var sw = stage.clientWidth || 300;
     var sh = stage.clientHeight || Math.round(sw * 9 / 16);
     var REF = 1600;
-    if (rs.layout === 'side') { v.className = 'side'; return; }
-    if (rs.layout === 'full') { v.className = 'full'; return; }
+    if (rs.layout === 'side') { v.className = 'side'; v.style.top = v.style.left = v.style.right = v.style.bottom = ''; v.style.setProperty('--d', ''); v.style.setProperty('--br', ''); return; }
+    if (rs.layout === 'full') { v.className = 'full'; v.style.top = v.style.left = v.style.right = v.style.bottom = ''; v.style.setProperty('--d', ''); v.style.setProperty('--br', ''); return; }
     var d = Math.round(rs.size / REF * sw);
     var pad = Math.round(sw * (9 / 16) * 0.03);
     var r = d / 2;

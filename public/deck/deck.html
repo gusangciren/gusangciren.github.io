@@ -180,12 +180,6 @@
           <i class="sw"></i>
         </label>
 
-        <label class="rp-row">
-          <span class="rp-lab">不说话时头像缩小</span>
-          <input type="checkbox" id="rpQuiet" checked>
-          <i class="sw"></i>
-        </label>
-
         <div class="rp-acts">
           <button class="btn ghost" id="rpCancel" type="button">取消</button>
           <button class="btn primary" id="rpStart" type="button">开始录制</button>
@@ -203,14 +197,24 @@
   <button id="recStop">结束</button>
 </div>
 
+<!-- 画布合成模式下、侧边 / 全屏布局的实时录制指示：纯屏幕浮层（不入成片，
+     因为画布模式的成片只来自录制画布），让「正在录」有明确反馈；
+     角落布局已有角落小窗的 REC 点，这里就不再重复显示。 -->
+<div id="recLive" class="rec-live" hidden>
+  <span class="rl-dot"></span><span class="rl-time" id="recLiveTime">00:00</span>
+</div>
+
 <!-- 录制倒计时：在真正开始写入前显示，不计入成片 -->
 <div id="recCount" class="rec-count" hidden><span>3</span></div>
 
 <!-- 录制中的摄像头实时画面（小窗）。它本身就是摄像头气泡的样子，
-     让你能实时看到自己；canvas 里同步画了同一个气泡，所以成片里也有。 -->
+     让你能实时看到自己；canvas 里同步画了同一个气泡，所以成片里也有。
+     顶部「拖动可摆放位置」提示：可见即可拖，拖到哪成片里就在哪。 -->
 <div id="recPip" class="rec-pip" hidden>
   <video id="pipVideo" autoplay muted playsinline></video>
   <span class="pip-time" id="pipTime">00:00</span>
+  <span class="pip-tip">拖动摆放位置 · 拉右下角圆点调大小</span>
+  <i class="pip-grip" title="拖动调整大小"></i>
 </div>
 
 <!-- 录制完成 -->
