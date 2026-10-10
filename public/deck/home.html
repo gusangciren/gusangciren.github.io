@@ -13,8 +13,6 @@
   <div class="spacer"></div>
   <div class="tools">
     <span class="count" id="count"></span>
-    <button class="btn" id="btnRecSet" title="录屏设置：头像大小 / 形状 / 位置 / 布局">⚙ 录屏设置</button>
-    <button class="btn primary" id="btnRec"><span class="ico">⏺</span>录屏</button>
     <button class="btn ghost" id="btnClear">清空</button>
     <button class="btn primary big" id="btnPlay"><span class="ico">⛶</span>开始全屏演示</button>
   </div>
@@ -68,70 +66,6 @@
   </div>
 </div>
 
-<!-- 录屏设置：头像（摄像头气泡）的大小 / 形状 / 位置 / 布局。
-     存本机，演示页录屏时直接沿用；这里开摄像头预览同时也是「提前授权」，
-     避免在全屏里弹权限框把演示踢出全屏。 -->
-<div class="rs-mask" id="rsMask" hidden>
-  <div class="rs-box">
-    <div class="rs-head">录屏设置<span class="rs-sub">设置存在本机，录屏时直接沿用</span></div>
-    <div class="rs-body">
-      <div class="rs-left">
-        <!-- 迷你舞台：按 1600x900 参考尺寸等比缩放，所见即所得 -->
-        <div class="rs-stage" id="rsStage">
-          <video id="rsPrev" autoplay muted playsinline></video>
-          <div class="rs-divider" id="rsDivider" hidden></div>
-          <div class="rs-off" id="rsOff" hidden>摄像头未开启</div>
-        </div>
-        <div class="rs-cap">实时预览 · 成片里头像就是这样</div>
-      </div>
-      <div class="rs-right">
-        <label class="rs-row"><span>摄像头</span><input type="checkbox" id="rsCam" checked><i class="sw"></i></label>
-        <div class="rs-row"><span>摄像头设备</span>
-          <select id="rsCamDevice" class="rs-sel"><option value="">系统默认</option></select>
-        </div>
-        <label class="rs-row"><span>麦克风</span><input type="checkbox" id="rsMic" checked><i class="sw"></i></label>
-        <div class="rs-row"><span>麦克风设备</span>
-          <select id="rsMicDevice" class="rs-sel"><option value="">系统默认</option></select>
-        </div>
-        <div class="rs-row" id="rowSize">
-          <span>头像大小</span>
-          <input type="range" id="rsSize" min="80" max="420" step="4" value="260">
-          <i class="rs-val" id="rsSizeVal">260px</i>
-        </div>
-        <div class="rs-row" id="rowShape"><span>形状</span>
-          <div class="rs-seg" id="rsShape">
-            <button type="button" class="on" data-s="circle">圆形</button>
-            <button type="button" data-s="square">方形</button>
-          </div>
-        </div>
-        <div class="rs-row" id="rowPos"><span>位置</span>
-          <div class="rs-seg" id="rsPos">
-            <button type="button" class="on" data-p="br">右下</button>
-            <button type="button" data-p="bl">左下</button>
-            <button type="button" data-p="tr">右上</button>
-            <button type="button" data-p="tl">左上</button>
-          </div>
-        </div>
-        <div class="rs-row"><span>布局</span>
-          <div class="rs-seg" id="rsLayout">
-            <button type="button" class="on" data-l="corner">角落</button>
-            <button type="button" data-l="side">侧边</button>
-            <button type="button" data-l="full">全屏</button>
-          </div>
-        </div>
-        <div class="rs-tele">
-          <span>提词词稿</span>
-          <textarea id="rsTele" rows="3" placeholder="录制时显示在画面底部给你看，不入成片&#10;用单独一行 --- 分隔下一页，翻页自动跟着换"></textarea>
-        </div>
-      </div>
-    </div>
-    <div class="rs-foot">
-      <span class="rs-tip">开启摄像头即完成授权，之后录屏不再弹权限框</span>
-      <span class="spacer"></span>
-      <button class="btn primary" id="rsClose" type="button">完成</button>
-    </div>
-  </div>
-</div>
 
 <input type="file" id="file"
   accept="image/*,.pdf,.docx,.doc,.xlsx,.xls,.csv,.txt,.md,.html,.htm" multiple hidden>

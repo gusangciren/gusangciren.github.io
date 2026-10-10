@@ -50,10 +50,6 @@
       /* 落地同步一次全屏状态（从管理页撑宿主 iframe 全屏后跳过来时，
          fullscreenchange 不会在新文档里补发） */
       syncFsState();
-      /* 管理页点的是「录屏」（?rec=1）：授权已提前拿过，直接开录 */
-      if (/[?&]rec=1/.test(location.search) && window.__recAutoStart) {
-        window.__recAutoStart();
-      }
     });
   });
 
@@ -74,8 +70,6 @@
       return !!(fe && fe.ownerDocument.fullscreenElement === fe);
     } catch (e) { return false; }
   }
-  window.__deckHostFs = hostFs;   /* rec.js 也要用（取消成片时退宿主全屏） */
-  window.__deckQuit = quit;       /* rec.js 也要用（Esc 结束录屏后回管理页） */
 
   function openCurrent() {
     var s = slides[cur];
@@ -292,13 +286,7 @@
   function syncFsState() {
     var fs = !!document.fullscreenElement || hostFs();
     document.body.classList.toggle('fs-on', fs);
-    /* 录屏面板开着时也不跳走：万一授权框把演示踢出全屏，
-       不该顺手把人送回管理页（那正是「点录屏就退回管理页」的老毛病）。 */
-    var rp = document.getElementById('recPanel');
-    var recBusy = document.body.classList.contains('recording-clean') ||
-      (document.getElementById('recDone') && !document.getElementById('recDone').hidden) ||
-      (rp && !rp.hidden);
-    if (fsState && !fs && !recBusy && !window.__recActive) quit();
+    if (fsState && !fs) quit();
     fsState = fs;
   }
   document.addEventListener('fullscreenchange', syncFsState);
@@ -372,12 +360,8 @@
       e.preventDefault(); next();
     } else if (k === 'ArrowLeft' || k === 'PageUp' || k === 'p') {
       e.preventDefault(); prev();
-    } else if (k === 'Escape') {
-      /* 录屏中 / 预览面板开着时，Esc 交给 rec.js 处理（结束录屏或关闭预览），
-         这里不要再 quit 把演示页关回首页。 */
-      if (window.__recActive) { e.preventDefault(); return; }
-      if (document.getElementById('recDone') && !document.getElementById('recDone').hidden) { e.preventDefault(); return; }
-      e.preventDefault();
+      } else if (k === 'Escape') {
+        e.preventDefault();
       if (document.fullscreenElement) document.exitFullscreen();
       else if (hostFs()) toggleFs();   /* 退出宿主全屏，syncFsState 会接手回管理页 */
       else quit();
