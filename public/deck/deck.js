@@ -202,6 +202,12 @@
     try { window.close(); } catch (e) {}
     location.href = 'home.html';
   }
+  /* 内嵌 iframe（PDF/网页）里按 Esc 时，子文档无法感知父 iframe 全屏，
+     暴露此函数供 bridgeKeys 调用，统一走 exitFs → syncFsState → quit */
+  window.__deckEscExit = function () {
+    if (exitFs()) return;
+    quit();
+  };
 
   /* ---------- 焦点管理 ----------
      点进 PDF / 网页后，焦点会被 iframe 内的文档接管，父页面就收不到 ← →，
@@ -230,7 +236,9 @@
           e.preventDefault(); prev();
         } else if (k === 'Escape') {
           e.preventDefault();
-          if (document.fullscreenElement) document.exitFullscreen(); else quit();
+          if (document.fullscreenElement) document.exitFullscreen();
+          else if (window.parent && window.parent.__deckEscExit) window.parent.__deckEscExit();
+          else quit();
         }
         /* ↑ ↓ 不拦截：让 PDF / 网页自己滚动内容 */
       }, true);
@@ -261,21 +269,36 @@
   $('navNext').addEventListener('click', function () { reclaimFocus(); next(); });
   $('hPrev').addEventListener('click', function () { reclaimFocus(); prev(); });
   $('hNext').addEventListener('click', function () { reclaimFocus(); next(); });
-  $('hExit').addEventListener('click', quit);
+  $('hExit').addEventListener('click', function () {
+    /* 全屏时先退出全屏，等 fullscreenchange → syncFsState 再跳转回管理页，
+       避免管理页在全屏 iframe 里加载出来的中间态 */
+    if (exitFs()) return;
+    quit();
+  });
   $('hOpen').addEventListener('click', openCurrent);
   $('hintOpen').addEventListener('click', openCurrent);
   $('bkOpen').addEventListener('click', openCurrent);
   function toggleFs() {
-    if (document.fullscreenElement) { document.exitFullscreen(); return; }
+    if (exitFs()) return;
+    enterFs();
+  }
+  /* 退出全屏（文档自身或父页面宿主 iframe），返回是否确实执行了退出 */
+  function exitFs() {
+    if (document.fullscreenElement) {
+      var p = document.exitFullscreen();
+      if (p && p.catch) p.catch(function () {});
+      return true;
+    }
     /* 全屏元素是父页面的宿主 iframe 时，从宿主侧退出 */
     try {
       var fe = window.frameElement;
       if (fe && fe.ownerDocument.fullscreenElement === fe) {
-        fe.ownerDocument.exitFullscreen();
-        return;
+        var p2 = fe.ownerDocument.exitFullscreen();
+        if (p2 && p2.catch) p2.catch(function () {});
+        return true;
       }
     } catch (e) {}
-    enterFs();
+    return false;
   }
   $('fsBig').addEventListener('click', toggleFs);
 
@@ -360,11 +383,10 @@
       e.preventDefault(); next();
     } else if (k === 'ArrowLeft' || k === 'PageUp' || k === 'p') {
       e.preventDefault(); prev();
-      } else if (k === 'Escape') {
-        e.preventDefault();
-      if (document.fullscreenElement) document.exitFullscreen();
-      else if (hostFs()) toggleFs();   /* 退出宿主全屏，syncFsState 会接手回管理页 */
-      else quit();
+    } else if (k === 'Escape') {
+      e.preventDefault();
+      if (exitFs()) return;   /* 等 fullscreenchange → syncFsState → quit，避免中间态 */
+      quit();
     }
     else if (k === 'f' || k === 'F') {
       toggleFs();
