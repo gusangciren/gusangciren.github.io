@@ -1,0 +1,774 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><meta name="description" content="YC 创业课第4讲｜Adora Cheung"><link rel="canonical" href="https://gusangciren.github.io/blog/yc-lecture-04-building-product-talking-to-users-and-growing/"><title>打造产品、与用户对话、实现增长 — 像企业家一样写作</title><!-- 社交分享卡片（微信 / 微博 / X 等抓取标题、描述与缩略图） --><meta property="og:type" content="website"><meta property="og:site_name" content="像企业家一样写作"><meta property="og:title" content="打造产品、与用户对话、实现增长 — 像企业家一样写作"><meta property="og:description" content="YC 创业课第4讲｜Adora Cheung"><meta property="og:image" content="https://gusangciren.github.io/images/logo-180x180.png"><meta property="og:url" content="https://gusangciren.github.io/blog/yc-lecture-04-building-product-talking-to-users-and-growing/"><meta property="og:locale" content="zh_CN"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="打造产品、与用户对话、实现增长 — 像企业家一样写作"><meta name="twitter:description" content="YC 创业课第4讲｜Adora Cheung"><meta name="twitter:image" content="https://gusangciren.github.io/images/logo-180x180.png"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="/favicon.png"><link rel="icon" type="image/png" sizes="16x16" href="/favicon.png"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml"><link rel="sitemap" type="application/xml" href="/sitemap-index.xml"><!-- Static CSS — no build hash, safe for incremental deploys --><link rel="stylesheet" href="/global.css"><!-- 金句卡导出用到的 html2canvas 不再全站预加载：导出时由 ensureH2C() 按需注入（省下每页 45KB + 一次公网往返） --><!-- 中文字体：直连 BootCDN，去掉 /fonts/fonts.css → @import → CDN 的串行两跳；仍在渲染后用 preload+onload 切换。
+         preconnect 提前完成 DNS/TLS（字体文件走 CORS 通道，故带 crossorigin）；CDN CSS 自带 font-display:swap。 --><link rel="preconnect" href="https://cdn.bootcdn.net" crossorigin><link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-webfont/1.7.0/lxgwwenkai-regular.css" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-webfont/1.7.0/lxgwwenkai-regular.css"></noscript><link rel="stylesheet" href="/_astro/BaseLayout.Bu4xGSCj.css">
+<link rel="stylesheet" href="/_astro/_..C9EtzWgj.css"></head> <body> <nav class="navbar"> <div class="nav-inner"> <div class="nav-lead">  <a href="/" class="logo"> <img src="/images/logo-header.png" alt="Logo" class="logo-img"> <span>像企业家一样写作</span> </a> </div> <div class="nav-links" id="nav-pill"> <span class="nav-slider" id="nav-slider"></span> <a href="/book">书籍</a> <a href="/columns">专栏</a> <a href="/tools" class="nav-tools">工具</a> </div> </div> </nav> <!-- 搜索浮窗 --> <div id="search-overlay" class="search-overlay"> <div class="search-modal"> <div class="search-header"> <input id="search-input" type="text" placeholder="搜索书籍、章节或关键词…" autocomplete="off"> <button id="search-close" class="search-close-btn" aria-label="关闭搜索">✕</button> </div> <div id="search-results" class="search-results"></div> </div> </div> <!-- 分享按钮：点开菜单 → 复制链接（导航旁 + 文章底部共用一套逻辑与样式） --> <script>
+      (function () {
+        function flash(btn, txt, ok) {
+          var span = btn.querySelector('.share-item-text');
+          if (!span) return;
+          var old = span.textContent;
+          span.textContent = txt;
+          btn.classList.toggle('done', !!ok);
+          setTimeout(function () { span.textContent = old; btn.classList.remove('done'); }, 1600);
+        }
+        function closeAll(except) {
+          document.querySelectorAll('.share-btn.open').forEach(function (b) {
+            if (b === except) return;
+            b.classList.remove('open');
+            var t = b.querySelector('.share-trigger');
+            if (t) t.setAttribute('aria-expanded', 'false');
+          });
+        }
+
+        document.addEventListener('click', function (e) {
+          var root = e.target.closest ? e.target.closest('.share-btn') : null;
+
+          /* 点菜单项 → 复制链接 */
+          var item = e.target.closest ? e.target.closest('.share-item') : null;
+          if (item) {
+            var url = window.location.href;
+            var done = function () { flash(item, '已复制 ✓', true); };
+            var fail = function () { flash(item, '复制失败', false); };
+            var fallback = function () {
+              try {
+                var ta = document.createElement('textarea');
+                ta.value = url;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                done();
+              } catch (err) { fail(); }
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(url).then(done).catch(fallback);
+            } else { fallback(); }
+            closeAll(null);
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+          }
+
+          /* 点触发器 → 开合菜单 */
+          var trig = e.target.closest ? e.target.closest('.share-trigger') : null;
+          if (trig) {
+            var box = trig.closest('.share-btn');
+            var wasOpen = box.classList.contains('open');
+            closeAll(box);
+            if (!wasOpen) {
+              box.classList.add('open');
+              trig.setAttribute('aria-expanded', 'true');
+            } else {
+              trig.setAttribute('aria-expanded', 'false');
+            }
+            e.preventDefault();
+            return;
+          }
+
+          /* 点别处 → 全部收起 */
+          if (!root) closeAll(null);
+        });
+
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') closeAll(null);
+        });
+      })();
+    </script> <!-- 导航胶囊滑块（仿 iOS 相册 视频/照片 切换动态） --> <script>
+      (function () {
+        var pill = document.getElementById('nav-pill');
+        var slider = document.getElementById('nav-slider');
+        if (!pill || !slider) return;
+        var links = Array.prototype.slice.call(pill.querySelectorAll('a'));
+        var path = window.location.pathname.replace(/\/+$/, '') || '/';
+        var activeIdx = -1;
+        links.forEach(function (a, i) {
+          var href = (a.getAttribute('href') || '').replace(/\/+$/, '') || '/';
+          var match = (href === '/') ? (path === '/') : (path === href || path.indexOf(href + '/') === 0);
+          if (match) activeIdx = i;
+        });
+        if (activeIdx < 0) { slider.style.opacity = '0'; return; }
+        links[activeIdx].classList.add('active');
+        function move(idx, animate) {
+          var a = links[idx];
+          if (!a) return;
+          if (!animate) slider.style.transition = 'none';
+          slider.style.width = a.offsetWidth + 'px';
+          slider.style.transform = 'translateX(' + a.offsetLeft + 'px)';
+          if (!animate) {
+            void slider.offsetWidth; /* 强制回流，让下一次位移产生过渡动画 */
+            slider.style.transition = '';
+          }
+        }
+        /* iOS 动态：先停在另一项上，再滑到当前项 */
+        move(activeIdx === 0 ? 1 : 0, false);
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () { move(activeIdx, true); });
+        });
+        window.addEventListener('resize', function () { move(activeIdx, false); });
+      })();
+    </script> <main>   <div id="reading-progress" class="reading-progress"></div> <!-- 书籍系列：杂志章节页（方案 C 优化版） -->
+    <div class="reader"> <!-- 吸顶极简条：滚过章首后出现 --> <div class="reader-mini" id="reader-mini"> <a href="/book" class="reader-mini-back" aria-label="返回书架">←</a> <span class="reader-mini-book">YC 创业课</span> <span class="reader-mini-sep">·</span> <span class="reader-mini-chapter">打造产品、与用户对话、实现增长</span> <span class="reader-mini-pct" id="mini-pct">0%</span> </div> <!-- 章首大标题区：超大章节号 + 居左内容 --> <header class="reader-hero"> <div class="reader-hero-inner"> <div class="reader-hero-num" aria-hidden="true">04</div> <div class="reader-hero-text"> <a href="/book" class="reader-hero-back">← 返回书架</a> <div class="reader-hero-book">《YC 创业课：如何创办初创公司》</div> <div class="reader-hero-chapter">第 4 章 / 共 20 章</div> <h1 class="reader-hero-title">打造产品、与用户对话、实现增长</h1> <div class="reader-hero-meta"> <time>2026年6月27日</time> <span class="reader-hero-dot">·</span> <span>约 36 分钟阅读</span> </div> </div> </div> </header> <!-- 正文 + 时间线目录 --> <div class="reader-body"> <aside class="reader-toc" id="reader-toc"> <div class="reader-toc-inner"> <div class="reader-toc-book">《YC 创业课：如何创办初创公司》</div> <nav class="reader-toc-nav"> <div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-01-how-to-start-a-startup" class="reader-toc-item"> <span class="reader-toc-title">如何创办初创公司</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-02-ideas-products-teams-execution-part2" class="reader-toc-item"> <span class="reader-toc-title">创意、产品、团队与执行（第二部分）</span> </a>  </div><div class="reader-toc-item-wrap  done"> <a href="/blog/yc-lecture-03-counterintuitive-parts-and-how-to-have-ideas" class="reader-toc-item"> <span class="reader-toc-title">创业中反直觉的部分，以及如何产生创意</span> </a>  </div><div class="reader-toc-item-wrap active "> <a href="/blog/yc-lecture-04-building-product-talking-to-users-and-growing" class="reader-toc-item"> <span class="reader-toc-title">打造产品、与用户对话、实现增长</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-05-business-strategy-and-monopoly-theory" class="reader-toc-item"> <span class="reader-toc-title">商业战略与垄断理论</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-06-growth" class="reader-toc-item"> <span class="reader-toc-title">增长</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-07-how-to-build-products-users-love" class="reader-toc-item"> <span class="reader-toc-title">如何打造用户热爱的产品（第一部分）</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-08-doing-things-that-dont-scale-pr" class="reader-toc-item"> <span class="reader-toc-title">做那些无法规模化的事、公关，以及如何起步</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-09-how-to-raise-money" class="reader-toc-item"> <span class="reader-toc-title">如何融资</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-10-company-culture-and-building-a-team" class="reader-toc-item"> <span class="reader-toc-title">企业文化与团队建设（第一部分）</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-11-company-culture-and-building-a-team-part2" class="reader-toc-item"> <span class="reader-toc-title">企业文化与团队建设（第二部分）</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-12-sales-and-marketing" class="reader-toc-item"> <span class="reader-toc-title">销售与营销（面向企业客户）</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-13-how-to-be-a-great-founder" class="reader-toc-item"> <span class="reader-toc-title">如何成为一位伟大的创始人</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-14-how-to-operate" class="reader-toc-item"> <span class="reader-toc-title">如何运营</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-15-how-to-manage" class="reader-toc-item"> <span class="reader-toc-title">如何管理</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-16-how-to-run-a-user-interview" class="reader-toc-item"> <span class="reader-toc-title">如何进行用户访谈</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-17-how-to-build-products-users-love-part2" class="reader-toc-item"> <span class="reader-toc-title">如何打造用户热爱的产品（第二部分）</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-18-legal-finance-hr" class="reader-toc-item"> <span class="reader-toc-title">创业公司的法律、财务与人力机制</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-19-sales-marketing-pitch-investor-roleplaying" class="reader-toc-item"> <span class="reader-toc-title">销售、营销与融资路演</span> </a>  </div><div class="reader-toc-item-wrap  "> <a href="/blog/yc-lecture-20-closing-thoughts-and-later-stage-advice" class="reader-toc-item"> <span class="reader-toc-title">收官思考与后期阶段建议</span> </a>  </div> </nav> </div> </aside> <main class="reader-main">  <article class="prose reader-prose"> <p><strong>YC 创业课第四讲 · Adora Cheung（Homejoy 联合创始人）</strong></p>
+<hr>
+<p>谢谢大家邀请我来。今天我要讲的是，如何把用户从零做到很多。我假设此刻你们脑子里已经装着许多很棒的点子，正在思考下一步该怎么走。</p>
+<p>我的讲座很大程度上建立在我过去犯过的错误之上。正如 Sam 所说，我在 2010 年加入了 YC，花了三年时间反复折腾，多次转型，也多次推倒重来。从中我学到了很多——如果将来在 Homejoy 之后还要再创办一家创业公司，有哪些事千万不能做。我的很多建议来自失败：先弄懂你不该做什么，再由此归纳出你应该做什么。</p>
+<p>先提醒一句：你们应该把所有建议都当作方向性的指引，而不是金科玉律。每家公司都不一样，你也和我不同，所以请带着这个前提去吸收这一切。</p>
+<p>创业之初，你应该有大把整块时间专注在创业上。我不是说让你退学或辞职；我的意思是，你应该有大量的「压缩时间」，专门用于沉浸在点子里，<strong>为你要解决的问题开发解决方案</strong>。比如，如果你还在上学，每周腾出一两个整天来打磨点子，比一周里每天东拼西凑挤两小时要好得多。这就像写代码——频繁的场景切换代价很高，所以能够真正聚焦、真正沉浸，至关重要。</p>
+<p>我写这篇讲稿时想的第一个问题是：大多数人在创业之初做错了什么？新手的做法通常是这样的：「我有一个很棒的点子，我不想告诉任何人。我要一直做、一直做，然后也许告诉一两个人，接着在 TechCrunch 上发布，然后就能获得大量用户。」</p>
+<p>但现实是：<strong>因为你没有拿到足够的反馈，也许你能拉来很多人访问你的网站，却没有一个人留下来——因为你缺失了最初的用户反馈</strong>。如果你足够幸运、银行里还有点钱，你可能会去买一些用户，但这些用户会随着时间的推移逐渐流失，最后你只能放弃。这是一个恶性循环。我实际上就做过这样的事，而且是在 YC 期间做的。我那次甚至连产品都没发布。我没有在 TechCrunch 上发布——而那其实是你应该做的事。你永远不想陷入那个循环，因为最后你什么好东西也得不到。</p>
+<p>接下来，你有了一个点子，就应该认真思考这个点子到底在解决什么。真正的问题是什么？你应该能够用一句话描述你的问题。然后你应该想：「<strong>这个问题和我有什么关系</strong>？我真的对这个问题有热情吗？」接着再想：「<strong>好，这是我的问题，但它是不是别人也有的问题</strong>？」你得走出去和人聊，来验证这一点。</p>
+<h2 id="我犯过的最大错误pathjoy-的教训">我犯过的最大错误：Pathjoy 的教训</h2>
+<p>我犯过的最大错误之一，涉及我的联合创始人——他同时也是我的兄弟。我们在 2009 年或 2010 年创办了一家叫 Pathjoy 的公司。我们当时有两个目标：一是创建一家让人们真正快乐的公司，二是创建一家非常有影响力的公司。衡量影响力的一个好代理指标，就是创建一家大公司。所以我们想，好吧，我们要解决的问题是「让人们更快乐」。我们首先想到的是：哪些人是专门让人快乐的？我们想到了人生教练和治疗师。创建一个人生教练和治疗师的平台，似乎是很明显的事情。</p>
+<p>但结果是：当我们自己开始用这个产品时——我们绝不是愤世嫉俗的人——人生教练和治疗师根本不是我们自己会用的人。它对我们就毫无用处。所以，<strong>这甚至不是我们自己的问题，也不是我们特别有热情去构建的东西，然而我们却花了将近一年的时间试图做这件事</strong>。如果你从 T=0 开始，在构建任何产品之前就想清楚这件事，我认为你可以避免日后很多不必要的麻烦，避免去做你其实根本不想做的事。</p>
+<h2 id="深入行业成为一颗螺丝钉">深入行业：成为一颗螺丝钉</h2>
+<p>假设你已经有了一个问题，并且能够把它表述出来，那么你从哪里开始？如何思考解决方案？你要做的第一件事，是认真琢磨你要进入的那个行业。无论它规模是大还是巨大，你都应该真正沉浸在那个行业里。有几种方法可以做到这一点。</p>
+<p>第一种方法，是在一段时间内真正成为那个行业里的一颗螺丝钉。这听起来可能有点反直觉，因为大多数人说，如果你真的想颠覆一个行业，你就不该成为其中的从业者。一个在某个行业待了二三十年的人，很可能已经习以为常，习惯了事情运作的方式，根本想不出有哪些低效之处是可以「颠覆」的。但作为一个进入这个行业的新人，你真的应该花一两个月的时间，去真正理解这个行业的每一个细枝末节，以及它是如何运作的。因为<strong>当你深入到细节中时，你才会开始看到那些可以被利用的缝隙，那些真正低效的地方，以及那些可能带来巨大开销、而你也许能够削减的部分</strong>。</p>
+<p>举个例子：当我们创办 Homejoy 时，我们从清洁行业切入，而刚开始时，我们自己就是清洁工。我们开始帮人打扫房子，很快发现我们是非常糟糕的清洁工。结果就是，我们说好吧，我们得学怎么清洁，或者至少得让一个专业人士来训练我们。我们于是去一家清洁公司找了份工作。</p>
+<p><img src="/images/yc-lecture-04/f01.png" alt="" loading="lazy" decoding="async" width="932" height="450"></p>
+<p>最酷的事情是，我在那家清洁公司接受了几个星期的培训，学会了怎么清洁；但更棒的事情是，我学到了很多关于一家本地清洁公司如何运作的知识。从这种意义上说，我明白了为什么一家本地清洁公司无法成长为今天 Homejoy 这样的规模。原因在于它们非常老派，很多事情做得很低效——比如预订客户、优化清洁工的时间表，都做得非常低效。</p>
+<p>如果你面临的情况和我的类似，其中涉及服务元素，那么你应该亲自去提供那个服务。如果你的东西和餐厅有关，你就应该去当服务员；如果和绘画有关，就去当画家。<strong>从你要构建的东西的所有角度，去站在你客户的鞋子里</strong>。</p>
+<p>另一件事是，你还应该对行业保持一定程度的痴迷。你应该痴迷到想知道那个领域里的每一个人都在做什么。具体做法包括：列出所有潜在竞争对手的名单、类似类型的公司，用谷歌搜索他们，点击每一个链接，从第 1 条搜索结果读到第 1000 条。我找到了所有潜在竞争对手，无论大小。如果它们是上市公司，我就会去读它们的 S-1 文件，读它们所有的季度财报，参加它们的财报电话会议。你们大多数情况下不会从中得到太多东西，但偶尔会发现一些金块。除非你真正完成了把所有这些信息装进脑子里的这项工作，否则你是找不到那些金块的。你应该成为你所在行业的专家。当你在构建这个产品时，毫无疑问，你就是专家，这样人们才会信任你。</p>
+<h2 id="识别客户细分">识别客户细分</h2>
+<p>第二件事是识别客户细分。理想情况下，你最终希望构建的产品或业务是全世界所有人都在使用的。但在一开始，你实际上希望划出客户群体的某一部分，以便真正为他们优化。这关乎专注——无论你是在迎合少女，还是足球妈妈，你都能够大量聚焦在她们的需求上。</p>
+<h2 id="在写代码之前先用故事板画出用户体验">在写代码之前，先用故事板画出用户体验</h2>
+<p>最后，在你甚至创建产品之前，在你写下代码之前，你应该真正把「你要如何解决这个问题」的用户体验，用故事板的形式画出来。</p>
+<p>这不仅仅是指网站本身，它还意味着：客户是如何发现你的？可能是通过广告或口碑。然后他们来到你的网站，进一步了解你。当他们注册项目时，你向他们传达了什么文字和信息？当他们购买服务时呢？他们实际上从你的服务或产品中得到了什么？在他们使用完产品或服务之后，他们会留下评价或评论吗？你需要能够完整地走过整个流程，在脑海中想象出什么是完美的用户体验。然后把它写在纸上，再写进代码里，从那里开始。</p>
+<h2 id="构建-mvp最小可行产品">构建 MVP：最小可行产品</h2>
+<p>所以，你脑子里有所有这些想法，现在你知道你想追逐的核心客户群体是什么，你也了解了关于这个行业的一切，接下来做什么？你开始构建你的产品。今天大多数人用的一个常见短语是：「你应该构建一个最小可行产品（MVP）。」我强调了「可行」这个词，因为我认为很多人跳过了那个部分，他们拿出一个功能，而最开始的整体用户体验是平的。最小可行产品基本上意味着：为了解决你试图解决的问题，你应该构建的最小功能集是什么。我认为如果你走完了整个故事板化的过程，你可以很快弄清楚这一点。但再一次，你必须和用户对话，你必须看看外面已经存在什么，而你应该构建的东西应该解决他们的即时需求。</p>
+<p><img src="/images/yc-lecture-04/f02.png" alt="" loading="lazy" decoding="async" width="842" height="442"></p>
+<p>第二件事是，在你把东西放到用户面前之前，你应该真正把你的产品定位弄清楚。我的意思是，你应该能够走到一个人面前，用一句话说：「嘿，这个东西能做 X、Y 和 Z。」比如，Homejoy 起步时说的是一个超级复杂的东西：我们是一个家庭服务的在线平台，你从清洁开始，你还能选择这个那个。这一套能讲上好多段。</p>
+<p>当我们去找潜在用户来我们平台时，他们听了前几句就开始觉得无聊。我们后来发现，我们需要一个一句话定位。这个一句话定位非常重要，它描述你所做的事情在功能上的好处。将来当你试图建立品牌之类的时候，你应该能够描述它在情感上的好处等等。<strong>但在你从零用户起步时，你真的需要告诉他们，他们能从中得到什么</strong>。在我们把定位改成「每小时 20 美元，帮你把家打扫干净」之后，所有人立刻就懂了，我们也就用这种方式把用户请进了门。</p>
+<h2 id="获取第一批用户">获取第一批用户</h2>
+<p>所以，你有了一个 MVP，现在你如何获得最开始的几个用户来试用它？最开始的几个用户显然应该是你身边的人。你和你的联合创始人应该在使用它，你的爸妈应该在使用它，你的朋友和同事应该在使用它。除此之外，你还要获取更多用户反馈。我在这里列了一些显而易见的去处，取决于你卖的是什么，你可以自己挑。比如线上社区——在 Hacker News 上现在有 Show HN，那是个好地方，尤其是当你在给开发者之类的人做工具的时候。本地社区——如果你在做消费类产品，你知道有很多有影响力的本地社区邮件列表，尤其是那些面向家长的。那些地方你可能也想打一下。</p>
+<p><img src="/images/yc-lecture-04/f03.png" alt="" loading="lazy" decoding="async" width="1060" height="696"></p>
+<p>在 Homejoy，我们实际上把这些都试了一遍。我们自己用，那没问题，因为我们就是唯一的清洁工，所以很简单。我们的父母住在密尔沃基，而我们总部在门洛帕克，所以那行不通。朋友和同事大多在旧金山和其他地方，所以也没几个人用。于是我们真的走进了一条死胡同，一开始根本说服不了多少人来用。我们于是做了这样一件事：因为我们在门洛帕克，你们有些人可能知道，卡斯楚街在夏天会有街头集市。所以我们会出去，基本上追着人跑，想办法让他们试着预约一次清洁。几乎所有人都说不要，直到有一天我们利用了天气。那是一个非常炎热潮湿的日子，我们注意到所有人都往食物和饮料区聚拢，尤其是在大热天。</p>
+<p>我们盘算，得挤到人群中间去，于是我们把水瓶冻上，开始免费发放冰镇水瓶。人们就主动朝我们走来了。我觉得我们基本上是靠「愧疚感」让人家预约了清洁。但证据在布丁里——我估计大多数人是因为愧疚才预约的，但之后他们回家并没有取消。嗯，有一部分人取消了，但大多数没有。我想，这不错，我虽然得去给他们打扫房子，但至少我们在这里确实解决了某个问题。</p>
+<p>我知道上一期另一个创业团队，我一时忘了他们名字，但他们卖的是替代快递包装之类的产品。他们会跑到美国邮局，找到那些正要寄东西的人，直接把他们从队伍里拉出来，让他们试用这个产品，帮他们把东西寄出去。<strong>所以你就是得去那些人真的会出现的地方</strong>。你的转化率会非常低，但要从 0 到 1 到 3 到 4，这类事情你可能就得做。</p>
+<h2 id="与用户对话收集反馈">与用户对话，收集反馈</h2>
+<p>所以，既然你已经有用户了，你拿这些用户怎么办？你首先要做的，是确保有一种方式能让人们联系到你。理想情况下应该有一个电话号码；如果你放了一个电话号码，一个好主意是确保你有语音留言，这样你就不必一直去接。但无论如何，让人能给你反馈是好的；而你真正应该做的，是主动去找你的用户、和他们对话。离开你的办公桌，出去做这件事。<strong>这看起来像苦差事，而且它确实就是苦差事，但这里正是你能为产品获得最好反馈的地方，也正是它能教会你哪些功能需要彻底改掉、砍掉，或者哪些功能你需要去构建的地方</strong>。</p>
+<p>一种做法是发调查问卷，在他们用完产品后收集评价。这也可以，但一般来说，人们只有在特别爱你或特别恨你的时候才会回应，<strong>你永远得不到中间那部分人的声音</strong>。要得到中间地带、而不是清一色的极端，真正的做法是去见那个使用你产品的人。我见过有人去见用户，坐在那里，像在实验室里、像在审讯一样戳他们。那不会给你最好的结果。你真正应该做的，是把这变成一场对话，去了解他们，让他们感到舒服。你要让他们达到一个会觉得「我应该对你诚实、帮你改进」的程度。所以我发现，真正带人们出去喝一杯之类的，其实是个很好的方式。我不确定你们是不是都到了能喝酒的年龄，但你可以带他们喝杯咖啡。</p>
+<p>另一件你应该从宏观角度追踪的事，是你整体做得怎么样。最好的方式是追踪客户留存。今天进门的人数，明天、后天以及之后回来的人数。通常随着时间推移，你看的是月度留存——今天进门的人，下个月还在用吗，等等。这个指标的问题在于，收集这些数据要花太长的时间，有时你根本没有一个月、两个月或三个月去等它出来。所以一个好的先行指标，其实是收集评价和评分。比如五星、四星评价，或者收集某种净推荐值（NPS）的概念。你基本上是问他们，从 0 到 10，他们有多大可能把你推荐给一个朋友，然后算出 NPS。</p>
+<p>随着时间的推移，你会看到，随着你构建新功能，评价和留存都在上升。那就说明你做得好。如果它在下降，说明你做得糟。如果它基本不变，那可能意味着你需要出去弄清楚，接下来该构建些什么新东西。</p>
+<h2 id="诚实曲线谁会对你说真话">诚实曲线：谁会对你说真话</h2>
+<p>有一件事你要警惕，那就是诚实曲线。有些人会对你撒谎。这里是你与他们的关系亲疏程度，这里是他们的诚实程度。这是你的妈妈，这些是你朋友的朋友，这里是陌生人。你妈妈会用你的产品，而且无论如何她都会为你骄傲，所以她的诚实度只有这么多。你的朋友会对你相当诚实、给你反馈，因为他们关心你——这是假设这是个免费产品——然后随着你接触到越来越陌生的人，这些人根本不知道你是谁。<strong>那边有些人根本不在乎给你反馈</strong>。所以在获取用户反馈时，要把这一点考虑进去。</p>
+<p><img src="/images/yc-lecture-04/f04.png" alt="" loading="lazy" decoding="async" width="970" height="522"></p>
+<p>假设现在这是一个付费产品。当它是付费产品时，你妈妈就落到这里了。她会直接骗你，告诉你棒极了。但它大概是像这样上升的（画了一条向上的曲线）。你的朋友会支持你、给你正确的反馈；但真正能给你最真实反馈的，是那些非常陌生的人——如果他们真的觉得花出去的钱不值，他们会毫不客气地告诉你。因为那是真金白银出了门。</p>
+<p>换一种说法就是：<strong>如果你能让某人付钱，你就能得到最好的反馈</strong>。这并不是说你应该让人第一次就用你的产品就付费，而是说，如果你要构建的产品最终需要别人为软件或硬件或其他什么付费，那就尽快到达那个可以收费的节点。<strong>因为到了那时，你才能进入更实质的层面——如何把更多付费用户请进门</strong>。</p>
+<h2 id="正式发布前为下一阶段增长而优化">正式发布前：为下一阶段增长而优化</h2>
+<p>你得到了大量反馈，那么在正式发布产品之前，你该做什么？你永远要快速地构建，并且为当前这个增长阶段做优化。此时你可能只有 10 个用户，去为将来可能有 1000 万用户时该有的功能而构建，毫无意义。你应该为下一阶段的增长做优化，也就是从 10 个用户到 100 个用户。你真正需要为那个阶段准备哪些功能，就只管去做。我在构建双边市场时发现，随着规模扩大，流程在很长时间里都非常重要。</p>
+<p><img src="/images/yc-lecture-04/f05.png" alt="" loading="lazy" decoding="async" width="1300" height="700"></p>
+<p>你需要做的，不是试图把一切都自动化、写软件让机器人运行一切。为了真正理解你该构建什么，你应该亲自手动去做。举个例子：当我们开始把清洁专业人员招上我们的平台时，我们会先在电话里问他们一堆问题，然后当面再问一堆。接着他们会去做一次试清洁，如果够好，才会被接入我们的平台。为那么多候选人问这么多问题，我们的通过率只有 3% 到 5%。</p>
+<p>随着时间推移，我们通过数据收集、以及审视所有能在线上表格里问的问题，逐渐了解到：<strong>某些问题能很好地预示一个人在平台上会是好还是坏</strong>。到那时我们才上了在线申请表，他们可以申请，然后我们在面试时再问另外几个问题。如果你试图把事情自动化得太快，就会遇到一个潜在问题——你无法快速迭代、无法调整申请表上的问题之类的事情。</p>
+<p>这里的第三点是：暂时的残缺，远好过永久的瘫痪。我的意思是：在这个阶段，完美毫无意义。当你进入下一个增长阶段时，<strong>你在这个阶段拼命完善的东西，到那时根本不再重要</strong>。所以不要为所有的边缘情况操心，<strong>只管操心你的核心用户是谁这个通用情况</strong>。随着你越做越大，那些边缘情况的数量会随时间增加，到那时你才会想去为它们构建。</p>
+<p>最后要警惕「弗兰肯斯坦式」做法——太好了，你和所有这些用户聊过，他们给了你所有点子，而你第一件想做的事，就是把每一个点子都构建出来，第二天拿去给他们看，让他们更开心。你当然应该听用户反馈，但当有人告诉你要构建一个功能时，你不该立刻去构建它。</p>
+<p><strong>你真正应该做的，是挖到他们要你构建那个功能的根本原因</strong>。他们建议的通常不是最好的主意。他们真正想说的是：我还有另一个问题，要么是你在产品里给我制造出来的，要么就是我如果要付费用这个产品就真的需要解决。所以先把这个弄清楚，再往上堆一堆功能——那些功能只会把真正的问题整个掩盖掉。</p>
+<h2 id="该发布就发布">该发布就发布</h2>
+<p>所以，你有了一个准备发布的产品——有些人在这一点上会继续构建产品，却根本不发布。我认为，那种「隐形模式、把产品完善到没有尽头」的想法，根源在于认为「模仿比创新在时间和金钱上更便宜」。我认为，每个人都应该始终假设：只要你有一个真正好的点子，无论你什么时候发布，都会有人快速跟进你，也会有人拼尽全力去追赶你。没有任何理由因为被害妄想式地担心有人会这样对你，就扣住那些你本可以通过获取大量用户而得到的反馈。</p>
+<p><img src="/images/yc-lecture-04/f06.png" alt="" loading="lazy" decoding="async" width="1186" height="528"></p>
+<p>我不厌其烦地强调这些，是因为这些是我今天在创始人身上看到的问题，也是我自己经历过的。我认为，除非你要构建的东西需要数千万美元才能启动，否则真的没有理由一直等下去不发布产品。</p>
+<p>假设你觉得已经准备好获取大量用户了。那此时你该做什么？我会在接下来的几页里过一遍各种类型的增长，但这里要注意的一点是：在早期，只有你、你的联合创始人和另外几个人在构建，你并不是为了增长而组建一个团队。那将是一两个人，且仅此而已。你真的需要聚焦，而且你会忍不住想同时尝试五种不同策略。</p>
+<p><img src="/images/yc-lecture-04/f07.png" alt="" loading="lazy" decoding="async" width="884" height="476"></p>
+<p>但你真正应该做的，是选一个渠道，整整一周就专注执行它，只盯它一个。<strong>如果有效，就一直执行到它触顶；如果无效，就换下一个</strong>。这样做，你会比「在几周里只花了三分之一时间」更有把握地确认：这个渠道就是错的，你最初的假设就是错的。所以一次只学一个渠道。</p>
+<p>其次，当你一次找到一个有效的渠 道和策略时，要不断对它做迭代。你可以做一个操作手册，交给别人去迭代，但这些渠道总是在变。从 Facebook 广告到 Google 广告，这些分发渠道、你无法掌控的环境，一直在变，你应该不断迭代、不断优化。最后，在初期，当你看到一个渠道失败，就直接扔掉它、换一条路，还有很多别的东西可以试。但随时间推移，要回过头再去看看那个渠道。</p>
+<p>举个例子：在 Homejoy 初期，我们没钱，所以当我们试图买 Google 广告来快速获客时，我们发现，所有这些全国性公司都比我们有钱，他们在一单生意上赚的比我们多得多。所以他们能以比我们高得多的成本获取用户。我们负担不起，只能换一个渠道。但今天我们在每单上赚得更多，某些方面也更强了，所以我们大概应该重新审视购买 Google 广告这个想法。这就是我的意思。</p>
+<p>而这一切的关键是创造力。效果营销，或者说营销和增长，整体上可以非常技术化，但它确实是技术化的，而且你必须要有创造力，因为如果它真的又简单又平淡，那现在所有人就都在增长了。所以你总是要去找那个没人做的、小小的点，然后把它做到极致。</p>
+<h2 id="三种增长类型">三种增长类型</h2>
+<p>所以有三种增长类型：粘性增长、病毒式增长和付费增长。粘性增长，是试图让你的现有用户回来、付更多钱或用得更多。病毒式增长，是人们谈论你。你用一个产品，真的很喜欢，告诉另外十个朋友，他们也喜欢。那就是病毒式增长。第三种是付费增长。如果你银行里恰好有钱，你就能拿出一部分来买增长。</p>
+<p><img src="/images/yc-lecture-04/f08.png" alt="" loading="lazy" decoding="async" width="842" height="598"></p>
+<p>我要贯穿讲的一个核心主题是可持续性。我所说的可持续增长，是指你基本上不是一个漏水的桶。你投进去的钱，能带来好的投资回报。所以粘性增长，就像我说的，是试图让你的现有用户回来、买东西。这里唯一真正重要的，是你提供了一段好的体验。对吧？如果你提供了一段好的体验，人们就会想一直用你。如果你提供了一段让人上瘾的体验，人们就会想一直用你。而衡量这一点、真正审视随着时间推移你做得如何的方式，就是<strong>看 CLV（客户生命周期价值）和留存同期群分析</strong>。</p>
+<p><img src="/images/yc-lecture-04/f09.png" alt="" loading="lazy" decoding="async" width="790" height="592"></p>
+<p>CLV，有些人叫它 LTV，是客户生命周期价值。它基本上是一个客户在一段时间内给你带来的净收入。所以 12 个月的 CLV，就是一个客户在 12 个月里给你带来多少净收入。有时人们也会看一个月、六个月等等。当我说同期群时，你基本上看的是：这是时间，这是回到你这里的用户的百分比。所以在第 0 期，你是 100%。</p>
+<p>同期群是客户细分的另一个名字。比如你可以看女性对男性同期群，或者佐治亚州亚特兰大市对加州萨克拉门托市同期群。最常见的是按月划分。所以同期群等于月份，假设我们这次看的是 2012 年 3 月。那么在 2012 年 3 月，100% 的人在用你的产品。一个月后，可能 50% 的人回来了。</p>
+<p>第二个月，3 月进来的人里，又有多少在两个月后回来？可能会下降。所以随着时间推移，你会得到一条像这样的曲线。总会有一些最初的流失。人们第一次使用后不留下的原因，可能是觉得不值，或者体验很差，或者类似的原因。而随着时间推移，你希望你的曲线能逐渐变平。这些最终成为你的核心客户，也就是那些会长期留在你身边的人。</p>
+<p><img src="/images/yc-lecture-04/f10.png" alt="" loading="lazy" decoding="async" width="1072" height="436"></p>
+<p>假设我们一年之后，你已经构建了一大堆东西。你把同样的东西画成图，希望看到的是一条像这样的曲线：即使在第一个周期，回来的人也超过 50%，而且越来越多的人留在你这里。一条非常糟的留存曲线长这样——第一次使用后他们就恨你恨到再也没人回来。我不知道那算什么生意，显然是个烂生意。我解释不了一个有好留存曲线那样的生意。随着时间推移，当你思考各种策略来抬高这条曲线、让它不断往上走时，你要一直回头看这个分析，看那个策略是否对你在起作用。</p>
+<p><img src="/images/yc-lecture-04/f11.png" alt="" loading="lazy" decoding="async" width="1432" height="780"></p>
+<h2 id="病毒式增长">病毒式增长</h2>
+<p>第二种增长是病毒式增长。和粘性增长一样，你也需要提供一段好的体验。但在此之上，你还需要提供一段真的、真的很好的体验。是什么会让这些人在 Twitter、Facebook 或别的什么平台上大声喊出来，告诉所有朋友、给全家发邮件提起你。你必须真的提供一段好的体验。与此配合的是，你还得有一套真正好的推荐机制本身。</p>
+<p>你有 100 个客户真的想谈论你，那他们要怎么谈论你？</p>
+<p><img src="/images/yc-lecture-04/f12.png" alt="" loading="lazy" decoding="async" width="1194" height="656"></p>
+<p>从这个意义上说，病毒式增长策略全在于构建一段好的体验，但如果有了它，你如何构建一套好的推荐计划？我列了它的三个主要部分。一个是<strong>客户触点</strong>——也就是人们在哪里得知他们可以推荐别人？可能是在他们预约之后，或者注册之后。更好的是，在他们用完产品一段时间、你看到他们高度参与之后，你再把那个链接展示给他们，让他们发出去给所有人。另一个例子是，如果你做的是更像平台型的玩法——在 Homejoy，我们实际上会进到他们家里。所以另一个客户触点，是当清洁专业人员进到家里时，他们可以留一些东西，我们也能在那里向他们展示些东西。你基本上要把客户触点、以及他们用来推荐朋友的那个实际链接，<strong>放在他们高度参与、并且你知道他们正爱着你的那个时间点上</strong>。</p>
+<p>第二是计划机制。我见过最常见的是「10 美元换 10 美元」：你邀请朋友、朋友用了，你得到 10 美元，他们也得到 10 美元。所以你应该尝试不同类型的机制，为你行之有效的那个做优化。可以是 25 换 25，也可以是 10 换 10，可以是任何这类东西。最后，当你的朋友点击你的推荐链接、回到网站时，优化他们注册的转化流程真的很重要。有时你需要用不同的方式向他们推销，或者向上销售「是朋友推荐你用这个的」等等。把这些全都结合起来，你需要从不同维度去试，才能做出一个好的推荐计划。</p>
+<h2 id="付费增长">付费增长</h2>
+<p>最后是付费增长。这里有一些例子。这些是最显而易见的几种，我相信你们还能想出更多。付费增长，是你恰好有钱可以花——你可能有信用卡之类的——但你可以用一些东西去换用户。所以思考付费增长的正确方式是：你愿意冒风险把钱投出去，看能不能得到回报。</p>
+<p>最简单的思考方式是——<strong>你的 CLV，即客户生命周期价值，是否大于你的 CAC。CAC（客户获取成本）的缩写</strong>。举个例子：假设你跑了 12 个月的广告，这个客户对你值 300 美元。每一个广告，你点击它时 CPC（每次点击成本）是不同数额的钱，然后当他们点击你的广告，他们得来到网站、注册或买点什么。</p>
+<p><img src="/images/yc-lecture-04/f14.png" alt="" loading="lazy" decoding="async" width="1186" height="702">
+<img src="/images/yc-lecture-04/f13.png" alt="" loading="lazy" decoding="async" width="914" height="686"></p>
+<p>各种广告的转化率都不一样。CAC 由 CPC 除以转化率算出来。所以你会看到，不同类型广告的获取成本各不相同。要判断一个广告好还是不好，你只需看 CLV 减去 CAC。如果大于零，你就在赚钱。所以你会看到，尽管 CLV 保持不变、转化率时高时低，有些看起来不错的广告，到头来其实没那么好。</p>
+<p>你可以对整个客户群看这个，把所有客户聚合在一起，但更好的方式是按客户细分来拆开看。如果你做一个乡村音乐的双边市场，纳什维尔、田纳西州那人的 CLV，会比捷克斯洛伐克那人的 CLV 大得多。我就假设情况是这样。</p>
+<p>你会希望，当你为这些不同的同期群买广告时，你知道它们之间的差异，而且你不想把一切都混在一起。关于回报和可持续性的最后一点——我认为很多企业在遇到麻烦、变成坏生意时，都是因为他们开始超出自己能力范围地花钱。这很大程度上和你的风险承受度、或者你愿意承担多少风险有关。</p>
+<p>所以当你看这些 CLV 时，假设你在 12 个月后得到一个值 300 美元的客户。第一个月他值 100 美元。如果你等到 12 个月周期结束，他才把另外 200 美元给你。但如果在第一个周期里你实际上为他花了 200 美元，那在 12 个月结束前，你就亏了 100 美元。这时你就开始进入可能不可持续的增长。在 12 个月结束时可能发生点什么，让你实际上没从客户那里拿到那 200 美元，你就会陷入非常糟糕的境地。本质上，到最后你可能会耗尽资金。如果你是用信用卡做这个，你肯定会很快发现自己得宣布破产。</p>
+<p>所以，回报周期非常重要。稳妥的选择是三个月。如果你非常爱冒险，那也许 12 个月更好。超过 12 个月就非常不安全了。</p>
+<h2 id="转型的艺术">转型的艺术</h2>
+<p>转型的艺术——Homejoy 现在的概念，实际上是我们完全构建并尝试执行、试图获取客户的第 13 个点子。所以我收到的很多问题都是：「你怎么才到那个第 13 个点子？你又是怎么决定什么时候该放弃的？」我能给出的最好指引，是看这三个标准：一旦你意识到你无法增长，而且尽管构建了所有这些很棒的功能、和所有这些用户聊过，却没有一个能留住人；或者这门生意的经济账根本说不通——那么，一旦你有了这个认识，你就需要放弃。</p>
+<p><img src="/images/yc-lecture-04/f15.png" alt="" loading="lazy" decoding="async" width="792" height="488"></p>
+<p>我认为最棘手的大概是增长这一条，因为外面有太多故事，讲创始人死守一个点子，三年之后突然就开始增长了。所以这里的诀窍是：你真的应该在起步时就有一个增长计划。以一种乐观但现实的方式，这门生意怎么增长？它可能长这样：第一周你只想要一个用户，第二周你想要也许两个用户，以此类推。然后你可以一直翻倍上去。</p>
+<p>在第一周，你基本上应该尽可能多地构建，以获得那一个用户。然后花一周尽可能多地构建，以获得两个用户。如果<strong>你有一个人们想要的产品</strong>，你应该能靠四处走动、手动找人，相当轻松地维持这条增长曲线。只有当你达到每周 100 个用户时，你才需要这些增长策略开始起作用。我告诉人们的是：通常，如果你在全力执行你的产品、真的非常努力，却连续三四周没有任何增长或负增长，那也许就是考虑转型的时候了。</p>
+<p><img src="/images/yc-lecture-04/f16.png" alt="" loading="lazy" decoding="async" width="1042" height="716"></p>
+<p>也许不是那种完全想出一个新点子的转型，但你很可能从根本上做错了什么，因为在那个早期阶段，一家创业公司本应该一直在增长。这是乐观情况下它看起来的样子，也是我创办 Homejoy 时定下并抛出的增长曲线，但现实中它看起来更像这样。所以你要确保在陷入低谷时不要停。那就是你应该等上两三周的原因。只要你不停下努力，你最终会回到这里，并随着时间看到像这样的趋势。</p>
+<p>我现在可以回答问题了。</p>
+<p><strong>问：</strong> 网上有一个问题：如果你的用户已经有一个他们用得很舒服的产品，你怎么让他们转到你的产品上来？</p>
+<p><strong>答：</strong> 总有一个<strong>转换成本</strong>。我给你举 Homejoy 的例子。我们实际上是在创造一个新市场，因为我们的很多初始用户以前从来没请过清洁工，所以让他们上手相当简单。而很多已经有清洁工的人，真的很信任他们的清洁工。要让他们来用别的东西，可能是世界上最困难的任务。当你在构建东西、试图让人们转向你时，<strong>你真正需要做的，是找到那些你的产品（或你提供的东西）比他们现有解决方案好得多、或者差异化非常明显的关键时刻</strong>。</p>
+<p>举个例子：有人有一个固定的清洁工，也许某天要办个派对，几乎第二天就需要一次清洁。因为 Homejoy 在大多数地区都有「次日可达」的服务，他们就会直接来找 Homejoy、用一下，因为他们知道自己找不着固定的清洁工。一旦他们开始用这个产品，那时他们才开始意识到用 Homejoy 的那些小优势，累积起来就是大优势。比如意识到留现金或用支票真的很烦人，所以能在线上完成所有支付更方便；能按照自己的日程取消或改期也非常方便。</p>
+<p>很多人在构建产品时会说——这 50 个东西都比现有解决方案好——但即使好处加起来超过了转换成本，你其实很难把这些告诉一个用户、让他们把那一大堆小好处聚合起来。与其这样，不如有一两件能让你和别的产品清晰区分开来的东西。</p> <div class="cta-box"> <p>觉得有用？继续阅读</p> <div class="cta-buttons"> <a href="/book" class="cta-btn cta-btn-primary">查看书籍</a>  </div> </div> </article> <!-- 底部导航 --> <nav class="reader-footnav"> <a href="/blog/yc-lecture-03-counterintuitive-parts-and-how-to-have-ideas" class="reader-prev"> <span class="reader-foot-label">← 上一章</span> <span class="reader-foot-title">创业中反直觉的部分，以及如何产生创意</span> </a> <a href="/blog/yc-lecture-05-business-strategy-and-monopoly-theory" class="reader-next"> <span class="reader-foot-label">继续阅读下一章 →</span> <span class="reader-foot-title">商业战略与垄断理论</span> </a> </nav> </main> </div> <!-- 移动端目录抽屉 --> <button class="reader-toc-toggle" id="reader-toc-toggle" aria-label="打开目录">目录</button> <div class="reader-toc-scrim" id="reader-toc-scrim"></div> </div> </main> <footer> <div class="footer-inner"> <p>© 2026 像企业家一样写作</p> <div class="footer-links"> <button type="button" class="footer-link-btn" id="wechat-qr-trigger">网站有bug，“码”上办，联系本人。</button> </div> </div> </footer> <!-- 微信名片二维码浮层 --> <div id="wechat-qr-overlay" class="wechat-qr-overlay" aria-hidden="true"> <div class="wechat-qr-modal"> <button type="button" class="wechat-qr-close" id="wechat-qr-close" aria-label="关闭">✕</button> <img src="/images/wechat-qr.png" alt="微信名片二维码"> <p class="wechat-qr-cap">微信扫一扫，联系本人</p> </div> </div> <script>
+    (function () {
+      var trigger = document.getElementById('wechat-qr-trigger');
+      var overlay = document.getElementById('wechat-qr-overlay');
+      var closeBtn = document.getElementById('wechat-qr-close');
+      if (!trigger || !overlay) return;
+      function openQr() {
+        overlay.classList.add('active');
+        overlay.setAttribute('aria-hidden', 'false');
+      }
+      function closeQr() {
+        overlay.classList.remove('active');
+        overlay.setAttribute('aria-hidden', 'true');
+      }
+      trigger.addEventListener('click', openQr);
+      if (closeBtn) closeBtn.addEventListener('click', closeQr);
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeQr();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeQr();
+      });
+    })();
+  </script>  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    let _searchIndex = null;
+
+    async function loadSearchIndex() {
+      if (_searchIndex) return _searchIndex;
+      try {
+        const resp = await fetch('/search.json?t=' + Date.now());
+        _searchIndex = await resp.json();
+      } catch (e) {
+        console.warn('search.json load failed', e);
+        _searchIndex = { posts: [], books: [] };
+      }
+      return _searchIndex;
+    }
+
+    function openSearch(initialQuery) {
+      const overlay = document.getElementById('search-overlay');
+      const input = document.getElementById('search-input');
+      overlay.classList.add('active');
+      input.value = initialQuery || '';
+      input.focus();
+      renderResults(input.value);
+    }
+
+    function closeSearch() {
+      document.getElementById('search-overlay').classList.remove('active');
+    }
+
+    function getSnippet(text, keyword, radius) {
+      radius = radius || 30;
+      if (!text) return '';
+      const idx = text.toLowerCase().indexOf(keyword.toLowerCase());
+      if (idx === -1) return text.substring(0, 80);
+      const start = Math.max(0, idx - radius);
+      const end = Math.min(text.length, idx + keyword.length + radius);
+      let s = text.substring(start, end);
+      if (start > 0) s = '…' + s;
+      if (end < text.length) s = s + '…';
+      return s;
+    }
+
+    function escapeHtml(s) {
+      return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    function escapeReg(s) {
+      return (s || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+    function highlight(text, q) {
+      const safe = escapeHtml(text);
+      if (!q) return safe;
+      try {
+        const re = new RegExp('(' + escapeReg(q) + ')', 'gi');
+        return safe.replace(re, '<mark>$1</mark>');
+      } catch (e) { return safe; }
+    }
+    function matchScore(item, q) {
+      const t = (item.title || '').toLowerCase();
+      const d = (item.desc || '').toLowerCase();
+      const c = (item.content || '').toLowerCase();
+      if (t.includes(q)) return 3;
+      if (d.includes(q)) return 2;
+      if (c.includes(q)) return 1;
+      return 0;
+    }
+    function resultItemHtml(item, q, href, isBook) {
+      const snippet = getSnippet(item.content || '', q, 40);
+      const contentHit = (item.content || '').toLowerCase().includes(q);
+      const desc = (contentHit && snippet) ? snippet : (item.desc || snippet || '');
+      return '<a href="' + href + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+        '<div class="search-result-title"><span class="search-result-type' + (isBook ? ' book' : '') + '">' + (isBook ? '书籍' : '章节') + '</span>' + highlight(item.title, q) + '</div>' +
+        '<div class="search-result-desc">' + highlight(desc, q) + '</div>' +
+      '</a>';
+    }
+
+    // 专栏条目：外链到微信公众号（不加 ?q=）
+    function columnItemHtml(col, q) {
+      return '<a href="' + escapeHtml(col.url) + '" target="_blank" rel="noopener noreferrer" class="search-result-item">' +
+        '<div class="search-result-title"><span class="search-result-type column">专栏</span>' + highlight(col.title, q) + '</div>' +
+        '<div class="search-result-desc">' + highlight(col.desc || col.columnName, q) + '</div>' +
+      '</a>';
+    }
+
+    function renderResults(query) {
+      const container = document.getElementById('search-results');
+      if (!query.trim()) {
+        container.innerHTML = '<div class="search-empty">输入关键词搜索书籍、章节与专栏…</div>';
+        return;
+      }
+      const q = query.toLowerCase();
+      const index = _searchIndex || { posts: [], books: [], columns: [] };
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      const matchedColumns = (index.columns || []).filter(c =>
+        c.title.toLowerCase().includes(q) ||
+        c.columnName.toLowerCase().includes(q) ||
+        c.rawTitle.toLowerCase().includes(q) ||
+        String(c.issue).includes(q)
+      );
+      if (matchedPosts.length === 0 && matchedBooks.length === 0 && matchedColumns.length === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        return;
+      }
+      const bookBySeries = {};
+      index.books.forEach(b => { if (b.series) bookBySeries[b.series] = b.title; });
+
+      let html = '';
+      // 书籍命中 → 单独作为「书籍」结果
+      if (matchedBooks.length) {
+        matchedBooks.sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        matchedBooks.forEach(b => { html += resultItemHtml(b, q, '/book/' + b.slug, true); });
+      }
+      // 章节按书籍分组
+      const groups = {};
+      matchedPosts.forEach(p => { const k = p.series || ''; (groups[k] = groups[k] || []).push(p); });
+      Object.keys(groups).forEach(series => {
+        const title = bookBySeries[series] || series || '其他';
+        groups[series].sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(title) + '》</div>';
+        groups[series].forEach(p => { html += resultItemHtml(p, q, '/blog/' + p.slug, false); });
+        html += '</div>';
+      });
+      // 专栏按专栏名分组（外链到微信）
+      const colGroups = {};
+      matchedColumns.forEach(c => { const k = c.columnName || ''; (colGroups[k] = colGroups[k] || []).push(c); });
+      Object.keys(colGroups).forEach(name => {
+        colGroups[name].sort((a, b) => a.issue - b.issue);
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(name) + '》· 专栏</div>';
+        colGroups[name].forEach(c => { html += columnItemHtml(c, q); });
+        html += '</div>';
+      });
+      container.innerHTML = html;
+    }
+
+    // ===== Hero 内联搜索（方案 B） =====
+    function closeHeroSearch() {
+      const dropdown = document.getElementById('hero-search-dropdown');
+      if (dropdown) { dropdown.classList.remove('show'); dropdown.innerHTML = ''; }
+    }
+
+    async function renderHeroResults(query) {
+      const container = document.getElementById('hero-search-dropdown');
+      if (!container) return;
+      if (!query.trim()) { closeHeroSearch(); return; }
+      const index = await loadSearchIndex();
+      const q = query.toLowerCase();
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      const matchedColumns = (index.columns || []).filter(c =>
+        c.title.toLowerCase().includes(q) ||
+        c.columnName.toLowerCase().includes(q) ||
+        c.rawTitle.toLowerCase().includes(q) ||
+        String(c.issue).includes(q)
+      );
+      const total = matchedPosts.length + matchedBooks.length + matchedColumns.length;
+      if (total === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        container.classList.add('show');
+        return;
+      }
+      const bookBySeries = {};
+      index.books.forEach(b => { if (b.series) bookBySeries[b.series] = b.title; });
+      let html = '';
+      if (matchedBooks.length) {
+        matchedBooks.slice(0, 2).sort((a, b) => matchScore(b, q) - matchScore(a, q)).forEach(b => {
+          html += resultItemHtml(b, q, '/book/' + b.slug, true);
+        });
+      }
+      const groups = {};
+      matchedPosts.forEach(p => { const k = p.series || ''; (groups[k] = groups[k] || []).push(p); });
+      let shown = 0;
+      Object.keys(groups).slice(0, 3).forEach(series => {
+        const title = bookBySeries[series] || series || '其他';
+        groups[series].sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(title) + '》</div>';
+        groups[series].slice(0, 3).forEach(p => { html += resultItemHtml(p, q, '/blog/' + p.slug, false); shown++; });
+        html += '</div>';
+      });
+      // 专栏命中（外链到微信）
+      const colGroups = {};
+      matchedColumns.forEach(c => { const k = c.columnName || ''; (colGroups[k] = colGroups[k] || []).push(c); });
+      Object.keys(colGroups).slice(0, 2).forEach(name => {
+        colGroups[name].sort((a, b) => a.issue - b.issue);
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(name) + '》· 专栏</div>';
+        colGroups[name].slice(0, 3).forEach(c => { html += columnItemHtml(c, q); shown++; });
+        html += '</div>';
+      });
+      if (total > shown + Math.min(matchedBooks.length, 2)) {
+        html += '<a href="#" class="hero-search-all" data-q="' + encodeURIComponent(q) + '">查看全部 ' + total + ' 条结果 →</a>';
+      }
+      container.innerHTML = html;
+      container.classList.add('show');
+    }
+
+    function initHeroSearch() {
+      const input = document.getElementById('hero-search-input');
+      const dropdown = document.getElementById('hero-search-dropdown');
+      const goBtn = document.getElementById('hero-search-go');
+      if (!input || !dropdown) return;
+
+      let inputTimeout;
+      input.addEventListener('input', () => {
+        clearTimeout(inputTimeout);
+        inputTimeout = setTimeout(() => renderHeroResults(input.value), 120);
+      });
+      input.addEventListener('focus', () => { if (input.value.trim()) renderHeroResults(input.value); });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(input.value); });
+        }
+        if (e.key === 'Escape') { closeHeroSearch(); input.blur(); }
+      });
+
+      if (goBtn) {
+        goBtn.addEventListener('click', () => {
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(input.value); });
+        });
+      }
+
+      dropdown.addEventListener('click', (e) => {
+        const all = e.target.closest('.hero-search-all');
+        if (all) {
+          e.preventDefault();
+          const q = decodeURIComponent(all.getAttribute('data-q') || '');
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(q); });
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.hero-search')) closeHeroSearch();
+      });
+    }
+
+    initHeroSearch();
+
+    // ===== 导航搜索图标（全站兜底入口） =====
+    const navSearchBtn = document.getElementById('nav-search-btn');
+    if (navSearchBtn) {
+      navSearchBtn.addEventListener('click', () => {
+        loadSearchIndex().then(() => openSearch());
+      });
+    }
+
+    document.getElementById('search-close').addEventListener('click', closeSearch);
+    document.getElementById('search-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeSearch();
+    });
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      renderResults(e.target.value);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+    });
+    });
+  </script> <!-- 页面关键词高亮（从搜索结果跳转过来时） --> <script>
+    (function() {
+      function getQueryParam(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name) || '';
+      }
+
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function highlightKeyword(keyword) {
+        if (!keyword.trim()) return;
+        const main = document.querySelector('main');
+        if (!main) return;
+
+        const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, null, false);
+        const nodesToReplace = [];
+        const regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
+
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node.parentElement && node.parentElement.tagName === 'MARK') continue;
+          if (regex.test(node.textContent)) {
+            nodesToReplace.push(node);
+          }
+        }
+
+        let firstMark = null;
+        nodesToReplace.forEach(textNode => {
+          const span = document.createElement('span');
+          span.innerHTML = textNode.textContent.replace(regex, '<mark class="search-highlight">$1</mark>');
+          const marks = span.querySelectorAll('mark');
+          if (marks.length > 0 && !firstMark) {
+            firstMark = marks[0];
+          }
+          const fragment = document.createDocumentFragment();
+          while (span.firstChild) {
+            fragment.appendChild(span.firstChild);
+          }
+          textNode.parentNode.replaceChild(fragment, textNode);
+        });
+
+        if (firstMark) {
+          firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(function() {
+            const marks = main.querySelectorAll('mark.search-highlight');
+            marks.forEach(function(m) {
+              const parent = m.parentNode;
+              parent.replaceChild(document.createTextNode(m.textContent), m);
+              parent.normalize();
+            });
+          }, 6000);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          highlightKeyword(getQueryParam('q'));
+        });
+      } else {
+        highlightKeyword(getQueryParam('q'));
+      }
+    })();
+  </script> <!-- 代码块复制按钮 --> <script>
+    (function() {
+      function initCopyButtons() {
+        document.querySelectorAll('.prose pre').forEach(function(pre) {
+          if (pre.querySelector('.copy-btn')) return;
+          var btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.textContent = '复制';
+          btn.setAttribute('aria-label', '复制代码');
+          btn.addEventListener('click', function() {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+              btn.textContent = '已复制';
+              btn.classList.add('copied');
+              setTimeout(function() {
+                btn.textContent = '复制';
+                btn.classList.remove('copied');
+              }, 2000);
+            }).catch(function() {
+              btn.textContent = '失败';
+              setTimeout(function() { btn.textContent = '复制'; }, 2000);
+            });
+          });
+          pre.style.position = 'relative';
+          pre.appendChild(btn);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCopyButtons);
+      } else {
+        initCopyButtons();
+      }
+    })();
+  </script> <!-- 选中文字：复制 / 生成金句卡片 --> <div class="sel-bubble" id="sel-bubble"> <span class="sb-act sb-copy" id="sbCopy">复制</span> <span class="sb-sep"></span> <span class="sb-act sb-card" id="sbCard">金句卡片</span> </div> <!-- 金句卡片弹层 --> <div class="qc-overlay" id="qcOverlay"> <div class="qc-modal"> <button class="qc-close" id="qcClose" aria-label="关闭">×</button> <div class="qc-stage"> <div class="qc a" id="qcCard"> <div class="qc-mark">“</div> <div class="qc-quote" id="qcQuote">先写完，再改清楚。</div> <div class="qc-foot"> <img class="qc-logo" src="/images/logo-180x180.png" alt="logo"> <div class="qc-src"> <div class="qc-site" id="qcSite">像企业家一样写作</div> <div class="qc-from" id="qcFrom">—— 选自正文</div> <div class="qc-url">gusangciren.github.io</div> </div> </div> </div> <div class="qc-tip">样式会记住你上次的选择</div> </div> <div class="qc-side"> <h3>金句卡片</h3> <p class="qc-sub">选好样式后下载或复制图片</p> <div class="qc-styles" id="qcStyles"> <div class="qc-style active" data-s="b"><div class="sw b"></div><div><div class="t">A · 深色品牌</div><div class="d">信息流吸睛</div></div></div> <div class="qc-style" data-s="a"><div class="sw a"></div><div><div class="t">B · 极简暖白</div><div class="d">站点默认，最协调</div></div></div> <div class="qc-style" data-s="c"><div class="sw c"></div><div><div class="t">C · 杂志书页</div><div class="d">书卷气</div></div></div> </div> <div class="qc-actions"> <div class="qc-act primary" data-act="copyimg">复制图片</div> <div class="qc-act" data-act="download">下载图片</div> </div> </div> </div> </div> <!-- 交互增强：阅读进度条 / 暗色模式 / 划词复制 / 金句卡片 --> <script>
+    (function () {
+      // ===== 划词气泡：复制 / 金句卡片 =====
+      var bubble = document.getElementById('sel-bubble');
+      var sbCopy = document.getElementById('sbCopy');
+      var sbCard = document.getElementById('sbCard');
+      var overlay = document.getElementById('qcOverlay');
+      var card = document.getElementById('qcCard');
+      var qQuote = document.getElementById('qcQuote');
+      var qSite = document.getElementById('qcSite');
+      var qFrom = document.getElementById('qcFrom');
+      var stylesBox = document.getElementById('qcStyles');
+      var lastText = '';
+
+      function hideBubble() { bubble.classList.remove('show'); }
+      function getSource() {
+        var h = document.querySelector('.article-header h1, .book-details h1, .prose h1, .community-hero h1');
+        var name = h ? h.textContent.trim() : document.title.trim();
+        try {
+          // 去掉标题尾部与站名重复的「— 像企业家一样写作」
+          name = name.replace(new RegExp('\\s*[—–-]\\s*' + getSite() + '\\s*$'), '');
+        } catch (e) {}
+        return name;
+      }
+      function getSite() {
+        var m = document.querySelector('meta[property="og:site_name"]');
+        return m ? m.content : '像企业家一样写作';
+      }
+
+      if (bubble) {
+        var SKIP = 'input,textarea,pre,code,.search-overlay,.wechat-qr-overlay,.rdl-ov,button,a,img';
+        document.addEventListener('mouseup', function () {
+          setTimeout(function () {
+            var sel = window.getSelection();
+            if (!sel || sel.isCollapsed) { hideBubble(); return; }
+            var text = sel.toString().trim();
+            var node = sel.anchorNode;
+            if (text.length < 2 || !node || !node.parentElement || node.parentElement.closest(SKIP)) { hideBubble(); return; }
+            var rect = sel.getRangeAt(0).getBoundingClientRect();
+            bubble.style.left = (rect.left + rect.width / 2) + 'px';
+            bubble.style.top = (rect.top - 6) + 'px';
+            lastText = text;
+            bubble.classList.add('show');
+          }, 10);
+        });
+        document.addEventListener('mousedown', function (e) { if (!bubble.contains(e.target)) hideBubble(); });
+        window.addEventListener('scroll', hideBubble, { passive: true });
+
+        sbCopy.addEventListener('click', function (ev) {
+          ev.stopPropagation();
+          var t = lastText;
+          function ok() {
+            sbCopy.textContent = '已复制 ✓'; sbCopy.classList.add('copied');
+            setTimeout(function () { sbCopy.textContent = '复制'; sbCopy.classList.remove('copied'); hideBubble(); }, 1200);
+          }
+          function fb() {
+            var i = document.createElement('textarea'); i.value = t; document.body.appendChild(i); i.select();
+            try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(i); ok();
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).then(ok).catch(fb); }
+          else { fb(); }
+        });
+        sbCard.addEventListener('click', function (ev) { ev.stopPropagation(); openCard(lastText); });
+      }
+
+      function openCard(text) {
+        qQuote.textContent = text || '先写完，再改清楚。';
+        var len = qQuote.textContent.length;
+        qQuote.style.fontSize = (len > 100 ? 18 : len > 60 ? 20 : 22) + 'px';
+        qSite.textContent = getSite();
+        qFrom.textContent = '—— 选自《' + getSource() + '》';
+        var saved = 'b';
+        try { saved = localStorage.getItem('qcStyle') || 'b'; } catch (e) {}
+        setStyle(saved);
+        overlay.classList.add('show');
+      }
+      var currentStyle = 'a';
+      function setStyle(s) {
+        currentStyle = s;
+        card.className = 'qc ' + s;
+        document.querySelectorAll('.qc-style').forEach(function (o) { o.classList.toggle('active', o.dataset.s === s); });
+        try { localStorage.setItem('qcStyle', s); } catch (e) {}
+      }
+      stylesBox.addEventListener('click', function (e) {
+        var o = e.target.closest('.qc-style'); if (o) setStyle(o.dataset.s);
+      });
+      document.getElementById('qcClose').addEventListener('click', function () { overlay.classList.remove('show'); });
+      overlay.addEventListener('click', function (e) { if (e.target === overlay) overlay.classList.remove('show'); });
+
+      // ===== 导出为图片（html2canvas） =====
+      function ensureH2C(cb) {
+        if (window.html2canvas) { cb(); return; }
+        var s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+        s.onload = cb;
+        s.onerror = function () { alert('金句卡片图片组件加载失败，请检查网络后重试'); };
+        document.head.appendChild(s);
+      }
+      // 每套样式的底色：填满圆角外区域，避免相册把透明像素渲染成黑角
+      var QC_BG = { a: '#ffffff', b: '#1c1917', c: '#f3ede1' };
+      var fontCssPromise = null;
+      function getFontCss() {
+        if (!fontCssPromise) {
+          fontCssPromise = fetch('https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-webfont/1.7.0/lxgwwenkai-regular.css')
+            .then(function (r) { return r.ok ? r.text() : ''; })
+            .catch(function () { return ''; });
+        }
+        return fontCssPromise;
+      }
+      function capture() {
+        return document.fonts.ready.then(function () {
+          return getFontCss().then(function (css) {
+            return html2canvas(card, {
+              scale: 2,
+              backgroundColor: QC_BG[currentStyle] || '#ffffff',
+              useCORS: true,
+              logging: false,
+              onclone: function (doc) {
+                // 导出环境可能没等到文楷加载完，主动注入字体 CSS 兜底；
+                // 即使仍回退，整卡统一衬线栈（楷体），上下字体也一致
+                if (css) {
+                  var st = doc.createElement('style');
+                  st.textContent = css;
+                  doc.head.appendChild(st);
+                }
+              }
+            });
+          });
+        });
+      }
+      function flash(btn, txt) { var o = btn.textContent; btn.textContent = txt; setTimeout(function () { btn.textContent = o; }, 1400); }
+
+      document.querySelectorAll('.qc-act').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var act = btn.dataset.act;
+          ensureH2C(function () {
+            capture().then(function (canvas) {
+              function doDownload() {
+                canvas.toBlob(function (blob) {
+                  var url = URL.createObjectURL(blob);
+                  var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png';
+                  a.href = url; document.body.appendChild(a); a.click(); a.remove();
+                  setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+                });
+              }
+              if (act === 'download') {
+                doDownload(); flash(btn, '已下载 ✓');
+              } else if (act === 'copyimg') {
+                canvas.toBlob(function (blob) {
+                  if (blob && navigator.clipboard && window.ClipboardItem) {
+                    navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
+                      .then(function () { flash(btn, '已复制 ✓'); })
+                      .catch(function () { doDownload(); flash(btn, '已保存 ✓'); });
+                  } else {
+                    doDownload(); flash(btn, '已保存 ✓');
+                  }
+                });
+              }
+            });
+          });
+        });
+      });
+    })();
+  </script> </body></html>  <script type="module">(function(){const n=document.getElementById("reading-progress"),r=document.getElementById("reader-mini"),d=document.getElementById("mini-pct"),i=document.querySelector(".reader-hero");function c(){const e=window.scrollY||document.documentElement.scrollTop,t=document.documentElement.scrollHeight-document.documentElement.clientHeight,o=t>0?Math.min(100,Math.max(0,e/t*100)):0,u=Math.round(o);n&&(n.style.width=o+"%",n.classList.toggle("show",e>50)),d&&(d.textContent=u+"%"),r&&i&&r.classList.toggle("show",e>i.offsetHeight+20)}window.addEventListener("scroll",c,{passive:!0}),window.addEventListener("resize",c),c();const s=document.getElementById("reader-toc-toggle"),l=document.getElementById("reader-toc-scrim"),m=document.getElementById("reader-toc");function a(){document.body.classList.remove("toc-open")}s&&s.addEventListener("click",()=>document.body.classList.toggle("toc-open")),l&&l.addEventListener("click",a),m&&m.querySelectorAll("a").forEach(e=>e.addEventListener("click",a)),document.addEventListener("keydown",e=>{if(e.target&&/^(INPUT|TEXTAREA)$/.test(e.target.tagName))return;const t=document.querySelector(".reader-prev[href]"),o=document.querySelector(".reader-next[href]");e.key==="ArrowLeft"&&t&&(window.location.href=t.getAttribute("href")),e.key==="ArrowRight"&&o&&(window.location.href=o.getAttribute("href"))})})();</script> <script type="module">(function(){var o=[1,1.25,1.5,2];function l(t){t=Math.max(0,Math.round(t));var a=Math.floor(t/60),e=t%60;return(a<10?"0":"")+a+":"+(e<10?"0":"")+e}function d(t){return"audio:"+t}document.querySelectorAll(".aplayer").forEach(function(t){var a=t.getAttribute("data-audio");if(!a)return;var e=t.querySelector("audio"),E=t.querySelector(".aplayer-play"),s=t.querySelector(".aplayer-bar"),m=t.querySelector(".aplayer-bar i"),v=t.querySelector(".aplayer-now"),y=t.querySelector(".aplayer-rate"),f=t.querySelector(".aplayer-label"),i=0,p=!1;e.src=a,e.addEventListener("loadedmetadata",function(){if(!p&&isFinite(e.duration)&&e.duration>0){p=!0,f.textContent=f.textContent+" · "+l(e.duration);try{var n=parseFloat(localStorage.getItem(d(a)));!isNaN(n)&&n>1&&n<e.duration-2&&(e.currentTime=n,v.textContent=l(n),m.style.width=n/e.duration*100+"%")}catch{}}});function u(){var n=e.duration||0,r=n?e.currentTime/n:0;m.style.width=Math.min(100,r*100)+"%",v.textContent=l(e.currentTime),t.classList.toggle("playing",!e.paused)}E.addEventListener("click",function(){e.paused?(e.currentTime>=(e.duration||0)-.3&&(e.currentTime=0),e.play().catch(function(){})):e.pause()}),e.addEventListener("play",u),e.addEventListener("pause",u),e.addEventListener("timeupdate",function(){u();try{localStorage.setItem(d(a),e.currentTime)}catch{}}),e.addEventListener("ended",function(){try{localStorage.removeItem(d(a))}catch{}m.style.width="0%",v.textContent="00:00",t.classList.remove("playing")}),y.addEventListener("click",function(){i=(i+1)%o.length,e.playbackRate=o[i],y.textContent="倍速 "+o[i]+"x"});function h(n){var r=s.getBoundingClientRect(),c=Math.min(1,Math.max(0,(n.clientX-r.left)/r.width));e.duration&&(e.currentTime=c*e.duration,u())}s.addEventListener("mousedown",function(n){h(n);function r(L){h(L)}function c(){document.removeEventListener("mousemove",r),document.removeEventListener("mouseup",c)}document.addEventListener("mousemove",r),document.addEventListener("mouseup",c)})})})();</script>

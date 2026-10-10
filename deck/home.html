@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>图卡演示</title>
+<link rel="stylesheet" href="/fonts/fonts.css">
+<link rel="stylesheet" href="home.css">
+</head>
+<body>
+
+<header>
+  <div class="brand">图卡演示 <span class="en">Image Deck</span></div>
+  <div class="spacer"></div>
+  <div class="tools">
+    <span class="count" id="count"></span>
+    <button class="btn ghost" id="btnClear">清空</button>
+    <button class="btn primary big" id="btnPlay"><span class="ico">⛶</span>开始全屏演示</button>
+  </div>
+</header>
+
+<main id="main">
+  <div class="empty" id="empty">
+    <div class="big">一屏一张图，像 PPT 一样讲</div>
+    <div class="sub">什么格式、什么尺寸、什么分辨率都行，顺序随时调</div>
+    <div class="dropzone" id="drop">
+      <div class="lead">把图片、PDF、Word、Excel 拖进来</div>
+      <div class="tip">JPG / PNG / WebP / GIF / SVG、PDF、Word(.docx)、Excel(.xlsx/.xls/.csv)、TXT、HTML(.html/.htm) — 一次可拖多个</div>      <div class="row">
+        <button class="btn" id="btnPick">选择文件</button>
+        <button class="btn primary" id="btnDemo">我看看演示效果</button>
+      </div>
+    </div>
+    <div class="paste-hint">或者直接按 <b>⌘ / Ctrl + V</b> 粘贴<b>截图</b>或<b>网址</b>——粘网址会在演示时于画面里直接打开那个网页</div>
+  </div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<footer>
+  <span><kbd>⌘/Ctrl + V</kbd>粘贴图片 / 网址 / 文件</span>
+  <span><kbd>拖拽</kbd>调整顺序</span>
+  <span><kbd>双击</kbd>从这一张开始演示</span>
+  <span><kbd>Delete</kbd>删除选中的图</span>
+  <span><kbd>Enter</kbd>开始演示</span>
+</footer>
+
+<div id="veil"><div class="box">松手，加入演示</div></div>
+
+<div id="crop" class="crop-layer">
+  <div class="crop-box">
+    <div class="crop-head">
+      <div class="crop-title">裁剪这张图</div>
+      <div class="spacer"></div>
+      <div class="crop-ratios" id="cropRatios">
+        <button data-r="1:1">1:1</button>
+        <button data-r="3:4" class="on">3:4</button>
+        <button data-r="4:3">4:3</button>
+        <button data-r="16:9">16:9</button>
+      </div>
+      <button class="btn ghost" id="cropCancel">取消</button>
+      <button class="btn primary" id="cropApply">应用裁剪</button>
+    </div>
+    <div class="crop-stage" id="cropStage">
+      <img id="cropImg" alt="" draggable="false">
+      <div class="crop-sel" id="cropSel"><span class="grip" id="cropGrip"></span></div>
+    </div>
+    <div class="crop-foot">拖动选框换位置，拖右下角圆点调大小，比例锁定不变</div>
+  </div>
+</div>
+
+
+<input type="file" id="file"
+  accept="image/*,.pdf,.docx,.doc,.xlsx,.xls,.csv,.txt,.md,.html,.htm" multiple hidden>
+
+<script src="lib/store.js"></script>
+<script src="lib/mammoth.browser.min.js"></script>
+<script src="lib/xlsx.full.min.js"></script>
+<script src="home.js"></script>
+</body>
+</html>
