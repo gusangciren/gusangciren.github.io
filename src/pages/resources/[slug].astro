@@ -1,0 +1,296 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { bookRecs, siteRecs, tutorials, projects, pdfs, wallpapers } from '../../data/resources';
+
+export function getStaticPaths() {
+  // 注意：getStaticPaths 被提升执行，无法访问 frontmatter 顶层的 const，
+  // 所以 TABS 必须在这里定义，并通过 props 传给模板。
+  const TABS = [
+    { slug: 'books', label: '推荐书单', sub: '写作、创业、增长，真正改变过我的书' },
+    { slug: 'sites', label: '推荐网站 / 工具', sub: '日常在用的网站与效率工具' },
+    { slug: 'tutorials', label: '开源教程', sub: '我把学过的方法整理成可复用的教程' },
+    { slug: 'projects', label: '我的开源作品', sub: 'GitHub 上的 skill 与自制小软件' },
+    { slug: 'downloads', label: '素材下载', sub: '书单原文 PDF 与壁纸，免费取用' },
+  ];
+  return TABS.map((t) => ({ params: { slug: t.slug }, props: { tab: t, tabs: TABS } }));
+}
+
+const { tab, tabs } = Astro.props;
+const isDownloads = tab.slug === 'downloads';
+
+// 各分类页未完工时的占位文案（给提前点进来的读者一点惊喜）
+const WIPS: Record<string, { t: string; p: string }> = {
+  books: { t: '正在装修', p: '书正一本本从我的书架上往下搬，搬完我第一个告诉你。这会儿，不妨先去读读已经上架的《闭环》。' },
+  sites: { t: '名单筛选中', p: '我每天在用的工具不少，但能上这份名单的，得是真朋友。面试还在进行，请稍候。' },
+  tutorials: { t: '写作台上', p: '教程正在排队。写完一篇上架一篇，绝不注水。' },
+  projects: { t: '还在长个子', p: '有几样小东西还在仓库里安静长大。等它们能见人了，第一时间带来见你。' },
+};
+const wip = WIPS[tab.slug];
+---
+
+<BaseLayout title={`${tab.label} — 像企业家一样写作`}>
+  <div class="resources-page">
+    <nav class="rp-tabs" aria-label="资源分类">
+      {tabs.filter((t) => t.slug !== 'downloads').map((t) => (
+        <a class:list={["rp-tab", { "rp-tab-on": t.slug === tab.slug }]} href={`/resources/${t.slug}/`}>{t.label}</a>
+      ))}
+    </nav>
+
+    <h1 class="rp-h1">{tab.label}</h1>
+    <p class="rp-sub">{tab.sub}</p>
+
+    {tab.slug === 'books' && (
+      <div class="rp-grid2 rp-sec-body">
+        {bookRecs.map((b) => (
+          <a class="rp-rec" href={b.url || '#'}>
+            <div class="rp-rec-t">{b.title}</div>
+            <div class="rp-rec-d">{b.reason}</div>
+          </a>
+        ))}
+      </div>
+    )}
+
+    {tab.slug === 'sites' && (
+      <div class="rp-list rp-sec-body">
+        {siteRecs.map((s) => (
+          <a class="rp-row" href={s.url || '#'}>
+            <span class="rp-row-nm">{s.name}</span>
+            <span class="rp-row-why">{s.why}</span>
+            <span class="rp-go">↗</span>
+          </a>
+        ))}
+      </div>
+    )}
+
+    {tab.slug === 'tutorials' && (
+      <div class="rp-sec-body">
+        {tutorials.map((t) => (
+          <a class="rp-feat" href={t.url || '#'}>
+            <span class="rp-feat-ic">★</span>
+            <span class="rp-feat-body">
+              <span class="rp-feat-t">{t.name}</span>
+              <span class="rp-feat-d">{t.desc}</span>
+            </span>
+            <span class="rp-feat-lk">查看仓库 ↗</span>
+          </a>
+        ))}
+      </div>
+    )}
+
+    {tab.slug === 'projects' && (
+      <div class="rp-grid2 rp-sec-body">
+        {projects.map((p) => (
+          <a class="rp-proj" href={p.url || '#'}>
+            <div class="rp-proj-t">{p.name}</div>
+            <div class="rp-proj-d">{p.desc}</div>
+            {p.stars && <div class="rp-proj-star">★ {p.stars}</div>}
+          </a>
+        ))}
+      </div>
+    )}
+
+    {isDownloads && (
+      <div class="rp-sec-body">
+        <h2 class="rp-group-h">书单原文 PDF</h2>
+        <div class="rp-pdf-grid">
+          {pdfs.map((pdf, i) => (
+            <button class="rp-pdf" data-pdf={pdf.file} data-index={i} type="button">
+              <div class="rp-pdf-cover"><span>{pdf.icon}</span></div>
+              <div class="rp-pdf-body">
+                <div class="rp-pdf-name">{pdf.name}</div>
+                <div class="rp-pdf-meta">{pdf.author} · PDF</div>
+                <span class="rp-dl-btn">预览 / 下载 →</span>
+              </div>
+            </button>
+          ))}
+        </div>
+
+        <h2 class="rp-group-h">壁纸</h2>
+        <div class="rp-wp-grid">
+          {wallpapers.map((wp) => (
+            <button class="rp-wp" data-src={wp.file} data-name={wp.name} type="button">
+              <img src={wp.file} alt={wp.name} loading="lazy" />
+              <div class="rp-wp-ov"><span>{wp.name} · 点击预览</span></div>
+            </button>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {wip && (
+      <div class="rp-wip">
+        <div class="rp-wip-t">✎ {wip.t}</div>
+        <p class="rp-wip-p">{wip.p}</p>
+        <p class="rp-wip-ps">P.S. 你来得比内容还早——这本身就是一种运气。</p>
+      </div>
+    )}
+
+    <p class="rp-note">更多资源持续整理中，欢迎关注公众号「种一个梦」获取最新更新</p>
+  </div>
+
+  {isDownloads && (
+    <Fragment>
+      <!-- 壁纸预览弹层 -->
+      <div id="wallpaper-lightbox" class="rp-lightbox" role="dialog" aria-modal="true" aria-label="壁纸预览">
+        <button id="lightbox-close" class="rp-lightbox-close" aria-label="关闭">✕</button>
+        <img id="lightbox-img" src="" alt="" />
+        <a id="lightbox-download" href="" class="rp-lightbox-dl" download>↓ 下载原图</a>
+      </div>
+
+      <!-- PDF 预览弹层 -->
+      <div id="pdf-overlay" class="rp-pdf-overlay" role="dialog" aria-modal="true" aria-label="PDF 预览">
+        <div class="rp-pdf-modal">
+          <div class="rp-pdf-toolbar">
+            <span class="rp-pdf-name" id="pdf-name"></span>
+            <div class="rp-pdf-actions">
+              <a id="pdf-download-btn" href="" class="rp-pdf-dl-btn" download>↓ 下载</a>
+              <button id="pdf-close" class="rp-pdf-close-btn" aria-label="关闭">✕</button>
+            </div>
+          </div>
+          <iframe id="pdf-frame" src="" width="100%" height="100%"></iframe>
+        </div>
+      </div>
+
+      <script is:inline>
+        (function () {
+          var lightbox = document.getElementById('wallpaper-lightbox');
+          if (!lightbox) return;
+          var lightboxImg = document.getElementById('lightbox-img');
+          var lightboxDl = document.getElementById('lightbox-download');
+          var closeBtn = document.getElementById('lightbox-close');
+          document.querySelectorAll('.rp-wp').forEach(function (card) {
+            card.addEventListener('click', function () {
+              var src = this.getAttribute('data-src');
+              var name = this.getAttribute('data-name');
+              lightboxImg.src = src; lightboxImg.alt = name;
+              lightboxDl.href = src; lightboxDl.download = name;
+              lightbox.classList.add('show'); document.body.style.overflow = 'hidden';
+            });
+          });
+          function closeLightbox() { lightbox.classList.remove('show'); lightboxImg.src = ''; document.body.style.overflow = ''; }
+          closeBtn.addEventListener('click', closeLightbox);
+          lightbox.addEventListener('click', function (e) { if (e.target === lightbox) closeLightbox(); });
+          document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && lightbox.classList.contains('show')) closeLightbox(); });
+        })();
+        (function () {
+          var overlay = document.getElementById('pdf-overlay');
+          if (!overlay) return;
+          var frame = document.getElementById('pdf-frame');
+          var nameEl = document.getElementById('pdf-name');
+          var dlBtn = document.getElementById('pdf-download-btn');
+          var closeBtn = document.getElementById('pdf-close');
+          document.querySelectorAll('.rp-pdf').forEach(function (card) {
+            card.addEventListener('click', function () {
+              var pdfFile = this.getAttribute('data-pdf');
+              var title = this.querySelector('.rp-pdf-name').textContent;
+              nameEl.textContent = title; dlBtn.href = pdfFile; frame.src = pdfFile;
+              overlay.classList.add('show'); document.body.style.overflow = 'hidden';
+            });
+          });
+          function closePdf() { overlay.classList.remove('show'); frame.src = ''; document.body.style.overflow = ''; }
+          closeBtn.addEventListener('click', closePdf);
+          overlay.addEventListener('click', function (e) { if (e.target === overlay) closePdf(); });
+          document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && overlay.classList.contains('show')) closePdf(); });
+        })();
+      </script>
+    </Fragment>
+  )}
+</BaseLayout>
+
+<style is:global>
+  .resources-page { max-width: 960px; margin: 0 auto; padding: 100px 24px 80px; }
+
+  /* 分类标签导航：一个标签 = 一个页面 */
+  .rp-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 30px; }
+  .rp-tab { font-size: 13px; color: var(--color-text-secondary, #666); text-decoration: none; border: 1px solid var(--color-border, #e5e5e5); border-radius: 999px; padding: 6px 16px; transition: all .2s; }
+  .rp-tab:hover { border-color: var(--color-accent, #f55000); color: var(--color-accent, #f55000); }
+  .rp-tab-on { background: var(--color-accent, #f55000); border-color: var(--color-accent, #f55000); color: #fff; }
+  .rp-tab-on:hover { color: #fff; }
+
+  .rp-h1 { font-family: var(--font-serif, Georgia, serif); font-size: 2rem; font-weight: 700; color: var(--color-text, #1a1a1a); margin: 0 0 6px; }
+  .rp-sub { color: var(--color-text-secondary, #888); font-size: 0.95rem; margin: 0 0 8px; }
+  .rp-sec-body { margin-top: 28px; }
+  .rp-group-h { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.08em; color: var(--color-accent, #f55000); margin: 0 0 16px; }
+  .rp-group-h + .rp-pdf-grid, .rp-group-h + .rp-wp-grid { margin-bottom: 28px; }
+
+  .rp-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .rp-rec { background: var(--color-card-bg, #fff); border: 1px solid var(--color-border, #e5e5e5); border-radius: 12px; padding: 16px 18px; text-decoration: none; color: inherit; transition: all .2s; }
+  .rp-rec:hover { border-color: var(--color-accent, #f55000); box-shadow: 0 8px 30px rgba(245,80,0,.1); transform: translateY(-3px); }
+  .rp-rec-t { font-size: 0.95rem; font-weight: 700; color: var(--color-text, #1a1a1a); }
+  .rp-rec-d { font-size: 0.82rem; color: var(--color-text-secondary, #888); margin-top: 6px; line-height: 1.5; }
+
+  .rp-list .rp-row { display: flex; align-items: center; gap: 14px; background: #faf9f7; border: 1px solid var(--color-border, #e5e5e5); border-radius: 8px; padding: 12px 16px; margin-bottom: 10px; text-decoration: none; color: inherit; transition: border-color .2s; }
+  .rp-list .rp-row:hover { border-color: var(--color-accent, #f55000); }
+  .rp-row-nm { font-size: 0.9rem; color: var(--color-text, #1a1a1a); }
+  .rp-row-why { font-size: 0.78rem; color: var(--color-text-secondary, #888); margin-left: auto; }
+  .rp-go { color: var(--color-accent, #f55000); text-decoration: none; }
+
+  .rp-feat { display: flex; align-items: center; gap: 16px; background: var(--color-card-bg, #fff); border: 1px solid var(--color-border, #e5e5e5); border-radius: 12px; padding: 18px 20px; text-decoration: none; color: inherit; transition: all .2s; margin-bottom: 12px; }
+  .rp-feat:hover { border-color: var(--color-accent, #f55000); }
+  .rp-feat-ic { width: 44px; height: 44px; flex: none; border-radius: 10px; background: #faf9f7; border: 1px solid var(--color-border, #e5e5e5); display: flex; align-items: center; justify-content: center; color: #e8a04c; font-size: 18px; }
+  .rp-feat-body { display: flex; flex-direction: column; }
+  .rp-feat-t { font-size: 0.95rem; font-weight: 700; color: var(--color-text, #1a1a1a); }
+  .rp-feat-d { font-size: 0.78rem; color: var(--color-text-secondary, #888); margin-top: 4px; }
+  .rp-feat-lk { margin-left: auto; color: var(--color-accent, #f55000); font-size: 0.82rem; text-decoration: none; white-space: nowrap; }
+
+  .rp-proj { background: var(--color-card-bg, #fff); border: 1px solid var(--color-border, #e5e5e5); border-radius: 12px; padding: 16px 18px; text-decoration: none; color: inherit; transition: all .2s; }
+  .rp-proj:hover { border-color: var(--color-accent, #f55000); transform: translateY(-3px); }
+  .rp-proj-t { font-size: 0.95rem; font-weight: 700; color: var(--color-text, #1a1a1a); }
+  .rp-proj-d { font-size: 0.82rem; color: var(--color-text-secondary, #888); margin-top: 6px; line-height: 1.5; }
+  .rp-proj-star { font-size: 0.78rem; color: #e8a04c; margin-top: 8px; }
+
+  .rp-pdf-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+  .rp-pdf { background: var(--color-card-bg, #fff); border: 1px solid var(--color-border, #e5e5e5); border-radius: 12px; overflow: hidden; cursor: pointer; text-align: left; transition: all .2s; color: inherit; }
+  .rp-pdf:hover { border-color: var(--color-accent, #f55000); box-shadow: 0 8px 32px rgba(245,80,0,.1); transform: translateY(-3px); }
+  .rp-pdf-cover { height: 160px; background: linear-gradient(135deg, var(--color-accent, #f55000) 0%, #ff8c00 100%); display: flex; align-items: center; justify-content: center; }
+  .rp-pdf-cover span { font-size: 2.5rem; }
+  .rp-pdf-body { padding: 14px 16px; }
+  .rp-pdf-name { font-size: 0.88rem; font-weight: 600; color: var(--color-text, #1a1a1a); }
+  .rp-pdf-meta { font-size: 0.75rem; color: #aaa; margin-top: 2px; }
+  .rp-dl-btn { display: inline-block; margin-top: 10px; font-size: 0.78rem; font-weight: 600; color: var(--color-accent, #f55000); border: 1.5px solid var(--color-accent, #f55000); border-radius: 20px; padding: 4px 14px; }
+  .rp-pdf:hover .rp-dl-btn { background: var(--color-accent, #f55000); color: #fff; }
+
+  .rp-wp-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .rp-wp { border-radius: 10px; overflow: hidden; cursor: pointer; position: relative; aspect-ratio: 9/16; background: none; border: none; padding: 0; }
+  .rp-wp img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s; }
+  .rp-wp:hover img { transform: scale(1.05); }
+  .rp-wp-ov { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.6) 0%, transparent 50%); display: flex; align-items: flex-end; padding: 12px; opacity: 0; transition: opacity .2s; }
+  .rp-wp:hover .rp-wp-ov { opacity: 1; }
+  .rp-wp-ov span { color: #fff; font-size: 0.75rem; background: rgba(255,255,255,.2); backdrop-filter: blur(8px); border-radius: 20px; padding: 4px 12px; }
+
+  .rp-note { text-align: center; color: var(--color-text-secondary, #888); font-size: 0.85rem; margin-top: 48px; }
+
+  /* 未完工占位块 */
+  .rp-wip { margin-top: 32px; border: 1.5px dashed var(--color-border, #e5e5e5); border-radius: 14px; padding: 36px 28px; text-align: center; background: #fffdfa; }
+  .rp-wip-t { font-family: var(--font-serif, Georgia, serif); font-size: 1.05rem; font-weight: 700; color: var(--color-accent, #f55000); margin-bottom: 10px; letter-spacing: .06em; }
+  .rp-wip-p { font-size: 0.92rem; color: var(--color-text-secondary, #666); line-height: 1.9; margin: 0; }
+  .rp-wip-ps { margin-top: 12px; font-size: 0.8rem; color: #b3ada2; }
+
+  /* 弹层 */
+  .rp-lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.92); z-index: 1000; display: none; align-items: center; justify-content: center; flex-direction: column; padding: 24px; }
+  .rp-lightbox.show { display: flex; }
+  .rp-lightbox img { max-width: 100%; max-height: 85vh; border-radius: 8px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+  .rp-lightbox-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,.1); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; }
+  .rp-lightbox-close:hover { background: rgba(255,255,255,.2); }
+  .rp-lightbox-dl { margin-top: 16px; padding: 10px 24px; background: rgba(255,255,255,.15); color: #fff; border-radius: 8px; text-decoration: none; font-size: 14px; }
+  .rp-lightbox-dl:hover { background: rgba(255,255,255,.25); }
+
+  .rp-pdf-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 24px; }
+  .rp-pdf-overlay.show { display: flex; }
+  .rp-pdf-modal { background: #fff; border-radius: 16px; width: 100%; max-width: 800px; height: 90vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 24px 80px rgba(0,0,0,.3); }
+  .rp-pdf-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; border-bottom: 1px solid #e5e5e5; background: #fafaf9; flex-shrink: 0; }
+  .rp-pdf-name { font-size: 14px; font-weight: 500; color: #333; }
+  .rp-pdf-actions { display: flex; gap: 8px; align-items: center; }
+  .rp-pdf-dl-btn { padding: 6px 16px; background: var(--color-accent, #f55000); color: #fff; border-radius: 6px; font-size: 13px; text-decoration: none; }
+  .rp-pdf-dl-btn:hover { opacity: .88; }
+  .rp-pdf-close-btn { background: none; border: 1px solid #e5e5e5; color: #666; width: 32px; height: 32px; border-radius: 6px; font-size: 1rem; cursor: pointer; }
+  .rp-pdf-close-btn:hover { border-color: #999; color: #333; }
+  #pdf-frame { border: none; flex: 1; }
+
+  @media (max-width: 640px) {
+    .rp-grid2 { grid-template-columns: 1fr; }
+    .rp-wp-grid { grid-template-columns: repeat(2, 1fr); }
+    .resources-page { padding-top: 80px; }
+    .rp-h1 { font-size: 1.6rem; }
+  }
+</style>

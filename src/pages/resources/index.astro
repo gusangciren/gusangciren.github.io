@@ -1,0 +1,16 @@
+---
+// 旧的资源长页已拆成 5 个独立分类页；/resources 重定向到第一个分类页
+const target = '/resources/books/';
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0;url=${target}`} />
+    <link rel="canonical" href={target} />
+    <title>资源 — 像企业家一样写作</title>
+  </head>
+  <body>
+    <p>正在跳转… <a href={target}>如果没有自动跳转，点这里</a></p>
+  </body>
+</html>

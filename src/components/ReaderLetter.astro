@@ -125,8 +125,9 @@
 <style is:global>
 /* ===== 读者信（rdl- 前缀防冲突）· 放大版 ===== */
 /* 三层结构（金句做法）：背景插画 → 半透明遮罩 → 顶层内容，均 absolute inset:0 叠放 */
-.rdl-wrap{position:relative;width:calc(100% - 48px);max-width:1200px;margin:16px auto 0;border-radius:20px;overflow:hidden;
-  box-shadow:0 24px 60px rgba(28,25,23,.12);}
+/* 全宽铺满：图片背景左右到边，不再缩在限宽圆角卡片里 */
+.rdl-wrap{position:relative;width:100%;max-width:none;margin:0;border-radius:0;overflow:hidden;
+  box-shadow:none;}
 .rdl-bg{position:absolute;inset:0;background:url('/images/letter-bg-focus.jpg') center 58% / cover no-repeat;}
 .rdl-bg-ov{position:absolute;inset:0;background:rgba(22,17,10,.44);}
 .rdl-ct{position:relative;z-index:2;padding:54px 20px 64px;}
