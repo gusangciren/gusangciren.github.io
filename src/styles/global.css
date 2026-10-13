@@ -1222,8 +1222,8 @@ body {
   }
 }
 /* 小圆形 / 小图标控件的隐形热区（桌面端同样生效，macOS 建议 ≥20pt，这里给 44 更宽裕） */
-.fr-dot, .shop-plus, .sm-plus { position: relative; }
-.fr-dot::after, .shop-plus::after, .sm-plus::after {
+.fr-dot { position: relative; }
+.fr-dot::after {
   content: '';
   position: absolute;
   left: 50%; top: 50%;
@@ -1231,10 +1231,6 @@ body {
   transform: translate(-50%, -50%);
 }
 /* 桌面端小按钮本身的尺寸下限 */
-.shop-plus, .sm-plus {
-  min-width: 24px; min-height: 24px;
-  display: inline-flex; align-items: center; justify-content: center;
-}
 .intro-qr-btn, a.latest, .bf-btn {
   min-height: 28px;
   display: inline-flex;
