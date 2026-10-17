@@ -35,8 +35,16 @@ export const bookRecs: BookRec[] = [];
 // ② 推荐网站 / 工具（我推荐的）—— 内容整理中
 export const siteRecs: SiteRec[] = [];
 
-// ③ + ④ 合并：我的开源（教程 + 作品，统一在一个页面展示）—— 内容整理中
-export const openSources: OpenSourceItem[] = [];
+// ③ + ④ 合并：我的开源（教程 + 作品，统一在一个页面展示）
+// kind: 'tutorial' = 站内阅读页；'project' = 跳 GitHub 仓库
+export const openSources: OpenSourceItem[] = [
+  {
+    name: '搜索课',
+    desc: '10+3 个搜索方法：从选项卡、双引号到 filetype 与站内搜索。读完之后你大概率会感慨——之前的自己不太会搜索。',
+    kind: 'tutorial',
+    url: '/resources/opensource/search-course/',
+  },
+];
 
 // ⑤ 素材下载（现有 resources.astro 的内容，原样保留）
 export const pdfs: PdfItem[] = [

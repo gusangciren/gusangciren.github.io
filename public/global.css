@@ -178,6 +178,13 @@ footer {
   text-decoration: none;
   border-bottom: 1px solid rgba(245, 80, 0, 0.3);
   transition: border-color 0.2s;
+  /* 超长裸链接（如正文里的完整 URL）必须能折断，否则移动端会撑出横向滚动 */
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+/* 锚点跳转时给吸顶导航（约 57px）留位置，否则标题会被导航盖住 */
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  scroll-margin-top: 76px;
 }
 .prose a:hover {
   border-bottom-color: var(--color-accent);

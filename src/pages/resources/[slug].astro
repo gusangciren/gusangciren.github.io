@@ -22,6 +22,11 @@ const WIPS: Record<string, { t: string; p: string }> = {
   opensource: { t: '写作台上', p: '教程正在排队，作品也在慢慢长大。写完一篇、做好一样，就上架一件，绝不注水。' },
 };
 const wip = WIPS[tab.slug];
+// 只有该页还没有任何内容时才显示占位块，避免占位与真实内容同时出现
+const isEmpty =
+  tab.slug === 'opensource' ? openSources.length === 0
+  : tab.slug === 'recommended' ? bookRecs.length + siteRecs.length === 0
+  : false;
 ---
 
 <BaseLayout title={`${tab.label} — 像企业家一样写作`}>
@@ -62,10 +67,13 @@ const wip = WIPS[tab.slug];
     {tab.slug === 'opensource' && (
       <div class="rp-grid2 rp-sec-body">
         {openSources.map((o) => (
-          <a class="rp-proj" href={o.url || '#'}>
+          <a class="rp-proj" href={o.url || '#'} {...(o.kind === 'project' ? { target: '_blank', rel: 'noopener' } : {})}>
             <div class="rp-proj-t">{o.name}</div>
             <div class="rp-proj-d">{o.desc}</div>
-            {o.stars && <div class="rp-proj-star">★ {o.stars}</div>}
+            <div class="rp-proj-foot">
+              <span class="rp-proj-kind">{o.kind === 'tutorial' ? '站内阅读 →' : 'GitHub ↗'}</span>
+              {o.stars && <span class="rp-proj-star">★ {o.stars}</span>}
+            </div>
           </a>
         ))}
       </div>
@@ -99,7 +107,7 @@ const wip = WIPS[tab.slug];
       </div>
     )}
 
-    {wip && (
+    {wip && isEmpty && (
       <div class="rp-wip">
         <div class="rp-wip-t">✎ {wip.t}</div>
         <p class="rp-wip-p">{wip.p}</p>
@@ -122,7 +130,7 @@ const wip = WIPS[tab.slug];
       <!-- 壁纸预览弹层 -->
       <div id="wallpaper-lightbox" class="rp-lightbox" role="dialog" aria-modal="true" aria-label="壁纸预览">
         <button id="lightbox-close" class="rp-lightbox-close" aria-label="关闭">✕</button>
-        <img id="lightbox-img" src="" alt="" />
+        <img id="lightbox-img" alt="" />
         <a id="lightbox-download" href="" class="rp-lightbox-dl" download>↓ 下载原图</a>
       </div>
 
@@ -156,7 +164,8 @@ const wip = WIPS[tab.slug];
               lightbox.classList.add('show'); document.body.style.overflow = 'hidden';
             });
           });
-          function closeLightbox() { lightbox.classList.remove('show'); lightboxImg.src = ''; document.body.style.overflow = ''; }
+          // 注意：src='' 会让浏览器把当前页面 URL 当图片再请求一次，必须用 removeAttribute
+          function closeLightbox() { lightbox.classList.remove('show'); lightboxImg.removeAttribute('src'); document.body.style.overflow = ''; }
           closeBtn.addEventListener('click', closeLightbox);
           lightbox.addEventListener('click', function (e) { if (e.target === lightbox) closeLightbox(); });
           document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && lightbox.classList.contains('show')) closeLightbox(); });
@@ -219,7 +228,9 @@ const wip = WIPS[tab.slug];
   .rp-proj:hover { border-color: var(--color-accent, #f55000); transform: translateY(-3px); }
   .rp-proj-t { font-size: 0.95rem; font-weight: 700; color: var(--color-text, #1a1a1a); }
   .rp-proj-d { font-size: 0.82rem; color: var(--color-text-secondary, #888); margin-top: 6px; line-height: 1.5; }
-  .rp-proj-star { font-size: 0.78rem; color: #e8a04c; margin-top: 8px; }
+  .rp-proj-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px; }
+  .rp-proj-kind { font-size: 0.78rem; font-weight: 700; color: var(--color-accent, #f55000); }
+  .rp-proj-star { font-size: 0.78rem; color: #e8a04c; }
 
   .rp-pdf-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
   .rp-pdf { background: var(--color-card-bg, #fff); border: 1px solid var(--color-border, #e5e5e5); border-radius: 12px; overflow: hidden; cursor: pointer; text-align: left; transition: all .2s; color: inherit; }
