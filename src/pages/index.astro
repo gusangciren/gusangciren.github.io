@@ -410,25 +410,17 @@ function titleWithBrackets(name) {
         <div class="rs-sub">我读过的、好用的、自己做的，都收在一处</div>
       </div>
       <div class="rs-grid">
-        <a class="rs-card" href="/resources/books/">
-          <span class="rs-badge">书</span>
-          <h3>推荐书单</h3>
-          <p>写作、创业、增长，真正改变过我的书</p>
+        <a class="rs-card" href="/resources/recommended/">
+          <span class="rs-badge">荐</span>
+          <h3>我的推荐</h3>
+          <p>我读过的书，和我每天在用的工具</p>
+          <span class="rs-go">查看 →</span>
         </a>
-        <a class="rs-card" href="/resources/sites/">
-          <span class="rs-badge">站</span>
-          <h3>推荐网站 / 工具</h3>
-          <p>日常在用的网站与效率工具</p>
-        </a>
-        <a class="rs-card" href="/resources/tutorials/">
-          <span class="rs-badge">课</span>
-          <h3>开源教程</h3>
-          <p>我把学过的方法整理成可复用的教程</p>
-        </a>
-        <a class="rs-card" href="/resources/projects/">
-          <span class="rs-badge">创</span>
-          <h3>我的开源作品</h3>
-          <p>GitHub 上的 skill 与自制小软件</p>
+        <a class="rs-card" href="/resources/opensource/">
+          <span class="rs-badge">源</span>
+          <h3>我的开源</h3>
+          <p>教程与作品，都在这</p>
+          <span class="rs-go">查看 →</span>
         </a>
       </div>
     </div>
@@ -442,19 +434,18 @@ function titleWithBrackets(name) {
     .rs-title{font-family:var(--font-serif);font-size:1.9rem;font-weight:700;color:var(--color-text,#1a1a1a)}
     .rs-title .hl{color:var(--color-accent,#f55000)}
     .rs-sub{font-size:14px;color:var(--color-text-secondary,#666);margin-top:8px}
-    .rs-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+    .rs-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
     .rs-card{display:block;background:var(--color-card-bg,#fff);border:1px solid var(--color-border,#e8e3da);border-radius:14px;padding:28px 24px;min-height:210px;text-decoration:none;color:inherit;box-shadow:0 2px 10px rgba(28,25,23,.04);transition:border-color .2s,transform .2s,box-shadow .2s}
     .rs-card:hover{border-color:var(--color-accent,#f55000);transform:translateY(-3px);box-shadow:0 12px 30px rgba(245,80,0,.12)}
     .rs-badge{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;background:rgba(245,80,0,.08);color:var(--color-accent,#f55000);font-family:var(--font-serif);font-size:1.2rem;font-weight:700;margin-bottom:16px}
     .rs-card h3{font-size:1.05rem;font-weight:600;margin:0 0 8px;color:var(--color-text,#1a1a1a)}
     .rs-card p{font-size:13px;line-height:1.6;color:var(--color-text-secondary,#666);margin:0}
+    .rs-go{display:inline-block;margin-top:18px;font-size:13px;font-weight:600;color:var(--color-accent,#f55000);transition:transform .2s}
+    .rs-card:hover .rs-go{transform:translateX(4px)}
     @media(max-width:760px){
-      .rs-grid{grid-template-columns:repeat(2,1fr);gap:14px}
+      .rs-grid{grid-template-columns:1fr;gap:14px}
       .rs-title{font-size:1.6rem}
-      .rs-card{padding:20px 16px;min-height:0}
-    }
-    @media(max-width:360px){
-      .rs-grid{grid-template-columns:1fr}
+      .rs-card{padding:22px 18px;min-height:0}
     }
   </style>
 

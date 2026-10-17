@@ -1,4 +1,4 @@
-// 资源中心共享数据：书单推荐 / 网站推荐 / 开源教程 / 开源作品 / 现有下载素材
+// 资源中心共享数据：书单推荐 / 网站推荐 / 我的开源（教程+作品）/ 现有下载素材
 // 三个方案页（资源枢纽 / 资源+作品 / 百宝箱）共用此模块，避免重复维护。
 
 export interface BookRec {
@@ -11,16 +11,12 @@ export interface SiteRec {
   why: string;
   url?: string;
 }
-export interface Tutorial {
-  name: string;
-  desc: string;
-  url?: string;
-}
-export interface Project {
+export interface OpenSourceItem {
   name: string;
   desc: string;
   stars?: string;
   url?: string;
+  kind: 'tutorial' | 'project';
 }
 export interface PdfItem {
   name: string;
@@ -39,11 +35,8 @@ export const bookRecs: BookRec[] = [];
 // ② 推荐网站 / 工具（我推荐的）—— 内容整理中
 export const siteRecs: SiteRec[] = [];
 
-// ③ 开源教程（我做的）—— 内容整理中
-export const tutorials: Tutorial[] = [];
-
-// ④ 我的开源作品（我做的）：skill & 软件 —— 内容整理中
-export const projects: Project[] = [];
+// ③ + ④ 合并：我的开源（教程 + 作品，统一在一个页面展示）—— 内容整理中
+export const openSources: OpenSourceItem[] = [];
 
 // ⑤ 素材下载（现有 resources.astro 的内容，原样保留）
 export const pdfs: PdfItem[] = [

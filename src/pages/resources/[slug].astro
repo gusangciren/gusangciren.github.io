@@ -1,89 +1,71 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { bookRecs, siteRecs, tutorials, projects, pdfs, wallpapers } from '../../data/resources';
+import { bookRecs, siteRecs, openSources, pdfs, wallpapers } from '../../data/resources';
 
 export function getStaticPaths() {
   // 注意：getStaticPaths 被提升执行，无法访问 frontmatter 顶层的 const，
   // 所以 TABS 必须在这里定义，并通过 props 传给模板。
   const TABS = [
-    { slug: 'books', label: '推荐书单', sub: '写作、创业、增长，真正改变过我的书' },
-    { slug: 'sites', label: '推荐网站 / 工具', sub: '日常在用的网站与效率工具' },
-    { slug: 'tutorials', label: '开源教程', sub: '我把学过的方法整理成可复用的教程' },
-    { slug: 'projects', label: '我的开源作品', sub: 'GitHub 上的 skill 与自制小软件' },
+    { slug: 'recommended', label: '我的推荐', sub: '我读过的书，和我每天在用的工具' },
+    { slug: 'opensource', label: '我的开源', sub: '我把方法整理成教程，也把工具做成作品，都在这' },
     { slug: 'downloads', label: '素材下载', sub: '书单原文 PDF 与壁纸，免费取用' },
   ];
   return TABS.map((t) => ({ params: { slug: t.slug }, props: { tab: t, tabs: TABS } }));
 }
 
-const { tab, tabs } = Astro.props;
+const { tab } = Astro.props;
 const isDownloads = tab.slug === 'downloads';
 
 // 各分类页未完工时的占位文案（给提前点进来的读者一点惊喜）
 const WIPS: Record<string, { t: string; p: string }> = {
-  books: { t: '正在装修', p: '书正一本本从我的书架上往下搬，搬完我第一个告诉你。这会儿，不妨先去读读已经上架的《闭环》。' },
-  sites: { t: '名单筛选中', p: '我每天在用的工具不少，但能上这份名单的，得是真朋友。面试还在进行，请稍候。' },
-  tutorials: { t: '写作台上', p: '教程正在排队。写完一篇上架一篇，绝不注水。' },
-  projects: { t: '还在长个子', p: '有几样小东西还在仓库里安静长大。等它们能见人了，第一时间带来见你。' },
+  recommended: { t: '正在装修', p: '书正一本本从我的书架上往下搬，好用的工具也在挑挑拣拣。搬完、挑好，第一个告诉你。这会儿，不妨先去读读已经上架的《闭环》。' },
+  opensource: { t: '写作台上', p: '教程正在排队，作品也在慢慢长大。写完一篇、做好一样，就上架一件，绝不注水。' },
 };
 const wip = WIPS[tab.slug];
 ---
 
 <BaseLayout title={`${tab.label} — 像企业家一样写作`}>
   <div class="resources-page">
-    <nav class="rp-tabs" aria-label="资源分类">
-      {tabs.filter((t) => t.slug !== 'downloads').map((t) => (
-        <a class:list={["rp-tab", { "rp-tab-on": t.slug === tab.slug }]} href={`/resources/${t.slug}/`}>{t.label}</a>
-      ))}
-    </nav>
-
-    <h1 class="rp-h1">{tab.label}</h1>
     <p class="rp-sub">{tab.sub}</p>
 
-    {tab.slug === 'books' && (
-      <div class="rp-grid2 rp-sec-body">
-        {bookRecs.map((b) => (
-          <a class="rp-rec" href={b.url || '#'}>
-            <div class="rp-rec-t">{b.title}</div>
-            <div class="rp-rec-d">{b.reason}</div>
-          </a>
-        ))}
-      </div>
-    )}
-
-    {tab.slug === 'sites' && (
-      <div class="rp-list rp-sec-body">
-        {siteRecs.map((s) => (
-          <a class="rp-row" href={s.url || '#'}>
-            <span class="rp-row-nm">{s.name}</span>
-            <span class="rp-row-why">{s.why}</span>
-            <span class="rp-go">↗</span>
-          </a>
-        ))}
-      </div>
-    )}
-
-    {tab.slug === 'tutorials' && (
+    {tab.slug === 'recommended' && (
       <div class="rp-sec-body">
-        {tutorials.map((t) => (
-          <a class="rp-feat" href={t.url || '#'}>
-            <span class="rp-feat-ic">★</span>
-            <span class="rp-feat-body">
-              <span class="rp-feat-t">{t.name}</span>
-              <span class="rp-feat-d">{t.desc}</span>
-            </span>
-            <span class="rp-feat-lk">查看仓库 ↗</span>
-          </a>
-        ))}
+        {bookRecs.length > 0 && (
+          <>
+            <h2 class="rp-group-h">推荐书单</h2>
+            <div class="rp-grid2">
+              {bookRecs.map((b) => (
+                <a class="rp-rec" href={b.url || '#'}>
+                  <div class="rp-rec-t">{b.title}</div>
+                  <div class="rp-rec-d">{b.reason}</div>
+                </a>
+              ))}
+            </div>
+          </>
+        )}
+        {siteRecs.length > 0 && (
+          <>
+            <h2 class="rp-group-h rp-group-h-sep">推荐网站 / 工具</h2>
+            <div class="rp-grid2">
+              {siteRecs.map((s) => (
+                <a class="rp-rec" href={s.url || '#'}>
+                  <div class="rp-rec-t">{s.name}</div>
+                  <div class="rp-rec-d">{s.why}</div>
+                </a>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     )}
 
-    {tab.slug === 'projects' && (
+    {tab.slug === 'opensource' && (
       <div class="rp-grid2 rp-sec-body">
-        {projects.map((p) => (
-          <a class="rp-proj" href={p.url || '#'}>
-            <div class="rp-proj-t">{p.name}</div>
-            <div class="rp-proj-d">{p.desc}</div>
-            {p.stars && <div class="rp-proj-star">★ {p.stars}</div>}
+        {openSources.map((o) => (
+          <a class="rp-proj" href={o.url || '#'}>
+            <div class="rp-proj-t">{o.name}</div>
+            <div class="rp-proj-d">{o.desc}</div>
+            {o.stars && <div class="rp-proj-star">★ {o.stars}</div>}
           </a>
         ))}
       </div>
@@ -122,6 +104,13 @@ const wip = WIPS[tab.slug];
         <div class="rp-wip-t">✎ {wip.t}</div>
         <p class="rp-wip-p">{wip.p}</p>
         <p class="rp-wip-ps">P.S. 你来得比内容还早——这本身就是一种运气。</p>
+      </div>
+    )}
+
+    {tab.slug !== 'downloads' && (
+      <div class="rp-sibling">
+        {tab.slug === 'recommended' && <a href="/resources/opensource/">→ 我的开源</a>}
+        {tab.slug === 'opensource' && <a href="/resources/recommended/">← 我的推荐</a>}
       </div>
     )}
 
@@ -200,17 +189,10 @@ const wip = WIPS[tab.slug];
 <style is:global>
   .resources-page { max-width: 960px; margin: 0 auto; padding: 100px 24px 80px; }
 
-  /* 分类标签导航：一个标签 = 一个页面 */
-  .rp-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 30px; }
-  .rp-tab { font-size: 13px; color: var(--color-text-secondary, #666); text-decoration: none; border: 1px solid var(--color-border, #e5e5e5); border-radius: 999px; padding: 6px 16px; transition: all .2s; }
-  .rp-tab:hover { border-color: var(--color-accent, #f55000); color: var(--color-accent, #f55000); }
-  .rp-tab-on { background: var(--color-accent, #f55000); border-color: var(--color-accent, #f55000); color: #fff; }
-  .rp-tab-on:hover { color: #fff; }
-
-  .rp-h1 { font-family: var(--font-serif, Georgia, serif); font-size: 2rem; font-weight: 700; color: var(--color-text, #1a1a1a); margin: 0 0 6px; }
   .rp-sub { color: var(--color-text-secondary, #888); font-size: 0.95rem; margin: 0 0 8px; }
   .rp-sec-body { margin-top: 28px; }
   .rp-group-h { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.08em; color: var(--color-accent, #f55000); margin: 0 0 16px; }
+  .rp-group-h-sep { margin-top: 38px; padding-top: 30px; border-top: 1px solid var(--color-border, #e5e5e5); }
   .rp-group-h + .rp-pdf-grid, .rp-group-h + .rp-wp-grid { margin-bottom: 28px; }
 
   .rp-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -259,6 +241,9 @@ const wip = WIPS[tab.slug];
   .rp-wp-ov span { color: #fff; font-size: 0.75rem; background: rgba(255,255,255,.2); backdrop-filter: blur(8px); border-radius: 20px; padding: 4px 12px; }
 
   .rp-note { text-align: center; color: var(--color-text-secondary, #888); font-size: 0.85rem; margin-top: 48px; }
+  .rp-sibling { margin-top: 36px; }
+  .rp-sibling a { display: inline-block; color: var(--color-accent, #f55000); font-size: 0.95rem; font-weight: 600; text-decoration: none; transition: transform .2s; }
+  .rp-sibling a:hover { transform: translateX(4px); text-decoration: underline; }
 
   /* 未完工占位块 */
   .rp-wip { margin-top: 32px; border: 1.5px dashed var(--color-border, #e5e5e5); border-radius: 14px; padding: 36px 28px; text-align: center; background: #fffdfa; }
