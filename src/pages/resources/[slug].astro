@@ -72,7 +72,8 @@ const isEmpty =
             <div class="rp-proj-d">{o.desc}</div>
             <div class="rp-proj-foot">
               <span class="rp-proj-kind">{o.kind === 'tutorial' ? '站内阅读 →' : 'GitHub ↗'}</span>
-              {o.stars && <span class="rp-proj-star">★ {o.stars}</span>}
+              {/* 用三元而非 &&：stars 为 0 时 && 会把 0 渲染出来 */}
+              {o.stars ? <span class="rp-proj-star">★ {o.stars}</span> : null}
             </div>
           </a>
         ))}

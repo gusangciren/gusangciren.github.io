@@ -44,6 +44,12 @@ export const openSources: OpenSourceItem[] = [
     kind: 'tutorial',
     url: '/resources/opensource/search-course/',
   },
+  {
+    name: 'md-to-book-pdf',
+    desc: '把 Markdown 书稿一键排版成出版级 PDF：自动封面、章节扉页、可点击目录、侧边栏书签。你只管写，排版交给它。',
+    kind: 'project',
+    url: 'https://github.com/gusangciren/md-to-book-pdf',
+  },
 ];
 
 // ⑤ 素材下载（现有 resources.astro 的内容，原样保留）
