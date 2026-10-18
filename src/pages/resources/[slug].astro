@@ -15,6 +15,8 @@ export function getStaticPaths() {
 
 const { tab } = Astro.props;
 const isDownloads = tab.slug === 'downloads';
+// 书单（bookRecs）用 reasonBlocks 渲染独立推荐理由块；老数据只有 reason 时回退成单段
+const blocksOf = (b) => (b.reasonBlocks ? b.reasonBlocks.split(/\n\s*\n/) : b.reason ? [b.reason] : []);
 
 // 各分类页未完工时的占位文案（给提前点进来的读者一点惊喜）
 const WIPS: Record<string, { t: string; p: string }> = {
@@ -34,17 +36,57 @@ const isEmpty =
     <p class="rp-sub">{tab.sub}</p>
 
     {tab.slug === 'recommended' && (
-      <div class="rp-sec-body">
+      <div class="rp-sec-body rp-booklist">
         {bookRecs.length > 0 && (
           <>
-            <h2 class="rp-group-h">推荐书单</h2>
-            <div class="rp-grid2">
-              {bookRecs.map((b) => (
-                <a class="rp-rec" href={b.url || '#'}>
-                  <div class="rp-rec-t">{b.title}</div>
-                  <div class="rp-rec-d">{b.reason}</div>
-                </a>
-              ))}
+            <div class="rp-bl-hd">
+              <div class="rp-bl-title">我的<span class="hl">书单</span></div>
+              <div class="rp-bl-meta">{bookRecs.length} 本 · 推荐值来自微信读书</div>
+            </div>
+            <p class="rp-bl-sub">不是「必读清单」，是我真的读过、并且改变过我做法的书。</p>
+            <div class="rp-bl-list">
+              {bookRecs.map((b, i) => {
+                const paras = blocksOf(b);
+                return (
+                  <div class="rp-bl">
+                    <div class="rp-bl-top">
+                      <div class="rp-bl-cov">
+                        {b.cover ? (
+                          <img src={b.cover} alt={`${b.title} 封面`} loading="lazy" />
+                        ) : (
+                          <span class="rp-bl-cov-ph">待补封面</span>
+                        )}
+                      </div>
+                      <div class="rp-bl-body">
+                        <div class="rp-bl-l1">
+                          <span class="rp-bl-no">{String(i + 1).padStart(2, '0')}</span>
+                          <span class="rp-bl-t">{b.title}</span>
+                          {b.author && <span class="rp-bl-a">{b.author}</span>}
+                        </div>
+                        {b.doubanIntro && <p class="rp-bl-d">{b.doubanIntro}</p>}
+                        <div class="rp-bl-foot">
+                          {(b.wrScore || b.doubanScore) && (
+                            <span class="rp-bl-rate">
+                              <b>{b.wrScore ? `${b.wrScore}%` : b.doubanScore}</b>
+                              <i>{b.wrScore ? '推荐值' : '豆瓣'}</i>
+                            </span>
+                          )}
+                          {b.wrBadge && <span class="rp-bl-badge">{b.wrBadge}</span>}
+                          {b.publisher && <span class="rp-bl-dot">|</span>}
+                          {b.publisher && <span class="rp-bl-pub">{b.publisher}</span>}
+                          {b.readAt && <span class="rp-bl-date">{b.readAt}</span>}
+                        </div>
+                      </div>
+                    </div>
+                    {paras.length > 0 && (
+                      <div class="rp-bl-quote">
+                        <span class="rp-bl-qmark">❝</span>
+                        {paras.map((p, k) => <p>{p}</p>)}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </>
         )}
@@ -199,6 +241,51 @@ const isEmpty =
 <style is:global>
   .resources-page { max-width: 960px; margin: 0 auto; padding: 100px 24px 80px; }
 
+  /* ===== 站内书单（2026-10-18 · 变体 B + 680px 居中，与博客正文同宽）=====
+     书单是「阅读类」内容，按用户要求收窄到 680px 居中，不铺满 960px 容器 */
+  .rp-booklist { max-width: 680px; margin-left: auto; margin-right: auto; }
+  .rp-bl-hd { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; }
+  .rp-bl-title { font-family: var(--font-serif, Georgia, serif); font-size: 1.5rem; font-weight: 700; color: var(--color-text, #1c1917); }
+  .rp-bl-title .hl { color: var(--color-accent, #f55000); }
+  .rp-bl-meta { font-size: 0.82rem; color: var(--color-text-secondary, #78716c); }
+  .rp-bl-sub { font-size: 0.88rem; color: var(--color-text-secondary, #78716c); margin: 6px 0 22px; }
+
+  .rp-bl-list { display: flex; flex-direction: column; gap: 20px; }
+  /* 纯展示卡：不可点击、无 hover 反馈；保留 1px 灰边框维持边界感 */
+  .rp-bl { display: block; background: var(--color-card-bg, #fff); border: 1px solid var(--color-border, #e5e5e5);
+    border-radius: 12px; color: inherit; overflow: hidden; }
+
+  .rp-bl-top { display: flex; gap: 20px; padding: 18px 20px 16px; }
+  .rp-bl-cov { flex: 0 0 84px; width: 84px; height: 118px; }
+  .rp-bl-cov img { width: 100%; height: 100%; object-fit: cover; display: block;
+    border-radius: 5px; border: 1px solid var(--color-border, #e5e5e5); box-shadow: 0 3px 10px rgba(28,25,23,.1); }
+  .rp-bl-cov-ph { width: 100%; height: 100%; border-radius: 5px; border: 1px dashed #d6d3d1; background: #faf9f7;
+    display: flex; align-items: center; justify-content: center; color: #a8a29e; font-size: 0.72rem; }
+
+  .rp-bl-body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .rp-bl-l1 { display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap; }
+  .rp-bl-no { font-family: Georgia, serif; font-size: 0.81rem; font-weight: 700; color: #d6d3d1; flex: none; }
+  .rp-bl-t { font-family: var(--font-serif, Georgia, serif); font-size: 1.1rem; font-weight: 700; line-height: 1.5; color: var(--color-text, #1c1917); }
+  .rp-bl-a { font-size: 0.78rem; color: var(--color-text-secondary, #78716c); }
+  .rp-bl-d { font-size: 0.85rem; color: var(--color-text-secondary, #78716c); line-height: 1.8; margin-top: 9px; }
+
+  .rp-bl-foot { display: flex; align-items: center; gap: 11px; margin-top: auto; padding-top: 12px; flex-wrap: wrap; }
+  .rp-bl-rate { display: inline-flex; align-items: center; gap: 4px; font-size: 0.75rem; color: #8a7a55; }
+  .rp-bl-rate::before { content: '\2605'; color: #e0b95f; font-size: 0.7rem; }
+  .rp-bl-rate b { font-family: Georgia, serif; font-size: 0.94rem; color: #c8940f; font-weight: 700; }
+  .rp-bl-rate i { font-style: normal; font-size: 0.75rem; }
+  .rp-bl-badge { font-size: 0.7rem; line-height: 1; color: #a16207; background: #fdf8ee; border: 1px solid #ecd9b0; border-radius: 999px; padding: 3px 9px; }
+  .rp-bl-dot { color: #d6d3d1; }
+  .rp-bl-pub { font-size: 0.72rem; color: #b3ada2; }
+  .rp-bl-date { font-size: 0.72rem; color: #b3ada2; margin-left: auto; }
+
+  /* 推荐理由：不加独立底色/边框，整卡统一白底（参考微信读书书友圈）
+     只靠 ❝ 引号 + 稍浅字色与上方书方信息区分，避免分层过重 */
+  .rp-bl-quote { padding: 2px 20px 20px; }
+  .rp-bl-qmark { display: block; font-family: Georgia, serif; font-size: 1.75rem; line-height: .7; color: #ccc7c0; margin: 2px 0 12px; }
+  .rp-bl-quote p { font-size: 0.88rem; line-height: 2; color: #6b6560; margin: 0 0 10px; }
+  .rp-bl-quote p:last-child { margin: 0; }
+
   .rp-sub { color: var(--color-text-secondary, #888); font-size: 0.95rem; margin: 0 0 8px; }
   .rp-sec-body { margin-top: 28px; }
   .rp-group-h { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.08em; color: var(--color-accent, #f55000); margin: 0 0 16px; }
@@ -289,5 +376,10 @@ const isEmpty =
     .rp-wp-grid { grid-template-columns: repeat(2, 1fr); }
     .resources-page { padding-top: 80px; }
     .rp-h1 { font-size: 1.6rem; }
+    /* 书单移动端：封面放大独占一行，引号块内缩 */
+    .rp-bl-hd { flex-direction: column; align-items: flex-start; gap: 4px; }
+    .rp-bl-top { flex-direction: column; gap: 16px; }
+    .rp-bl-cov { flex: none; width: 96px; height: 136px; }
+    .rp-bl-quote { padding: 2px 16px 18px; }
   }
 </style>
