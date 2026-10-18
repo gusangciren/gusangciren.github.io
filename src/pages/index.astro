@@ -397,12 +397,7 @@ function titleWithBrackets(name) {
     }
   </style>
 
-  {/* ===== 致读者的一封信（拆信交互 · A2 悬念款） ===== */}
-  <div class="letter-gap">
-    <ReaderLetter />
-  </div>
-
-  {/* ===== 资源中心：致读者的一封信之后 ===== */}
+  {/* ===== 资源中心：专栏之后、读者信之前 ===== */}
   <section class="section section-resources">
     <div class="section-inner">
       <div class="rs-head">
@@ -410,31 +405,38 @@ function titleWithBrackets(name) {
         <div class="rs-sub">我读过的、好用的、自己做的，都收在一处</div>
       </div>
       <div class="rs-grid">
-        <a class="rs-card" href="/resources/recommended/">
-          <span class="rs-badge">荐</span>
-          <h3>我的推荐</h3>
-          <p>我读过的书，和我每天在用的工具</p>
-          <span class="rs-go">查看 →</span>
-        </a>
         <a class="rs-card" href="/resources/opensource/">
           <span class="rs-badge">源</span>
           <h3>我的开源</h3>
           <p>教程与作品，都在这</p>
           <span class="rs-go">查看 →</span>
         </a>
+        <a class="rs-card" href="/resources/recommended/">
+          <span class="rs-badge">荐</span>
+          <h3>我的推荐</h3>
+          <p>我读过的书，和我每天在用的工具</p>
+          <span class="rs-go">查看 →</span>
+        </a>
       </div>
     </div>
   </section>
 
+  {/* ===== 致读者的一封信（拆信交互 · A2 悬念款） ===== */}
+  <div class="letter-gap">
+    <ReaderLetter />
+  </div>
+
   <style>
     /* 暖米色背景：与纯白信区、#fafaf9 书籍区形成层次 */
     .section-resources{background:linear-gradient(180deg,#faf8f4 0%,#f5f1e8 100%)}
-    .section-resources .section-inner{max-width:1400px}
+    .section-resources .section-inner{max-width:1200px} /* 与书籍作品区同宽，避免贴边显挤 */
     .rs-head{text-align:center;margin-bottom:36px}
     .rs-title{font-family:var(--font-serif);font-size:1.9rem;font-weight:700;color:var(--color-text,#1a1a1a)}
     .rs-title .hl{color:var(--color-accent,#f55000)}
     .rs-sub{font-size:14px;color:var(--color-text-secondary,#666);margin-top:8px}
-    .rs-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+    /* 宽度对齐「书籍作品」区（.section-books .section-inner = 1200px）：资源区直接填满 1200px 容器，
+       桌面端两卡并排、宽高与整站区块一致；移动端（≤760px）单列全宽见下方媒体查询 */
+    .rs-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin:0 auto}
     .rs-card{display:block;background:var(--color-card-bg,#fff);border:1px solid var(--color-border,#e8e3da);border-radius:14px;padding:28px 24px;min-height:210px;text-decoration:none;color:inherit;box-shadow:0 2px 10px rgba(28,25,23,.04);transition:border-color .2s,transform .2s,box-shadow .2s}
     .rs-card:hover{border-color:var(--color-accent,#f55000);transform:translateY(-3px);box-shadow:0 12px 30px rgba(245,80,0,.12)}
     .rs-badge{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;background:rgba(245,80,0,.08);color:var(--color-accent,#f55000);font-family:var(--font-serif);font-size:1.2rem;font-weight:700;margin-bottom:16px}
@@ -443,16 +445,13 @@ function titleWithBrackets(name) {
     .rs-go{display:inline-block;margin-top:18px;font-size:13px;font-weight:600;color:var(--color-accent,#f55000);transition:transform .2s}
     .rs-card:hover .rs-go{transform:translateX(4px)}
     @media(max-width:760px){
-      .rs-grid{grid-template-columns:1fr;gap:14px}
+      .rs-grid{grid-template-columns:1fr;gap:14px;width:100%}
       .rs-title{font-size:1.6rem}
       .rs-card{padding:22px 18px;min-height:0}
     }
   </style>
 
   <style is:global>
-    /* 首页：资源中心暖米背景一直铺到页脚分割线，消除 footer 前的 body 色空带（只影响首页） */
-    footer { margin-top: 0; }
-
     /* ===== Hero 内联搜索（方案 B） ===== */
     .hero-search {
       position: relative;
