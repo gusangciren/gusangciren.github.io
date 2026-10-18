@@ -1,22 +1,34 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { bookRecs, siteRecs, openSources, pdfs, wallpapers } from '../../data/resources';
+import { bookRecs, siteRecs, openSources } from '../../data/resources';
 
 export function getStaticPaths() {
   // 注意：getStaticPaths 被提升执行，无法访问 frontmatter 顶层的 const，
   // 所以 TABS 必须在这里定义，并通过 props 传给模板。
+  // 顺序与首页资源中心四卡对应（我的开源 → 我的书单 → 常读博客）；
+  // 素材下载已按用户要求彻底下线（2026-10-19），不再恢复。
   const TABS = [
-    { slug: 'recommended', label: '我的推荐', sub: '我读过的书，和我每天在用的工具' },
     { slug: 'opensource', label: '我的开源', sub: '我把方法整理成教程，也把工具做成作品，都在这' },
-    { slug: 'downloads', label: '素材下载', sub: '书单原文 PDF 与壁纸，免费取用' },
+    { slug: 'recommended', label: '我的书单', sub: '我读过的书，和我为什么推荐它们' },
+    { slug: 'blogs', label: '常读博客', sub: '我每周都会打开的网站与博客，不是导航站，是一份清单' },
   ];
   return TABS.map((t) => ({ params: { slug: t.slug }, props: { tab: t, tabs: TABS } }));
 }
 
-const { tab } = Astro.props;
-const isDownloads = tab.slug === 'downloads';
+const { tab, tabs } = Astro.props;
+// 面包屑右侧的「下一个」：按上面 TABS 顺序循环（开源 → 书单 → 博客 → 回到开源）
+const tabIdx = tabs.findIndex((t) => t.slug === tab.slug);
+const nextTab = tabs[(tabIdx + 1) % tabs.length];
 // 书单（bookRecs）用 reasonBlocks 渲染独立推荐理由块；老数据只有 reason 时回退成单段
 const blocksOf = (b) => (b.reasonBlocks ? b.reasonBlocks.split(/\n\s*\n/) : b.reason ? [b.reason] : []);
+// 网站推荐只显示主机名（去 www.），长路径不占版面
+const hostOf = (u) => {
+  try {
+    return new URL(u).hostname.replace(/^www\./, '');
+  } catch {
+    return '';
+  }
+};
 
 // 各分类页未完工时的占位文案（给提前点进来的读者一点惊喜）
 const WIPS: Record<string, { t: string; p: string }> = {
@@ -33,12 +45,19 @@ const isEmpty =
 
 <BaseLayout title={`${tab.label} — 像企业家一样写作`}>
   <div class="resources-page">
+    {/* 面包屑（当前位置）+ 下一个分类：不用滚到底也能继续翻 */}
+    <nav class="rp-crumb" aria-label="资源分类">
+      <div class="rp-crumb-l">
+        <a href="/#resources">资源中心</a><span class="rp-crumb-sep">›</span><b aria-current="page">{tab.label}</b>
+      </div>
+      <a class="rp-crumb-next" href={`/resources/${nextTab.slug}/`}>下一个：{nextTab.label} →</a>
+    </nav>
     <p class="rp-sub">{tab.sub}</p>
 
     {tab.slug === 'recommended' && (
-      <div class="rp-sec-body rp-booklist">
+      <div class="rp-sec-body">
         {bookRecs.length > 0 && (
-          <>
+          <div class="rp-booklist">
             <div class="rp-bl-hd">
               <div class="rp-bl-title">我的<span class="hl">书单</span></div>
               <div class="rp-bl-meta">{bookRecs.length} 本 · 推荐值来自微信读书</div>
@@ -88,19 +107,34 @@ const isEmpty =
                 );
               })}
             </div>
-          </>
+          </div>
         )}
+      </div>
+    )}
+
+    {tab.slug === 'blogs' && (
+      <div class="rp-sec-body rp-booklist">
         {siteRecs.length > 0 && (
           <>
-            <h2 class="rp-group-h rp-group-h-sep">推荐网站 / 工具</h2>
-            <div class="rp-grid2">
-              {siteRecs.map((s) => (
-                <a class="rp-rec" href={s.url || '#'}>
-                  <div class="rp-rec-t">{s.name}</div>
-                  <div class="rp-rec-d">{s.why}</div>
+            <div class="rp-bl-hd">
+              <div class="rp-bl-title">常读<span class="hl">博客</span></div>
+              <div class="rp-bl-meta">{siteRecs.length} 个 · 每周都会打开</div>
+            </div>
+            <p class="rp-bl-sub">不是导航站，是我真的会反复回去读的地方。</p>
+            <div class="lk-list">
+              {siteRecs.map((s, i) => (
+                <a class="lk-item" href={s.url || '#'} target="_blank" rel="noopener noreferrer">
+                  <span class="lk-row">
+                    <span class="lk-no">{String(i + 1).padStart(2, '0')}</span>
+                    <span class="lk-name">{s.name}</span>
+                    <span class="lk-dom">{hostOf(s.url || '')}</span>
+                    <span class="lk-arrow" aria-hidden="true">↗</span>
+                  </span>
+                  {s.why && <span class="lk-why">{s.why}</span>}
                 </a>
               ))}
             </div>
+            <p class="lk-foot">以上链接都在新标签页打开。</p>
           </>
         )}
       </div>
@@ -122,34 +156,6 @@ const isEmpty =
       </div>
     )}
 
-    {isDownloads && (
-      <div class="rp-sec-body">
-        <h2 class="rp-group-h">书单原文 PDF</h2>
-        <div class="rp-pdf-grid">
-          {pdfs.map((pdf, i) => (
-            <button class="rp-pdf" data-pdf={pdf.file} data-index={i} type="button">
-              <div class="rp-pdf-cover"><span>{pdf.icon}</span></div>
-              <div class="rp-pdf-body">
-                <div class="rp-pdf-name">{pdf.name}</div>
-                <div class="rp-pdf-meta">{pdf.author} · PDF</div>
-                <span class="rp-dl-btn">预览 / 下载 →</span>
-              </div>
-            </button>
-          ))}
-        </div>
-
-        <h2 class="rp-group-h">壁纸</h2>
-        <div class="rp-wp-grid">
-          {wallpapers.map((wp) => (
-            <button class="rp-wp" data-src={wp.file} data-name={wp.name} type="button">
-              <img src={wp.file} alt={wp.name} loading="lazy" />
-              <div class="rp-wp-ov"><span>{wp.name} · 点击预览</span></div>
-            </button>
-          ))}
-        </div>
-      </div>
-    )}
-
     {wip && isEmpty && (
       <div class="rp-wip">
         <div class="rp-wip-t">✎ {wip.t}</div>
@@ -158,84 +164,8 @@ const isEmpty =
       </div>
     )}
 
-    {tab.slug !== 'downloads' && (
-      <div class="rp-sibling">
-        {tab.slug === 'recommended' && <a href="/resources/opensource/">→ 我的开源</a>}
-        {tab.slug === 'opensource' && <a href="/resources/recommended/">← 我的推荐</a>}
-      </div>
-    )}
-
     <p class="rp-note">更多资源持续整理中，欢迎关注公众号「种一个梦」获取最新更新</p>
   </div>
-
-  {isDownloads && (
-    <Fragment>
-      <!-- 壁纸预览弹层 -->
-      <div id="wallpaper-lightbox" class="rp-lightbox" role="dialog" aria-modal="true" aria-label="壁纸预览">
-        <button id="lightbox-close" class="rp-lightbox-close" aria-label="关闭">✕</button>
-        <img id="lightbox-img" alt="" />
-        <a id="lightbox-download" href="" class="rp-lightbox-dl" download>↓ 下载原图</a>
-      </div>
-
-      <!-- PDF 预览弹层 -->
-      <div id="pdf-overlay" class="rp-pdf-overlay" role="dialog" aria-modal="true" aria-label="PDF 预览">
-        <div class="rp-pdf-modal">
-          <div class="rp-pdf-toolbar">
-            <span class="rp-pdf-name" id="pdf-name"></span>
-            <div class="rp-pdf-actions">
-              <a id="pdf-download-btn" href="" class="rp-pdf-dl-btn" download>↓ 下载</a>
-              <button id="pdf-close" class="rp-pdf-close-btn" aria-label="关闭">✕</button>
-            </div>
-          </div>
-          <iframe id="pdf-frame" src="" width="100%" height="100%"></iframe>
-        </div>
-      </div>
-
-      <script is:inline>
-        (function () {
-          var lightbox = document.getElementById('wallpaper-lightbox');
-          if (!lightbox) return;
-          var lightboxImg = document.getElementById('lightbox-img');
-          var lightboxDl = document.getElementById('lightbox-download');
-          var closeBtn = document.getElementById('lightbox-close');
-          document.querySelectorAll('.rp-wp').forEach(function (card) {
-            card.addEventListener('click', function () {
-              var src = this.getAttribute('data-src');
-              var name = this.getAttribute('data-name');
-              lightboxImg.src = src; lightboxImg.alt = name;
-              lightboxDl.href = src; lightboxDl.download = name;
-              lightbox.classList.add('show'); document.body.style.overflow = 'hidden';
-            });
-          });
-          // 注意：src='' 会让浏览器把当前页面 URL 当图片再请求一次，必须用 removeAttribute
-          function closeLightbox() { lightbox.classList.remove('show'); lightboxImg.removeAttribute('src'); document.body.style.overflow = ''; }
-          closeBtn.addEventListener('click', closeLightbox);
-          lightbox.addEventListener('click', function (e) { if (e.target === lightbox) closeLightbox(); });
-          document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && lightbox.classList.contains('show')) closeLightbox(); });
-        })();
-        (function () {
-          var overlay = document.getElementById('pdf-overlay');
-          if (!overlay) return;
-          var frame = document.getElementById('pdf-frame');
-          var nameEl = document.getElementById('pdf-name');
-          var dlBtn = document.getElementById('pdf-download-btn');
-          var closeBtn = document.getElementById('pdf-close');
-          document.querySelectorAll('.rp-pdf').forEach(function (card) {
-            card.addEventListener('click', function () {
-              var pdfFile = this.getAttribute('data-pdf');
-              var title = this.querySelector('.rp-pdf-name').textContent;
-              nameEl.textContent = title; dlBtn.href = pdfFile; frame.src = pdfFile;
-              overlay.classList.add('show'); document.body.style.overflow = 'hidden';
-            });
-          });
-          function closePdf() { overlay.classList.remove('show'); frame.src = ''; document.body.style.overflow = ''; }
-          closeBtn.addEventListener('click', closePdf);
-          overlay.addEventListener('click', function (e) { if (e.target === overlay) closePdf(); });
-          document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && overlay.classList.contains('show')) closePdf(); });
-        })();
-      </script>
-    </Fragment>
-  )}
 </BaseLayout>
 
 <style is:global>
@@ -286,11 +216,25 @@ const isEmpty =
   .rp-bl-quote p { font-size: 0.88rem; line-height: 2; color: #6b6560; margin: 0 0 10px; }
   .rp-bl-quote p:last-child { margin: 0; }
 
+  /* ===== 常读博客（清单式，整行可点） ===== */
+  .lk-list { border-top: 1px solid var(--color-border, #e5e5e5); }
+  .lk-item { display: block; padding: 17px 0; border-bottom: 1px solid var(--color-border, #e5e5e5);
+    text-decoration: none; color: inherit; }
+  .lk-item:hover .lk-name, .lk-item:focus-visible .lk-name { color: var(--color-accent, #f55000); }
+  .lk-item:hover .lk-arrow { color: var(--color-accent, #f55000); transform: translate(2px, -2px); }
+  .lk-item:focus-visible { outline: 2px solid var(--color-accent, #f55000); outline-offset: 4px; border-radius: 4px; }
+  .lk-row { display: flex; align-items: baseline; gap: 10px; }
+  .lk-no { font-family: Georgia, serif; font-size: 0.78rem; font-weight: 700; color: #d6d3d1; flex: none; }
+  .lk-name { font-size: 1.02rem; font-weight: 700; line-height: 1.5; color: var(--color-text, #1c1917); transition: color 0.18s; }
+  .lk-dom { font-size: 0.75rem; color: #a8a29e; }
+  .lk-arrow { margin-left: auto; flex: none; font-size: 0.8rem; color: #c9c4bd; transition: color 0.18s, transform 0.18s; }
+  .lk-why { display: block; font-size: 0.86rem; line-height: 1.9; color: #6b6560; margin: 6px 0 0 26px; }
+  .lk-foot { font-size: 0.75rem; color: #a8a29e; margin: 22px 0 0; }
+
   .rp-sub { color: var(--color-text-secondary, #888); font-size: 0.95rem; margin: 0 0 8px; }
   .rp-sec-body { margin-top: 28px; }
   .rp-group-h { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.08em; color: var(--color-accent, #f55000); margin: 0 0 16px; }
   .rp-group-h-sep { margin-top: 38px; padding-top: 30px; border-top: 1px solid var(--color-border, #e5e5e5); }
-  .rp-group-h + .rp-pdf-grid, .rp-group-h + .rp-wp-grid { margin-bottom: 28px; }
 
   .rp-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .rp-rec { background: var(--color-card-bg, #fff); border: 1px solid var(--color-border, #e5e5e5); border-radius: 12px; padding: 16px 18px; text-decoration: none; color: inherit; transition: all .2s; }
@@ -320,29 +264,17 @@ const isEmpty =
   .rp-proj-kind { font-size: 0.78rem; font-weight: 700; color: var(--color-accent, #f55000); }
   .rp-proj-star { font-size: 0.78rem; color: #e8a04c; }
 
-  .rp-pdf-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
-  .rp-pdf { background: var(--color-card-bg, #fff); border: 1px solid var(--color-border, #e5e5e5); border-radius: 12px; overflow: hidden; cursor: pointer; text-align: left; transition: all .2s; color: inherit; }
-  .rp-pdf:hover { border-color: var(--color-accent, #f55000); box-shadow: 0 8px 32px rgba(245,80,0,.1); transform: translateY(-3px); }
-  .rp-pdf-cover { height: 160px; background: linear-gradient(135deg, var(--color-accent, #f55000) 0%, #ff8c00 100%); display: flex; align-items: center; justify-content: center; }
-  .rp-pdf-cover span { font-size: 2.5rem; }
-  .rp-pdf-body { padding: 14px 16px; }
-  .rp-pdf-name { font-size: 0.88rem; font-weight: 600; color: var(--color-text, #1a1a1a); }
-  .rp-pdf-meta { font-size: 0.75rem; color: #aaa; margin-top: 2px; }
-  .rp-dl-btn { display: inline-block; margin-top: 10px; font-size: 0.78rem; font-weight: 600; color: var(--color-accent, #f55000); border: 1.5px solid var(--color-accent, #f55000); border-radius: 20px; padding: 4px 14px; }
-  .rp-pdf:hover .rp-dl-btn { background: var(--color-accent, #f55000); color: #fff; }
-
-  .rp-wp-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-  .rp-wp { border-radius: 10px; overflow: hidden; cursor: pointer; position: relative; aspect-ratio: 9/16; background: none; border: none; padding: 0; }
-  .rp-wp img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s; }
-  .rp-wp:hover img { transform: scale(1.05); }
-  .rp-wp-ov { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.6) 0%, transparent 50%); display: flex; align-items: flex-end; padding: 12px; opacity: 0; transition: opacity .2s; }
-  .rp-wp:hover .rp-wp-ov { opacity: 1; }
-  .rp-wp-ov span { color: #fff; font-size: 0.75rem; background: rgba(255,255,255,.2); backdrop-filter: blur(8px); border-radius: 20px; padding: 4px 12px; }
-
   .rp-note { text-align: center; color: var(--color-text-secondary, #888); font-size: 0.85rem; margin-top: 48px; }
-  .rp-sibling { margin-top: 36px; }
-  .rp-sibling a { display: inline-block; color: var(--color-accent, #f55000); font-size: 0.95rem; font-weight: 600; text-decoration: none; transition: transform .2s; }
-  .rp-sibling a:hover { transform: translateX(4px); text-decoration: underline; }
+  /* ===== 面包屑（当前位置）+ 下一个分类 ===== */
+  .rp-crumb { display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+    font-size: 0.85rem; margin: 0 0 20px; padding-bottom: 14px; border-bottom: 1px solid var(--color-border, #e5e5e5); }
+  .rp-crumb-l { color: var(--color-text-secondary, #78716c); min-width: 0; }
+  .rp-crumb-l a { color: var(--color-text-secondary, #78716c); text-decoration: none; }
+  .rp-crumb-l a:hover { color: var(--color-text, #1c1917); text-decoration: underline; }
+  .rp-crumb-sep { color: #d6d3d1; margin: 0 7px; }
+  .rp-crumb-l b { color: var(--color-text, #1c1917); font-weight: 700; }
+  .rp-crumb-next { flex: none; color: var(--color-accent, #f55000); font-weight: 600; text-decoration: none; }
+  .rp-crumb-next:hover { text-decoration: underline; }
 
   /* 未完工占位块 */
   .rp-wip { margin-top: 32px; border: 1.5px dashed var(--color-border, #e5e5e5); border-radius: 14px; padding: 36px 28px; text-align: center; background: #fffdfa; }
@@ -350,35 +282,20 @@ const isEmpty =
   .rp-wip-p { font-size: 0.92rem; color: var(--color-text-secondary, #666); line-height: 1.9; margin: 0; }
   .rp-wip-ps { margin-top: 12px; font-size: 0.8rem; color: #b3ada2; }
 
-  /* 弹层 */
-  .rp-lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.92); z-index: 1000; display: none; align-items: center; justify-content: center; flex-direction: column; padding: 24px; }
-  .rp-lightbox.show { display: flex; }
-  .rp-lightbox img { max-width: 100%; max-height: 85vh; border-radius: 8px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
-  .rp-lightbox-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,.1); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; }
-  .rp-lightbox-close:hover { background: rgba(255,255,255,.2); }
-  .rp-lightbox-dl { margin-top: 16px; padding: 10px 24px; background: rgba(255,255,255,.15); color: #fff; border-radius: 8px; text-decoration: none; font-size: 14px; }
-  .rp-lightbox-dl:hover { background: rgba(255,255,255,.25); }
-
-  .rp-pdf-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 24px; }
-  .rp-pdf-overlay.show { display: flex; }
-  .rp-pdf-modal { background: #fff; border-radius: 16px; width: 100%; max-width: 800px; height: 90vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 24px 80px rgba(0,0,0,.3); }
-  .rp-pdf-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; border-bottom: 1px solid #e5e5e5; background: #fafaf9; flex-shrink: 0; }
-  .rp-pdf-name { font-size: 14px; font-weight: 500; color: #333; }
-  .rp-pdf-actions { display: flex; gap: 8px; align-items: center; }
-  .rp-pdf-dl-btn { padding: 6px 16px; background: var(--color-accent, #f55000); color: #fff; border-radius: 6px; font-size: 13px; text-decoration: none; }
-  .rp-pdf-dl-btn:hover { opacity: .88; }
-  .rp-pdf-close-btn { background: none; border: 1px solid #e5e5e5; color: #666; width: 32px; height: 32px; border-radius: 6px; font-size: 1rem; cursor: pointer; }
-  .rp-pdf-close-btn:hover { border-color: #999; color: #333; }
-  #pdf-frame { border: none; flex: 1; }
-
   @media (max-width: 640px) {
     .rp-grid2 { grid-template-columns: 1fr; }
-    .rp-wp-grid { grid-template-columns: repeat(2, 1fr); }
     .resources-page { padding-top: 80px; }
     .rp-h1 { font-size: 1.6rem; }
+    /* 面包屑窄屏：分两行，下一行右移对齐 */
+    .rp-crumb { flex-direction: column; align-items: flex-start; gap: 8px; }
     /* 书单移动端：封面放大独占一行，引号块内缩 */
     .rp-bl-hd { flex-direction: column; align-items: flex-start; gap: 4px; }
     .rp-bl-top { flex-direction: column; gap: 16px; }
+    /* 常读博客窄屏：第一行=序号+站名+↗，域名换行缩进，推荐语第三行 */
+    .lk-row { flex-wrap: wrap; }
+    .lk-dom { order: 3; flex: none; width: calc(100% - 26px); margin-left: 26px; }
+    .lk-arrow { order: 2; }
+    .lk-why { margin-left: 0; }
     .rp-bl-cov { flex: none; width: 96px; height: 136px; }
     .rp-bl-quote { padding: 2px 16px 18px; }
   }

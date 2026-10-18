@@ -34,16 +34,6 @@ export interface OpenSourceItem {
   url?: string;
   kind: 'tutorial' | 'project';
 }
-export interface PdfItem {
-  name: string;
-  author: string;
-  icon: string;
-  file: string;
-}
-export interface Wallpaper {
-  file: string;
-  name: string;
-}
 
 // ① 推荐书单（站内可读清单 · 2026-10-18 定稿：变体 B + 680px 居中）
 // 封面放 public/images/booklist/（豆瓣图有防盗链，必须下载到本地，不能外链）
@@ -270,8 +260,60 @@ export const bookRecs: BookRec[] = [
   },
 ];
 
-// ② 推荐网站 / 工具（我推荐的）—— 内容整理中
-export const siteRecs: SiteRec[] = [];
+// ② 推荐网站 / 博客（2026-10-19：来自桌面《网站.xlsx》，放在「我的推荐」页书单下方）
+// why 为 2026-10-19 起草的推荐语，可随时改；改完刷新页面即可生效
+export const siteRecs: SiteRec[] = [
+  {
+    name: 'Paul Graham',
+    url: 'https://paulgraham.com/articles.html',
+    why: '把一件事想清楚，再写清楚。英文随笔的标杆，谈写作和创业的人几乎都在引用他。',
+  },
+  {
+    name: '李笑来',
+    url: 'https://lixiaolai.com/',
+    why: '中文互联网里少见的长期主义者，博客、开源书籍都在他自己这个站上。',
+  },
+  {
+    name: 'Justin Welsh',
+    url: 'https://justinwelsh.me/essays',
+    why: '一个人、一台电脑做成一门生意的完整打法，内容就是渠道。',
+  },
+  {
+    name: "Seth's Blog",
+    url: 'https://seths.blog/archive/',
+    why: '每天一篇，常常只有一段。看上十年，你会换一种方式理解营销。',
+  },
+  {
+    name: 'David Perell',
+    url: 'https://perell.com/',
+    why: '关于写作这件事本身：把文章当作品，而不是当产出。',
+  },
+  {
+    name: '雪豹',
+    url: 'https://lochhead.com/',
+    why: '定位与品类设计的一线视角，商业播客与文章都在这里。',
+  },
+  {
+    name: 'Hacker News',
+    url: 'https://news.ycombinator.com/news',
+    why: '科技与创业世界的实时脉搏，值得每天扫一眼标题。',
+  },
+  {
+    name: "Lenny's Newsletter",
+    url: 'https://www.lennysnewsletter.com/p/start-here',
+    why: '产品与增长的一手复盘，细节来自真正在做的人。',
+  },
+  {
+    name: 'Tim Ferriss Show · 逐字稿',
+    url: 'https://tim.blog/2018/09/20/all-transcripts-from-the-tim-ferriss-show/',
+    why: '几百场长访谈的全文逐字稿，适合精读，不适合快翻。',
+  },
+  {
+    name: 'Ribbonfarm',
+    url: 'https://ribbonfarm.com/',
+    why: '长文思辨，互联网思想界的深水区，读完要花点力气。',
+  },
+];
 
 // ③ + ④ 合并：我的开源（教程 + 作品，统一在一个页面展示）
 // kind: 'tutorial' = 站内阅读页；'project' = 跳 GitHub 仓库
@@ -289,19 +331,5 @@ export const openSources: OpenSourceItem[] = [
     url: 'https://github.com/gusangciren/md-to-book-pdf',
   },
 ];
-
-// ⑤ 素材下载（现有 resources.astro 的内容，原样保留）
-export const pdfs: PdfItem[] = [
-  { name: '100M Offers', author: 'Alex Hormozi', icon: '📈', file: '/resources/100M_Offers_-_Alex_Hormozi.pdf' },
-  { name: 'Breakthrough Advertising', author: 'Eugene Swartz', icon: '📣', file: '/resources/Breakthrough_advertising_-_Eugene_Swartz.pdf' },
-  { name: 'Case Study · StoryLearning', author: 'Olly Richards', icon: '🗣️', file: '/resources/Case%20Study%20-%20StoryLearning%20_%20OllyRichards.pdf' },
-  { name: 'Leads', author: 'Alex Hormozi', icon: '🎯', file: '/resources/Leads_-_Alex_hormozi.pdf' },
-  { name: 'Snow Leopard', author: 'Nicolas Cole', icon: '🐆', file: '/resources/snow_leopard_-_nicolas_cole.pdf' },
-];
-
-export const wallpapers: Wallpaper[] = [
-  { file: '/resources/2778c2174c280000bca95903b70a2476.jpg', name: '壁纸 01' },
-  { file: '/resources/2dd7720b5a5187e16d6c4dbcc12e410c.png', name: '壁纸 02' },
-  { file: '/resources/841a441a04e1b958f5287a6a84bbeb33.png', name: '壁纸 03' },
-  { file: '/resources/d9c7269ee0c6f4e4bce4e820db9d5584.jpg', name: '壁纸 04' },
-];
+// 注：⑤素材下载（PDF + 壁纸）已于 2026-10-19 按用户要求彻底下线，数据与文件一并移除，之后不再上线。
+// 相关静态文件 public/resources/（5 个 PDF + 4 张壁纸）也一并删除。

@@ -398,7 +398,7 @@ function titleWithBrackets(name) {
   </style>
 
   {/* ===== 资源中心：专栏之后、读者信之前 ===== */}
-  <section class="section section-resources">
+  <section class="section section-resources" id="resources">
     <div class="section-inner">
       <div class="rs-head">
         <div class="rs-title">资源<span class="hl">中心</span></div>
@@ -411,10 +411,21 @@ function titleWithBrackets(name) {
           <span class="rs-go">查看 →</span>
         </a>
         <a class="rs-card" href="/resources/recommended/">
-          <h3>我的推荐</h3>
-          <p>我读过的书，和我每天在用的工具</p>
+          <h3>我的书单</h3>
+          <p>我读过的书，和我为什么推荐它们</p>
           <span class="rs-go">查看 →</span>
         </a>
+        <a class="rs-card" href="/resources/blogs/">
+          <h3>常读博客</h3>
+          <p>我每周都会打开的网站与博客，不是导航站，是一份清单</p>
+          <span class="rs-go">查看 →</span>
+        </a>
+        {/* 占位卡：与前三张凑成 2×2 对称，内容定下来后替换掉即可 */}
+        <div class="rs-card rs-card-soon">
+          <h3>敬请期待</h3>
+          <p>下一块内容还在准备中，位置先留着</p>
+          <span class="rs-go rs-go-soon">筹备中</span>
+        </div>
       </div>
     </div>
   </section>
@@ -440,6 +451,11 @@ function titleWithBrackets(name) {
     .rs-card p{font-size:14.5px;line-height:1.6;color:var(--color-text-secondary,#666);margin:0}
     .rs-go{display:inline-block;margin-top:18px;font-size:13px;font-weight:600;color:var(--color-accent,#f55000);transition:transform .2s}
     .rs-card:hover .rs-go{transform:translateX(4px)}
+    /* 占位卡：虚线边框 + 灰化，一眼看出「还没内容」，但不破坏四宫格对称 */
+    .rs-card-soon{border-style:dashed;border-color:#dcd5c9;background:#fcfbf9;box-shadow:none}
+    .rs-card-soon:hover{border-color:#dcd5c9;transform:none;box-shadow:none}
+    .rs-card-soon h3{color:#a8a29e}
+    .rs-go-soon{color:#b8b2aa}
     @media(max-width:760px){
       .rs-grid{grid-template-columns:1fr;gap:14px;width:100%}
       .rs-title{font-size:2rem}
