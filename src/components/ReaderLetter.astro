@@ -62,17 +62,17 @@
   <p class="rdl-emph">「我」读完，就让 AI 读。</p>
 
   <p class="rdl-p">你好，我是「种一个梦」公众号的主理人，《闭环：在你睡觉时赚钱》等书，我写完了，但我更希望它不只是一本被"读完"的书，而是一套能被你<b>拿走、改造、复用</b>的资产。</p>
-  <p class="rdl-p">你不是拥有阅读权。</p>
+  <p class="rdl-p">你不只是拥有阅读权。</p>
 
   <h4>一、你能拿到什么？</h4>
   <p class="rdl-p">网站上的每一个书籍，我都为你准备了两套版本：</p>
-  <ul class="rdl-list">
+  <ul class="rdl-list rdl-cards">
     <li><b>精美 PDF 版</b>：排版精致，适合深度阅读、收藏保存、打印成册。</li>
     <li><b>本地 Markdown 文件包</b>：纯文本、无平台绑定，是 AI 时代真正属于你的<b>核心知识资产</b>。</li>
   </ul>
 
   <figure class="rdl-fig">
-    <img src="/images/letter-kb-books.jpg" alt="知识库：《闭环》《选择改变命运》的 Markdown 与 PDF 文件" loading="lazy" />
+    <img src="/images/letter-kb-assets.png" alt="知识库与资源：《闭环》《保罗·格雷厄姆文集》《选择改变命运》《YC 创业课》的 PDF 与 Markdown 文件" loading="lazy" />
     <figcaption>放进你的知识库，让 AI 随时调用它</figcaption>
   </figure>
 
@@ -82,20 +82,16 @@
   <p class="rdl-p">因为——<a href="https://mp.weixin.qq.com/s/82u-7l75Z04l7ohQzQTQLg" target="_blank" rel="noopener">文章即代码</a>。总之，没有限制，发挥你的想象力，你不只是拥有阅读权限。</p>
   <p class="rdl-p">不只是「读书」，还要「<a href="https://mp.weixin.qq.com/s/P3riaxxextfinvu-YBm8-g" target="_blank" rel="noopener">写书</a>」。我写完这篇文章，我希望这些内容不只是被你“读过”，而是希望它能真正被你拿走、重构、迭代、用起来，变成你自己的资产。</p>
 
-  <figure class="rdl-fig">
-    <img src="/images/letter-write-book.png" alt="混合笔记系统：纸质笔记本与手机数字笔记" loading="lazy" />
-  </figure>
-
   <p class="rdl-p"><b class="rdl-num">③</b><b>打印成纸质版</b></p>
-  <p class="rdl-p">《闭环》已做过排版与视觉优化，打印质感极佳，优先推荐这两本。</p>
+  <p class="rdl-p">《闭环》已做过排版与视觉优化，打印质感极佳，优先推荐这一本。</p>
 
   <h4>三、如何领取？（3 选 1，30 秒搞定）</h4>
   <div class="rdl-claim">
-    <div class="rdl-claim-row">
+    <div class="rdl-claim-row rdl-claim-hot">
       <div class="rdl-claim-txt">
-        <b>方式一：加微信（最直接且高效）</b>
+        <b>方式一：加微信（最直接且高效）<i class="rdl-tag">推荐</i></b>
         <ul class="rdl-list rdl-dot">
-          <li>微信号：<code>gusang211800</code>，或者点击<button type="button" class="rdl-qr-btn" id="rdl-qr-btn">二维码</button>扫二维码添加我的微信，回复「资料包」领取完整版资料。</li>
+          <li>微信号：<code>gusang211800</code>，或者点击<button type="button" class="rdl-qr-btn" id="rdl-qr-btn">二维码</button>扫二维码添加我的微信，回复<b class="rdl-hlb">「资产包」</b>领取完整版资料。</li>
         </ul>
         <span class="rdl-ps">PS：专栏内容为付费内容，仅对付费读者开放。</span>
       </div>
@@ -104,7 +100,7 @@
       <div class="rdl-claim-txt">
         <b>方式二：I 人极速通道（无需加好友）</b>
         <ul class="rdl-list rdl-dot">
-          <li>公众号后台回复关键词即可领取：回复关键词——「闭环」｜「选择改变命运」｜「格雷厄姆文集」</li>
+          <li>公众号后台回复关键词即可领取：回复关键词——<b class="rdl-hlb">「资产包」</b></li>
         </ul>
       </div>
     </div>
@@ -171,56 +167,99 @@
 .rdl-qinqi{position:absolute;right:4%;top:-30%;z-index:3;background:#b8433a;color:#fff7ef;font-family:var(--font-serif);font-size:14px;
   padding:5px 12px;border-radius:5px;transform:rotate(8deg);letter-spacing:.2em;box-shadow:0 3px 8px rgba(0,0,0,.22);}
 
-/* ===== 全屏读信（米白信纸垫） ===== */
+/* ===== 全屏读信（深夜书房 · 暖金夜信） ===== */
 .rdl-ov{position:fixed;inset:0;z-index:1200;display:none;align-items:center;justify-content:center;padding:4vh 16px;}
 .rdl-ov.show{display:flex;}
-.rdl-shade{position:absolute;inset:0;background:linear-gradient(180deg,#f6f1e6,#efe7d6);opacity:0;transition:opacity .35s;}
+.rdl-shade{position:absolute;inset:0;
+  background:radial-gradient(900px 420px at 50% -80px,rgba(232,160,76,.13),transparent 65%),#0f0d09;
+  opacity:0;transition:opacity .35s;}
 .rdl-ov.in .rdl-shade{opacity:1;}
-.rdl-sheet{position:relative;width:min(780px,94vw);max-height:92vh;overflow-y:auto;background:#fffdf7;border-radius:14px;
-  padding:46px 48px 38px;box-shadow:0 30px 90px rgba(0,0,0,.16);opacity:0;transform:translateY(46px) scale(.97);
+.rdl-sheet{position:relative;width:min(780px,94vw);max-height:92vh;overflow-y:auto;
+  scrollbar-width:none;-ms-overflow-style:none;
+  background:linear-gradient(180deg,#1c160d,#171208);border:1px solid rgba(232,160,76,.28);border-radius:14px;
+  padding:46px 48px 38px;box-shadow:0 30px 90px rgba(0,0,0,.6),inset 0 0 60px rgba(232,160,76,.05);
+  opacity:0;transform:translateY(46px) scale(.97);
   transition:transform .5s cubic-bezier(.2,.7,.3,1),opacity .4s;}
+.rdl-sheet::-webkit-scrollbar{display:none;width:0;height:0;}
 .rdl-ov.in .rdl-sheet{opacity:1;transform:translateY(0) scale(1);}
-.rdl-close{position:sticky;top:0;float:right;width:36px;height:36px;border:none;border-radius:50%;background:rgba(28,25,23,.06);
-  color:#57534e;font-size:15px;cursor:pointer;z-index:5;transition:background .2s,color .2s;}
-.rdl-close:hover{background:rgba(245,80,0,.1);color:var(--color-accent);}
-.rdl-sheet-top{display:flex;justify-content:space-between;font-size:12px;letter-spacing:.18em;color:#b8a37a;
-  border-bottom:1px solid #eee2c8;padding-bottom:12px;margin-bottom:26px;}
+.rdl-close{position:sticky;top:0;float:right;width:36px;height:36px;border:none;border-radius:50%;background:rgba(232,160,76,.1);
+  color:#bfb298;font-size:15px;cursor:pointer;z-index:5;transition:background .2s,color .2s;}
+.rdl-close:hover{background:rgba(232,160,76,.22);color:#e8a04c;}
+.rdl-sheet-top{display:flex;justify-content:space-between;font-size:12px;letter-spacing:.18em;color:#a8905e;
+  border-bottom:1px solid rgba(232,160,76,.2);padding-bottom:12px;margin-bottom:26px;}
 
-/* ===== 信内排版（丙 · 极简优化版） ===== */
-.rdl-title{font-family:var(--font-serif);font-size:1.75rem;font-weight:700;line-height:1.6;text-align:center;margin:0 0 26px;}
-.rdl-title em{display:block;font-style:normal;color:var(--color-accent);}
-.rdl-p{font-size:15.5px;line-height:2;margin:14px 0;}
-.rdl-p b{color:var(--color-accent);font-weight:700;}
-.rdl-num{color:var(--color-accent);font-weight:800;margin-right:4px;}
-.rdl-list{list-style:none;margin:10px 0;padding:0;}
-.rdl-list li{position:relative;padding-left:20px;font-size:15.5px;line-height:1.95;margin:7px 0;}
-.rdl-list li::before{content:'·';position:absolute;left:4px;color:var(--color-accent);font-weight:700;}
-.rdl-list b{color:var(--color-accent);}
-.rdl-tick li::before{content:'✓';font-size:12px;top:1px;color:var(--color-accent);}
+/* ===== 信内排版（深夜书房 · 暖金夜信） ===== */
+.rdl-title{font-family:var(--font-serif);font-size:1.75rem;font-weight:700;line-height:1.7;text-align:center;margin:0 0 12px;color:#f0e3c8;}
+.rdl-title em{display:block;font-style:normal;color:#e8a04c;text-shadow:0 0 22px rgba(232,160,76,.35);font-size:1.08rem;margin-top:8px;}
+.rdl-p{font-size:15.5px;line-height:2.15;margin:15px 0;color:#cfc4ad;}
+.rdl-p b{color:#e8a04c;font-weight:700;}
+.rdl-num{color:#e8a04c;font-weight:800;margin-right:4px;}
+.rdl-list{list-style:none;margin:12px 0;padding:0;}
+.rdl-list li{position:relative;padding-left:20px;font-size:15.5px;line-height:2;margin:7px 0;color:#cfc4ad;}
+.rdl-list li::before{content:'·';position:absolute;left:4px;color:#e8a04c;font-weight:700;}
+.rdl-list b{color:#e8a04c;}
+/* 交付物两栏价值卡（借方案 B 的卡片骨架，配深夜金） */
+.rdl-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:22px 0 8px;}
+.rdl-cards li{border:1px solid rgba(232,160,76,.22);border-radius:10px;background:rgba(232,160,76,.05);
+  padding:20px 16px 16px;font-size:14.5px;line-height:1.95;margin:0;}
+.rdl-cards li::before{content:'✓';position:absolute;top:-11px;left:14px;width:22px;height:22px;border-radius:50%;
+  background:#e8a04c;color:#161208;display:grid;place-items:center;font-size:12px;font-weight:700;}
+.rdl-tick li::before{content:'✓';font-size:12px;top:1px;color:#e8a04c;}
 .rdl-dot li{padding-left:16px;font-size:14.5px;line-height:1.85;margin:5px 0;}
 .rdl-dot li::before{content:'·';left:2px;}
-.rdl-paper h4{font-family:var(--font-serif);font-size:1.15rem;font-weight:700;margin:32px 0 6px;padding-left:11px;border-left:3px solid var(--color-accent);}
-.rdl-flow{text-align:center;font-size:15.5px;letter-spacing:.06em;color:var(--color-accent);font-weight:600;margin:16px 0;}
-.rdl-emph{margin:18px 0;padding:14px 18px;background:rgba(245,80,0,.06);border-radius:10px;text-align:center;font-size:15.5px;line-height:1.9;}
-.rdl-emph b{color:var(--color-accent);font-weight:700;}
+.rdl-paper h4{font-family:var(--font-serif);font-size:1.18rem;font-weight:700;color:#e8a04c;margin:40px 0 14px;
+  text-align:center;letter-spacing:.14em;}
+.rdl-paper h4::before{content:'◆';display:block;font-size:10px;color:rgba(232,160,76,.6);margin-bottom:10px;}
+.rdl-flow{text-align:center;font-size:15.5px;letter-spacing:.06em;color:#e8a04c;font-weight:600;margin:16px 0;}
+.rdl-emph{margin:22px 0;padding:0;text-align:center;font-size:1.14rem;line-height:1.9;color:#e8a04c;letter-spacing:.08em;}
+.rdl-emph b{color:#e8a04c;font-weight:700;}
 .rdl-emph b:last-child{margin-left:.4em;}
-.rdl-fig{margin:20px 0;}
-.rdl-fig img{width:100%;display:block;border-radius:10px;border:1px solid #ece2cc;box-shadow:0 8px 22px rgba(28,25,23,.08);background:#fff;}
-.rdl-fig figcaption{margin-top:9px;text-align:center;font-size:12.5px;color:#8a8378;letter-spacing:.04em;}
+.rdl-fig{margin:26px 0;}
+.rdl-fig img{width:100%;display:block;border-radius:8px;border:1px solid rgba(232,160,76,.35);background:#0f0d09;
+  box-shadow:0 18px 40px rgba(0,0,0,.55),0 0 30px rgba(232,160,76,.08);}
+.rdl-fig figcaption{margin-top:12px;text-align:center;font-size:12.5px;color:#8f7f5e;letter-spacing:.15em;}
 .rdl-claim{margin-top:14px;}
-.rdl-claim-row{display:flex;gap:16px;align-items:flex-start;border:1px dashed #d9c9a8;border-radius:12px;padding:16px 18px;background:#fffef9;margin-bottom:14px;}
-.rdl-claim-txt{font-size:14.5px;line-height:1.9;color:#57534e;}
-.rdl-claim-txt>b:first-child{display:block;margin-bottom:6px;font-size:15px;color:var(--color-text);}
-.rdl-claim-txt b{color:var(--color-accent);}
-.rdl-claim-txt code{background:#f5f0e4;border-radius:4px;padding:1px 6px;font-size:13.5px;}
-.rdl-ps{display:block;margin-top:8px;font-size:12.5px;color:#8a8378;line-height:1.8;}
-.rdl-ps b{color:var(--color-accent);}
-.rdl-code{margin-top:22px;text-align:center;font-size:13.5px;border:1px dashed rgba(245,80,0,.35);color:var(--color-accent);border-radius:999px;padding:10px 20px;width:fit-content;margin-left:auto;margin-right:auto;}
-.rdl-code span{color:var(--color-text-secondary);font-size:12px;}
-.rdl-sign{margin-top:18px;text-align:right;font-family:var(--font-serif);font-size:14.5px;color:#57534e;}
+.rdl-claim-row{display:flex;gap:16px;align-items:flex-start;border:1px solid rgba(232,160,76,.18);border-radius:12px;
+  padding:16px 18px;background:rgba(232,160,76,.04);margin-bottom:14px;}
+/* 三个方式标题：独占一行 + 亮金大字号 + 短金线下划，与下方正文拉开层级（原来继承正文色 #bfb298，融在一起） */
+.rdl-claim-txt>b{display:block;color:#f0c98a;font-size:1.06rem;font-weight:700;letter-spacing:.04em;
+  margin:0 0 12px;padding-bottom:9px;position:relative;}
+.rdl-claim-txt>b::after{content:'';position:absolute;left:0;bottom:0;width:36px;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,#e8a04c,rgba(232,160,76,0));}
+/* 方式一凸显：更亮的金 + 更长更粗的金线，标题字号再大一档 */
+.rdl-claim-row.rdl-claim-hot{border:1.5px solid rgba(232,160,76,.55);background:rgba(232,160,76,.08);
+  box-shadow:0 0 24px rgba(232,160,76,.08);}
+.rdl-claim-hot .rdl-claim-txt>b{color:#ffc978;font-size:1.16rem;letter-spacing:.05em;}
+.rdl-claim-hot .rdl-claim-txt>b::after{width:52px;height:3px;box-shadow:0 0 10px rgba(232,160,76,.5);}
+.rdl-tag{display:inline-block;font-style:normal;font-weight:700;font-size:11.5px;background:#e8a04c;color:#161208;
+  border-radius:999px;padding:2px 10px;margin-left:8px;letter-spacing:.14em;vertical-align:2px;}
+/* 「资产包」标记高亮 */
+.rdl-hlb{color:#f0c98a;font-weight:700;background:rgba(232,160,76,.14);border:1px solid rgba(232,160,76,.3);
+  border-radius:6px;padding:1px 7px;}
+.rdl-claim-txt{font-size:14.5px;line-height:1.95;color:#bfb298;}
+/* 正文里的加粗强调（标题的样式已在 .rdl-claim-txt>b 统一处理，此处只管正文内 b） */
+.rdl-claim-txt .rdl-list b,.rdl-claim-txt .rdl-ps b{color:#e8a04c;}
+.rdl-claim-txt code{background:rgba(232,160,76,.12);border-radius:4px;padding:1px 6px;font-size:13.5px;color:#f0c98a;}
+.rdl-ps{display:block;margin-top:8px;font-size:12.5px;color:#8f7f5e;line-height:1.8;}
+.rdl-ps b{color:#e8a04c;}
+.rdl-code{margin-top:22px;text-align:center;font-size:13.5px;border:1px dashed rgba(232,160,76,.4);color:#e8a04c;border-radius:999px;padding:10px 20px;width:fit-content;margin-left:auto;margin-right:auto;}
+.rdl-code span{color:#8f7f5e;font-size:12px;}
+.rdl-sign{margin-top:26px;text-align:right;font-family:var(--font-serif);font-size:14.5px;color:#a8905e;
+  position:relative;padding-right:58px;min-height:46px;}
+/* 金印章 */
+.rdl-sign::after{content:'夜读';position:absolute;right:0;bottom:-2px;width:40px;height:40px;
+  border:1.5px solid rgba(232,160,76,.6);border-radius:6px;color:#e8a04c;font-size:14px;font-weight:700;
+  display:grid;place-items:center;writing-mode:vertical-rl;letter-spacing:3px;transform:rotate(-4deg);
+  background:rgba(232,160,76,.06);}
 
-.rdl-qr-btn{display:inline;border:none;background:none;padding:0;font-family:inherit;font-size:inherit;color:var(--color-accent);cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
-.rdl-qr-btn:hover{color:#c2410c;}
+/* 信内链接：金色点线 + 上标 ↗（深夜书房） */
+.rdl-paper a{color:#e8a04c;font-weight:600;text-decoration:none;padding:0 1px;
+  border-bottom:1px dotted rgba(232,160,76,.55);transition:color .2s,border-color .2s;}
+.rdl-paper a::after{content:'↗';font-size:.7em;vertical-align:.42em;margin-left:2px;opacity:.8;}
+.rdl-paper a:hover{color:#f0c98a;border-bottom-color:#f0c98a;}
+
+.rdl-qr-btn{display:inline;border:none;background:none;padding:0;font-family:inherit;font-size:inherit;color:#e8a04c;cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;}
+.rdl-qr-btn:hover{color:#f0c98a;}
 
 body.rdl-locked{overflow:hidden;}
 /* 信打开时，页脚二维码弹层要浮在信纸之上（信 = 1200） */
@@ -243,6 +282,7 @@ body.rdl-locked .wechat-qr-overlay.wechat-qr-overlay{z-index:1400;}
   .rdl-lp-tag{font-size: 12px;}
   .rdl-lp-hint{font-size: 12px;}
   .rdl-sheet{padding:30px 20px 26px;}
+  .rdl-cards{grid-template-columns:1fr;gap:12px;}
   .rdl-title{font-size:1.4rem;}
   .rdl-claim-row{flex-direction:column;gap:10px;}
 }
