@@ -472,6 +472,16 @@ export const bookRecs: BookRec[] = [
 // why 为 2026-10-19 起草的推荐语，可随时改；改完刷新页面即可生效
 export const siteRecs: SiteRec[] = [
   {
+    name: 'Sam Altman',
+    url: 'https://blog.samaltman.com/',
+    why: '文章不多，但几乎每篇都值得反复读。既谈怎么把一件事做成，也谈技术正把世界带去哪里。',
+  },
+  {
+    name: 'Dan Koe',
+    url: 'https://thedankoe.com/',
+    why: '一个人把写作、产品和生意串成一件事的样板。想靠内容养活自己，这条路上绕不开他。',
+  },
+  {
     name: 'Paul Graham',
     url: 'https://paulgraham.com/articles.html',
     why: '把一件事想清楚，再写清楚。英文随笔的标杆，谈写作和创业的人几乎都在引用他。',

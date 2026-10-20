@@ -407,18 +407,21 @@ function titleWithBrackets(name) {
       </div>
       <div class="rs-grid">
         <a class="rs-card" href="/resources/recommended/">
+          <div class="rs-count"><span class="rs-n">{bookRecs.length}</span><span class="rs-u">本</span></div>
           <h3>我的书单</h3>
-          <p>{bookRecs.length} 本 · 我读过的书，和我为什么推荐它们</p>
+          <p>我读过的书，和我为什么推荐它们</p>
           <span class="rs-go">查看 →</span>
         </a>
         <a class="rs-card" href="/resources/blogs/">
+          <div class="rs-count"><span class="rs-n">{siteRecs.length}</span><span class="rs-u">个</span></div>
           <h3>常读博客</h3>
-          <p>{siteRecs.length} 个 · 我每周都会打开的网站与博客，不是导航站，是一份清单</p>
+          <p>我每周都会打开的网站与博客，不是导航站，是一份清单</p>
           <span class="rs-go">查看 →</span>
         </a>
         <a class="rs-card" href="/resources/opensource/">
+          <div class="rs-count"><span class="rs-n">{openSources.length}</span><span class="rs-u">项</span></div>
           <h3>我的开源</h3>
-          <p>{openSources.length} 项 · 教程与作品，都在这</p>
+          <p>教程与作品，都在这</p>
           <span class="rs-go">查看 →</span>
         </a>
       </div>
@@ -431,26 +434,35 @@ function titleWithBrackets(name) {
   </div>
 
   <style>
-    /* 资源中心：无背景（用站点默认米白 #fafaf9），与书籍作品区统一 */
-    .section-resources .section-inner{max-width:1200px} /* 与书籍作品区同宽，避免贴边显挤 */
-    .rs-head{text-align:center;margin-bottom:44px}
-    .rs-title{font-family:var(--font-serif);font-size:2.4rem;font-weight:700;color:var(--color-text,#1c1917)}
-    .rs-title .hl{color:var(--color-accent,#f55000)}
-    .rs-sub{font-size:16px;line-height:1.6;color:var(--color-text-secondary,#78716c);margin-top:10px}
-    /* 宽度对齐「书籍作品」区（.section-books .section-inner = 1200px）：资源区直接填满 1200px 容器，
-       桌面端两卡并排、宽高与整站区块一致；移动端（≤760px）单列全宽见下方媒体查询 */
-    .rs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin:0 auto}
-    .rs-card{display:block;background:var(--color-card-bg,#fff);border:1px solid var(--color-border,#e8e3da);border-radius:14px;padding:28px 24px;min-height:210px;text-decoration:none;color:inherit;box-shadow:0 2px 10px rgba(28,25,23,.04);transition:border-color .2s,transform .2s,box-shadow .2s}
-    .rs-card:hover{border-color:var(--color-accent,#f55000);transform:translateY(-3px);box-shadow:0 12px 30px rgba(245,80,0,.12)}
-    .rs-card h3{font-size:1.15rem;font-weight:600;margin:0 0 10px;color:var(--color-text,#1a1a1a)}
-    .rs-card p{font-size:14.5px;line-height:1.6;color:var(--color-text-secondary,#666);margin:0}
-    .rs-go{display:inline-block;margin-top:18px;font-size:13px;font-weight:600;color:var(--color-accent,#f55000);transition:transform .2s}
-    .rs-card:hover .rs-go{transform:translateX(4px)}
+    /* 资源中心：白底通栏——无卡片/无阴影/无圆角，只用细线分栏（2026-10-20：暗色版改白底，配色回归站点色板） */
+    .section-resources{background:#fff;padding:88px 24px}
+    .section-resources .section-inner{max-width:1200px}
+    .rs-head{text-align:center;margin-bottom:52px}
+    .rs-title{font-family:var(--font-serif);font-size:2.4rem;font-weight:700;color:#1c1917;letter-spacing:.02em}
+    .rs-title .hl{color:#F55000}
+    .rs-sub{font-size:16px;line-height:1.6;color:#78716c;margin-top:12px}
+    .rs-grid{display:grid;grid-template-columns:repeat(3,1fr);margin:0 auto}
+    .rs-card{position:relative;display:block;padding:6px 34px 6px 30px;text-decoration:none;color:inherit}
+    /* 列间细线分隔，代替卡片 */
+    .rs-card + .rs-card{border-left:1px solid #e8e3da}
+    /* hover：左侧亮起一条品牌橙竖线，不靠阴影和位移 */
+    .rs-card::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:2px;background:#F55000;opacity:0;transform:scaleY(.4);transform-origin:center;transition:opacity .25s,transform .25s}
+    .rs-card:hover::before{opacity:1;transform:scaleY(1)}
+    .rs-count{display:flex;align-items:baseline;gap:4px;margin-bottom:14px}
+    .rs-n{font-family:var(--font-serif);font-size:2.5rem;line-height:1;color:#F55000;letter-spacing:.01em}
+    .rs-u{font-size:13px;color:#a8a29e}
+    .rs-card h3{font-family:var(--font-serif);font-size:1.18rem;font-weight:700;margin:0 0 10px;color:#1c1917;transition:color .25s}
+    .rs-card:hover h3{color:#F55000}
+    .rs-card p{font-size:14.5px;line-height:1.7;color:#78716c;margin:0}
+    .rs-go{display:inline-block;margin-top:20px;font-size:13px;font-weight:600;color:#F55000;transition:transform .25s}
+    .rs-card:hover .rs-go{transform:translateX(5px)}
     @media(max-width:860px){
-      .rs-grid{grid-template-columns:1fr;gap:14px;width:100%}
+      .section-resources{padding:60px 20px}
+      .rs-grid{grid-template-columns:1fr}
+      .rs-card{padding:24px 0 24px 20px}
+      .rs-card + .rs-card{border-left:0;border-top:1px solid #e8e3da}
       .rs-title{font-size:2rem}
       .rs-sub{font-size:15px}
-      .rs-card{padding:22px 18px;min-height:0}
     }
   </style>
 
