@@ -44,7 +44,7 @@ const isEmpty =
 ---
 
 <BaseLayout title={`${tab.label} — 像企业家一样写作`}>
-  <div class="resources-page">
+  <div class:list={["resources-page", tab.slug !== "opensource" && "rp-narrow"]}>
     {/* 面包屑（当前位置）+ 下一个分类：不用滚到底也能继续翻 */}
     <nav class="rp-crumb" aria-label="资源分类">
       <div class="rp-crumb-l">
@@ -68,6 +68,7 @@ const isEmpty =
                 const paras = blocksOf(b);
                 return (
                   <div class="rp-bl">
+                    <span class="rp-bl-no">{String(i + 1).padStart(2, '0')}</span>
                     <div class="rp-bl-top">
                       <div class="rp-bl-cov">
                         {b.cover ? (
@@ -78,7 +79,6 @@ const isEmpty =
                       </div>
                       <div class="rp-bl-body">
                         <div class="rp-bl-l1">
-                          <span class="rp-bl-no">{String(i + 1).padStart(2, '0')}</span>
                           <span class="rp-bl-t">{b.title}</span>
                           {b.author && <span class="rp-bl-a">{b.author}</span>}
                         </div>
@@ -170,6 +170,8 @@ const isEmpty =
 
 <style is:global>
   .resources-page { max-width: 960px; margin: 0 auto; padding: 100px 24px 80px; }
+  /* 书单 / 常读博客页正文是 680px 居中，头部（面包屑 + 副标题）同步收窄对齐，不再左右突出 */
+  .rp-narrow .rp-crumb, .rp-narrow .rp-sub { max-width: 680px; margin-left: auto; margin-right: auto; }
 
   /* ===== 站内书单（2026-10-18 · 变体 B + 680px 居中，与博客正文同宽）=====
      书单是「阅读类」内容，按用户要求收窄到 680px 居中，不铺满 960px 容器 */
@@ -182,7 +184,7 @@ const isEmpty =
 
   .rp-bl-list { display: flex; flex-direction: column; gap: 20px; }
   /* 纯展示卡：不可点击、无 hover 反馈；保留 1px 灰边框维持边界感 */
-  .rp-bl { display: block; background: var(--color-card-bg, #fff); border: 1px solid var(--color-border, #e5e5e5);
+  .rp-bl { display: block; position: relative; background: var(--color-card-bg, #fff); border: 1px solid var(--color-border, #e5e5e5);
     border-radius: 12px; color: inherit; overflow: hidden; }
 
   .rp-bl-top { display: flex; gap: 20px; padding: 18px 20px 16px; }
@@ -194,7 +196,11 @@ const isEmpty =
 
   .rp-bl-body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
   .rp-bl-l1 { display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap; }
-  .rp-bl-no { font-family: Georgia, serif; font-size: 0.81rem; font-weight: 700; color: #d6d3d1; flex: none; }
+  /* 序号移到卡片左上角：深色圆形徽标，浮于封面左上角（排名贴纸感） */
+  .rp-bl-no { position: absolute; top: 8px; left: 8px; z-index: 2;
+    font-family: Georgia, serif; font-size: 0.78rem; font-weight: 700; color: #fff;
+    background: rgba(28, 25, 23, 0.72); width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; }
   .rp-bl-t { font-family: var(--font-serif, Georgia, serif); font-size: 1.1rem; font-weight: 700; line-height: 1.5; color: var(--color-text, #1c1917); }
   .rp-bl-a { font-size: 0.78rem; color: var(--color-text-secondary, #78716c); }
   .rp-bl-d { font-size: 0.85rem; color: var(--color-text-secondary, #78716c); line-height: 1.8; margin-top: 9px; }

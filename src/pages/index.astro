@@ -4,6 +4,7 @@ import SectionHeader from '../components/SectionHeader.astro';
 import ReaderLetter from '../components/ReaderLetter.astro';
 import { getCollection } from 'astro:content';
 import { columns } from '../data/columns';
+import { bookRecs, siteRecs, openSources } from '../data/resources';
 
 // 首屏最大元素（Hero 夜空背景是 CSS 背景图）提前拉取，改善 LCP 观感
 const HERO_BG = '/images/hero-night.jpg';
@@ -405,27 +406,21 @@ function titleWithBrackets(name) {
         <div class="rs-sub">我读过的、好用的、自己做的，都收在一处</div>
       </div>
       <div class="rs-grid">
-        <a class="rs-card" href="/resources/opensource/">
-          <h3>我的开源</h3>
-          <p>教程与作品，都在这</p>
-          <span class="rs-go">查看 →</span>
-        </a>
         <a class="rs-card" href="/resources/recommended/">
           <h3>我的书单</h3>
-          <p>我读过的书，和我为什么推荐它们</p>
+          <p>{bookRecs.length} 本 · 我读过的书，和我为什么推荐它们</p>
           <span class="rs-go">查看 →</span>
         </a>
         <a class="rs-card" href="/resources/blogs/">
           <h3>常读博客</h3>
-          <p>我每周都会打开的网站与博客，不是导航站，是一份清单</p>
+          <p>{siteRecs.length} 个 · 我每周都会打开的网站与博客，不是导航站，是一份清单</p>
           <span class="rs-go">查看 →</span>
         </a>
-        {/* 占位卡：与前三张凑成 2×2 对称，内容定下来后替换掉即可 */}
-        <div class="rs-card rs-card-soon">
-          <h3>敬请期待</h3>
-          <p>下一块内容还在准备中，位置先留着</p>
-          <span class="rs-go rs-go-soon">筹备中</span>
-        </div>
+        <a class="rs-card" href="/resources/opensource/">
+          <h3>我的开源</h3>
+          <p>{openSources.length} 项 · 教程与作品，都在这</p>
+          <span class="rs-go">查看 →</span>
+        </a>
       </div>
     </div>
   </section>
@@ -444,19 +439,14 @@ function titleWithBrackets(name) {
     .rs-sub{font-size:16px;line-height:1.6;color:var(--color-text-secondary,#78716c);margin-top:10px}
     /* 宽度对齐「书籍作品」区（.section-books .section-inner = 1200px）：资源区直接填满 1200px 容器，
        桌面端两卡并排、宽高与整站区块一致；移动端（≤760px）单列全宽见下方媒体查询 */
-    .rs-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin:0 auto}
+    .rs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin:0 auto}
     .rs-card{display:block;background:var(--color-card-bg,#fff);border:1px solid var(--color-border,#e8e3da);border-radius:14px;padding:28px 24px;min-height:210px;text-decoration:none;color:inherit;box-shadow:0 2px 10px rgba(28,25,23,.04);transition:border-color .2s,transform .2s,box-shadow .2s}
     .rs-card:hover{border-color:var(--color-accent,#f55000);transform:translateY(-3px);box-shadow:0 12px 30px rgba(245,80,0,.12)}
     .rs-card h3{font-size:1.15rem;font-weight:600;margin:0 0 10px;color:var(--color-text,#1a1a1a)}
     .rs-card p{font-size:14.5px;line-height:1.6;color:var(--color-text-secondary,#666);margin:0}
     .rs-go{display:inline-block;margin-top:18px;font-size:13px;font-weight:600;color:var(--color-accent,#f55000);transition:transform .2s}
     .rs-card:hover .rs-go{transform:translateX(4px)}
-    /* 占位卡：虚线边框 + 灰化，一眼看出「还没内容」，但不破坏四宫格对称 */
-    .rs-card-soon{border-style:dashed;border-color:#dcd5c9;background:#fcfbf9;box-shadow:none}
-    .rs-card-soon:hover{border-color:#dcd5c9;transform:none;box-shadow:none}
-    .rs-card-soon h3{color:#a8a29e}
-    .rs-go-soon{color:#b8b2aa}
-    @media(max-width:760px){
+    @media(max-width:860px){
       .rs-grid{grid-template-columns:1fr;gap:14px;width:100%}
       .rs-title{font-size:2rem}
       .rs-sub{font-size:15px}

@@ -41,7 +41,7 @@ export interface OpenSourceItem {
 // 推荐理由为原文照录，不做改写；微信读书推荐值需手工维护
 export const bookRecs: BookRec[] = [
   {
-    title: '终身成长（全新修订版）',
+    title: '《终身成长》（全新修订版）',
     author: '卡罗尔·德韦克 / 楚祎楠 译',
     cover: '/images/booklist/growth.jpg',
     doubanIntro:
@@ -55,7 +55,7 @@ export const bookRecs: BookRec[] = [
     reason: '',
   },
   {
-    title: '纳瓦尔宝典',
+    title: '《纳瓦尔宝典》',
     author: '埃里克·乔根森 / 赵灿 译',
     cover: '/images/booklist/naval.jpg',
     doubanIntro:
@@ -68,7 +68,7 @@ export const bookRecs: BookRec[] = [
     reason: '',
   },
   {
-    title: '穷查理宝典：查理·芒格智慧箴言录（全新增订本）',
+    title: '《穷查理宝典：查理·芒格智慧箴言录》（全新增订本）',
     author: '彼得·考夫曼 / 李继宏 等 译',
     cover: '/images/booklist/poorcharlie.jpg',
     doubanIntro:
@@ -82,7 +82,7 @@ export const bookRecs: BookRec[] = [
     reason: '',
   },
   {
-    title: '文明、现代化、价值投资与中国',
+    title: '《文明、现代化、价值投资与中国》',
     author: '李录',
     cover: '/images/booklist/civilization.jpg',
     doubanIntro:
@@ -96,7 +96,7 @@ export const bookRecs: BookRec[] = [
     reason: '',
   },
   {
-    title: '经济学的思维方式：第13版',
+    title: '《经济学的思维方式》（第13版）',
     author: '保罗·海恩 彼得·勃特克 大卫·普雷契特科',
     cover: '/images/booklist/economic-way.jpg',
     doubanIntro:
@@ -109,7 +109,7 @@ export const bookRecs: BookRec[] = [
     reason: '',
   },
   {
-    title: '洞见：从科学到哲学，打开人类的认知真相',
+    title: '《洞见：从科学到哲学，打开人类的认知真相》',
     author: '罗伯特·赖特 / 宋伟 译',
     cover: '/images/booklist/insight.jpg',
     doubanIntro:
@@ -122,7 +122,7 @@ export const bookRecs: BookRec[] = [
     reason: '',
   },
   {
-    title: '思考致富',
+    title: '《思考致富》',
     author: '拿破仑·希尔 / 洪友 译',
     cover: '/images/booklist/think-grow-rich.jpg',
     doubanIntro:
@@ -137,7 +137,7 @@ export const bookRecs: BookRec[] = [
     reason: '',
   },
   {
-    title: '自私的基因（40周年增订版）',
+    title: '《自私的基因》（40周年增订版）',
     author: '理查德·道金斯 / 卢允中,张岱云等 译',
     cover: '/images/booklist/selfish-gene.jpg',
     doubanIntro:
@@ -151,7 +151,7 @@ export const bookRecs: BookRec[] = [
     reason: '',
   },
   {
-    title: '影响力（全新升级版）',
+    title: '《影响力》（全新升级版）',
     author: '罗伯特·西奥迪尼 / 闾佳 译',
     cover: '/images/booklist/influence.jpg',
     doubanIntro:
@@ -165,7 +165,7 @@ export const bookRecs: BookRec[] = [
     reason: '',
   },
   {
-    title: '先发影响力',
+    title: '《先发影响力》',
     author: '罗伯特·西奥迪尼 / 闾佳 译',
     cover: '/images/booklist/pre-suasion.jpg',
     doubanIntro:
@@ -178,7 +178,7 @@ export const bookRecs: BookRec[] = [
     reason: '',
   },
   {
-    title: '人类简史：从动物到上帝',
+    title: '《人类简史：从动物到上帝》',
     author: '尤瓦尔·赫拉利 / 林俊宏 译',
     cover: '/images/booklist/sapiens.jpg',
     doubanIntro:
@@ -192,7 +192,7 @@ export const bookRecs: BookRec[] = [
     reason: '',
   },
   {
-    title: '枪炮、病菌与钢铁',
+    title: '《枪炮、病菌与钢铁》',
     author: '贾雷德·戴蒙德 / 王道还,廖月娟 译',
     cover: '/images/booklist/guns-germs-steel.jpg',
     doubanIntro:
@@ -206,7 +206,7 @@ export const bookRecs: BookRec[] = [
     reason: '',
   },
   {
-    title: '思考，快与慢',
+    title: '《思考，快与慢》',
     author: '丹尼尔·卡尼曼 / 胡晓姣,李爱民,何梦莹 译',
     cover: '/images/booklist/thinking-fast-slow.jpg',
     doubanIntro:
@@ -218,7 +218,7 @@ export const bookRecs: BookRec[] = [
     reason: '',
   },
   {
-    title: '财富自由之路',
+    title: '《财富自由之路》',
     author: '李笑来',
     cover: '/images/booklist/wealth-freedom.jpg',
     doubanIntro:
@@ -232,7 +232,7 @@ export const bookRecs: BookRec[] = [
     reason: '',
   },
   {
-    title: '稀缺：我们是如何陷入贫穷与忙碌的',
+    title: '《稀缺：我们是如何陷入贫穷与忙碌的》',
     author: '塞德希尔·穆来纳森 / 魏薇,龙志勇 译',
     cover: '/images/booklist/scarcity.jpg',
     doubanIntro:
@@ -245,7 +245,7 @@ export const bookRecs: BookRec[] = [
     reason: '',
   },
   {
-    title: '认知觉醒：开启自我改变的原动力',
+    title: '《认知觉醒：开启自我改变的原动力》',
     author: '周岭',
     cover: '/images/booklist/cognition-awake.jpg',
     doubanIntro:
@@ -256,6 +256,214 @@ export const bookRecs: BookRec[] = [
       '了解大脑，才能和它交朋友，一起成长。',
     wrScore: '90.5',
     wrBadge: '神作',
+    reason: '',
+  },
+  {
+    title: '《Rework》',
+    author: '37signals（Jason Fried & David Heinemeier Hansson）',
+    cover: '/images/booklist/rework.jpg',
+    doubanIntro: '37signals 写给创业者的反常识手册：少做、做对、快速行动，用更少的资源把事做成。',
+    reasonBlocks:
+      '第4章「成长才是最大的副产品」里，我整段引用了这本书的「卖掉副产品」一节：37signals 的《Getting Real》本就是写书过程中不经意产生的副产品，最后直接赚了超过 100 万美元。' +
+      '\n\n' +
+      '它彻底改变了我对「做产品」的理解——你不需要先计划好要出一本书、做一个课，你只管好好做事、好好分享，产品会作为副产品自己长出来。' +
+      '\n\n' +
+      '先去做，再卖掉副产品。',
+    reason: '',
+  },
+  {
+    title: '《Show Your Work!》',
+    author: 'Austin Kleon',
+    cover: '/images/booklist/show-your-work.jpg',
+    doubanIntro: 'Austin Kleon 关于「如何大方展示自己的创作过程」的短指南：被人看见，从公开分享开始。',
+    reasonBlocks:
+      '第4章讲「白天当学生，晚上当老师」，这本书就是「公开分享」最好的注脚。' +
+      '\n\n' +
+      '书里那段话我几乎全文引了：你仰慕并想效仿的人，没有一个是囤积作品、对别人保密的，他们都在网上不断发布自己作品的片段、想法和学到的知识。' +
+      '\n\n' +
+      '他们不浪费时间「建立人脉」，而是靠慷慨分享，反而收获了一个观众。想被看见，先公开做事。',
+    reason: '',
+  },
+  {
+    title: '《The Art of Focus》',
+    author: 'Dan Koe',
+    cover: '/images/booklist/the-art-of-focus.jpg',
+    doubanIntro: 'Dan Koe 关于专注与一人公司的思考合集：把注意力放在重要的事上，而不是做更多。',
+    reasonBlocks:
+      '和《Rework》《Show Your Work!》一起列在第4章的书单里，因为它讲的恰恰是如何把注意力放在真正重要的事上。' +
+      '\n\n' +
+      'Dan Koe 的思路和我一致：不是做更多，而是少做、做对。一个人、一台电脑，靠的是聚焦，不是堆量。' +
+      '\n\n' +
+      '专注，是这个时代最被低估的杠杆。',
+    reason: '',
+  },
+  {
+    title: '《价值心法》',
+    author: '姜胡说',
+    cover: '/images/booklist/jiahu-xinfa.jpg',
+    doubanIntro: '姜胡说把「如何想清楚、如何做成事」拆成可复用的方法论，偏实战、不灌鸡汤。',
+    reasonBlocks:
+      '姜胡说的内容我一直当「公开学习、公开分享」的范本在看，所以把它和《Rework》《Show Your Work!》列在一起。' +
+      '\n\n' +
+      '他最打动我的一点：把「如何想清楚、如何做成事」拆解成可以复用的方法，而不是灌鸡汤。' +
+      '\n\n' +
+      '想认真做事的人，值得翻一翻。',
+    reason: '',
+  },
+  {
+    title: '《小而美：持续盈利的经营法则》',
+    author: 'Sahil Lavingia（萨希尔·拉文吉亚）',
+    cover: '/images/booklist/xiao-er-mei.jpg',
+    doubanIntro: 'Sahil Lavingia 用自己 Gumroad 的经历说明：不追求成为巨头，先把一门小生意做成、做盈利。',
+    reasonBlocks:
+      '第5章讲「为观众提供真正有价值的服务」，这本书是「一个人也能做成生意」的活样本。' +
+      '\n\n' +
+      'Sahil 把自己做 Gumroad 的经历写成了「小而美」——不追求成为巨头，先把一件小事做成、做盈利，再慢慢长大。' +
+      '\n\n' +
+      '和《闭环》里「第一个100块」的逻辑一脉相承：先跑通一个小闭环。',
+    reason: '',
+  },
+  {
+    title: '《The Mom Test》',
+    author: 'Rob Fitzpatrick',
+    cover: '/images/booklist/the-mom-test.jpg',
+    doubanIntro: 'Rob Fitzpatrick 教你如何跟客户聊天还不被忽悠——别问「你会买吗」，要问出真话。',
+    reasonBlocks:
+      '第5章反复讲「去和用户建联、拿反馈」，这本书就是教你怎么和用户聊天还不被忽悠。' +
+      '\n\n' +
+      '名字来自一个真相：你妈都会对你说谎（出于爱护），所以别问「你会买吗」这种傻问题。' +
+      '\n\n' +
+      '怎么问出真话、怎么从聊天里挖出真需求，这本书讲透了。做产品前必读。',
+    reason: '',
+  },
+  {
+    title: '《Write Useful Books》',
+    author: 'Rob Fitzpatrick',
+    cover: '/images/booklist/write-useful-books.jpg',
+    doubanIntro: '同一位作者专讲「怎么写一本真正有用、能卖出去的非虚构书」的可执行指南。',
+    reasonBlocks:
+      '同一位作者（写《The Mom Test》的那位）写的，专门讲「怎么写一本真正有用、能卖出去的非虚构书」。' +
+      '\n\n' +
+      '第5章我说「服务是产品的 1.0 版本」，这本书把「把你的解决方案写成书」这件事拆成了可执行的步骤。' +
+      '\n\n' +
+      '如果你也想把自己解决问题的能力打包成一本数字产品，这是绕不开的一本。',
+    reason: '',
+  },
+  {
+    title: '《Anything You Want》',
+    author: 'Derek Sivers',
+    cover: '/images/booklist/anything-you-want.jpg',
+    doubanIntro: 'Derek Sivers 用 40 多条短心得讲透「从零做一门小生意」：生意是为别人解决问题。',
+    reasonBlocks:
+      'Derek Sivers 把「怎么从零开始做一门小生意」写成了 40 多条短心得，十几分钟就能读完。' +
+      '\n\n' +
+      '第5章讲「为其他人构建、别闭门造车」，他恰恰是用自己的 CD Baby 故事说明：生意是为别人解决问题的，不是为自己圆梦的。' +
+      '\n\n' +
+      '短、狠、没有废话，适合想清楚「我到底要不要开始」的人。',
+    reason: '',
+  },
+  {
+    title: '《俞军产品方法论》',
+    author: '俞军',
+    cover: '/images/booklist/yujun-product.jpg',
+    doubanIntro: '俞军把产品思维的底层框架讲清楚，核心是「用户价值 = 新体验 − 旧体验 − 替换成本」。',
+    reasonBlocks:
+      '第6章讲「如何在你睡觉时赚钱」，前提是先有真正有用的产品，这本书是中文世界里产品思维的底层框架。' +
+      '\n\n' +
+      '俞军把「用户价值 = 新体验 − 旧体验 − 替换成本」这条公式讲得很透，也讲清楚了什么是「产品经理」该想的。' +
+      '\n\n' +
+      '想认真做产品的人，这是绕不开的一本。',
+    reason: '',
+  },
+  {
+    title: '《重新理解企业家精神》',
+    author: '张维迎',
+    cover: '/images/booklist/chongxin-lijie.jpg',
+    doubanIntro: '张维迎把企业家精神还原为「发现机会、承担不确定性」，重新理解财富与市场的本质。',
+    reasonBlocks:
+      '和《俞军产品方法论》一起列在第6章，因为它把「企业家精神」还原成了「发现机会、承担不确定性」这件事。' +
+      '\n\n' +
+      '张维迎的观点和我一致：财富来自为别人解决问题，来自对未来的判断，而不是来自囤积。' +
+      '\n\n' +
+      '想理解「生意的本质」，这本书能帮你把地基打牢。',
+    reason: '',
+  },
+  {
+    title: '《The Heart Is the Bottleneck》',
+    author: 'Tiago Forte',
+    cover: '/images/booklist/heart-bottleneck.jpg',
+    doubanIntro: 'Tiago Forte（打造第二大脑作者）谈「瓶颈在人、不在方法」，以及如何把已有好东西重新打包成产品。',
+    reasonBlocks:
+      '第6章我引用了 Tiago 的一段真实经历：他的第一个在线课程，是基于《搞定：无压工作的艺术》做的视频版，目标只赚 1000 美元，结果 4 年多下来 15000+ 人参加。' +
+      '\n\n' +
+      '这本书（以及他的「打造第二大脑」思路）说明一件事：你不需要原创一个惊天动地的点子，把一个已有的好东西重新打包、做成交付，就是一门生意。' +
+      '\n\n' +
+      '完美的「第一个数字产品」范本。',
+    reason: '',
+  },
+  {
+    title: '《How to Start a Startup》',
+    author: 'Y Combinator / Sam Altman 等',
+    cover: '/images/booklist/how-to-start-a-startup.jpg',
+    doubanIntro: 'Y Combinator 在斯坦福开设的创业公开课，系统讲怎么从0到1做一家公司。',
+    reasonBlocks:
+      'YC 在斯坦福开的那门创业课，几乎把「从0到1做一家公司」拆成了公开课。' +
+      '\n\n' +
+      '第6章讲「数字产品风险几乎为零、可以先做再改」，这门课则是从更系统的角度讲：怎么找方向、怎么做产品、怎么增长。' +
+      '\n\n' +
+      '免费、完整、可以当播客一样反复听。',
+    reason: '',
+  },
+  {
+    title: '《Snow Leopard: How Legendary Writers Create A Category Of One》',
+    author: 'Nicolas Cole、Christopher Lochhead、Eddie Yoon（Category Pirates）',
+    cover: '/images/booklist/snow-leopard.png',
+    doubanIntro: 'Category Pirates 讲「创造属于自己的品类」：厉害的写作者不开品类内卷，而是自己开一个品类。',
+    reasonBlocks:
+      '第7章讲「创造自己的品类」，这本书把这件事讲到了极致：真正厉害的写作者，不是在一个品类里卷，而是自己开一个只属于自己的品类。' +
+      '\n\n' +
+      'Category Pirates（Nicolas Cole 等人）用大量案例说明：差异化不是装饰，是生存方式。' +
+      '\n\n' +
+      '想做内容、又不想被淹没在红海里，这本值得反复读。',
+    reason: '',
+  },
+  {
+    title: '《$100M Offers》',
+    author: 'Alex Hormozi',
+    cover: '/images/booklist/100m-offers.jpg',
+    doubanIntro: 'Alex Hormozi 讲如何把解决方案包装成「好到用户觉得不买就是傻」的 offer。',
+    reasonBlocks:
+      '第7章拆解「年入百万的收入组合流」，Hormozi 这两本（$100M Offers 和 $100M Leads）就是教你怎么把「解决方案」包装成别人抢着买的东西。' +
+      '\n\n' +
+      '他最核心的一句话：让你的 offer 好到用户觉得「不买就是傻」。' +
+      '\n\n' +
+      '和第3章的「引导磁铁」、第5章的「价值公式」可以直接串起来读。',
+    reason: '',
+  },
+  {
+    title: '《Case Study: Anatomy of a $10M Online Education Business》',
+    author: 'Olly Richards',
+    cover: '/images/booklist/case-study-10m.png',
+    doubanIntro: 'Olly Richards 对自己语言教育生意从0到1000万美元的完整拆解：数字、决策与复盘。',
+    reasonBlocks:
+      '第7章讲「从解决自身问题开始打包成产品」，这本书就是一个完整的案例拆解：一门教语言的在线教育生意，是怎么从0做到 1000 万美元的。' +
+      '\n\n' +
+      '不是鸡汤，是逐层的数字、决策和复盘。' +
+      '\n\n' +
+      '想认真做数字产品的人，看别人怎么走通过一遍，比自己瞎摸索省十年。',
+    reason: '',
+  },
+  {
+    title: '《$100M Leads: How to Get Strangers To Want To Buy Your Stuff》',
+    author: 'Alex Hormozi',
+    cover: '/images/booklist/100m-leads.jpg',
+    doubanIntro: 'Alex Hormozi 讲「怎么让陌生人主动想买你的东西」，与引导磁铁、获客打法直接呼应。',
+    reasonBlocks:
+      '第3章讲「引导磁铁（Lead Magnet）」怎么帮你低成本获客，这本书（和上面的 $100M Offers 是姐妹篇）专门讲「怎么让陌生人主动想买你的东西」。' +
+      '\n\n' +
+      '它和第3章的自动化序列、关键词回复那套打法直接呼应——先拿到注意力，再谈成交。' +
+      '\n\n' +
+      '想搞懂「流量从哪来」，这本是绕不开的。',
     reason: '',
   },
 ];
@@ -313,6 +521,26 @@ export const siteRecs: SiteRec[] = [
     url: 'https://ribbonfarm.com/',
     why: '长文思辨，互联网思想界的深水区，读完要花点力气。',
   },
+  {
+    name: 'Zapier · Lead Magnet 指南',
+    url: 'https://zapier.com/blog/lead-magnet/',
+    why: '《闭环》第2章顺手推的「引导磁铁」入门文章。',
+  },
+  {
+    name: 'Paul Graham · 创业点子误区',
+    url: 'https://paulgraham.com/startupideas.html',
+    why: '《闭环》第4章引用的 PG 经典文：怎么想创业点子。',
+  },
+  {
+    name: 'Derek Sivers · 怎么提请求',
+    url: 'https://sive.rs/asking',
+    why: '《闭环》第4章引用的西弗斯短文：怎么向人提请求。',
+  },
+  {
+    name: 'James Clear',
+    url: 'https://jamesclear.com/',
+    why: '《闭环》第6章引用「原子习惯」作者产品矩阵的出处。',
+  },
 ];
 
 // ③ + ④ 合并：我的开源（教程 + 作品，统一在一个页面展示）
@@ -331,5 +559,6 @@ export const openSources: OpenSourceItem[] = [
     url: 'https://github.com/gusangciren/md-to-book-pdf',
   },
 ];
+
 // 注：⑤素材下载（PDF + 壁纸）已于 2026-10-19 按用户要求彻底下线，数据与文件一并移除，之后不再上线。
 // 相关静态文件 public/resources/（5 个 PDF + 4 张壁纸）也一并删除。
