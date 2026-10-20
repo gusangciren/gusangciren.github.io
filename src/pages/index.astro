@@ -375,7 +375,8 @@ function titleWithBrackets(name) {
       .cd-screen{width:168px;height:106px;gap:6px}
       .cd-scr-line{font-size:9.5px}
       .cd-screen-base{width:186px}
-      .cd-right{grid-row:2;grid-column:1/-1;width:100%;max-width:320px;justify-self:center}
+      /* 移动端隐藏整条「一句话→…→一门生意」路径（图例本来也已隐藏），桌面端保留 */
+      .cd-right{display:none}
       .cd-path{flex-direction:column;gap:24px;align-items:flex-start;max-width:320px;margin:0}
       .cd-path::before{left:7px;right:auto;top:8px;bottom:8px;width:1px;height:auto;background:linear-gradient(180deg,rgba(232,160,76,.18),rgba(232,160,76,.5))}
       .cd-st{display:flex;align-items:center;gap:14px;text-align:left;padding:0;width:100%}
@@ -510,10 +511,17 @@ function titleWithBrackets(name) {
     .rs-go{display:inline-block;margin-top:20px;font-size:13px;font-weight:600;color:#F55000;transition:transform .25s}
     .rs-card:hover .rs-go{transform:translateX(5px)}
     @media(max-width:860px){
-      .section-resources{padding:60px 20px}
+      .section-resources{padding:44px 20px}
+      .rs-head{margin-bottom:30px}
       .rs-grid{grid-template-columns:1fr}
-      .rs-card{padding:24px 0 24px 20px}
+      /* 手机端压短：数字 | 标题+简介 | 查看 三栏一行式，替代原来的竖排大卡 */
+      .rs-card{display:grid;grid-template-columns:auto 1fr auto;column-gap:14px;align-items:center;padding:18px 0 18px 16px}
       .rs-card + .rs-card{border-left:0;border-top:1px solid #e8e3da}
+      .rs-count{grid-row:1/3;margin:0}
+      .rs-n{font-size:1.9rem}
+      .rs-card h3{grid-column:2;grid-row:1;margin:0 0 2px;font-size:1.05rem}
+      .rs-card p{grid-column:2;grid-row:2;font-size:13px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+      .rs-go{grid-column:3;grid-row:1/3;margin:0;font-size:12.5px}
       .rs-title{font-size:2rem}
       .rs-sub{font-size:15px}
     }
