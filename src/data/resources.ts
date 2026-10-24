@@ -26,6 +26,10 @@ export interface SiteRec {
   name: string;
   why: string;
   url?: string;
+  /** 分类（常读博客页按此分组展示），如「写作者」「创业与科技」 */
+  category?: string;
+  /** 站点图标，已本地化到 /images/blog-icons/{slug}.png（favicon 有失效风险，不外链） */
+  icon?: string;
 }
 export interface OpenSourceItem {
   name: string;
@@ -470,86 +474,119 @@ export const bookRecs: BookRec[] = [
 
 // ② 推荐网站 / 博客（2026-10-19：来自桌面《网站.xlsx》，放在「我的推荐」页书单下方）
 // why 为 2026-10-19 起草的推荐语，可随时改；改完刷新页面即可生效
+// 2026-10-24：加 category（页面分组）与 icon（本地化站点图标 /images/blog-icons/）
 export const siteRecs: SiteRec[] = [
   {
     name: 'Sam Altman',
     url: 'https://blog.samaltman.com/',
     why: '文章不多，但几乎每篇都值得反复读。既谈怎么把一件事做成，也谈技术正把世界带去哪里。',
+    category: '创业与科技',
+    icon: '/images/blog-icons/sam-altman.png',
   },
   {
     name: 'Dan Koe',
     url: 'https://thedankoe.com/',
     why: '一个人把写作、产品和生意串成一件事的样板。想靠内容养活自己，这条路上绕不开他。',
+    category: '写作者',
+    icon: '/images/blog-icons/dan-koe.png',
   },
   {
     name: 'Paul Graham',
     url: 'https://paulgraham.com/articles.html',
     why: '把一件事想清楚，再写清楚。英文随笔的标杆，谈写作和创业的人几乎都在引用他。',
+    category: '写作者',
+    icon: '/images/blog-icons/paul-graham.png',
   },
   {
     name: '李笑来',
     url: 'https://lixiaolai.com/',
     why: '中文互联网里少见的长期主义者，博客、开源书籍都在他自己这个站上。',
+    category: '写作者',
+    icon: '/images/blog-icons/lixiaolai.png',
   },
   {
     name: 'Justin Welsh',
     url: 'https://justinwelsh.me/essays',
     why: '一个人、一台电脑做成一门生意的完整打法，内容就是渠道。',
+    category: '创业与科技',
+    icon: '/images/blog-icons/justin-welsh.png',
   },
   {
     name: "Seth's Blog",
     url: 'https://seths.blog/archive/',
     why: '每天一篇，常常只有一段。看上十年，你会换一种方式理解营销。',
+    category: '写作者',
+    icon: '/images/blog-icons/seths-blog.png',
   },
   {
     name: 'David Perell',
     url: 'https://perell.com/',
     why: '关于写作这件事本身：把文章当作品，而不是当产出。',
+    category: '写作者',
+    icon: '/images/blog-icons/david-perell.png',
   },
   {
     name: '雪豹',
     url: 'https://lochhead.com/',
     why: '定位与品类设计的一线视角，商业播客与文章都在这里。',
+    category: '创业与科技',
+    icon: '/images/blog-icons/lochhead.png',
   },
   {
     name: 'Hacker News',
     url: 'https://news.ycombinator.com/news',
     why: '科技与创业世界的实时脉搏，值得每天扫一眼标题。',
+    category: '创业与科技',
+    icon: '/images/blog-icons/hacker-news.png',
   },
   {
     name: "Lenny's Newsletter",
     url: 'https://www.lennysnewsletter.com/p/start-here',
     why: '产品与增长的一手复盘，细节来自真正在做的人。',
+    category: '创业与科技',
+    icon: '/images/blog-icons/lennys.png',
   },
   {
     name: 'Tim Ferriss Show · 逐字稿',
     url: 'https://tim.blog/2018/09/20/all-transcripts-from-the-tim-ferriss-show/',
     why: '几百场长访谈的全文逐字稿，适合精读，不适合快翻。',
+    category: '创业与科技',
+    icon: '/images/blog-icons/tim-ferriss.png',
   },
   {
     name: 'Ribbonfarm',
     url: 'https://ribbonfarm.com/',
     why: '长文思辨，互联网思想界的深水区，读完要花点力气。',
+    category: '写作者',
+    icon: '/images/blog-icons/ribbonfarm.png',
   },
   {
     name: 'Zapier · Lead Magnet 指南',
     url: 'https://zapier.com/blog/lead-magnet/',
     why: '《闭环》第2章顺手推的「引导磁铁」入门文章。',
+    category: '《闭环》引用文章',
+    icon: '/images/blog-icons/zapier.png',
   },
   {
     name: 'Paul Graham · 创业点子误区',
     url: 'https://paulgraham.com/startupideas.html',
     why: '《闭环》第4章引用的 PG 经典文：怎么想创业点子。',
+    category: '《闭环》引用文章',
+    icon: '/images/blog-icons/pg-ideas.png',
   },
   {
     name: 'Derek Sivers · 怎么提请求',
     url: 'https://sive.rs/asking',
     why: '《闭环》第4章引用的西弗斯短文：怎么向人提请求。',
+    category: '《闭环》引用文章',
+    icon: '/images/blog-icons/sivers.png',
   },
   {
     name: 'James Clear',
     url: 'https://jamesclear.com/',
     why: '《闭环》第6章引用「原子习惯」作者产品矩阵的出处。',
+    category: '《闭环》引用文章',
+    icon: '/images/blog-icons/james-clear.png',
   },
 ];
 

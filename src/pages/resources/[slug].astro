@@ -30,6 +30,18 @@ const hostOf = (u) => {
   }
 };
 
+// 常读博客按 category 分组；组间顺序 = 各分类在 siteRecs 中首次出现的顺序，组内保持原顺序
+const blogGroups = (() => {
+  const order = [];
+  const map = {};
+  for (const s of siteRecs) {
+    const c = s.category || '其他';
+    if (!map[c]) { map[c] = []; order.push(c); }
+    map[c].push(s);
+  }
+  return order.map((c) => [c, map[c]]);
+})();
+
 // 各分类页未完工时的占位文案（给提前点进来的读者一点惊喜）
 const WIPS: Record<string, { t: string; p: string }> = {
   recommended: { t: '正在装修', p: '书正一本本从我的书架上往下搬，好用的工具也在挑挑拣拣。搬完、挑好，第一个告诉你。这会儿，不妨先去读读已经上架的《闭环》。' },
@@ -121,19 +133,29 @@ const isEmpty =
               <div class="rp-bl-meta">{siteRecs.length} 个 · 每周都会打开</div>
             </div>
             <p class="rp-bl-sub">不是导航站，是我真的会反复回去读的地方。</p>
-            <div class="lk-list">
-              {siteRecs.map((s, i) => (
-                <a class="lk-item" href={s.url || '#'} target="_blank" rel="noopener noreferrer">
-                  <span class="lk-row">
-                    <span class="lk-no">{String(i + 1).padStart(2, '0')}</span>
-                    <span class="lk-name">{s.name}</span>
-                    <span class="lk-dom">{hostOf(s.url || '')}</span>
-                    <span class="lk-arrow" aria-hidden="true">↗</span>
-                  </span>
-                  {s.why && <span class="lk-why">{s.why}</span>}
-                </a>
-              ))}
-            </div>
+            {blogGroups.map(([cat, items]) => (
+              <div class="lk-group">
+                <div class="lk-cat">{cat}</div>
+                <div class="lk-cards">
+                  {items.map((s) => (
+                    <a class="lk-card" href={s.url || '#'} target="_blank" rel="noopener noreferrer">
+                      <span class="lk-ic">
+                        {s.icon ? (
+                          <img src={s.icon} alt={`${s.name} 图标`} width="44" height="44" loading="lazy" />
+                        ) : (
+                          <span class="lk-ic-ph">{s.name.slice(0, 1)}</span>
+                        )}
+                      </span>
+                      <span class="lk-body">
+                        <span class="lk-name">{s.name}</span>
+                        {s.why && <span class="lk-why">{s.why}</span>}
+                      </span>
+                      <span class="lk-arrow" aria-hidden="true">›</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))}
             <p class="lk-foot">以上链接都在新标签页打开。</p>
           </>
         )}
@@ -222,19 +244,27 @@ const isEmpty =
   .rp-bl-quote p { font-size: 0.88rem; line-height: 2; color: #6b6560; margin: 0 0 10px; }
   .rp-bl-quote p:last-child { margin: 0; }
 
-  /* ===== 常读博客（清单式，整行可点） ===== */
-  .lk-list { border-top: 1px solid var(--color-border, #e5e5e5); }
-  .lk-item { display: block; padding: 17px 0; border-bottom: 1px solid var(--color-border, #e5e5e5);
-    text-decoration: none; color: inherit; }
-  .lk-item:hover .lk-name, .lk-item:focus-visible .lk-name { color: var(--color-accent, #f55000); }
-  .lk-item:hover .lk-arrow { color: var(--color-accent, #f55000); transform: translate(2px, -2px); }
-  .lk-item:focus-visible { outline: 2px solid var(--color-accent, #f55000); outline-offset: 4px; border-radius: 4px; }
-  .lk-row { display: flex; align-items: baseline; gap: 10px; }
-  .lk-no { font-family: Georgia, serif; font-size: 0.78rem; font-weight: 700; color: #d6d3d1; flex: none; }
-  .lk-name { font-size: 1.02rem; font-weight: 700; line-height: 1.5; color: var(--color-text, #1c1917); transition: color 0.18s; }
-  .lk-dom { font-size: 0.75rem; color: #a8a29e; }
-  .lk-arrow { margin-left: auto; flex: none; font-size: 0.8rem; color: #c9c4bd; transition: color 0.18s, transform 0.18s; }
-  .lk-why { display: block; font-size: 0.86rem; line-height: 1.9; color: #6b6560; margin: 6px 0 0 26px; }
+  /* ===== 常读博客（2026-10-24：分类分组 + 圆形站点头像列表，参考手机「精选」页） ===== */
+  .lk-cat { font-size: 0.85rem; font-weight: 600; letter-spacing: 0.02em;
+    color: var(--color-text-secondary, #78716c); margin: 30px 0 10px; }
+  .lk-group:first-of-type .lk-cat { margin-top: 0; }
+  .lk-cards { display: flex; flex-direction: column; gap: 10px; }
+  .lk-card { display: flex; align-items: center; gap: 14px; background: var(--color-card-bg, #fff);
+    border: 1px solid var(--color-border, #ececec); border-radius: 14px; padding: 13px 16px;
+    text-decoration: none; color: inherit; transition: border-color .18s, box-shadow .18s; }
+  .lk-card:hover { border-color: #d8d3ca; box-shadow: 0 6px 18px rgba(28,25,23,.07); }
+  .lk-ic { flex: none; width: 44px; height: 44px; border-radius: 50%; overflow: hidden;
+    background: #faf9f7; border: 1px solid rgba(28,25,23,.06); }
+  .lk-ic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .lk-ic-ph { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-serif, Georgia, serif); font-weight: 700; font-size: 1.05rem;
+    color: #fff; background: var(--color-accent, #f55000); }
+  .lk-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .lk-name { font-size: 0.98rem; font-weight: 700; line-height: 1.4; color: var(--color-text, #1c1917); }
+  .lk-why { font-size: 0.82rem; line-height: 1.65; color: var(--color-text-secondary, #78716c); }
+  .lk-arrow { flex: none; font-size: 1.25rem; line-height: 1; color: #c9c4bd; transition: color .18s, transform .18s; }
+  .lk-card:hover .lk-arrow { color: var(--color-accent, #f55000); transform: translateX(3px); }
+  .lk-card:focus-visible { outline: 2px solid var(--color-accent, #f55000); outline-offset: 3px; }
   .lk-foot { font-size: 0.75rem; color: #a8a29e; margin: 22px 0 0; }
 
   .rp-sub { color: var(--color-text-secondary, #888); font-size: 0.95rem; margin: 0 0 8px; }
@@ -297,11 +327,8 @@ const isEmpty =
     /* 书单移动端：封面放大独占一行，引号块内缩 */
     .rp-bl-hd { flex-direction: column; align-items: flex-start; gap: 4px; }
     .rp-bl-top { flex-direction: column; gap: 16px; }
-    /* 常读博客窄屏：第一行=序号+站名+↗，域名换行缩进，推荐语第三行 */
-    .lk-row { flex-wrap: wrap; }
-    .lk-dom { order: 3; flex: none; width: calc(100% - 26px); margin-left: 26px; }
-    .lk-arrow { order: 2; }
-    .lk-why { margin-left: 0; }
+    /* 常读博客窄屏：卡片两端留白略收，行高已自适应无需额外换行规则 */
+    .lk-card { padding: 12px 14px; gap: 12px; }
     .rp-bl-cov { flex: none; width: 96px; height: 136px; }
     .rp-bl-quote { padding: 2px 16px 18px; }
   }
