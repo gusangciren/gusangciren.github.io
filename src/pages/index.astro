@@ -5,6 +5,7 @@ import ReaderLetter from '../components/ReaderLetter.astro';
 import { getCollection } from 'astro:content';
 import { columns } from '../data/columns';
 import { bookRecs, siteRecs, openSources } from '../data/resources';
+import { prompts } from '../data/promptToolkit';
 
 // 首屏最大元素（Hero 夜空背景是 CSS 背景图）提前拉取，改善 LCP 观感
 const HERO_BG = '/images/hero-night.jpg';
@@ -425,6 +426,12 @@ function titleWithBrackets(name) {
           <p>教程与作品，都在这</p>
           <span class="rs-go">查看 →</span>
         </a>
+        <a class="rs-card" href="/resources/prompts/">
+          <div class="rs-count"><span class="rs-n">{prompts.length}</span><span class="rs-u">条</span></div>
+          <h3>写作提示词</h3>
+          <p>喂给 AI 的提示词，按写作流程排好，可搜索、筛选、一键复制</p>
+          <span class="rs-go">查看 →</span>
+        </a>
       </div>
     </div>
   </section>
@@ -495,7 +502,8 @@ function titleWithBrackets(name) {
     .rs-title{font-family:var(--font-serif);font-size:2.4rem;font-weight:700;color:#1c1917;letter-spacing:.02em}
     .rs-title .hl{color:#F55000}
     .rs-sub{font-size:16px;line-height:1.6;color:#78716c;margin-top:12px}
-    .rs-grid{display:grid;grid-template-columns:repeat(3,1fr);margin:0 auto}
+    .rs-grid{display:grid;grid-template-columns:repeat(4,1fr);margin:0 auto}
+    @media(max-width:1100px){.rs-grid{grid-template-columns:repeat(2,1fr)}}
     .rs-card{position:relative;display:block;padding:6px 34px 6px 30px;text-decoration:none;color:inherit}
     /* 列间细线分隔，代替卡片 */
     .rs-card + .rs-card{border-left:1px solid #e8e3da}

@@ -1,0 +1,234 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { prompts, categories } from '../../data/promptToolkit';
+
+const total = prompts.length;
+const cats = categories;
+const groups = cats.map((cat) => ({
+  cat,
+  items: prompts
+    .filter((p) => p.category === cat)
+    .map((p) => ({ ...p, no: prompts.indexOf(p) + 1 })),
+}));
+---
+
+<BaseLayout
+  title="写作提示词工具箱 — 像企业家一样写作"
+  description="从发现选题、挖掘观点、研究素材，到组织文章、编辑润色和优化表达。32 个写作提示词，按写作流程排好，支持分类筛选和一键复制。"
+>
+  <div class="resources-page">
+    <nav class="rp-crumb" aria-label="资源分类">
+      <div class="rp-crumb-l">
+        <a href="/#resources">资源中心</a><span class="rp-crumb-sep">›</span><b aria-current="page">写作提示词</b>
+      </div>
+    </nav>
+    <div class="pt-wrap" id="pt-app">
+      <div class="pt-layout">
+        <div class="pt-main">
+          <div class="pt-note">
+            <b>建议工作流：</b>观察与发现 → 挖掘观点 → 研究素材 → 组织结构 → 编辑润色 → 优化表达 → 选题评估。不要让 AI 越过你的思考，直接替你决定文章写什么。
+          </div>
+
+          <div class="pt-content">
+            {groups.map((g, gi) => (
+              <section class="pt-group" id={'sec-' + gi} data-cat={g.cat}>
+                <div class="pt-group-head">
+                  <span class="pt-group-title">{g.cat}</span>
+                  <span class="pt-group-count">{g.items.length} 个</span>
+                </div>
+                <div class="pt-list">
+                  {g.items.map((p) => (
+                    <article class="pt-card" id={'p-' + p.no} data-cat={g.cat}>
+                      <div class="pt-top">
+                        <span class="pt-num">{String(p.no).padStart(2, '0')} / PROMPT</span>
+                        <div class="pt-top-right">
+                          <span class="pt-tag">{g.cat}</span>
+                          <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                          </button>
+                        </div>
+                      </div>
+                      <h3 class="pt-title">{p.title}</h3>
+                      <p class="pt-desc">{p.desc}</p>
+                      <pre class="pt-prompt">{p.prompt}</pre>
+                    </article>
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+          <div class="pt-empty" id="pt-empty">没有找到匹配的提示词。</div>
+        </div>
+
+        <aside class="pt-toc" aria-label="目录">
+          <div class="pt-toc-inner">
+            <div class="pt-toc-title">目录</div>
+            <nav class="pt-toc-nav">
+              {groups.map((g, gi) => (
+                <div class="pt-toc-sec">
+                  <a class="pt-toc-cat" href={'#sec-' + gi}><span class="pt-toc-idx">{String(gi + 1).padStart(2, '0')}</span><span class="pt-toc-cat-name">{g.cat}</span><span class="pt-toc-n">{g.items.length}</span></a>
+                  <div class="pt-toc-items">
+                    {g.items.map((p) => (
+                      <a class="pt-toc-item" href={'#p-' + p.no}><span class="pt-toc-inum">{String(p.no).padStart(2, '0')}</span>{p.title}</a>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </nav>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .resources-page { max-width: 1180px; margin: 0 auto; padding: 100px 24px 80px; }
+    .rp-crumb { display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+      font-size: .85rem; margin: 0 0 20px; padding-bottom: 14px; border-bottom: 1px solid var(--color-border); }
+    .rp-crumb-l { color: var(--color-text-secondary); min-width: 0; }
+    .rp-crumb-l a { color: var(--color-text-secondary); text-decoration: none; }
+    .rp-crumb-l a:hover { color: var(--color-text); text-decoration: underline; }
+    .rp-crumb-sep { color: #d6d3d1; margin: 0 7px; }
+    .rp-crumb-l b { color: var(--color-text); font-weight: 700; }
+    .pt-wrap { margin-top: 28px; }
+    .pt-layout { display: grid; grid-template-columns: 1fr minmax(0, 680px) 1fr; align-items: start; }
+    .pt-main { min-width: 0; grid-column: 2; }
+    .pt-note { background: rgba(245,80,0,.05); border: 1px solid rgba(245,80,0,.14); border-left: 3px solid var(--color-accent); border-radius: 0 10px 10px 0; padding: 12px 16px; color: #8a5a3c; font-size: 13px; line-height: 1.7; margin: 0 0 18px; }
+    .pt-note b { color: var(--color-accent); }
+    .pt-group { margin-bottom: 28px; scroll-margin-top: 96px; }
+    .pt-group-head { display: flex; align-items: baseline; gap: 10px; margin: 0 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--color-border); }
+    .pt-group-title { font-family: var(--font-serif); font-size: 16px; font-weight: 700; color: var(--color-text); }
+    .pt-group-count { font-size: 12px; color: var(--color-text-secondary); }
+    .pt-list { display: flex; flex-direction: column; gap: 14px; }
+    .pt-card { background: var(--color-card-bg); border: 1px solid var(--color-border); border-radius: 15px; padding: 18px; display: flex; flex-direction: column; min-width: 0; transition: box-shadow .2s, border-color .2s; }
+    .pt-card:hover { box-shadow: 0 8px 24px rgba(28,25,23,.07); border-color: rgba(245,80,0,.25); }
+    .pt-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .pt-top-right { display: inline-flex; align-items: center; gap: 10px; }
+    .pt-num { font-size: 10px; color: var(--color-accent); font-weight: 800; letter-spacing: .1em; font-family: var(--font-sans); }
+    .pt-tag { font-size: 11px; color: var(--color-text-secondary); background: #f1f2ee; border-radius: 99px; padding: 3px 9px; white-space: nowrap; }
+    .pt-title { font-family: var(--font-serif); font-size: 17px; line-height: 1.4; margin: 0 0 5px; color: var(--color-text); }
+    .pt-desc { font-size: 12.5px; color: var(--color-text-secondary); margin: 0 0 12px; line-height: 1.6; }
+    .pt-prompt { white-space: pre-wrap; word-break: break-word; background: #f8f8f5; border: 1px solid #eeeeea; border-radius: 9px; padding: 13px; font-size: 12.5px; line-height: 1.75; color: #343630; font-family: var(--font-sans); margin: 0; }
+    .pt-copy { border: 0; background: transparent; color: var(--color-text-secondary); cursor: pointer; padding: 6px; margin: -2px -4px 0 0; border-radius: 8px; display: inline-flex; line-height: 0; transition: color .15s, background .15s; }
+    .pt-copy:hover { color: var(--color-accent); background: rgba(245,80,0,.08); }
+    .pt-copy.done { color: #277653; }
+    .pt-copy svg { width: 17px; height: 17px; }
+    .pt-empty { display: none; text-align: center; color: var(--color-text-secondary); padding: 38px; font-size: 14px; }
+    .pt-toc { grid-column: 3; position: sticky; top: 92px; align-self: start; justify-self: end; width: 220px; margin-right: 16px; }
+    .pt-toc-inner { border: 1px solid var(--color-border); border-radius: 12px; padding: 16px 15px 18px; background: var(--color-card-bg); max-height: calc(100vh - 120px); overflow: auto; }
+    .pt-toc-title { font-family: var(--font-serif); font-size: 14px; font-weight: 700; color: var(--color-text); margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--color-border); }
+    .pt-toc-sec { margin-bottom: 14px; }
+    .pt-toc-cat { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--color-text); text-decoration: none; margin-bottom: 7px; padding: 4px 8px; border-radius: 7px; border-left: 2px solid transparent; transition: color .15s, background .15s, border-color .15s; }
+    .pt-toc-cat:hover { color: var(--color-accent); }
+    .pt-toc-cat.active { color: var(--color-accent); background: rgba(245,80,0,.07); border-left-color: var(--color-accent); }
+    .pt-toc-idx { font-family: var(--font-sans); font-size: 11px; font-weight: 700; color: var(--color-accent); opacity: .85; }
+    .pt-toc-cat-name { flex: 1; }
+    .pt-toc-n { font-size: 11px; color: var(--color-text-secondary); font-weight: 400; }
+    .pt-toc-items { display: flex; flex-direction: column; gap: 2px; padding-left: 10px; }
+    .pt-toc-item { display: flex; gap: 7px; font-size: 12px; color: var(--color-text-secondary); text-decoration: none; line-height: 1.5; padding: 3px 8px; border-radius: 6px; transition: color .15s, background .15s; }
+    .pt-toc-item:hover { color: var(--color-accent); background: rgba(245,80,0,.05); }
+    .pt-toc-inum { font-family: var(--font-sans); font-size: 10.5px; color: #b9b6ae; flex: none; }
+    @media (max-width: 1180px) {
+      .pt-toc { display: none; }
+    }
+    @media (max-width: 720px) {
+      .resources-page { padding-top: 80px; }
+      .pt-layout { grid-template-columns: minmax(0, 1fr); }
+      .pt-main { grid-column: auto; }
+      .pt-card { padding: 16px; }
+    }
+  </style>
+
+  <script is:inline>
+    (function () {
+      var pane = document.getElementById('pt-app');
+      if (!pane) return;
+      var groups = Array.prototype.slice.call(pane.querySelectorAll('.pt-group'));
+      var filters = document.getElementById('pt-filters');
+      var empty = document.getElementById('pt-empty');
+      var active = '全部';
+      function apply() {
+        var visible = 0;
+        groups.forEach(function (g) {
+          var gCards = g.querySelectorAll('.pt-card');
+          var gVisible = 0;
+          gCards.forEach(function (c) {
+            var show = active === '全部' || c.getAttribute('data-cat') === active;
+            c.hidden = !show;
+            if (show) gVisible++;
+          });
+          g.hidden = gVisible === 0;
+          visible += gVisible;
+        });
+        if (empty) empty.style.display = visible ? 'none' : 'block';
+      }
+      if (filters) {
+        filters.querySelectorAll('.pt-filter').forEach(function (b) {
+          b.addEventListener('click', function () {
+            filters.querySelectorAll('.pt-filter').forEach(function (x) { x.classList.remove('active'); });
+            b.classList.add('active');
+            active = b.getAttribute('data-cat');
+            apply();
+          });
+        });
+      }
+      pane.addEventListener('click', function (e) {
+        var btn = e.target.closest ? e.target.closest('.pt-copy') : null;
+        if (!btn) return;
+        var card = btn.closest('.pt-card');
+        var pre = card ? card.querySelector('.pt-prompt') : null;
+        var text = pre ? pre.textContent : '';
+        function done() {
+          btn.classList.add('done');
+          btn.setAttribute('title', '已复制 ✓');
+          setTimeout(function () { btn.classList.remove('done'); btn.setAttribute('title', '复制提示词'); }, 1500);
+        }
+        function fb() {
+          try {
+            var t = document.createElement('textarea');
+            t.value = text; t.style.position = 'fixed'; t.style.opacity = '0';
+            document.body.appendChild(t); t.select();
+            document.execCommand('copy'); document.body.removeChild(t);
+          } catch (_) {}
+          done();
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done).catch(fb);
+        } else { fb(); }
+      });
+      var toc = pane.querySelector('.pt-toc-nav');
+      if (toc) {
+        toc.addEventListener('click', function (e) {
+          var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+          if (!a) return;
+          var id = a.getAttribute('href').slice(1);
+          var target = id ? document.getElementById(id) : null;
+          if (!target) return;
+          e.preventDefault();
+          if (active !== '全部') {
+            active = '全部';
+            if (filters) filters.querySelectorAll('.pt-filter').forEach(function (x) {
+              x.classList.toggle('active', x.getAttribute('data-cat') === '全部');
+            });
+            apply();
+          }
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          try { history.replaceState(null, '', '#' + id); } catch (_) {}
+        });
+      }
+      var spyLinks = pane.querySelectorAll('.pt-toc-cat');
+      function setActiveToc(id) {
+        spyLinks.forEach(function (a) { a.classList.toggle('active', a.getAttribute('href') === '#' + id); });
+      }
+      if ('IntersectionObserver' in window && spyLinks.length) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (en.isIntersecting) setActiveToc(en.target.id);
+          });
+        }, { rootMargin: '-80px 0px -65% 0px', threshold: 0 });
+        groups.forEach(function (s) { io.observe(s); });
+      }
+      apply();
+    })();
+  </script>
+</BaseLayout>
