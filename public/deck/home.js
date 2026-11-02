@@ -389,6 +389,23 @@
 
   /* ---------- 提示 ---------- */
   var tipEl = null, tipTimer = null;
+
+  /* 实时测量 footer 高度写进 --deck-foot-h：提示条要浮在快捷键条之上，
+     footer 会随视口换行变高，写死偏移会在某些宽度下又被压住 */
+  function syncFootHeight() {
+    var f = document.querySelector('footer');
+    if (!f) return;
+    var h = Math.round(f.getBoundingClientRect().height);
+    if (h > 0) document.documentElement.style.setProperty('--deck-foot-h', h + 'px');
+  }
+  syncFootHeight();
+  window.addEventListener('resize', syncFootHeight);
+  if (window.ResizeObserver) {
+    var ro = new ResizeObserver(syncFootHeight);
+    var fEl = document.querySelector('footer');
+    if (fEl) ro.observe(fEl);
+  }
+
   function toast(msg) {
     if (tipEl) tipEl.remove();
     tipEl = document.createElement('div');
@@ -486,12 +503,14 @@
     { t: 'img', src: '/images/100/11-hormozi-100M.png', name: '横图 · 超宽' },
     { t: 'img', src: '/images/book1-cover.png', name: '竖图 · 书封' },
     { t: 'img', src: '/images/fate/01-大脑皮质与杏仁核.jpg', name: '大脑 · 机器怎么转' },
-    { t: 'pdf', src: '/resources/snow_leopard_-_nicolas_cole.pdf', name: '雪豹.pdf' },
+    { t: 'pdf', src: '/deck/demo/book-cover.pdf', name: '《闭环》封面.pdf' },
     { t: 'web', url: 'https://gusangciren.github.io/', name: '我的主页' },
     { t: 'img', src: '/deck/demo/howto.png', name: '怎么用' },
     { t: 'img', src: '/deck/demo/start.png', name: '开始创作' }
   ];
 
+  /* 单个素材加载失败不应该让整份演示报废：失败的那张跳过，其余照常播放。
+     （历史 bug：PDF 素材被下线后仍被引用，Promise.all 一挂全盘皆输，演示完全打不开） */
   function loadDemoOne(spec) {
     if (spec.t === 'web') {
       var host = hostOf(spec.url), blocked = blocksEmbed(host);
@@ -520,10 +539,23 @@
     var btn = $('btnDemo');
     btn.disabled = true;
     btn.textContent = '正在准备…';
-    Promise.all(DEMO.map(loadDemoOne)).then(function (items) {
+    /* allSettled：单个素材缺失只跳过那一张，其余照常演示；全部失败才算真失败 */
+    Promise.allSettled(DEMO.map(loadDemoOne)).then(function (results) {
+      var items = [], failed = [];
+      results.forEach(function (r, i) {
+        if (r.status === 'fulfilled') items.push(r.value);
+        else failed.push(DEMO[i].name);
+      });
+      if (!items.length) {
+        toast('示例素材都加载失败了，请稍后重试');
+        btn.disabled = false;
+        btn.textContent = '我看看演示效果';
+        return;
+      }
       slides = slides.concat(items);
       save(); render();
       play(0);   /* 直接进入演示，看效果 */
+      if (failed.length) toast('有 ' + failed.length + ' 个示例素材没加载出来（' + failed.join('、') + '），其余正常播放');
     })['catch'](function (e) {
       toast('示例加载失败：' + ((e && e.message) || e));
       btn.disabled = false;

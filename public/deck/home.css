@@ -152,9 +152,10 @@ body.drag-on .slide{transition:none}
 #veil.on{display:flex}
 #veil .box{border:2px dashed rgba(255,255,255,.6);border-radius:16px;padding:40px 60px}
 
-/* 提示条 */
+/* 提示条：底部锚在 footer 快捷键条之上，不遮挡提示。
+   footer 高度随视口换行而变，用 --deck-foot-h 由 JS 实时测量，硬编码偏移会漏 */
 .toast{
-  position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:200;
+  position:fixed;left:50%;bottom:calc(var(--deck-foot-h, 77px) + 14px);transform:translateX(-50%);z-index:200;
   background:rgba(28,25,23,.94);color:#fff;font-size:13px;padding:9px 18px;
   border-radius:999px;box-shadow:0 6px 24px rgba(0,0,0,.24);
   transition:opacity .2s;opacity:0
