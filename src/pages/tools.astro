@@ -11,6 +11,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <li data-pane="pane-cover" class="active"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></span><span class="lab">公众号封面</span></li>
         <li data-pane="pane-quote"><span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 7h5v6H8.5C8.5 16 11 18 14 18v2c-5 0-9-3-9-9Zm9 0h5v6h-3.5C17.5 16 20 18 23 18v2c-5 0-9-3-9-9Z"/></svg></span><span class="lab">句子卡片</span></li>
         <li data-pane="pane-deck"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 8l10 5 10-5-10-5Z"/><path d="m2 13 10 5 10-5"/><path d="m2 18 10 5 10-5"/></svg></span><span class="lab">图卡演示</span></li>
+        <li data-pane="pane-sub"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M7 15h10"></path><path d="M7 18h6"></path></svg></span><span class="lab">字幕拼图</span></li>
       </ul>
     </aside>
 
@@ -218,6 +219,72 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <div class="deck-wrap">
           <iframe class="deck-frame" src="/deck/home.html" title="图卡演示"
             allow="fullscreen; display-capture" allowfullscreen></iframe>
+        </div>
+      </section>
+
+      <!-- N+1) 字幕拼图 · 剧照/截屏 + 台词 → 竖排金句图（纯本地 canvas，不上传服务器） -->
+      <section class="pane" id="pane-sub" hidden>
+        <!-- 上传区：拖拽 / 选择文件 / 演示效果 / 粘贴（顶部整幅） -->
+        <div class="sub-drop" id="subDrop">
+          <div class="sub-drop-t">把剧照拖进来</div>
+          <div class="sub-drop-s">JPG / PNG / WebP —— 一次可拖多个</div>
+          <div class="sub-drop-b">
+            <button class="sub-btn" type="button" id="subPick">选择文件</button>
+            <button class="sub-btn primary" type="button" id="subSample">我看看演示效果</button>
+            <input type="file" id="subFile" accept="image/*" multiple hidden />
+          </div>
+          <div class="sub-drop-p">或者直接按 <b>Ctrl / &#8984; + V</b> 粘贴截图</div>
+        </div>
+
+        <div class="sub-ws">
+          <!-- 左：预览（字幕直接在图上改） -->
+          <div class="sub-pv">
+            <div class="sub-stage">
+              <div class="sub-cv-wrap" id="subCvWrap">
+                <canvas id="subCanvas"></canvas>
+                <div class="sub-ol" id="subOl"></div>
+              </div>
+              <p class="sub-ph" id="subPh">先点「我看看演示效果」，或把剧照拖到上面的框里</p>
+            </div>
+            <div class="sub-dims" id="subDims">—</div>
+            <div class="sub-ex">
+              <button class="sub-btn primary" type="button" id="subExport">一键生成高清拼图</button>
+            </div>
+            <div class="sub-hint">导出 PNG，宽 1620px（高清 ×1.5），适合直接发小红书 / 朋友圈。点图上任意一条字幕即可改文字。</div>
+          </div>
+
+          <!-- 右：样式 -->
+          <div class="sub-set">
+            <div class="sub-sec">
+              <span class="sub-lab">拼图</span>
+              <div class="sub-row"><span class="sub-t">底色</span><input type="color" id="subBg" value="#fafaf9" /></div>
+              <div class="sub-row">
+                <span class="sub-t" id="subGapLab">裁切</span>
+                <div class="sub-seg" id="subGapMode"><button type="button" data-v="compact" class="on">紧凑</button><button type="button" data-v="expand">展开</button></div>
+                <input type="range" id="subGap" min="30" max="80" value="52" />
+              </div>
+              <div class="sub-hint">紧凑 = 每张裁成字幕附近的扁横条；右侧滑块调「裁切」大小（30%–80%）。展开 = 完整画幅，滑块变「间距」留出留白。</div>
+              <div class="sub-row"><span class="sub-t">圆角</span><input type="range" id="subRadius" min="0" max="40" value="12" /></div>
+            </div>
+
+            <div class="sub-sec">
+              <span class="sub-lab">字幕</span>
+              <div class="sub-row"><span class="sub-t">条底色</span><input type="color" id="subBarBg" value="#0a0806" /><input type="range" id="subBarA" min="0" max="100" value="78" /></div>
+              <div class="sub-row"><span class="sub-t">颜色</span><input type="color" id="subMainC" value="#f5efe6" /></div>
+              <div class="sub-row"><span class="sub-t">大小</span><input type="range" id="subMainS" min="22" max="64" value="40" /></div>
+              <div class="sub-row">
+                <span class="sub-t">对齐</span>
+                <div class="sub-seg" id="subAlign"><button type="button" data-v="left">左</button><button type="button" data-v="center" class="on">中</button><button type="button" data-v="right">右</button></div>
+              </div>
+            </div>
+
+            <div class="sub-sec">
+              <span class="sub-lab">译文</span>
+              <div class="sub-row"><span class="sub-t">开启</span><label class="sub-sw"><input type="checkbox" id="subOn" checked /><span class="sub-tr"></span></label></div>
+              <div class="sub-row"><span class="sub-t">颜色</span><input type="color" id="subSubC" value="#cbb89a" /></div>
+              <div class="sub-row"><span class="sub-t">大小</span><input type="range" id="subSubS" min="14" max="40" value="24" /></div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1374,6 +1441,413 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       });
     })();
 
+    /* ===== 字幕拼图：剧照/截屏 + 台词 → 竖排金句图（纯本地 canvas，不上传服务器） ===== */
+    (function () {
+      var BASE_W = 1080;
+      var cv = document.getElementById('subCanvas');
+      if (!cv) return;
+      var ph = document.getElementById('subPh');
+      var dimsEl = document.getElementById('subDims');
+      var cvWrap = document.getElementById('subCvWrap');
+      var olWrap = document.getElementById('subOl');
+      var drop = document.getElementById('subDrop');
+      var items = [];
+      var editIdx = -1;
+      var st = {
+        bg: '#fafaf9', gapMode: 'compact', gap: 24, compactRatio: 0.52, radius: 12,
+        barBg: '#0a0806', barA: 0.78,
+        font: 'serif', mainC: '#f5efe6', mainS: 40, align: 'center',
+        subOn: true, subC: '#cbb89a', subS: 24
+      };
+      var SAMPLES = [
+        { src: '/images/sub-demo/01.png', main: '假如再碰不见你们，祝你早、午、晚都安。', sub: 'Good afternoon, good evening, and good night.', name: '示例一' },
+        { src: '/images/sub-demo/02.png', main: '我们距离之远，令我黯然神伤。', sub: 'The distance between us is breaking my spirit.', name: '示例二' },
+        { src: '/images/sub-demo/03.png', main: '这短暂的一生，我们最终都会失去。', sub: 'This short life, we will all lose it in the end.', name: '示例三' }
+      ];
+
+      function fnt() {
+        return st.font === 'sans'
+          ? "-apple-system,'PingFang SC','Microsoft YaHei',sans-serif"
+          : "'LXGW WenKai','霞鹜文楷',serif";
+      }
+      function esc(s) {
+        return String(s == null ? '' : s).replace(/[&<>"]/g, function (m) {
+          return m === '&' ? '&amp;' : m === '<' ? '&lt;' : m === '>' ? '&gt;' : '&quot;';
+        });
+      }
+      function wrap(c, text, maxW, font) {
+        c.font = font;
+        var out = [], paras = String(text || '').split('\n');
+        paras.forEach(function (p) {
+          if (!p) { out.push(''); return; }
+          var ch = p.split(''), cur = '';
+          for (var i = 0; i < ch.length; i++) {
+            var t = cur + ch[i];
+            if (c.measureText(t).width > maxW && cur) { out.push(cur); cur = ch[i]; }
+            else { cur = t; }
+          }
+          if (cur) out.push(cur);
+        });
+        return out;
+      }
+      function cover(c, img, x, y, w, h) {
+        var ir = img.width / img.height, br = w / h, dw, dh, dx, dy;
+        if (ir > br) { dh = h; dw = h * ir; dx = x - (dw - w) / 2; dy = y; }
+        else { dw = w; dh = w / ir; dx = x; dy = y - (dh - h) / 2; }
+        c.drawImage(img, dx, dy, dw, dh);
+      }
+      /* 圆角矩形：top/bottom 分别控制上下两角是否倒圆。
+         紧凑（无缝）模式下只圆整条长图的最上与最下两角，内部接缝保持齐平 */
+      function rrect(c, x, y, w, h, r, top, bottom) {
+        var rr = Math.max(0, Math.min(r, w / 2, h / 2));
+        var rt = top ? rr : 0;
+        var rb = bottom ? rr : 0;
+        c.beginPath();
+        c.moveTo(x + rt, y);
+        c.lineTo(x + w - rt, y);
+        if (rt > 0) { c.arcTo(x + w, y, x + w, y + rt, rt); } else { c.lineTo(x + w, y); }
+        c.lineTo(x + w, y + h - rb);
+        if (rb > 0) { c.arcTo(x + w, y + h, x + w - rb, y + h, rb); } else { c.lineTo(x + w, y + h); }
+        c.lineTo(x + rb, y + h);
+        if (rb > 0) { c.arcTo(x, y + h, x, y + h - rb, rb); } else { c.lineTo(x, y + h); }
+        c.lineTo(x, y + rt);
+        if (rt > 0) { c.arcTo(x, y, x + rt, y, rt); } else { c.lineTo(x, y); }
+        c.closePath();
+      }
+      function sampleBg(c, x, y, w, h, idx) {
+        var pal = [['#2b2440', '#0e0b18'], ['#10303a', '#06141a'], ['#3a2418', '#160d08']];
+        var p = pal[idx % pal.length];
+        var g = c.createLinearGradient(x, y, x + w, y + h);
+        g.addColorStop(0, p[0]);
+        g.addColorStop(1, p[1]);
+        c.fillStyle = g;
+        c.fillRect(x, y, w, h);
+      }
+      function subtitle(c, it, x, y, w, h, k) {
+        var maxW = w * 0.86;
+        var mS = st.mainS * k, sS = st.subS * k;
+        var ml = wrap(c, it.main, maxW, '700 ' + mS + 'px ' + fnt());
+        var sl = (st.subOn && it.sub) ? wrap(c, it.sub, maxW, sS + 'px Georgia,serif') : [];
+        var padX = w * 0.07, padY = h * 0.045;
+        var mlh = mS * 1.38, slh = sS * 1.3;
+        var gp = (ml.length && sl.length) ? sS * 0.6 : 0;
+        var bh = padY * 2 + ml.length * mlh + (sl.length ? gp + sl.length * slh : 0);
+        var by = y + h - bh;
+        var tx = st.align === 'left' ? x + padX : st.align === 'right' ? x + w - padX : x + w / 2;
+        c.save();
+        c.globalAlpha = st.barA;
+        c.fillStyle = st.barBg;
+        c.fillRect(x, by, w, bh);
+        c.restore();
+        c.textBaseline = 'top';
+        c.textAlign = st.align;
+        var ty = by + padY;
+        c.fillStyle = st.mainC;
+        c.font = '700 ' + mS + 'px ' + fnt();
+        ml.forEach(function (ln, i) { c.fillText(ln, tx, ty + i * mlh); });
+        if (sl.length) {
+          ty += ml.length * mlh + gp;
+          c.fillStyle = st.subC;
+          c.font = sS + 'px Georgia,serif';
+          sl.forEach(function (ln, i) { c.fillText(ln, tx, ty + i * slh); });
+        }
+      }
+      /* 计算每张卡的 y / 高度（与绘制共用，保证覆盖层与画面对齐） */
+      function computeLayout(W) {
+        var k = W / BASE_W;
+        var gap = st.gapMode === 'compact' ? 0 : st.gap * k;
+        /* 紧凑：每张只取中间约一半高度（扁横条）；展开：完整画幅 */
+        var compact = st.gapMode === 'compact';
+        var lay = [], y = 0, i;
+        for (i = 0; i < items.length; i++) {
+          var ar = items[i].ar || 9 / 16;
+          var ih = Math.round(W * (compact ? ar * st.compactRatio : ar));
+          lay.push({ y: y, h: ih });
+          y += ih + gap;
+        }
+        return { lay: lay, total: Math.max(1, Math.round(y - (items.length ? gap : 0))) };
+      }
+      function renderTo(target, W) {
+        var L = computeLayout(W);
+        var k = W / BASE_W;
+        var isCompact = st.gapMode === 'compact';
+        target.width = Math.round(W);
+        target.height = L.total;
+        var c = target.getContext('2d');
+        c.fillStyle = st.bg;
+        c.fillRect(0, 0, target.width, target.height);
+        for (var i = 0; i < items.length; i++) {
+          var it = items[i];
+          c.save();
+          rrect(c, 0, L.lay[i].y, W, L.lay[i].h, st.radius * k, !isCompact || i === 0, !isCompact || i === items.length - 1);
+          c.clip();
+          if (it.img) cover(c, it.img, 0, L.lay[i].y, W, L.lay[i].h);
+          else sampleBg(c, 0, L.lay[i].y, W, L.lay[i].h, i);
+          subtitle(c, it, 0, L.lay[i].y, W, L.lay[i].h, k);
+          c.restore();
+        }
+        return { w: target.width, h: target.height };
+      }
+      /* 只重绘画布，不重建覆盖层（打字时保住输入框焦点） */
+      function drawCanvas() {
+        if (!items.length) {
+          if (cvWrap) cvWrap.style.display = 'none';
+          if (ph) ph.style.display = '';
+          if (dimsEl) dimsEl.textContent = '—';
+          return;
+        }
+        if (cvWrap) cvWrap.style.display = '';
+        if (ph) ph.style.display = 'none';
+        var r = renderTo(cv, BASE_W);
+        if (dimsEl) dimsEl.textContent = r.w + ' × ' + r.h + ' px';
+      }
+      /* 覆盖层：每张卡一条工具条（上移/下移/编辑/删除），编辑时在该条下方弹出主/副字幕输入框 */
+      function buildOverlay() {
+        if (!olWrap) return;
+        if (!items.length) { olWrap.innerHTML = ''; return; }
+        var L = computeLayout(BASE_W);
+        var kd = cv.offsetWidth / cv.width;
+        if (!kd || !isFinite(kd)) kd = 1;
+        var html = '';
+        items.forEach(function (it, i) {
+          html += '<div class="sub-olcard" data-i="' + i + '" style="top:' + (L.lay[i].y * kd) + 'px;height:' + (L.lay[i].h * kd) + 'px">'
+            + '<div class="sub-olbar">'
+            + '<button type="button" class="olb" data-a="up" title="上移">↑</button>'
+            + '<button type="button" class="olb" data-a="down" title="下移">↓</button>'
+            + '<button type="button" class="olb" data-a="edit" title="改文字">✎</button>'
+            + '<button type="button" class="olb del" data-a="del" title="删除">✕</button>'
+            + '</div>';
+          if (editIdx === i) {
+            html += '<div class="sub-oledit">'
+              + '<div class="oe-lb">主字幕</div>'
+              + '<input type="text" data-k="main" value="' + esc(it.main) + '" placeholder="主字幕（中文）" />'
+              + '<div class="oe-lb">副字幕 · 译文</div>'
+              + '<input type="text" data-k="sub" value="' + esc(it.sub) + '" placeholder="译文 / English" />'
+              + '</div>';
+          }
+          html += '</div>';
+        });
+        olWrap.innerHTML = html;
+      }
+      function render() { drawCanvas(); buildOverlay(); }
+
+      function swap(a, b) { var t = items[a]; items[a] = items[b]; items[b] = t; }
+
+      /* ---- 覆盖层交互 ---- */
+      if (olWrap) {
+        olWrap.addEventListener('click', function (e) {
+          var card = e.target.closest ? e.target.closest('.sub-olcard') : null;
+          if (!card) return;
+          var i = +card.dataset.i;
+          var btn = e.target.closest ? e.target.closest('.olb') : null;
+          if (btn) {
+            var a = btn.dataset.a;
+            if (a === 'up' && i > 0) { swap(i, i - 1); editIdx = i - 1; render(); }
+            else if (a === 'down' && i < items.length - 1) { swap(i, i + 1); editIdx = i + 1; render(); }
+            else if (a === 'del') { items.splice(i, 1); editIdx = -1; render(); }
+            else if (a === 'edit') { editIdx = (editIdx === i ? -1 : i); render(); }
+            return;
+          }
+          if (e.target.tagName === 'INPUT') return;
+          editIdx = (editIdx === i ? -1 : i);
+          render();
+        });
+        olWrap.addEventListener('input', function (e) {
+          var t = e.target;
+          if (t.tagName !== 'INPUT') return;
+          var card = t.closest ? t.closest('.sub-olcard') : null;
+          if (!card) return;
+          items[+card.dataset.i][t.dataset.k] = t.value;
+          drawCanvas();
+        });
+      }
+
+      /* ---- 图片来源：拖拽 / 选择文件 / 演示 / 粘贴 ---- */
+      function addFiles(fs) {
+        fs = fs.filter(function (f) { return f && /^image\//.test(f.type); });
+        fs.forEach(function (f) {
+          var rd = new FileReader();
+          rd.onload = function (ev) {
+            var img = new Image();
+            img.onload = function () {
+              items.push({ img: img, ar: img.height / img.width, main: '', sub: '', name: f.name.replace(/\.[^.]+$/, '') });
+              editIdx = items.length - 1;
+              render();
+            };
+            img.src = ev.target.result;
+          };
+          rd.readAsDataURL(f);
+        });
+      }
+      var fileIn = document.getElementById('subFile');
+      var pickBtn = document.getElementById('subPick');
+      var sampleBtn = document.getElementById('subSample');
+      if (pickBtn && fileIn) pickBtn.addEventListener('click', function () { fileIn.click(); });
+      if (fileIn) {
+        fileIn.addEventListener('change', function (e) {
+          addFiles(Array.prototype.slice.call(e.target.files || []));
+          e.target.value = '';
+        });
+      }
+      if (sampleBtn) {
+        sampleBtn.addEventListener('click', function () {
+          items = [];
+          editIdx = -1;
+          var pending = SAMPLES.length;
+          SAMPLES.forEach(function (s, i) {
+            var img = new Image();
+            img.onload = function () {
+              items[i] = { img: img, ar: img.height / img.width, main: s.main, sub: s.sub, name: s.name };
+              if (--pending === 0) render();
+            };
+            img.onerror = function () {
+              items[i] = { img: null, ar: 9 / 16, main: s.main, sub: s.sub, name: s.name };
+              if (--pending === 0) render();
+            };
+            img.src = s.src;
+          });
+        });
+      }
+      if (drop) {
+        ['dragenter', 'dragover'].forEach(function (ev) {
+          drop.addEventListener(ev, function (e) { e.preventDefault(); e.stopPropagation(); drop.classList.add('hot'); });
+        });
+        ['dragleave', 'dragend'].forEach(function (ev) {
+          drop.addEventListener(ev, function (e) { e.preventDefault(); e.stopPropagation(); drop.classList.remove('hot'); });
+        });
+        drop.addEventListener('drop', function (e) {
+          e.preventDefault(); e.stopPropagation();
+          drop.classList.remove('hot');
+          addFiles(Array.prototype.slice.call((e.dataTransfer && e.dataTransfer.files) || []));
+        });
+      }
+      /* 粘贴截图（仅本面板可见时生效，且只在剪贴板含文件时拦截） */
+      document.addEventListener('paste', function (e) {
+        var pane = document.getElementById('pane-sub');
+        if (!pane || pane.hidden) return;
+        var its = (e.clipboardData && e.clipboardData.items) || [];
+        var fs = [];
+        for (var i = 0; i < its.length; i++) {
+          if (its[i].kind === 'file') { var f = its[i].getAsFile(); if (f) fs.push(f); }
+        }
+        if (fs.length) { e.preventDefault(); addFiles(fs); }
+      });
+
+      /* ---- 样式控件 ---- */
+      function bindColor(id, key, alpha) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('input', function () {
+          st[key] = alpha ? (+el.value) / 100 : el.value;
+          render();
+        });
+      }
+      function bindRange(id, key) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('input', function () { st[key] = +el.value; render(); });
+      }
+      function bindSeg(id, key) {
+        var box = document.getElementById(id);
+        if (!box) return;
+        box.addEventListener('click', function (e) {
+          if (e.target.tagName !== 'BUTTON') return;
+          Array.prototype.forEach.call(box.children, function (b) { b.classList.remove('on'); });
+          e.target.classList.add('on');
+          st[key] = e.target.dataset.v;
+          render();
+        });
+      }
+      bindColor('subBg', 'bg');
+      bindColor('subBarBg', 'barBg');
+      bindColor('subBarA', 'barA', true);
+      bindColor('subMainC', 'mainC');
+      bindColor('subSubC', 'subC');
+      bindRange('subRadius', 'radius');
+      bindRange('subMainS', 'mainS');
+      bindRange('subSubS', 'subS');
+      bindSeg('subAlign', 'align');
+
+      /* 间距 / 裁切 滑块：紧凑模式控「裁切比例」，展开模式控「间距」——两种模式都可用 */
+      var gapBox = document.getElementById('subGapMode');
+      var gapSlider = document.getElementById('subGap');
+      var gapLab = document.getElementById('subGapLab');
+      function syncGapUI() {
+        if (!gapSlider) return;
+        gapSlider.disabled = false;
+        if (st.gapMode === 'compact') {
+          gapSlider.min = 30; gapSlider.max = 80;
+          gapSlider.value = Math.round(st.compactRatio * 100);
+          if (gapLab) gapLab.textContent = '裁切';
+        } else {
+          gapSlider.min = 0; gapSlider.max = 60;
+          gapSlider.value = st.gap;
+          if (gapLab) gapLab.textContent = '间距';
+        }
+      }
+      if (gapSlider) {
+        gapSlider.addEventListener('input', function () {
+          var v = +gapSlider.value;
+          if (st.gapMode === 'compact') st.compactRatio = v / 100;
+          else st.gap = v;
+          render();
+        });
+      }
+      if (gapBox) {
+        gapBox.addEventListener('click', function (e) {
+          if (e.target.tagName !== 'BUTTON') return;
+          Array.prototype.forEach.call(gapBox.children, function (b) { b.classList.remove('on'); });
+          e.target.classList.add('on');
+          st.gapMode = e.target.dataset.v;
+          syncGapUI();
+          render();
+        });
+      }
+      syncGapUI();
+
+      var subChk = document.getElementById('subOn');
+      if (subChk) subChk.addEventListener('change', function () { st.subOn = subChk.checked; render(); });
+
+      /* ---- 导出：只保留高清 ×1.5 ---- */
+      var expBtn = document.getElementById('subExport');
+      if (expBtn) {
+        expBtn.addEventListener('click', function () {
+          if (!items.length) {
+            if (typeof gToast === 'function') gToast('先拖入剧照，或点「我看看演示效果」');
+            return;
+          }
+          var off = document.createElement('canvas');
+          renderTo(off, BASE_W * 1.5);
+          off.toBlob(function (blob) {
+            var name = '字幕拼图_高清.png';
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = name;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+            if (typeof gToast === 'function') gToast('已导出 ' + name);
+          }, 'image/png');
+        });
+      }
+
+      /* 以 DOM 控件初值为准，避免 state 与滑块显示不一致（裁切/间距由 syncGapUI 接管，不在此读） */
+      (function syncInit() {
+        var r = document.getElementById('subRadius'); if (r) st.radius = +r.value;
+        var m = document.getElementById('subMainS'); if (m) st.mainS = +m.value;
+        var s2 = document.getElementById('subSubS'); if (s2) st.subS = +s2.value;
+        var a = document.getElementById('subBarA'); if (a) st.barA = (+a.value) / 100;
+      })();
+      render();
+      /* 字体就绪后重绘，避免首帧用回退字体 */
+      if (document.fonts && document.fonts.load) {
+        document.fonts.load("16px 'LXGW WenKai'").then(render, render);
+      }
+      window.addEventListener('resize', function () { buildOverlay(); });
+    })();
+
   </script>
 
 
@@ -1740,8 +2214,63 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     .side li.active { background: #fff; color: var(--t-text); box-shadow: var(--t-shadow); font-weight: 700; }
     .side li.active::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 3px; height: 18px; border-radius: 0 3px 3px 0; background: var(--t-accent); }
     .side li.active .ic { color: var(--t-accent); }
+    /* ===== 字幕拼图面板（作用域收在 #pane-sub，只复用站点 CSS 变量） ===== */
+    #pane-sub .sub-drop { border: 2px dashed var(--color-border, #e7e5e4); border-radius: 16px; background: #fff; padding: 24px 20px; text-align: center; margin-bottom: 18px; transition: .18s; }
+    #pane-sub .sub-drop.hot { border-color: var(--color-accent, #F55000); background: #fff7ed; }
+    #pane-sub .sub-drop-t { font-family: var(--font-serif); font-size: 17px; font-weight: 700; color: var(--color-text, #1c1917); }
+    #pane-sub .sub-drop-s { font-size: 12.5px; color: var(--color-text-secondary, #78716c); margin-top: 6px; }
+    #pane-sub .sub-drop-b { display: flex; gap: 10px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
+    #pane-sub .sub-drop-p { font-size: 12px; color: var(--color-text-secondary, #78716c); margin-top: 12px; }
+    #pane-sub .sub-drop-p b { color: var(--color-text, #1c1917); font-weight: 700; }
+    #pane-sub .sub-ws { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 22px; align-items: start; }
+    #pane-sub .sub-stage { background: repeating-conic-gradient(#f0ece4 0% 25%, #fafaf9 0% 50%) 0/22px 22px; border: 1px solid var(--color-border, #e7e5e4); border-radius: 14px; padding: 14px; min-height: 300px; max-height: calc(100vh - 200px); overflow: auto; display: flex; align-items: flex-start; justify-content: center; }
+    #pane-sub .sub-cv-wrap { position: relative; width: 100%; }
+    #pane-sub .sub-cv-wrap canvas { display: block; width: 100%; height: auto; border-radius: 8px; box-shadow: 0 6px 22px rgba(28, 25, 23, .14); }
+    #pane-sub .sub-ol { position: absolute; inset: 0; border-radius: 8px; }
+    #pane-sub .sub-olcard { position: absolute; left: 0; right: 0; cursor: pointer; }
+    #pane-sub .sub-olcard:hover { outline: 2px solid var(--color-accent, #F55000); outline-offset: -2px; }
+    #pane-sub .sub-olbar { position: absolute; top: 6px; right: 6px; display: flex; gap: 4px; opacity: 0; transition: .15s; }
+    #pane-sub .sub-olcard:hover .sub-olbar { opacity: 1; }
+    #pane-sub .olb { width: 26px; height: 26px; border-radius: 7px; border: 1px solid rgba(255, 255, 255, .55); background: rgba(28, 25, 23, .68); color: #fff; font-size: 13px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; font-family: inherit; }
+    #pane-sub .olb:hover { background: var(--color-accent, #F55000); border-color: var(--color-accent, #F55000); }
+    #pane-sub .olb.del:hover { background: #dc2626; border-color: #dc2626; }
+    #pane-sub .sub-oledit { position: absolute; left: 10px; right: 10px; bottom: 10px; background: #fff; border-radius: 10px; padding: 9px; box-shadow: 0 6px 22px rgba(28, 25, 23, .3); cursor: default; }
+    #pane-sub .sub-oledit .oe-lb { font-size: 11px; color: var(--color-text-secondary, #78716c); margin: 0 0 4px; }
+    #pane-sub .sub-oledit input { width: 100%; font-family: inherit; font-size: 12.5px; color: var(--color-text, #1c1917); border: 1px solid var(--color-border, #e7e5e4); border-radius: 8px; padding: 6px 8px; background: #fff; margin-bottom: 7px; }
+    #pane-sub .sub-oledit input:last-child { margin-bottom: 0; }
+    #pane-sub .sub-ph { font-size: 13px; color: var(--color-text-secondary, #78716c); margin: 0; text-align: center; }
+    #pane-sub .sub-dims { font-size: 12px; color: var(--color-text-secondary, #78716c); margin-top: 10px; text-align: center; font-variant-numeric: tabular-nums; }
+    #pane-sub .sub-ex { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+    #pane-sub .sub-btn { font-family: inherit; font-size: 13px; border: 1.5px solid var(--color-border, #e7e5e4); background: #fff; color: var(--color-text, #1c1917); border-radius: 11px; padding: 9px 16px; cursor: pointer; transition: .18s; min-height: 40px; }
+    #pane-sub .sub-btn:hover { border-color: var(--color-accent, #F55000); color: var(--color-accent, #F55000); }
+    #pane-sub .sub-btn.primary { background: var(--color-accent, #F55000); border-color: var(--color-accent, #F55000); color: #fff; font-weight: 700; }
+    #pane-sub .sub-btn.primary:hover { background: #e04a00; border-color: #e04a00; color: #fff; }
+    #pane-sub .sub-set { display: flex; flex-direction: column; gap: 14px; }
+    #pane-sub .sub-sec { background: var(--color-card-bg, #fff); border: 1px solid var(--color-border, #e7e5e4); border-radius: 14px; padding: 14px; }
+    #pane-sub .sub-lab { display: block; font-family: var(--font-serif); font-size: 13px; font-weight: 700; color: var(--color-text, #1c1917); margin-bottom: 10px; }
+    #pane-sub .sub-row { display: flex; align-items: center; gap: 10px; margin: 8px 0; }
+    #pane-sub .sub-t { font-size: 12.5px; color: var(--color-text-secondary, #78716c); width: 46px; flex: none; }
+    #pane-sub .sub-row input[type=range] { flex: 1; min-width: 0; }
+    #pane-sub .sub-row input[type=range]:disabled { opacity: .38; cursor: default; }
+    #pane-sub .sub-row input[type=color] { width: 34px; height: 28px; border: 1px solid var(--color-border, #e7e5e4); border-radius: 8px; padding: 2px; background: #fff; cursor: pointer; flex: none; }
+    #pane-sub .sub-inp, #pane-sub .sub-row select { font-family: inherit; font-size: 12.5px; color: var(--color-text, #1c1917); border: 1px solid var(--color-border, #e7e5e4); border-radius: 9px; padding: 6px 9px; background: #fff; flex: 1; min-width: 0; }
+    #pane-sub .sub-seg { display: inline-flex; border: 1px solid var(--color-border, #e7e5e4); border-radius: 9px; overflow: hidden; flex: none; }
+    #pane-sub .sub-seg button { font-family: inherit; border: 0; background: #fff; padding: 6px 10px; font-size: 12px; cursor: pointer; color: var(--color-text-secondary, #78716c); }
+    #pane-sub .sub-seg button.on { background: var(--color-accent, #F55000); color: #fff; font-weight: 700; }
+    #pane-sub .sub-sw { position: relative; width: 40px; height: 22px; flex: none; }
+    #pane-sub .sub-sw input { opacity: 0; width: 0; height: 0; }
+    #pane-sub .sub-tr { position: absolute; inset: 0; background: #d6d3cd; border-radius: 999px; cursor: pointer; transition: .2s; }
+    #pane-sub .sub-tr::before { content: ''; position: absolute; width: 16px; height: 16px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s; }
+    #pane-sub .sub-sw input:checked + .sub-tr { background: var(--color-accent, #F55000); }
+    #pane-sub .sub-sw input:checked + .sub-tr::before { transform: translateX(18px); }
+    #pane-sub .sub-hint { font-size: 11.5px; line-height: 1.6; color: var(--color-text-secondary, #78716c); margin: 8px 0 0; }
+    @media (max-width: 900px) {
+      #pane-sub .sub-ws { grid-template-columns: 1fr; }
+      #pane-sub .sub-stage { max-height: none; }
+    }
+
     /* 工具切换淡入（交互反馈） */
-    #pane-cover, #pane-quote, #pane-write { animation: paneIn .34s cubic-bezier(.32,.72,0,1) both; }
+    #pane-cover, #pane-quote, #pane-write, #pane-sub { animation: paneIn .34s cubic-bezier(.32,.72,0,1) both; }
     @keyframes paneIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
     /* 统一焦点环（情感化 / 一致性） */
     #pane-cover .inp:focus, #pane-cover .ta-box:focus-within,
