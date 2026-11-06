@@ -1,0 +1,1336 @@
+<!DOCTYPE html><html lang="zh-CN"> <head><meta charset="UTF-8"><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"><meta name="description" content="从发现选题、挖掘观点、研究素材，到组织文章、编辑润色和优化表达。32 个写作提示词，按写作流程排好，支持分类筛选和一键复制。"><link rel="canonical" href="https://gusangciren.github.io/resources/prompts/"><title>写作提示词工具箱 — 像企业家一样写作</title><!-- 社交分享卡片（微信 / 微博 / X 等抓取标题、描述与缩略图） --><meta property="og:type" content="website"><meta property="og:site_name" content="像企业家一样写作"><meta property="og:title" content="写作提示词工具箱 — 像企业家一样写作"><meta property="og:description" content="从发现选题、挖掘观点、研究素材，到组织文章、编辑润色和优化表达。32 个写作提示词，按写作流程排好，支持分类筛选和一键复制。"><meta property="og:image" content="https://gusangciren.github.io/images/logo-180x180.png"><meta property="og:url" content="https://gusangciren.github.io/resources/prompts/"><meta property="og:locale" content="zh_CN"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="写作提示词工具箱 — 像企业家一样写作"><meta name="twitter:description" content="从发现选题、挖掘观点、研究素材，到组织文章、编辑润色和优化表达。32 个写作提示词，按写作流程排好，支持分类筛选和一键复制。"><meta name="twitter:image" content="https://gusangciren.github.io/images/logo-180x180.png"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="/favicon.png"><link rel="icon" type="image/png" sizes="16x16" href="/favicon.png"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo-180x180.png"><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/rss.xml"><link rel="sitemap" type="application/xml" href="/sitemap-index.xml"><!-- Static CSS — no build hash, safe for incremental deploys --><link rel="stylesheet" href="/global.css"><!-- 金句卡导出用到的 html2canvas 不再全站预加载：导出时由 ensureH2C() 按需注入（省下每页 45KB + 一次公网往返） --><!-- 中文字体：直连 BootCDN，去掉 /fonts/fonts.css → @import → CDN 的串行两跳；仍在渲染后用 preload+onload 切换。
+         preconnect 提前完成 DNS/TLS（字体文件走 CORS 通道，故带 crossorigin）；CDN CSS 自带 font-display:swap。 --><link rel="preconnect" href="https://cdn.bootcdn.net" crossorigin><link rel="preload" as="style" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-webfont/1.7.0/lxgwwenkai-regular.css" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-webfont/1.7.0/lxgwwenkai-regular.css"></noscript><link rel="stylesheet" href="/_astro/BaseLayout.Bu4xGSCj.css">
+<link rel="stylesheet" href="/_astro/prompts.DsdjNbpi.css"></head> <body> <nav class="navbar"> <div class="nav-inner"> <div class="nav-lead">  <a href="/" class="logo"> <img src="/images/logo-header.png" alt="Logo" class="logo-img"> <span>像企业家一样写作</span> </a> </div> <div class="nav-links" id="nav-pill"> <span class="nav-slider" id="nav-slider"></span> <a href="/book">书籍</a> <a href="/columns">专栏</a> <a href="/tools" class="nav-tools">工具</a> </div> </div> </nav> <!-- 搜索浮窗 --> <div id="search-overlay" class="search-overlay"> <div class="search-modal"> <div class="search-header"> <input id="search-input" type="text" placeholder="搜索书籍、章节或关键词…" autocomplete="off"> <button id="search-close" class="search-close-btn" aria-label="关闭搜索">✕</button> </div> <div id="search-results" class="search-results"></div> </div> </div> <!-- 分享按钮：点开菜单 → 复制链接（导航旁 + 文章底部共用一套逻辑与样式） --> <script>
+      (function () {
+        function flash(btn, txt, ok) {
+          var span = btn.querySelector('.share-item-text');
+          if (!span) return;
+          var old = span.textContent;
+          span.textContent = txt;
+          btn.classList.toggle('done', !!ok);
+          setTimeout(function () { span.textContent = old; btn.classList.remove('done'); }, 1600);
+        }
+        function closeAll(except) {
+          document.querySelectorAll('.share-btn.open').forEach(function (b) {
+            if (b === except) return;
+            b.classList.remove('open');
+            var t = b.querySelector('.share-trigger');
+            if (t) t.setAttribute('aria-expanded', 'false');
+          });
+        }
+
+        document.addEventListener('click', function (e) {
+          var root = e.target.closest ? e.target.closest('.share-btn') : null;
+
+          /* 点菜单项 → 复制链接 */
+          var item = e.target.closest ? e.target.closest('.share-item') : null;
+          if (item) {
+            var url = window.location.href;
+            var done = function () { flash(item, '已复制 ✓', true); };
+            var fail = function () { flash(item, '复制失败', false); };
+            var fallback = function () {
+              try {
+                var ta = document.createElement('textarea');
+                ta.value = url;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                done();
+              } catch (err) { fail(); }
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(url).then(done).catch(fallback);
+            } else { fallback(); }
+            closeAll(null);
+            e.preventDefault();
+            e.stopPropagation();
+            return;
+          }
+
+          /* 点触发器 → 开合菜单 */
+          var trig = e.target.closest ? e.target.closest('.share-trigger') : null;
+          if (trig) {
+            var box = trig.closest('.share-btn');
+            var wasOpen = box.classList.contains('open');
+            closeAll(box);
+            if (!wasOpen) {
+              box.classList.add('open');
+              trig.setAttribute('aria-expanded', 'true');
+            } else {
+              trig.setAttribute('aria-expanded', 'false');
+            }
+            e.preventDefault();
+            return;
+          }
+
+          /* 点别处 → 全部收起 */
+          if (!root) closeAll(null);
+        });
+
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') closeAll(null);
+        });
+      })();
+    </script> <!-- 导航胶囊滑块（仿 iOS 相册 视频/照片 切换动态） --> <script>
+      (function () {
+        var pill = document.getElementById('nav-pill');
+        var slider = document.getElementById('nav-slider');
+        if (!pill || !slider) return;
+        var links = Array.prototype.slice.call(pill.querySelectorAll('a'));
+        var path = window.location.pathname.replace(/\/+$/, '') || '/';
+        var activeIdx = -1;
+        links.forEach(function (a, i) {
+          var href = (a.getAttribute('href') || '').replace(/\/+$/, '') || '/';
+          var match = (href === '/') ? (path === '/') : (path === href || path.indexOf(href + '/') === 0);
+          if (match) activeIdx = i;
+        });
+        if (activeIdx < 0) { slider.style.opacity = '0'; return; }
+        links[activeIdx].classList.add('active');
+        function move(idx, animate) {
+          var a = links[idx];
+          if (!a) return;
+          if (!animate) slider.style.transition = 'none';
+          slider.style.width = a.offsetWidth + 'px';
+          slider.style.transform = 'translateX(' + a.offsetLeft + 'px)';
+          if (!animate) {
+            void slider.offsetWidth; /* 强制回流，让下一次位移产生过渡动画 */
+            slider.style.transition = '';
+          }
+        }
+        /* iOS 动态：先停在另一项上，再滑到当前项 */
+        move(activeIdx === 0 ? 1 : 0, false);
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () { move(activeIdx, true); });
+        });
+        window.addEventListener('resize', function () { move(activeIdx, false); });
+      })();
+    </script> <main>  <div class="resources-page" data-astro-cid-pgzakz6x> <nav class="rp-crumb" aria-label="资源分类" data-astro-cid-pgzakz6x> <div class="rp-crumb-l" data-astro-cid-pgzakz6x> <a href="/#resources" data-astro-cid-pgzakz6x>资源中心</a><span class="rp-crumb-sep" data-astro-cid-pgzakz6x>›</span><b aria-current="page" data-astro-cid-pgzakz6x>写作提示词</b> </div> </nav> <div class="pt-wrap" id="pt-app" data-astro-cid-pgzakz6x> <div class="pt-layout" data-astro-cid-pgzakz6x> <div class="pt-main" data-astro-cid-pgzakz6x> <div class="pt-note" data-astro-cid-pgzakz6x> <b data-astro-cid-pgzakz6x>建议工作流：</b>观察与发现 → 挖掘观点 → 研究素材 → 组织结构 → 编辑润色 → 优化表达 → 选题评估。不要让 AI 越过你的思考，直接替你决定文章写什么。
+</div> <div class="pt-content" data-astro-cid-pgzakz6x> <section class="pt-group" id="sec-0" data-cat="选题发现" data-astro-cid-pgzakz6x> <div class="pt-group-head" data-astro-cid-pgzakz6x> <span class="pt-group-title" data-astro-cid-pgzakz6x>选题发现</span> <span class="pt-group-count" data-astro-cid-pgzakz6x>8 个</span> </div> <div class="pt-list" data-astro-cid-pgzakz6x> <article class="pt-card" id="p-1" data-cat="选题发现" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>01 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>选题发现</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>从日常观察中发现选题</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>把经历、困惑和随手记录变成值得深入讨论的问题。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>你是一位优秀的非虚构写作选题编辑。
+
+我会向你提供一些日常观察、经历、想法、困惑或者随手记录。
+
+你的任务不是直接替我写文章，而是从这些材料中发现值得深入讨论的问题。
+
+请完成以下工作：
+
+1. 找出材料中最有意思、最反常或者最值得追问的地方。
+2. 从中提炼出 5 个值得讨论的问题。
+3. 将每个问题发展成一个具体的文章选题。
+4. 解释每个选题为什么值得写，以及可能吸引什么样的读者。
+5. 尽量寻找那些隐藏在日常现象背后的商业、心理或社会规律。
+
+不要制造宏大但空洞的话题。选题必须有具体的观察作为起点。
+
+【在这里粘贴你的观察或想法】</pre> </article><article class="pt-card" id="p-2" data-cat="选题发现" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>02 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>选题发现</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>从读者的问题中发现需求</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>从读者真正遇到的问题出发，而不是从知识点出发。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>你是一位擅长发现市场需求和内容选题的研究员。
+
+请围绕【主题】进行分析。
+
+不要直接罗列知识点，而是站在普通读者的角度，找出他们在这个领域真正遇到的问题。
+
+请从以下角度挖掘：
+
+1. 他们经常遇到什么麻烦？
+2. 他们想实现什么目标，却不知道怎么做？
+3. 他们有哪些错误认知？
+4. 他们反复搜索什么问题？
+5. 有哪些问题他们意识到了，却不知道该如何表达？
+6. 有哪些需求目前没有得到很好的满足？
+
+最后，将这些问题转化成 20 个具体的文章选题。
+
+选题尽量使用读者自己的语言，而不是行业术语。
+
+【主题】：</pre> </article><article class="pt-card" id="p-3" data-cat="选题发现" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>03 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>选题发现</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>从热门观点中寻找反常识选题</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>检验常见观点，寻找它不成立的条件和被忽略的因素。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>你是一位擅长独立思考的选题编辑。
+
+围绕【主题】，找出这个领域中广泛流行的观点、普遍接受的经验和常见建议。
+
+然后逐一追问：
+
+1. 这个观点一定正确吗？
+2. 它在什么情况下不成立？
+3. 它忽略了什么重要因素？
+4. 有没有与之相反的真实案例？
+5. 有没有一种更准确、更深刻的解释？
+
+请从中提炼 10 个具有讨论价值的文章选题。
+
+注意：不要为了反常识而反常识。每个选题都必须有合理的推理基础。
+
+【主题】：</pre> </article><article class="pt-card" id="p-4" data-cat="选题发现" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>04 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>选题发现</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>把一个小问题发展成大选题</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>从具体问题出发，逐渐连接到更普遍的议题。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>我有一个初步想法：【输入想法】。
+
+请帮助我判断这个想法是否具有进一步发展的价值。
+
+请按照以下步骤分析：
+
+1. 这个想法最初解决的是什么小问题？
+2. 它背后隐藏着什么更大的问题？
+3. 这个问题涉及哪些人群？
+4. 为什么这些人会关心它？
+5. 它与个人成长、商业、创业或生活有什么联系？
+6. 有没有更有吸引力的表达方式？
+
+请把这个想法发展成 5 个不同层次的文章选题。
+
+从具体问题逐渐深入到普遍规律，但不要偏离最初的想法。</pre> </article><article class="pt-card" id="p-5" data-cat="选题发现" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>05 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>选题发现</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>从成功文章中提炼选题规律</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>研究高表现内容背后的吸引力机制，而不是照搬标题。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>我会提供一些阅读量较高、传播效果较好的文章标题或文章内容。
+
+请你不要简单模仿标题。
+
+你的任务是分析这些文章为什么能够吸引读者。
+
+重点研究：
+
+1. 它们讨论的是什么问题？
+2. 触发了读者的什么情绪或需求？
+3. 使用了什么认知冲突？
+4. 它们满足了读者的什么好奇心？
+5. 标题中有什么值得借鉴的结构？
+6. 哪些选题机制可以迁移到其他领域？
+
+最后，基于这些规律，为【我的主题】设计 15 个全新的选题。
+
+要求：学习底层机制，不复制原来的选题。
+
+【在这里粘贴参考文章标题或内容】
+【我的主题】：</pre> </article><article class="pt-card" id="p-6" data-cat="选题发现" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>06 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>选题发现</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>从商业目标反推内容选题</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>让内容和产品形成长期关系，而不是每篇文章都像广告。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>我的长期目标是通过内容建立信任，并销售自己的产品。
+
+目前我销售的产品是：【产品介绍】。
+目标读者是：【目标读者】。
+
+请你从商业目标反推内容选题。
+
+分为四种类型：
+
+1. 流量型：帮助陌生读者发现我。
+2. 信任型：展示我的思考、经验和专业能力。
+3. 需求型：让读者意识到自己存在某个问题。
+4. 转化型：帮助读者理解产品能够解决什么问题。
+
+每种类型分别提供 5 个选题。
+
+注意：
+- 不要让所有文章都像广告。
+- 不要每篇文章都强行推销产品。
+- 让选题之间形成连续的内容关系。
+- 让读者从认识一个问题，逐渐走向理解解决方案。
+
+【产品介绍】：
+【目标读者】：</pre> </article><article class="pt-card" id="p-24" data-cat="选题发现" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>24 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>选题发现</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>从一个主题中寻找值得写的观点</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>解决有主题却没有观点的问题。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>你是一名擅长个人成长、创业和商业写作的编辑。
+我想写的主题是：【填写主题】。
+请不要直接给我文章标题，也不要直接写文章。
+请围绕这个主题，提出 20 个值得深入研究的问题。
+这些问题应该满足以下条件：
+1. 能够引发思考，而不是简单罗列常识。
+2. 能够引出不同于常见观点的解释。
+3. 可以通过真实案例、个人经历或原始资料进行研究。
+4. 尽量寻找人们习以为常、但很少认真思考的地方。
+5. 不要为了制造新颖感而故意提出荒谬的问题。
+最后，从中选出最值得写的 5 个问题，并解释理由。</pre> </article><article class="pt-card" id="p-25" data-cat="选题发现" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>25 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>选题发现</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>从热门观点中寻找反常识的切入点</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>避免文章重复别人已经讲过的话。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>我准备研究的主题是：【填写主题】。
+请先列出这个主题中最常见的 10 个观点。
+然后逐一分析：
+- 这些观点成立的前提是什么？
+- 在什么情况下它们可能不成立？
+- 它们忽略了哪些因素？
+- 有没有被忽视的相反证据？
+- 有没有更准确、更有解释力的表达方式？
+最后，请提出 5 个值得进一步研究的切入点。
+注意：反常识不等于故意唱反调。请优先寻找有证据支持、能够解释现实的观点。
+对于需要事实验证的判断，请明确标注待核实之处。</pre> </article> </div> </section><section class="pt-group" id="sec-1" data-cat="观点挖掘" data-astro-cid-pgzakz6x> <div class="pt-group-head" data-astro-cid-pgzakz6x> <span class="pt-group-title" data-astro-cid-pgzakz6x>观点挖掘</span> <span class="pt-group-count" data-astro-cid-pgzakz6x>6 个</span> </div> <div class="pt-list" data-astro-cid-pgzakz6x> <article class="pt-card" id="p-7" data-cat="观点挖掘" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>07 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>观点挖掘</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>观点挖掘器（Idea Excavator）</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>从常见观点、隐藏假设和被忽略的角度中找到值得研究的观点。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>我正在思考一个主题：【主题】。
+
+你现在是一名思想研究者，不要直接帮我写文章。
+
+请帮助我挖掘这个主题中值得深入研究的观点。
+
+具体要求：
+
+1. 找出这个主题中最常见的10个观点。
+2. 找出这些观点背后隐藏的假设。
+3. 寻找被忽视的角度。
+4. 寻找与主流观点相矛盾的事实或案例。
+5. 提出10个值得进一步研究的问题。
+6. 找出其中最有解释力、最有讨论价值的3个观点。
+
+不要为了新颖而故意制造反常识。
+不要把未经验证的推测当成事实。
+
+【主题】：</pre> </article><article class="pt-card" id="p-8" data-cat="观点挖掘" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>08 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>观点挖掘</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>苏格拉底式思想教练</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>通过一问一答挑战假设，帮助作者自己形成核心观点。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>你现在是我的苏格拉底式思想教练。
+
+我正在思考：【观点或问题】。
+
+你的任务不是告诉我答案，而是通过一系列有深度的问题，帮助我自己发现答案。
+
+规则：
+
+1. 每次只问我一个问题。
+2. 根据我的回答继续追问。
+3. 挑战我没有意识到的假设。
+4. 指出我论证中的矛盾。
+5. 要求我为重要判断提供证据。
+6. 当我给出模糊答案时，要求我具体解释。
+
+不要急于总结。
+不要轻易赞同我。
+直到我们找到一个值得写下来的核心观点。</pre> </article><article class="pt-card" id="p-9" data-cat="观点挖掘" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>09 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>观点挖掘</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>把普通话题挖掘出不同角度</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>从历史、商业、心理、经济、技术等视角扩展思考。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>我准备写一篇关于【主题】的文章。
+
+请不要急着给我文章大纲。
+
+你需要像一位优秀的编辑一样，帮助我寻找这个主题中尚未被充分讨论的角度。
+
+请分别从以下方向展开：
+
+1. 历史角度：这个问题过去是怎样的？
+2. 商业角度：它背后有什么商业规律？
+3. 心理角度：人们为什么会这样做？
+4. 经济角度：成本、收益和激励机制是什么？
+5. 技术角度：技术变化带来了什么新机会？
+6. 反面角度：如果从相反的立场看，会得到什么结论？
+7. 个体角度：普通人可以从中获得什么启发？
+
+每个角度至少提出 2 个值得写的问题。
+
+不要给我重复的观点，要尽可能扩大思考范围。</pre> </article><article class="pt-card" id="p-10" data-cat="观点挖掘" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>10 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>观点挖掘</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>寻找主题背后的深层逻辑</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>连续追问表面现象，寻找底层规律和解释。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>我想写一个主题：【主题】。
+
+请你扮演一位善于思考和追问的研究伙伴。
+
+不要停留在表面现象，而是连续追问：
+
+1. 为什么会出现这个现象？
+2. 为什么背后的原因会存在？
+3. 这个现象与哪些更底层的规律有关？
+4. 它是否可以用其他领域的知识解释？
+5. 如果把这个规律放到其他场景，会发生什么？
+
+请通过连续追问，帮助我从一个普通话题中发现一个更深刻的观点。
+
+最终输出：
+- 表面话题
+- 深层问题
+- 核心观点候选
+- 可能的文章标题
+
+不要替我决定最终观点，保留多个思考方向。</pre> </article><article class="pt-card" id="p-11" data-cat="观点挖掘" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>11 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>观点挖掘</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>反向思考研究员</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>从相反方向检验主流观点，寻找另一种解释。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>我正在研究的问题是：【问题】。
+
+请尝试从相反的方向思考。
+
+1. 当前主流观点是什么？
+2. 如果这个观点是错的，可能是什么原因？
+3. 哪些条件下它不成立？
+4. 有没有被忽略的反面案例？
+5. 有没有另一种解释能够更好地解释现实？
+6. 如果完全反过来思考，会得出什么结论？
+
+请寻找证据，而不是为了反驳而反驳。
+
+最后给出3个值得进一步研究的反向观点。
+
+【问题】：</pre> </article><article class="pt-card" id="p-26" data-cat="观点挖掘" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>26 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>观点挖掘</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>使用类比产生新观点</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>找到解释复杂问题的新方式。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>我正在研究的问题是：【填写问题】。
+请为这个问题寻找 10 个来自不同领域的类比。
+可以从生物学、工程学、历史、心理学、商业、体育和日常生活中寻找。
+对每个类比，请说明：
+1. 两个事物的相似之处。
+2. 这种相似性能够帮助我们理解什么。
+3. 类比在哪些地方不成立。
+4. 它可能引出什么值得研究的新观点。
+不要只追求有趣的比喻，要寻找能够帮助我们推理的类比。
+最后选出三个最适合发展成文章的类比。</pre> </article> </div> </section><section class="pt-group" id="sec-2" data-cat="研究与素材" data-astro-cid-pgzakz6x> <div class="pt-group-head" data-astro-cid-pgzakz6x> <span class="pt-group-title" data-astro-cid-pgzakz6x>研究与素材</span> <span class="pt-group-count" data-astro-cid-pgzakz6x>2 个</span> </div> <div class="pt-list" data-astro-cid-pgzakz6x> <article class="pt-card" id="p-12" data-cat="研究与素材" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>12 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>研究与素材</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>原始资料研究员</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>研究人物、公司或商业事件时，优先寻找一手材料并核实出处。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>我想深入研究：【人物、公司或商业事件】。
+
+请不要只给我二手文章和常见总结。
+
+优先寻找：
+
+1. 当事人自己写的文章。
+2. 完整采访和播客。
+3. 原始演讲和公开视频。
+4. 官方产品页面。
+5. 公开的商业数据。
+6. 当事人亲自分享的经营经验。
+
+请建立时间线。
+
+对每个重要结论，提供：
+- 具体事实。
+- 原始出处。
+- 出处中的相关内容。
+- 这件事说明了什么。
+- 哪些地方还无法确定。
+
+不要编造资料，不要将二手观点伪装成当事人的原话。
+
+【研究对象】：</pre> </article><article class="pt-card" id="p-13" data-cat="研究与素材" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>13 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>研究与素材</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>从抽象表达中寻找具体材料</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>把抽象观点转化为场景、案例、行为和可查证材料。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>请检查下面的文章。
+
+找出其中过于抽象、空泛或缺乏具体内容的表达。
+
+例如：
+
+「创业需要坚持。」
+
+这句话虽然正确，但缺少具体信息。
+
+请尝试找到：
+
+1. 可以使用什么真实场景解释？
+2. 可以使用什么具体案例？
+3. 有没有可观察的行为？
+4. 有没有更具体的描述方式？
+
+请提供修改建议。
+
+不要随意编造故事。
+没有真实案例时，请明确告诉我需要寻找什么材料。
+
+文章：
+【粘贴文章】</pre> </article> </div> </section><section class="pt-group" id="sec-3" data-cat="文章结构" data-astro-cid-pgzakz6x> <div class="pt-group-head" data-astro-cid-pgzakz6x> <span class="pt-group-title" data-astro-cid-pgzakz6x>文章结构</span> <span class="pt-group-count" data-astro-cid-pgzakz6x>3 个</span> </div> <div class="pt-list" data-astro-cid-pgzakz6x> <article class="pt-card" id="p-14" data-cat="文章结构" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>14 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>文章结构</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>文章结构分析器</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>从素材中提炼核心结论、论点、证据和文章大纲。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>你现在是一名专业文章编辑。
+
+请分析下面的文章素材：
+
+【粘贴素材】
+
+不要直接写文章。
+
+请帮助我建立文章结构：
+
+1. 这篇文章真正想表达什么？
+2. 最核心的结论是什么？
+3. 支持结论的主要论点有哪些？
+4. 每个论点需要什么证据？
+5. 这些论点应该按照什么顺序排列？
+6. 哪些内容应该删除？
+7. 哪些重要问题还没有得到解释？
+
+最后提供一份文章大纲。
+
+注意：
+不要为了结构完整而编造论点。
+保留原素材中有价值的独特观点。</pre> </article><article class="pt-card" id="p-29" data-cat="文章结构" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>29 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>文章结构</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>使用 SCQA 优化文章开头</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>用情境—冲突—问题—回答结构打磨开头。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>我正在写一篇关于【主题】的文章。
+我的核心观点是：【观点】。
+目标读者是：【读者】。
+请使用 SCQA 分析文章开头：
+- Situation：读者熟悉的背景。
+- Complication：值得关注的冲突或变化。
+- Question：由此产生的问题。
+- Answer：文章准备给出的回答。
+请提供三个不同的开头方案。
+每个方案都必须忠于我的核心观点，不要为了制造冲突而夸大事实。
+先解释每个方案的结构，再给出示例。
+不要继续写正文。</pre> </article><article class="pt-card" id="p-30" data-cat="文章结构" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>30 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>文章结构</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>检查段落之间的衔接</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>检查并改善段落间的过渡与逻辑。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>请检查下面文章的段落衔接：
+【粘贴文章】
+请逐段分析：
+- 这一段承担什么作用？
+- 它与上一段有什么关系？
+- 它是否自然地引出下一段？
+- 是否存在突然转移话题的情况？
+对存在问题的地方，请提供最小幅度的修改建议。
+不要给每个段落都添加过渡句。
+如果直接进入下一观点更自然，就保留原样。</pre> </article> </div> </section><section class="pt-group" id="sec-4" data-cat="文章编辑" data-astro-cid-pgzakz6x> <div class="pt-group-head" data-astro-cid-pgzakz6x> <span class="pt-group-title" data-astro-cid-pgzakz6x>文章编辑</span> <span class="pt-group-count" data-astro-cid-pgzakz6x>6 个</span> </div> <div class="pt-list" data-astro-cid-pgzakz6x> <article class="pt-card" id="p-15" data-cat="文章编辑" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>15 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>文章编辑</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>Clarity Checker：清晰度编辑器</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>让表达更清楚，同时保留作者原始观点和语气。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>请编辑下面的段落，使它更清晰、更容易理解。
+
+要求：
+
+1. 找出复杂、模糊的句子。
+2. 删除不必要的表达。
+3. 改善句子结构。
+4. 保留我的原始观点和语气。
+5. 不要添加新的观点。
+6. 不要改变我的表达风格。
+
+先列出问题，再给出修改稿。
+
+原文：
+【粘贴内容】</pre> </article><article class="pt-card" id="p-16" data-cat="文章编辑" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>16 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>文章编辑</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>Flow Fixer：文章流畅度检查器</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>检查论证跳跃、段落衔接和重复论证。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>请检查下面文章的逻辑流动和段落衔接。
+
+重点检查：
+
+1. 观点之间是否自然连接？
+2. 有没有突然转移话题？
+3. 有没有缺少必要的解释？
+4. 是否存在重复论证？
+5. 哪些地方读起来不自然？
+
+请引用具体原文指出问题。
+
+先给出诊断，再提供修改建议。
+
+不要为了让文章流畅而添加大量过渡句。
+
+文章：
+【粘贴文章】</pre> </article><article class="pt-card" id="p-17" data-cat="文章编辑" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>17 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>文章编辑</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>Shortener：文章精简器</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>精简冗余表达，同时保留论据、案例、类比和个人语言。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>请帮助我精简下面的文章。
+
+目标：减少约20%的冗余表达。
+
+重点删除：
+
+1. 重复表达的观点。
+2. 不必要的修饰词。
+3. 过长的解释。
+4. 不影响核心意思的内容。
+
+必须保留：
+
+- 原始观点。
+- 重要论据。
+- 关键案例。
+- 有价值的类比。
+- 作者独特的语言表达。
+
+请提供修改前后的对照。
+
+文章：
+【粘贴文章】</pre> </article><article class="pt-card" id="p-18" data-cat="文章编辑" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>18 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>文章编辑</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>Voice Matcher：作者风格匹配器</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>用原创样本校准编辑风格，避免 AI 抹平个人表达。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>我将提供两段文字。
+
+第一段是我的原创文章，作为我的写作风格样本。
+
+第二段是需要编辑的文章。
+
+第一段：
+【粘贴风格样本】
+
+第二段：
+【粘贴待编辑文章】
+
+请先分析我的写作风格：
+
+1. 常用句式。
+2. 语言习惯。
+3. 论证方式。
+4. 段落长度。
+5. 叙述节奏。
+6. 如何使用案例和类比。
+7. 语言的正式程度。
+
+然后编辑第二段，使其更符合第一段的表达习惯。
+
+不要模仿其他作家的风格。
+不要改变第二段的核心观点。
+不要为了追求流畅而抹平我的个人表达。</pre> </article><article class="pt-card" id="p-19" data-cat="文章编辑" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>19 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>文章编辑</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>Master Editing Prompt：综合编辑器</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>从七个维度诊断文章，再进行最小幅度修改并解释修改理由。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>你是一名经验丰富的中文非虚构写作编辑。
+
+请从以下七个维度检查我的文章：
+
+1. 清晰度：表达是否容易理解？
+2. 逻辑：观点之间是否存在跳跃？
+3. 流畅度：段落之间是否自然？
+4. 简洁度：是否存在冗余？
+5. 语气：是否保持自然和一致？
+6. 节奏：长短句是否合理？
+7. 准确性：是否存在错别字、病句和事实错误？
+
+请分两个阶段工作。
+
+第一阶段：诊断。
+
+逐项指出问题，引用原文并解释原因。
+
+第二阶段：编辑。
+
+提供最小修改版。
+
+严格遵守：
+
+- 不改变我的核心观点。
+- 不擅自添加新观点。
+- 不改变我的比喻。
+- 不删除有价值的个人表达。
+- 不把文章改成营销文案。
+- 不机械增加小标题。
+- 不要一句一段。
+
+最后附上修改记录，说明最重要的5处修改及原因。
+
+文章：
+【粘贴文章】</pre> </article><article class="pt-card" id="p-31" data-cat="文章编辑" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>31 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>文章编辑</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>保留作者风格的编辑器</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>提高准确性与可读性，而不代替你写作。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>请作为我的中文文章编辑。
+你的任务是提高文章的准确性、清晰度和可读性，而不是代替我写作。
+【粘贴文章】
+请遵守以下原则：
+1. 尽量保留原文的观点、逻辑和语言习惯。
+2. 修正错别字、标点错误和明显的语音转文字错误。
+3. 调整确实影响阅读的句子。
+4. 保留有意义的比喻、类比和个人表达。
+5. 不擅自增加新的观点、案例或结论。
+6. 不把文章改成夸张的营销文案。
+7. 不要机械地增加小标题。
+8. 不要把每句话都单独分成一段。
+先指出需要修改的问题，再提供最小幅度的修改稿。
+对涉及观点变化的修改，必须单独说明，不要直接替我决定。</pre> </article> </div> </section><section class="pt-group" id="sec-5" data-cat="文章表达" data-astro-cid-pgzakz6x> <div class="pt-group-head" data-astro-cid-pgzakz6x> <span class="pt-group-title" data-astro-cid-pgzakz6x>文章表达</span> <span class="pt-group-count" data-astro-cid-pgzakz6x>3 个</span> </div> <div class="pt-list" data-astro-cid-pgzakz6x> <article class="pt-card" id="p-20" data-cat="文章表达" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>20 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>文章表达</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>开头优化器</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>为同一篇文章尝试故事、反直觉、场景、问题和事实五种开头。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>我正在写一篇文章：
+
+主题：【主题】
+核心观点：【观点】
+目标读者：【读者】
+
+请提供5种结构完全不同的文章开头：
+
+1. 从一个真实故事开始。
+2. 从一个反直觉观点开始。
+3. 从一个具体场景开始。
+4. 从一个值得思考的问题开始。
+5. 从一个事实或数据开始。
+
+要求：
+
+每个开头都必须自然引出文章的核心观点。
+
+不要使用夸张标题党。
+不要编造事实和故事。
+
+最后分析哪个开头最有吸引力，以及原因。
+
+【主题】：
+【核心观点】：
+【目标读者】：</pre> </article><article class="pt-card" id="p-21" data-cat="文章表达" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>21 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>文章表达</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>文章结尾优化器</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>让结尾形成呼应、拓展思考或留下问题，不强行升华。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>请阅读下面的文章：
+
+【粘贴文章】
+
+我认为目前的结尾不够有力。
+
+请提供三个不同方向：
+
+1. 回到文章开头，形成呼应。
+2. 从具体问题上升到更广泛的思考。
+3. 留下一个值得读者继续思考的问题。
+
+要求：
+
+不要简单重复文章内容。
+不要突然增加新的核心观点。
+不要强行升华主题。
+
+请解释每种结尾产生的阅读效果。</pre> </article><article class="pt-card" id="p-22" data-cat="文章表达" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>22 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>文章表达</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>文章标题生成器</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>围绕文章真实观点生成多种标题，并检查是否夸大内容。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>文章主题：【主题】
+核心观点：【观点】
+目标读者：【读者】
+
+请生成20个标题。
+
+分别从以下角度设计：
+
+1. 问题型。
+2. 反常识型。
+3. 故事型。
+4. 结果型。
+5. 好奇心型。
+6. 观点型。
+
+不要为了吸引点击而夸大文章内容。
+
+每个标题都必须能够被文章实际内容支持。
+
+最后选出最好的5个，并解释它们各自吸引读者的原因。
+
+【文章主题】：
+【核心观点】：
+【目标读者】：</pre> </article> </div> </section><section class="pt-group" id="sec-6" data-cat="选题评估" data-astro-cid-pgzakz6x> <div class="pt-group-head" data-astro-cid-pgzakz6x> <span class="pt-group-title" data-astro-cid-pgzakz6x>选题评估</span> <span class="pt-group-count" data-astro-cid-pgzakz6x>1 个</span> </div> <div class="pt-list" data-astro-cid-pgzakz6x> <article class="pt-card" id="p-23" data-cat="选题评估" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>23 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>选题评估</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>选题压力测试</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>从读者需求、独特性、观点空间、素材、传播和产品关联评估选题。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>你是一位严格的内容总编辑。
+
+我会提供一个文章选题：【选题】。
+
+请不要鼓励我，也不要急着帮我写文章。
+
+请从以下维度评估它：
+
+1. 读者需求：有没有人真正关心这个问题？
+2. 独特性：这个选题是否已经被大量讨论？
+3. 观点空间：能否形成有价值的独立观点？
+4. 素材空间：有没有足够的案例、数据和原始资料？
+5. 实用价值：读者读完能获得什么？
+6. 传播潜力：标题是否能激发好奇心？
+7. 产品关联：它是否能够自然连接到某个产品或服务？
+
+每项给出 1—10 分。
+
+最后告诉我：
+- 这个选题最大的优点是什么？
+- 最大的问题是什么？
+- 应该保留、修改还是放弃？
+- 如果修改，最值得尝试的三个新切口是什么？
+
+请给出真实判断，不要为了让选题看起来不错而打高分。
+
+【选题】：</pre> </article> </div> </section><section class="pt-group" id="sec-7" data-cat="商业与变现" data-astro-cid-pgzakz6x> <div class="pt-group-head" data-astro-cid-pgzakz6x> <span class="pt-group-title" data-astro-cid-pgzakz6x>商业与变现</span> <span class="pt-group-count" data-astro-cid-pgzakz6x>3 个</span> </div> <div class="pt-list" data-astro-cid-pgzakz6x> <article class="pt-card" id="p-27" data-cat="商业与变现" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>27 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>商业与变现</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>从一个问题中发现商业机会</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>将内容创作与创业研究连接起来。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>我正在研究的问题是：【填写问题】。
+请把它当作一个潜在的商业机会来研究。
+帮助我回答：
+1. 谁会遇到这个问题？
+2. 他们多久遇到一次？
+3. 问题会带来什么具体损失？
+4. 他们现在如何解决？
+5. 现有方案有什么缺陷？
+6. 他们是否已经为替代方案付过钱？
+7. 我可以用什么最小成本的方式验证需求？
+请区分已经掌握的事实与待验证的假设。
+最后提出三个低成本验证实验，不要一开始就建议我开发完整产品。</pre> </article><article class="pt-card" id="p-28" data-cat="商业与变现" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>28 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>商业与变现</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>从一个人物中提取可研究的商业案例</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>为你的商业人物研究系列寻找文章角度。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>我想研究的人物是：【人物姓名】。
+请不要直接写人物介绍，也不要只罗列他的成功经验。
+请先寻找值得研究的商业问题，例如：
+- 他最初如何发现机会？
+- 他在什么时间做出了关键决策？
+- 他如何获得第一批客户？
+- 他如何把内容转化为收入？
+- 他采用了什么低成本实验？
+- 哪些结果可能来自运气、时机或已有资源？
+- 哪些方法适合普通创作者借鉴？
+优先查找人物本人的文章、访谈、播客、公开产品和可验证的商业资料。
+为每个重要结论提供原始来源。
+最后提出 10 个有研究价值的文章选题，并说明每个选题需要什么证据才能成立。
+不要编造收入、时间线或人物言论。</pre> </article><article class="pt-card" id="p-32" data-cat="商业与变现" data-astro-cid-pgzakz6x> <div class="pt-top" data-astro-cid-pgzakz6x> <span class="pt-num" data-astro-cid-pgzakz6x>32 / PROMPT</span> <div class="pt-top-right" data-astro-cid-pgzakz6x> <span class="pt-tag" data-astro-cid-pgzakz6x>商业与变现</span> <button class="pt-copy" type="button" aria-label="复制提示词" title="复制提示词" data-astro-cid-pgzakz6x> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-pgzakz6x><rect x="9" y="9" width="13" height="13" rx="2" ry="2" data-astro-cid-pgzakz6x></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" data-astro-cid-pgzakz6x></path></svg> </button> </div> </div> <h3 class="pt-title" data-astro-cid-pgzakz6x>处理客户的购买异议</h3> <p class="pt-desc" data-astro-cid-pgzakz6x>诚实回应客户在购买前的真实顾虑。</p> <pre class="pt-prompt" data-astro-cid-pgzakz6x>我销售的产品是：【产品】。
+目标客户：【客户】。
+产品价格：【价格】。
+请模拟客户购买前可能提出的 10 个真实问题或异议。
+例如：
+- 为什么我需要购买？
+- 网上有没有免费的替代品？
+- 这个产品适合我吗？
+- 我购买后能得到什么？
+- 为什么价格是这个水平？
+对每个异议，请提供：
+1. 客户真正担心的是什么。
+2. 我应该提供什么证据。
+3. 如何诚实地回答。
+4. 哪些情况下应该承认产品不适合客户。
+不要把所有异议都当作需要反驳的问题。</pre> </article> </div> </section> </div> <div class="pt-empty" id="pt-empty" data-astro-cid-pgzakz6x>没有找到匹配的提示词。</div> </div> <aside class="pt-toc" aria-label="目录" data-astro-cid-pgzakz6x> <div class="pt-toc-inner" data-astro-cid-pgzakz6x> <div class="pt-toc-title" data-astro-cid-pgzakz6x>目录</div> <nav class="pt-toc-nav" data-astro-cid-pgzakz6x> <div class="pt-toc-sec" data-astro-cid-pgzakz6x> <a class="pt-toc-cat" href="#sec-0" data-astro-cid-pgzakz6x><span class="pt-toc-idx" data-astro-cid-pgzakz6x>01</span><span class="pt-toc-cat-name" data-astro-cid-pgzakz6x>选题发现</span><span class="pt-toc-n" data-astro-cid-pgzakz6x>8</span></a> <div class="pt-toc-items" data-astro-cid-pgzakz6x> <a class="pt-toc-item" href="#p-1" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>01</span>从日常观察中发现选题</a><a class="pt-toc-item" href="#p-2" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>02</span>从读者的问题中发现需求</a><a class="pt-toc-item" href="#p-3" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>03</span>从热门观点中寻找反常识选题</a><a class="pt-toc-item" href="#p-4" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>04</span>把一个小问题发展成大选题</a><a class="pt-toc-item" href="#p-5" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>05</span>从成功文章中提炼选题规律</a><a class="pt-toc-item" href="#p-6" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>06</span>从商业目标反推内容选题</a><a class="pt-toc-item" href="#p-24" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>24</span>从一个主题中寻找值得写的观点</a><a class="pt-toc-item" href="#p-25" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>25</span>从热门观点中寻找反常识的切入点</a> </div> </div><div class="pt-toc-sec" data-astro-cid-pgzakz6x> <a class="pt-toc-cat" href="#sec-1" data-astro-cid-pgzakz6x><span class="pt-toc-idx" data-astro-cid-pgzakz6x>02</span><span class="pt-toc-cat-name" data-astro-cid-pgzakz6x>观点挖掘</span><span class="pt-toc-n" data-astro-cid-pgzakz6x>6</span></a> <div class="pt-toc-items" data-astro-cid-pgzakz6x> <a class="pt-toc-item" href="#p-7" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>07</span>观点挖掘器（Idea Excavator）</a><a class="pt-toc-item" href="#p-8" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>08</span>苏格拉底式思想教练</a><a class="pt-toc-item" href="#p-9" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>09</span>把普通话题挖掘出不同角度</a><a class="pt-toc-item" href="#p-10" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>10</span>寻找主题背后的深层逻辑</a><a class="pt-toc-item" href="#p-11" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>11</span>反向思考研究员</a><a class="pt-toc-item" href="#p-26" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>26</span>使用类比产生新观点</a> </div> </div><div class="pt-toc-sec" data-astro-cid-pgzakz6x> <a class="pt-toc-cat" href="#sec-2" data-astro-cid-pgzakz6x><span class="pt-toc-idx" data-astro-cid-pgzakz6x>03</span><span class="pt-toc-cat-name" data-astro-cid-pgzakz6x>研究与素材</span><span class="pt-toc-n" data-astro-cid-pgzakz6x>2</span></a> <div class="pt-toc-items" data-astro-cid-pgzakz6x> <a class="pt-toc-item" href="#p-12" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>12</span>原始资料研究员</a><a class="pt-toc-item" href="#p-13" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>13</span>从抽象表达中寻找具体材料</a> </div> </div><div class="pt-toc-sec" data-astro-cid-pgzakz6x> <a class="pt-toc-cat" href="#sec-3" data-astro-cid-pgzakz6x><span class="pt-toc-idx" data-astro-cid-pgzakz6x>04</span><span class="pt-toc-cat-name" data-astro-cid-pgzakz6x>文章结构</span><span class="pt-toc-n" data-astro-cid-pgzakz6x>3</span></a> <div class="pt-toc-items" data-astro-cid-pgzakz6x> <a class="pt-toc-item" href="#p-14" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>14</span>文章结构分析器</a><a class="pt-toc-item" href="#p-29" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>29</span>使用 SCQA 优化文章开头</a><a class="pt-toc-item" href="#p-30" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>30</span>检查段落之间的衔接</a> </div> </div><div class="pt-toc-sec" data-astro-cid-pgzakz6x> <a class="pt-toc-cat" href="#sec-4" data-astro-cid-pgzakz6x><span class="pt-toc-idx" data-astro-cid-pgzakz6x>05</span><span class="pt-toc-cat-name" data-astro-cid-pgzakz6x>文章编辑</span><span class="pt-toc-n" data-astro-cid-pgzakz6x>6</span></a> <div class="pt-toc-items" data-astro-cid-pgzakz6x> <a class="pt-toc-item" href="#p-15" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>15</span>Clarity Checker：清晰度编辑器</a><a class="pt-toc-item" href="#p-16" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>16</span>Flow Fixer：文章流畅度检查器</a><a class="pt-toc-item" href="#p-17" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>17</span>Shortener：文章精简器</a><a class="pt-toc-item" href="#p-18" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>18</span>Voice Matcher：作者风格匹配器</a><a class="pt-toc-item" href="#p-19" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>19</span>Master Editing Prompt：综合编辑器</a><a class="pt-toc-item" href="#p-31" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>31</span>保留作者风格的编辑器</a> </div> </div><div class="pt-toc-sec" data-astro-cid-pgzakz6x> <a class="pt-toc-cat" href="#sec-5" data-astro-cid-pgzakz6x><span class="pt-toc-idx" data-astro-cid-pgzakz6x>06</span><span class="pt-toc-cat-name" data-astro-cid-pgzakz6x>文章表达</span><span class="pt-toc-n" data-astro-cid-pgzakz6x>3</span></a> <div class="pt-toc-items" data-astro-cid-pgzakz6x> <a class="pt-toc-item" href="#p-20" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>20</span>开头优化器</a><a class="pt-toc-item" href="#p-21" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>21</span>文章结尾优化器</a><a class="pt-toc-item" href="#p-22" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>22</span>文章标题生成器</a> </div> </div><div class="pt-toc-sec" data-astro-cid-pgzakz6x> <a class="pt-toc-cat" href="#sec-6" data-astro-cid-pgzakz6x><span class="pt-toc-idx" data-astro-cid-pgzakz6x>07</span><span class="pt-toc-cat-name" data-astro-cid-pgzakz6x>选题评估</span><span class="pt-toc-n" data-astro-cid-pgzakz6x>1</span></a> <div class="pt-toc-items" data-astro-cid-pgzakz6x> <a class="pt-toc-item" href="#p-23" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>23</span>选题压力测试</a> </div> </div><div class="pt-toc-sec" data-astro-cid-pgzakz6x> <a class="pt-toc-cat" href="#sec-7" data-astro-cid-pgzakz6x><span class="pt-toc-idx" data-astro-cid-pgzakz6x>08</span><span class="pt-toc-cat-name" data-astro-cid-pgzakz6x>商业与变现</span><span class="pt-toc-n" data-astro-cid-pgzakz6x>3</span></a> <div class="pt-toc-items" data-astro-cid-pgzakz6x> <a class="pt-toc-item" href="#p-27" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>27</span>从一个问题中发现商业机会</a><a class="pt-toc-item" href="#p-28" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>28</span>从一个人物中提取可研究的商业案例</a><a class="pt-toc-item" href="#p-32" data-astro-cid-pgzakz6x><span class="pt-toc-inum" data-astro-cid-pgzakz6x>32</span>处理客户的购买异议</a> </div> </div> </nav> </div> </aside> </div> </div> </div>  <script>
+    (function () {
+      var pane = document.getElementById('pt-app');
+      if (!pane) return;
+      var groups = Array.prototype.slice.call(pane.querySelectorAll('.pt-group'));
+      var filters = document.getElementById('pt-filters');
+      var empty = document.getElementById('pt-empty');
+      var active = '全部';
+      function apply() {
+        var visible = 0;
+        groups.forEach(function (g) {
+          var gCards = g.querySelectorAll('.pt-card');
+          var gVisible = 0;
+          gCards.forEach(function (c) {
+            var show = active === '全部' || c.getAttribute('data-cat') === active;
+            c.hidden = !show;
+            if (show) gVisible++;
+          });
+          g.hidden = gVisible === 0;
+          visible += gVisible;
+        });
+        if (empty) empty.style.display = visible ? 'none' : 'block';
+      }
+      if (filters) {
+        filters.querySelectorAll('.pt-filter').forEach(function (b) {
+          b.addEventListener('click', function () {
+            filters.querySelectorAll('.pt-filter').forEach(function (x) { x.classList.remove('active'); });
+            b.classList.add('active');
+            active = b.getAttribute('data-cat');
+            apply();
+          });
+        });
+      }
+      pane.addEventListener('click', function (e) {
+        var btn = e.target.closest ? e.target.closest('.pt-copy') : null;
+        if (!btn) return;
+        var card = btn.closest('.pt-card');
+        var pre = card ? card.querySelector('.pt-prompt') : null;
+        var text = pre ? pre.textContent : '';
+        function done() {
+          btn.classList.add('done');
+          btn.setAttribute('title', '已复制 ✓');
+          setTimeout(function () { btn.classList.remove('done'); btn.setAttribute('title', '复制提示词'); }, 1500);
+        }
+        function fb() {
+          try {
+            var t = document.createElement('textarea');
+            t.value = text; t.style.position = 'fixed'; t.style.opacity = '0';
+            document.body.appendChild(t); t.select();
+            document.execCommand('copy'); document.body.removeChild(t);
+          } catch (_) {}
+          done();
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done).catch(fb);
+        } else { fb(); }
+      });
+      var toc = pane.querySelector('.pt-toc-nav');
+      if (toc) {
+        toc.addEventListener('click', function (e) {
+          var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+          if (!a) return;
+          var id = a.getAttribute('href').slice(1);
+          var target = id ? document.getElementById(id) : null;
+          if (!target) return;
+          e.preventDefault();
+          if (active !== '全部') {
+            active = '全部';
+            if (filters) filters.querySelectorAll('.pt-filter').forEach(function (x) {
+              x.classList.toggle('active', x.getAttribute('data-cat') === '全部');
+            });
+            apply();
+          }
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          try { history.replaceState(null, '', '#' + id); } catch (_) {}
+        });
+      }
+      var spyLinks = pane.querySelectorAll('.pt-toc-cat');
+      function setActiveToc(id) {
+        spyLinks.forEach(function (a) { a.classList.toggle('active', a.getAttribute('href') === '#' + id); });
+      }
+      if ('IntersectionObserver' in window && spyLinks.length) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) {
+            if (en.isIntersecting) setActiveToc(en.target.id);
+          });
+        }, { rootMargin: '-80px 0px -65% 0px', threshold: 0 });
+        groups.forEach(function (s) { io.observe(s); });
+      }
+      apply();
+    })();
+  </script>  </main> <footer> <div class="footer-inner"> <p>© 2026 像企业家一样写作</p> <div class="footer-links"> <button type="button" class="footer-link-btn" id="wechat-qr-trigger">网站有bug，“码”上办，联系本人。</button> </div> </div> </footer> <!-- 微信名片二维码浮层 --> <div id="wechat-qr-overlay" class="wechat-qr-overlay" aria-hidden="true"> <div class="wechat-qr-modal"> <button type="button" class="wechat-qr-close" id="wechat-qr-close" aria-label="关闭">✕</button> <img src="/images/wechat-qr.png" alt="微信名片二维码"> <p class="wechat-qr-cap">微信扫一扫，联系本人</p> </div> </div> <script>
+    (function () {
+      var trigger = document.getElementById('wechat-qr-trigger');
+      var overlay = document.getElementById('wechat-qr-overlay');
+      var closeBtn = document.getElementById('wechat-qr-close');
+      if (!trigger || !overlay) return;
+      function openQr() {
+        overlay.classList.add('active');
+        overlay.setAttribute('aria-hidden', 'false');
+      }
+      function closeQr() {
+        overlay.classList.remove('active');
+        overlay.setAttribute('aria-hidden', 'true');
+      }
+      trigger.addEventListener('click', openQr);
+      if (closeBtn) closeBtn.addEventListener('click', closeQr);
+      overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeQr();
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeQr();
+      });
+    })();
+  </script>  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    let _searchIndex = null;
+
+    async function loadSearchIndex() {
+      if (_searchIndex) return _searchIndex;
+      try {
+        const resp = await fetch('/search.json?t=' + Date.now());
+        _searchIndex = await resp.json();
+      } catch (e) {
+        console.warn('search.json load failed', e);
+        _searchIndex = { posts: [], books: [] };
+      }
+      return _searchIndex;
+    }
+
+    function openSearch(initialQuery) {
+      const overlay = document.getElementById('search-overlay');
+      const input = document.getElementById('search-input');
+      overlay.classList.add('active');
+      input.value = initialQuery || '';
+      input.focus();
+      renderResults(input.value);
+    }
+
+    function closeSearch() {
+      document.getElementById('search-overlay').classList.remove('active');
+    }
+
+    function getSnippet(text, keyword, radius) {
+      radius = radius || 30;
+      if (!text) return '';
+      const idx = text.toLowerCase().indexOf(keyword.toLowerCase());
+      if (idx === -1) return text.substring(0, 80);
+      const start = Math.max(0, idx - radius);
+      const end = Math.min(text.length, idx + keyword.length + radius);
+      let s = text.substring(start, end);
+      if (start > 0) s = '…' + s;
+      if (end < text.length) s = s + '…';
+      return s;
+    }
+
+    function escapeHtml(s) {
+      return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    function escapeReg(s) {
+      return (s || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+    function highlight(text, q) {
+      const safe = escapeHtml(text);
+      if (!q) return safe;
+      try {
+        const re = new RegExp('(' + escapeReg(q) + ')', 'gi');
+        return safe.replace(re, '<mark>$1</mark>');
+      } catch (e) { return safe; }
+    }
+    function matchScore(item, q) {
+      const t = (item.title || '').toLowerCase();
+      const d = (item.desc || '').toLowerCase();
+      const c = (item.content || '').toLowerCase();
+      if (t.includes(q)) return 3;
+      if (d.includes(q)) return 2;
+      if (c.includes(q)) return 1;
+      return 0;
+    }
+    function resultItemHtml(item, q, href, isBook) {
+      const snippet = getSnippet(item.content || '', q, 40);
+      const contentHit = (item.content || '').toLowerCase().includes(q);
+      const desc = (contentHit && snippet) ? snippet : (item.desc || snippet || '');
+      return '<a href="' + href + '?q=' + encodeURIComponent(q) + '" class="search-result-item">' +
+        '<div class="search-result-title"><span class="search-result-type' + (isBook ? ' book' : '') + '">' + (isBook ? '书籍' : '章节') + '</span>' + highlight(item.title, q) + '</div>' +
+        '<div class="search-result-desc">' + highlight(desc, q) + '</div>' +
+      '</a>';
+    }
+
+    // 专栏条目：外链到微信公众号（不加 ?q=）
+    function columnItemHtml(col, q) {
+      return '<a href="' + escapeHtml(col.url) + '" target="_blank" rel="noopener noreferrer" class="search-result-item">' +
+        '<div class="search-result-title"><span class="search-result-type column">专栏</span>' + highlight(col.title, q) + '</div>' +
+        '<div class="search-result-desc">' + highlight(col.desc || col.columnName, q) + '</div>' +
+      '</a>';
+    }
+
+    function renderResults(query) {
+      const container = document.getElementById('search-results');
+      if (!query.trim()) {
+        container.innerHTML = '<div class="search-empty">输入关键词搜索书籍、章节与专栏…</div>';
+        return;
+      }
+      const q = query.toLowerCase();
+      const index = _searchIndex || { posts: [], books: [], columns: [] };
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      const matchedColumns = (index.columns || []).filter(c =>
+        c.title.toLowerCase().includes(q) ||
+        c.columnName.toLowerCase().includes(q) ||
+        c.rawTitle.toLowerCase().includes(q) ||
+        String(c.issue).includes(q)
+      );
+      if (matchedPosts.length === 0 && matchedBooks.length === 0 && matchedColumns.length === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        return;
+      }
+      const bookBySeries = {};
+      index.books.forEach(b => { if (b.series) bookBySeries[b.series] = b.title; });
+
+      let html = '';
+      // 书籍命中 → 单独作为「书籍」结果
+      if (matchedBooks.length) {
+        matchedBooks.sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        matchedBooks.forEach(b => { html += resultItemHtml(b, q, '/book/' + b.slug, true); });
+      }
+      // 章节按书籍分组
+      const groups = {};
+      matchedPosts.forEach(p => { const k = p.series || ''; (groups[k] = groups[k] || []).push(p); });
+      Object.keys(groups).forEach(series => {
+        const title = bookBySeries[series] || series || '其他';
+        groups[series].sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(title) + '》</div>';
+        groups[series].forEach(p => { html += resultItemHtml(p, q, '/blog/' + p.slug, false); });
+        html += '</div>';
+      });
+      // 专栏按专栏名分组（外链到微信）
+      const colGroups = {};
+      matchedColumns.forEach(c => { const k = c.columnName || ''; (colGroups[k] = colGroups[k] || []).push(c); });
+      Object.keys(colGroups).forEach(name => {
+        colGroups[name].sort((a, b) => a.issue - b.issue);
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(name) + '》· 专栏</div>';
+        colGroups[name].forEach(c => { html += columnItemHtml(c, q); });
+        html += '</div>';
+      });
+      container.innerHTML = html;
+    }
+
+    // ===== Hero 内联搜索（方案 B） =====
+    function closeHeroSearch() {
+      const dropdown = document.getElementById('hero-search-dropdown');
+      if (dropdown) { dropdown.classList.remove('show'); dropdown.innerHTML = ''; }
+    }
+
+    async function renderHeroResults(query) {
+      const container = document.getElementById('hero-search-dropdown');
+      if (!container) return;
+      if (!query.trim()) { closeHeroSearch(); return; }
+      const index = await loadSearchIndex();
+      const q = query.toLowerCase();
+      const matchedPosts = index.posts.filter(p =>
+        p.title.toLowerCase().includes(q) ||
+        (p.desc || '').toLowerCase().includes(q) ||
+        (p.content || '').toLowerCase().includes(q)
+      );
+      const matchedBooks = index.books.filter(b =>
+        b.title.toLowerCase().includes(q) ||
+        (b.desc || '').toLowerCase().includes(q) ||
+        (b.content || '').toLowerCase().includes(q)
+      );
+      const matchedColumns = (index.columns || []).filter(c =>
+        c.title.toLowerCase().includes(q) ||
+        c.columnName.toLowerCase().includes(q) ||
+        c.rawTitle.toLowerCase().includes(q) ||
+        String(c.issue).includes(q)
+      );
+      const total = matchedPosts.length + matchedBooks.length + matchedColumns.length;
+      if (total === 0) {
+        container.innerHTML = '<div class="search-empty">没有找到相关结果</div>';
+        container.classList.add('show');
+        return;
+      }
+      const bookBySeries = {};
+      index.books.forEach(b => { if (b.series) bookBySeries[b.series] = b.title; });
+      let html = '';
+      if (matchedBooks.length) {
+        matchedBooks.slice(0, 2).sort((a, b) => matchScore(b, q) - matchScore(a, q)).forEach(b => {
+          html += resultItemHtml(b, q, '/book/' + b.slug, true);
+        });
+      }
+      const groups = {};
+      matchedPosts.forEach(p => { const k = p.series || ''; (groups[k] = groups[k] || []).push(p); });
+      let shown = 0;
+      Object.keys(groups).slice(0, 3).forEach(series => {
+        const title = bookBySeries[series] || series || '其他';
+        groups[series].sort((a, b) => matchScore(b, q) - matchScore(a, q));
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(title) + '》</div>';
+        groups[series].slice(0, 3).forEach(p => { html += resultItemHtml(p, q, '/blog/' + p.slug, false); shown++; });
+        html += '</div>';
+      });
+      // 专栏命中（外链到微信）
+      const colGroups = {};
+      matchedColumns.forEach(c => { const k = c.columnName || ''; (colGroups[k] = colGroups[k] || []).push(c); });
+      Object.keys(colGroups).slice(0, 2).forEach(name => {
+        colGroups[name].sort((a, b) => a.issue - b.issue);
+        html += '<div class="search-group">';
+        html += '<div class="search-group-title">《' + escapeHtml(name) + '》· 专栏</div>';
+        colGroups[name].slice(0, 3).forEach(c => { html += columnItemHtml(c, q); shown++; });
+        html += '</div>';
+      });
+      if (total > shown + Math.min(matchedBooks.length, 2)) {
+        html += '<a href="#" class="hero-search-all" data-q="' + encodeURIComponent(q) + '">查看全部 ' + total + ' 条结果 →</a>';
+      }
+      container.innerHTML = html;
+      container.classList.add('show');
+    }
+
+    function initHeroSearch() {
+      const input = document.getElementById('hero-search-input');
+      const dropdown = document.getElementById('hero-search-dropdown');
+      const goBtn = document.getElementById('hero-search-go');
+      if (!input || !dropdown) return;
+
+      let inputTimeout;
+      input.addEventListener('input', () => {
+        clearTimeout(inputTimeout);
+        inputTimeout = setTimeout(() => renderHeroResults(input.value), 120);
+      });
+      input.addEventListener('focus', () => { if (input.value.trim()) renderHeroResults(input.value); });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(input.value); });
+        }
+        if (e.key === 'Escape') { closeHeroSearch(); input.blur(); }
+      });
+
+      if (goBtn) {
+        goBtn.addEventListener('click', () => {
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(input.value); });
+        });
+      }
+
+      dropdown.addEventListener('click', (e) => {
+        const all = e.target.closest('.hero-search-all');
+        if (all) {
+          e.preventDefault();
+          const q = decodeURIComponent(all.getAttribute('data-q') || '');
+          loadSearchIndex().then(() => { closeHeroSearch(); openSearch(q); });
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.hero-search')) closeHeroSearch();
+      });
+    }
+
+    initHeroSearch();
+
+    // ===== 导航搜索图标（全站兜底入口） =====
+    const navSearchBtn = document.getElementById('nav-search-btn');
+    if (navSearchBtn) {
+      navSearchBtn.addEventListener('click', () => {
+        loadSearchIndex().then(() => openSearch());
+      });
+    }
+
+    document.getElementById('search-close').addEventListener('click', closeSearch);
+    document.getElementById('search-overlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeSearch();
+    });
+    document.getElementById('search-input').addEventListener('input', (e) => {
+      renderResults(e.target.value);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeSearch();
+    });
+    });
+  </script> <!-- 页面关键词高亮（从搜索结果跳转过来时） --> <script>
+    (function() {
+      function getQueryParam(name) {
+        const url = new URL(window.location.href);
+        return url.searchParams.get(name) || '';
+      }
+
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function highlightKeyword(keyword) {
+        if (!keyword.trim()) return;
+        const main = document.querySelector('main');
+        if (!main) return;
+
+        const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, null, false);
+        const nodesToReplace = [];
+        const regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
+
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node.parentElement && node.parentElement.tagName === 'MARK') continue;
+          if (regex.test(node.textContent)) {
+            nodesToReplace.push(node);
+          }
+        }
+
+        let firstMark = null;
+        nodesToReplace.forEach(textNode => {
+          const span = document.createElement('span');
+          span.innerHTML = textNode.textContent.replace(regex, '<mark class="search-highlight">$1</mark>');
+          const marks = span.querySelectorAll('mark');
+          if (marks.length > 0 && !firstMark) {
+            firstMark = marks[0];
+          }
+          const fragment = document.createDocumentFragment();
+          while (span.firstChild) {
+            fragment.appendChild(span.firstChild);
+          }
+          textNode.parentNode.replaceChild(fragment, textNode);
+        });
+
+        if (firstMark) {
+          firstMark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(function() {
+            const marks = main.querySelectorAll('mark.search-highlight');
+            marks.forEach(function(m) {
+              const parent = m.parentNode;
+              parent.replaceChild(document.createTextNode(m.textContent), m);
+              parent.normalize();
+            });
+          }, 6000);
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+          highlightKeyword(getQueryParam('q'));
+        });
+      } else {
+        highlightKeyword(getQueryParam('q'));
+      }
+    })();
+  </script> <!-- 代码块复制按钮 --> <script>
+    (function() {
+      function initCopyButtons() {
+        document.querySelectorAll('.prose pre').forEach(function(pre) {
+          if (pre.querySelector('.copy-btn')) return;
+          var btn = document.createElement('button');
+          btn.className = 'copy-btn';
+          btn.textContent = '复制';
+          btn.setAttribute('aria-label', '复制代码');
+          btn.addEventListener('click', function() {
+            var code = pre.querySelector('code');
+            var text = code ? code.innerText : pre.innerText;
+            navigator.clipboard.writeText(text).then(function() {
+              btn.textContent = '已复制';
+              btn.classList.add('copied');
+              setTimeout(function() {
+                btn.textContent = '复制';
+                btn.classList.remove('copied');
+              }, 2000);
+            }).catch(function() {
+              btn.textContent = '失败';
+              setTimeout(function() { btn.textContent = '复制'; }, 2000);
+            });
+          });
+          pre.style.position = 'relative';
+          pre.appendChild(btn);
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCopyButtons);
+      } else {
+        initCopyButtons();
+      }
+    })();
+  </script> <!-- 选中文字：复制 / 生成金句卡片 --> <div class="sel-bubble" id="sel-bubble"> <span class="sb-act sb-copy" id="sbCopy">复制</span> <span class="sb-sep"></span> <span class="sb-act sb-card" id="sbCard">金句卡片</span> </div> <!-- 金句卡片弹层 --> <div class="qc-overlay" id="qcOverlay"> <div class="qc-modal"> <button class="qc-close" id="qcClose" aria-label="关闭">×</button> <div class="qc-stage"> <div class="qc a" id="qcCard"> <div class="qc-mark">“</div> <div class="qc-quote" id="qcQuote">先写完，再改清楚。</div> <div class="qc-foot"> <img class="qc-logo" src="/images/logo-180x180.png" alt="logo"> <div class="qc-src"> <div class="qc-site" id="qcSite">像企业家一样写作</div> <div class="qc-from" id="qcFrom">—— 选自正文</div> <div class="qc-url">gusangciren.github.io</div> </div> </div> </div> <div class="qc-tip">样式会记住你上次的选择</div> </div> <div class="qc-side"> <h3>金句卡片</h3> <p class="qc-sub">选好样式后下载或复制图片</p> <div class="qc-styles" id="qcStyles"> <div class="qc-style active" data-s="b"><div class="sw b"></div><div><div class="t">A · 深色品牌</div><div class="d">信息流吸睛</div></div></div> <div class="qc-style" data-s="a"><div class="sw a"></div><div><div class="t">B · 极简暖白</div><div class="d">站点默认，最协调</div></div></div> <div class="qc-style" data-s="c"><div class="sw c"></div><div><div class="t">C · 杂志书页</div><div class="d">书卷气</div></div></div> </div> <div class="qc-actions"> <div class="qc-act primary" data-act="copyimg">复制图片</div> <div class="qc-act" data-act="download">下载图片</div> </div> </div> </div> </div> <!-- 交互增强：阅读进度条 / 暗色模式 / 划词复制 / 金句卡片 --> <script>
+    (function () {
+      // ===== 划词气泡：复制 / 金句卡片 =====
+      var bubble = document.getElementById('sel-bubble');
+      var sbCopy = document.getElementById('sbCopy');
+      var sbCard = document.getElementById('sbCard');
+      var overlay = document.getElementById('qcOverlay');
+      var card = document.getElementById('qcCard');
+      var qQuote = document.getElementById('qcQuote');
+      var qSite = document.getElementById('qcSite');
+      var qFrom = document.getElementById('qcFrom');
+      var stylesBox = document.getElementById('qcStyles');
+      var lastText = '';
+
+      function hideBubble() { bubble.classList.remove('show'); }
+      function getSource() {
+        var h = document.querySelector('.article-header h1, .book-details h1, .prose h1, .community-hero h1');
+        var name = h ? h.textContent.trim() : document.title.trim();
+        try {
+          // 去掉标题尾部与站名重复的「— 像企业家一样写作」
+          name = name.replace(new RegExp('\\s*[—–-]\\s*' + getSite() + '\\s*$'), '');
+        } catch (e) {}
+        return name;
+      }
+      function getSite() {
+        var m = document.querySelector('meta[property="og:site_name"]');
+        return m ? m.content : '像企业家一样写作';
+      }
+
+      if (bubble) {
+        var SKIP = 'input,textarea,pre,code,.search-overlay,.wechat-qr-overlay,.rdl-ov,button,a,img';
+        document.addEventListener('mouseup', function () {
+          setTimeout(function () {
+            var sel = window.getSelection();
+            if (!sel || sel.isCollapsed) { hideBubble(); return; }
+            var text = sel.toString().trim();
+            var node = sel.anchorNode;
+            if (text.length < 2 || !node || !node.parentElement || node.parentElement.closest(SKIP)) { hideBubble(); return; }
+            var rect = sel.getRangeAt(0).getBoundingClientRect();
+            bubble.style.left = (rect.left + rect.width / 2) + 'px';
+            bubble.style.top = (rect.top - 6) + 'px';
+            lastText = text;
+            bubble.classList.add('show');
+          }, 10);
+        });
+        document.addEventListener('mousedown', function (e) { if (!bubble.contains(e.target)) hideBubble(); });
+        window.addEventListener('scroll', hideBubble, { passive: true });
+
+        sbCopy.addEventListener('click', function (ev) {
+          ev.stopPropagation();
+          var t = lastText;
+          function ok() {
+            sbCopy.textContent = '已复制 ✓'; sbCopy.classList.add('copied');
+            setTimeout(function () { sbCopy.textContent = '复制'; sbCopy.classList.remove('copied'); hideBubble(); }, 1200);
+          }
+          function fb() {
+            var i = document.createElement('textarea'); i.value = t; document.body.appendChild(i); i.select();
+            try { document.execCommand('copy'); } catch (e) {} document.body.removeChild(i); ok();
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).then(ok).catch(fb); }
+          else { fb(); }
+        });
+        sbCard.addEventListener('click', function (ev) { ev.stopPropagation(); openCard(lastText); });
+      }
+
+      function openCard(text) {
+        qQuote.textContent = text || '先写完，再改清楚。';
+        var len = qQuote.textContent.length;
+        qQuote.style.fontSize = (len > 100 ? 18 : len > 60 ? 20 : 22) + 'px';
+        qSite.textContent = getSite();
+        qFrom.textContent = '—— 选自《' + getSource() + '》';
+        var saved = 'b';
+        try { saved = localStorage.getItem('qcStyle') || 'b'; } catch (e) {}
+        setStyle(saved);
+        overlay.classList.add('show');
+      }
+      var currentStyle = 'a';
+      function setStyle(s) {
+        currentStyle = s;
+        card.className = 'qc ' + s;
+        document.querySelectorAll('.qc-style').forEach(function (o) { o.classList.toggle('active', o.dataset.s === s); });
+        try { localStorage.setItem('qcStyle', s); } catch (e) {}
+      }
+      stylesBox.addEventListener('click', function (e) {
+        var o = e.target.closest('.qc-style'); if (o) setStyle(o.dataset.s);
+      });
+      document.getElementById('qcClose').addEventListener('click', function () { overlay.classList.remove('show'); });
+      overlay.addEventListener('click', function (e) { if (e.target === overlay) overlay.classList.remove('show'); });
+
+      // ===== 导出为图片（html2canvas） =====
+      function ensureH2C(cb) {
+        if (window.html2canvas) { cb(); return; }
+        var s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+        s.onload = cb;
+        s.onerror = function () { alert('金句卡片图片组件加载失败，请检查网络后重试'); };
+        document.head.appendChild(s);
+      }
+      // 每套样式的底色：填满圆角外区域，避免相册把透明像素渲染成黑角
+      var QC_BG = { a: '#ffffff', b: '#1c1917', c: '#f3ede1' };
+      var fontCssPromise = null;
+      function getFontCss() {
+        if (!fontCssPromise) {
+          fontCssPromise = fetch('https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-webfont/1.7.0/lxgwwenkai-regular.css')
+            .then(function (r) { return r.ok ? r.text() : ''; })
+            .catch(function () { return ''; });
+        }
+        return fontCssPromise;
+      }
+      function capture() {
+        return document.fonts.ready.then(function () {
+          return getFontCss().then(function (css) {
+            return html2canvas(card, {
+              scale: 2,
+              backgroundColor: QC_BG[currentStyle] || '#ffffff',
+              useCORS: true,
+              logging: false,
+              onclone: function (doc) {
+                // 导出环境可能没等到文楷加载完，主动注入字体 CSS 兜底；
+                // 即使仍回退，整卡统一衬线栈（楷体），上下字体也一致
+                if (css) {
+                  var st = doc.createElement('style');
+                  st.textContent = css;
+                  doc.head.appendChild(st);
+                }
+              }
+            });
+          });
+        });
+      }
+      function flash(btn, txt) { var o = btn.textContent; btn.textContent = txt; setTimeout(function () { btn.textContent = o; }, 1400); }
+
+      document.querySelectorAll('.qc-act').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var act = btn.dataset.act;
+          ensureH2C(function () {
+            capture().then(function (canvas) {
+              function doDownload() {
+                canvas.toBlob(function (blob) {
+                  var url = URL.createObjectURL(blob);
+                  var a = document.createElement('a'); a.download = '金句卡片-' + getSource() + '.png';
+                  a.href = url; document.body.appendChild(a); a.click(); a.remove();
+                  setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+                });
+              }
+              if (act === 'download') {
+                doDownload(); flash(btn, '已下载 ✓');
+              } else if (act === 'copyimg') {
+                canvas.toBlob(function (blob) {
+                  if (blob && navigator.clipboard && window.ClipboardItem) {
+                    navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
+                      .then(function () { flash(btn, '已复制 ✓'); })
+                      .catch(function () { doDownload(); flash(btn, '已保存 ✓'); });
+                  } else {
+                    doDownload(); flash(btn, '已保存 ✓');
+                  }
+                });
+              }
+            });
+          });
+        });
+      });
+    })();
+  </script> </body></html>
