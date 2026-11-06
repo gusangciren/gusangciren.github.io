@@ -36,7 +36,8 @@ export interface OpenSourceItem {
   desc: string;
   stars?: string;
   url?: string;
-  kind: 'tutorial' | 'project';
+  /** tutorial=站内阅读页；project=跳 GitHub 仓库；interactive=站内互动作品（同窗口打开） */
+  kind: 'tutorial' | 'project' | 'interactive';
 }
 
 // ① 推荐书单（站内可读清单 · 2026-10-18 定稿：变体 B + 680px 居中）
@@ -590,8 +591,8 @@ export const siteRecs: SiteRec[] = [
   },
 ];
 
-// ③ + ④ 合并：我的开源（教程 + 作品，统一在一个页面展示）
-// kind: 'tutorial' = 站内阅读页；'project' = 跳 GitHub 仓库
+// ③ + ④ 合并：我的开源（教程 + 作品 + 站内互动镜像，统一在一个页面展示）
+// kind: 'tutorial' = 站内阅读页；'project' = 跳 GitHub 仓库；'interactive' = 站内互动作品
 export const openSources: OpenSourceItem[] = [
   {
     name: '搜索课',
@@ -604,6 +605,12 @@ export const openSources: OpenSourceItem[] = [
     desc: '把 Markdown 书稿一键排版成出版级 PDF：自动封面、章节扉页、可点击目录、侧边栏书签。你只管写，排版交给它。',
     kind: 'project',
     url: 'https://github.com/gusangciren/md-to-book-pdf',
+  },
+  {
+    name: '信任的进化 · 中文镜像',
+    desc: 'Nicky Case 的互动博弈论经典（原作 CC0），完整汉化后镜像到站内。约 30 分钟，用一场游戏讲清信任是怎么长出来的。简体译文：吴桐、唐凤。',
+    kind: 'interactive',
+    url: '/trust/index.html',
   },
 ];
 
