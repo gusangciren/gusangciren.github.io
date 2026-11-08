@@ -69,53 +69,69 @@ const isEmpty =
     {tab.slug === 'recommended' && (
       <div class="rp-sec-body">
         {bookRecs.length > 0 && (
-          <div class="rp-booklist">
+          <div class="rp-booklist rp-booklist-wall">
             <div class="rp-bl-hd">
               <div class="rp-bl-title">我的<span class="hl">书单</span></div>
               <div class="rp-bl-meta">{bookRecs.length} 本 · 推荐值来自微信读书</div>
             </div>
-            <p class="rp-bl-sub">不是「必读清单」，是我真的读过、并且改变过我做法的书。</p>
-            <div class="rp-bl-list">
+            <p class="rp-bl-sub">不是「必读清单」，是我真的读过、并且改变过我做法的书。点开封面，读我为什么推荐它。</p>
+            <div class="bw-wall">
               {bookRecs.map((b, i) => {
                 const paras = blocksOf(b);
                 return (
-                  <div class="rp-bl">
-                    <span class="rp-bl-no">{String(i + 1).padStart(2, '0')}</span>
-                    <div class="rp-bl-top">
-                      <div class="rp-bl-cov">
-                        {b.cover ? (
-                          <img src={b.cover} alt={`${b.title} 封面`} loading="lazy" />
-                        ) : (
-                          <span class="rp-bl-cov-ph">待补封面</span>
+                  <article class="bw-card" data-i={i} tabindex="0" role="button" aria-label={`${b.title}，查看推荐语`}>
+                    <div class="bw-cov">
+                      {b.cover ? (
+                        <img src={b.cover} alt={`${b.title} 封面`} loading="lazy" />
+                      ) : (
+                        <span class="bw-cov-ph">待补封面</span>
+                      )}
+                      <span class="bw-no">{String(i + 1).padStart(2, '0')}</span>
+                      <span class="bw-hint">点击·读推荐语</span>
+                    </div>
+                    <div class="bw-meta">
+                      <h3>{b.title}</h3>
+                      {b.author && <p class="bw-a">{b.author}</p>}
+                      <div class="bw-foot">
+                        {(b.wrScore || b.doubanScore) && (
+                          <span class="bw-rate"><b>{b.wrScore ? `${b.wrScore}%` : b.doubanScore}</b><i>{b.wrScore ? '推荐值' : '豆瓣'}</i></span>
                         )}
-                      </div>
-                      <div class="rp-bl-body">
-                        <div class="rp-bl-l1">
-                          <span class="rp-bl-t">{b.title}</span>
-                          {b.author && <span class="rp-bl-a">{b.author}</span>}
-                        </div>
-                        {b.doubanIntro && <p class="rp-bl-d">{b.doubanIntro}</p>}
-                        <div class="rp-bl-foot">
-                          {(b.wrScore || b.doubanScore) && (
-                            <span class="rp-bl-rate">
-                              <b>{b.wrScore ? `${b.wrScore}%` : b.doubanScore}</b>
-                              <i>{b.wrScore ? '推荐值' : '豆瓣'}</i>
-                            </span>
-                          )}
-                          {b.wrBadge && <span class="rp-bl-badge">{b.wrBadge}</span>}
-                          {b.publisher && <span class="rp-bl-dot">|</span>}
-                          {b.publisher && <span class="rp-bl-pub">{b.publisher}</span>}
-                          {b.readAt && <span class="rp-bl-date">{b.readAt}</span>}
-                        </div>
+                        {b.wrBadge && <span class="bw-badge">{b.wrBadge}</span>}
+                        {b.publisher && <span class="bw-pub">{b.publisher}</span>}
+                        {b.readAt && <span class="bw-date">{b.readAt}</span>}
                       </div>
                     </div>
-                    {paras.length > 0 && (
-                      <div class="rp-bl-quote">
-                        <span class="rp-bl-qmark">❝</span>
-                        {paras.map((p, k) => <p>{p}</p>)}
+                    <template class="bw-tpl">
+                      <div class="bw-dw-in">
+                        <div class="bw-dw-cov">
+                          {b.cover ? (
+                            <img class="bw-dw-cov-img" alt="" />
+                          ) : (
+                            <span class="bw-cov-ph">待补封面</span>
+                          )}
+                        </div>
+                        <div class="bw-dw-body">
+                          <div class="bw-dw-no">NO. {String(i + 1).padStart(2, '0')}</div>
+                          <h3>{b.title}</h3>
+                          {b.author && <p class="bw-dw-a">{b.author}</p>}
+                          {b.doubanIntro && <p class="bw-dw-d">{b.doubanIntro}</p>}
+                          <div class="bw-foot">
+                            {(b.wrScore || b.doubanScore) && (
+                              <span class="bw-rate"><b>{b.wrScore ? `${b.wrScore}%` : b.doubanScore}</b><i>{b.wrScore ? '推荐值' : '豆瓣'}</i></span>
+                            )}
+                            {b.wrBadge && <span class="bw-badge">{b.wrBadge}</span>}
+                            {b.publisher && <span class="bw-pub">{b.publisher}</span>}
+                            {b.readAt && <span class="bw-date">{b.readAt}</span>}
+                          </div>
+                          {paras.length > 0 && (
+                            <div class="bw-qbody">
+                              {paras.map((p) => <p>{p}</p>)}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    )}
-                  </div>
+                    </template>
+                  </article>
                 );
               })}
             </div>
@@ -189,6 +205,16 @@ const isEmpty =
     )}
 
     <p class="rp-note">更多资源持续整理中，欢迎关注公众号「种一个梦」获取最新更新</p>
+
+    {tab.slug === 'recommended' && (
+      <>
+        <div class="bw-mask" id="bw-mask"></div>
+        <div class="bw-dw" id="bw-dw">
+          <button class="bw-dw-close" id="bw-dw-close" type="button" aria-label="关闭">×</button>
+          <div id="bw-dw-body"></div>
+        </div>
+      </>
+    )}
   </div>
 </BaseLayout>
 
@@ -343,4 +369,112 @@ const isEmpty =
     .rp-bl-cov { flex: none; width: 96px; height: 136px; }
     .rp-bl-quote { padding: 2px 16px 18px; }
   }
+  /* ===== 书墙（方案 3 · 2026-11-08）=====
+     hover 只做轻反馈，点击开底部抽屉读完整推荐语。
+     独立前缀 bw-，不影响其他 tab 与其他页面；全站 navbar z-index=100，故遮罩/抽屉用 200/201。 */
+  .rp-booklist-wall { max-width: 960px; }
+  /* 标题 / 说明沿用全站 680px 居中，与面包屑、副标题对齐；只有书墙铺到 960px */
+  .rp-booklist-wall .rp-bl-hd, .rp-booklist-wall .rp-bl-sub { max-width: 680px; margin-left: auto; margin-right: auto; }
+  .bw-wall { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 22px; align-items: start; }
+  .bw-card { position: relative; min-width: 0; background: transparent; border: 0; padding: 0;
+    cursor: pointer; outline: none; text-align: left; }
+  .bw-cov { position: relative; overflow: hidden; border-radius: 4px; }
+  .bw-cov img, .bw-cov-ph { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; display: block;
+    box-shadow: 0 3px 12px rgba(28,25,23,.12); transition: transform .22s, box-shadow .22s; }
+  .bw-cov-ph { display: flex; align-items: center; justify-content: center; border-radius: 4px;
+    border: 1px dashed #d6d3d1; background: #faf9f7; color: #a8a29e; font-size: .72rem; box-shadow: none; }
+  .bw-no { position: absolute; top: -8px; left: -8px; z-index: 2; width: 26px; height: 26px;
+    border-radius: 50%; background: #1c1917; color: #fff; font-family: Georgia, serif; font-size: .72rem;
+    display: flex; align-items: center; justify-content: center; }
+  .bw-hint { position: absolute; left: 0; right: 0; bottom: 0; padding: 8px 10px; text-align: center;
+    font-size: .74rem; color: #fff; background: rgba(28,25,23,.76); opacity: 0; transform: translateY(6px);
+    transition: opacity .2s, transform .2s; pointer-events: none; }
+  .bw-card:hover .bw-hint, .bw-card:focus-visible .bw-hint { opacity: 1; transform: translateY(0); }
+  .bw-card:hover .bw-cov img, .bw-card:focus-visible .bw-cov img { transform: scale(1.035); box-shadow: 0 12px 26px rgba(28,25,23,.2); }
+  .bw-card:focus-visible .bw-cov img { outline: 2px solid #c8940f; outline-offset: 3px; }
+  .bw-meta { padding: 12px 2px 0; }
+  .bw-meta h3 { font-family: Georgia, serif; font-size: .98rem; font-weight: 700; line-height: 1.45;
+    margin: 0 0 4px; color: var(--color-text, #1c1917); overflow-wrap: anywhere; transition: color .18s; }
+  .bw-card:hover .bw-meta h3, .bw-card:focus-visible .bw-meta h3 { color: #a16207; }
+  .bw-a { font-size: .73rem; color: #8a837a; margin: 0 0 7px; line-height: 1.5; }
+  .bw-foot { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .bw-rate { display: inline-flex; align-items: center; gap: 4px; font-size: .76rem; color: #c8940f; }
+  .bw-rate::before { content: '\2605'; color: #e0b95f; font-size: .7rem; }
+  .bw-rate b { font-family: Georgia, serif; font-size: .82rem; font-weight: 700; }
+  .bw-rate i { font-style: normal; font-size: .7rem; color: #b3ada2; }
+  .bw-badge { font-size: .66rem; color: #a16207; background: #fdf8ee; border: 1px solid #ecd9b0;
+    border-radius: 999px; padding: 2px 8px; }
+  .bw-pub, .bw-date { font-size: .7rem; color: #b3ada2; }
+
+  /* 底部抽屉 */
+  .bw-mask { position: fixed; inset: 0; background: rgba(18,16,11,.5); z-index: 200; opacity: 0;
+    pointer-events: none; transition: opacity .22s; }
+  .bw-mask.on { opacity: 1; pointer-events: auto; }
+  .bw-dw { position: fixed; left: 50%; bottom: 0; transform: translate(-50%, 100%); z-index: 201;
+    width: min(920px, 100%); max-height: 82vh; overflow: auto; background: #fbf9f4;
+    border-radius: 18px 18px 0 0; padding: 26px 30px 32px; box-shadow: 0 -14px 44px rgba(0,0,0,.22);
+    visibility: hidden; transition: transform .28s ease, visibility 0s linear .28s; }
+  .bw-dw.on { transform: translate(-50%, 0); visibility: visible; transition: transform .28s ease, visibility 0s; }
+  .bw-dw-close { position: absolute; top: 12px; right: 16px; font: inherit; font-size: 1.3rem; line-height: 1;
+    background: none; border: 0; cursor: pointer; color: #8a837a; }
+  .bw-dw-close:focus-visible { outline: 2px solid #c8940f; outline-offset: 2px; border-radius: 4px; }
+  .bw-dw-in { display: flex; gap: 26px; align-items: flex-start; }
+  .bw-dw-cov { flex: 0 0 150px; }
+  .bw-dw-cov img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 5px; display: block; }
+  .bw-dw-cov .bw-cov-ph { width: 150px; }
+  .bw-dw-body { flex: 1; min-width: 0; }
+  .bw-dw-no { font-family: Georgia, serif; font-size: .78rem; color: #a16207; letter-spacing: .1em; }
+  .bw-dw-body h3 { font-family: Georgia, serif; font-size: 1.24rem; margin: 6px 0 4px;
+    color: var(--color-text, #1c1917); overflow-wrap: anywhere; }
+  .bw-dw-a { font-size: .78rem; color: #8a837a; margin: 0 0 10px; }
+  .bw-dw-d { font-size: .85rem; color: #78716c; line-height: 1.8; margin: 0 0 10px; }
+  .bw-qbody { border-left: 2px solid #e6d3ac; padding-left: 13px; margin-top: 12px; }
+  .bw-qbody p { font-size: .83rem; line-height: 1.95; color: #6b6560; margin: 0 0 9px; overflow-wrap: anywhere; }
+  .bw-qbody p:last-child { margin: 0; }
+
+  @media (max-width: 760px) {
+    .bw-wall { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 640px) {
+    .bw-wall { gap: 20px 14px; }
+    .bw-dw-in { flex-direction: column; }
+    .bw-dw-cov { flex: none; width: 110px; }
+    .bw-dw-cov .bw-cov-ph { width: 110px; }
+    .bw-dw { width: 100%; padding: 22px 18px 28px; border-radius: 14px 14px 0 0; }
+  }
 </style>
+
+<script>
+  // 方案 3：hover 轻反馈（纯 CSS），点击才展开底部抽屉读完整推荐语。
+  // 每本书的完整详情放在卡片内的 <template> 里，由 Astro 渲染，避免 JS 里拼 HTML。
+  (() => {
+    const mask = document.getElementById('bw-mask');
+    const dw = document.getElementById('bw-dw');
+    const body = document.getElementById('bw-dw-body');
+    const closeBtn = document.getElementById('bw-dw-close');
+    if (!mask || !dw || !body || !closeBtn) return;
+
+    function open(card) {
+      const tpl = card.querySelector('.bw-tpl');
+      if (!tpl) return;
+      body.innerHTML = tpl.innerHTML;
+      const img = body.querySelector('.bw-dw-cov-img');
+      const src = card.querySelector('.bw-cov img')?.getAttribute('src');
+      if (img && src) img.src = src;
+      mask.classList.add('on');
+      dw.classList.add('on');
+    }
+    function close() {
+      mask.classList.remove('on');
+      dw.classList.remove('on');
+    }
+    mask.addEventListener('click', close);
+    closeBtn.addEventListener('click', close);
+    document.querySelectorAll('.bw-card').forEach((c) => {
+      c.addEventListener('click', () => open(c));
+      c.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(c); }
+      });
+    });
+  })();
+</script>
