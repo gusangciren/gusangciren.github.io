@@ -127,21 +127,6 @@ export const bookRecs: BookRec[] = [
     reason: '',
   },
   {
-    title: '《思考致富》',
-    author: '拿破仑·希尔 / 洪友 译',
-    cover: '/images/booklist/think-grow-rich.jpg',
-    doubanIntro:
-      '拿破仑·希尔最重要的作品，创作受到卡内基的启发，被誉为「彻底改变了美国人的思想观念，激发了所有美国人的潜能」。',
-    reasonBlocks:
-      '一看书名很鸡汤，味道很浓，对吧？如果你这样想，原谅你，之前的我也是如此。但，借此也说明：你严重缺乏心理学、认知心理学、脑科学的基本知识。\n\n' +
-      '和《洞见》这两本，进行主题阅读，你会更加明白如何运用强大的潜意识。学会积极暗示来改变和激发自己潜意识的力量。\n\n' +
-      '正确运用潜意识的力量，自我预言总会实现。卡尔·荣格说：你的潜意识正在操纵你的人生，而你却称其为命运。\n\n' +
-      '积极暗示自己吧。为什么？你的预言会自我实现。',
-    wrScore: '75.9',
-    wrBadge: '值得一读',
-    reason: '',
-  },
-  {
     title: '《自私的基因》（40周年增订版）',
     author: '理查德·道金斯 / 卢允中,张岱云等 译',
     cover: '/images/booklist/selfish-gene.jpg',
@@ -264,7 +249,7 @@ export const bookRecs: BookRec[] = [
     reason: '',
   },
   {
-    title: '《Rework》',
+    title: '《重来：更为简单有效的商业思维》',
     author: '37signals（Jason Fried & David Heinemeier Hansson）',
     cover: '/images/booklist/rework.jpg',
     doubanIntro: '37signals 写给创业者的反常识手册：少做、做对、快速行动，用更少的资源把事做成。',
@@ -277,7 +262,7 @@ export const bookRecs: BookRec[] = [
     reason: '',
   },
   {
-    title: '《Show Your Work!》',
+    title: '《秀出你的工作》',
     author: 'Austin Kleon',
     cover: '/images/booklist/show-your-work.jpg',
     doubanIntro: 'Austin Kleon 关于「如何大方展示自己的创作过程」的短指南：被人看见，从公开分享开始。',
@@ -290,7 +275,7 @@ export const bookRecs: BookRec[] = [
     reason: '',
   },
   {
-    title: '《The Art of Focus》',
+    title: '《专注的艺术》',
     author: 'Dan Koe',
     cover: '/images/booklist/the-art-of-focus.jpg',
     doubanIntro: 'Dan Koe 关于专注与一人公司的思考合集：把注意力放在重要的事上，而不是做更多。',
@@ -326,32 +311,6 @@ export const bookRecs: BookRec[] = [
       'Sahil 把自己做 Gumroad 的经历写成了「小而美」——不追求成为巨头，先把一件小事做成、做盈利，再慢慢长大。' +
       '\n\n' +
       '和《闭环》里「第一个100块」的逻辑一脉相承：先跑通一个小闭环。',
-    reason: '',
-  },
-  {
-    title: '《The Mom Test》',
-    author: 'Rob Fitzpatrick',
-    cover: '/images/booklist/the-mom-test.jpg',
-    doubanIntro: 'Rob Fitzpatrick 教你如何跟客户聊天还不被忽悠——别问「你会买吗」，要问出真话。',
-    reasonBlocks:
-      '第5章反复讲「去和用户建联、拿反馈」，这本书就是教你怎么和用户聊天还不被忽悠。' +
-      '\n\n' +
-      '名字来自一个真相：你妈都会对你说谎（出于爱护），所以别问「你会买吗」这种傻问题。' +
-      '\n\n' +
-      '怎么问出真话、怎么从聊天里挖出真需求，这本书讲透了。做产品前必读。',
-    reason: '',
-  },
-  {
-    title: '《Write Useful Books》',
-    author: 'Rob Fitzpatrick',
-    cover: '/images/booklist/write-useful-books.jpg',
-    doubanIntro: '同一位作者专讲「怎么写一本真正有用、能卖出去的非虚构书」的可执行指南。',
-    reasonBlocks:
-      '同一位作者（写《The Mom Test》的那位）写的，专门讲「怎么写一本真正有用、能卖出去的非虚构书」。' +
-      '\n\n' +
-      '第5章我说「服务是产品的 1.0 版本」，这本书把「把你的解决方案写成书」这件事拆成了可执行的步骤。' +
-      '\n\n' +
-      '如果你也想把自己解决问题的能力打包成一本数字产品，这是绕不开的一本。',
     reason: '',
   },
   {
@@ -394,32 +353,6 @@ export const bookRecs: BookRec[] = [
     reason: '',
   },
   {
-    title: '《The Heart Is the Bottleneck》',
-    author: 'Tiago Forte',
-    cover: '/images/booklist/heart-bottleneck.jpg',
-    doubanIntro: 'Tiago Forte（打造第二大脑作者）谈「瓶颈在人、不在方法」，以及如何把已有好东西重新打包成产品。',
-    reasonBlocks:
-      '第6章我引用了 Tiago 的一段真实经历：他的第一个在线课程，是基于《搞定：无压工作的艺术》做的视频版，目标只赚 1000 美元，结果 4 年多下来 15000+ 人参加。' +
-      '\n\n' +
-      '这本书（以及他的「打造第二大脑」思路）说明一件事：你不需要原创一个惊天动地的点子，把一个已有的好东西重新打包、做成交付，就是一门生意。' +
-      '\n\n' +
-      '完美的「第一个数字产品」范本。',
-    reason: '',
-  },
-  {
-    title: '《How to Start a Startup》',
-    author: 'Y Combinator / Sam Altman 等',
-    cover: '/images/booklist/how-to-start-a-startup.jpg',
-    doubanIntro: 'Y Combinator 在斯坦福开设的创业公开课，系统讲怎么从0到1做一家公司。',
-    reasonBlocks:
-      'YC 在斯坦福开的那门创业课，几乎把「从0到1做一家公司」拆成了公开课。' +
-      '\n\n' +
-      '第6章讲「数字产品风险几乎为零、可以先做再改」，这门课则是从更系统的角度讲：怎么找方向、怎么做产品、怎么增长。' +
-      '\n\n' +
-      '免费、完整、可以当播客一样反复听。',
-    reason: '',
-  },
-  {
     title: '《Snow Leopard: How Legendary Writers Create A Category Of One》',
     author: 'Nicolas Cole、Christopher Lochhead、Eddie Yoon（Category Pirates）',
     cover: '/images/booklist/snow-leopard.png',
@@ -446,19 +379,6 @@ export const bookRecs: BookRec[] = [
     reason: '',
   },
   {
-    title: '《Case Study: Anatomy of a $10M Online Education Business》',
-    author: 'Olly Richards',
-    cover: '/images/booklist/case-study-10m.png',
-    doubanIntro: 'Olly Richards 对自己语言教育生意从0到1000万美元的完整拆解：数字、决策与复盘。',
-    reasonBlocks:
-      '第7章讲「从解决自身问题开始打包成产品」，这本书就是一个完整的案例拆解：一门教语言的在线教育生意，是怎么从0做到 1000 万美元的。' +
-      '\n\n' +
-      '不是鸡汤，是逐层的数字、决策和复盘。' +
-      '\n\n' +
-      '想认真做数字产品的人，看别人怎么走通过一遍，比自己瞎摸索省十年。',
-    reason: '',
-  },
-  {
     title: '《$100M Leads: How to Get Strangers To Want To Buy Your Stuff》',
     author: 'Alex Hormozi',
     cover: '/images/booklist/100m-leads.jpg',
@@ -469,6 +389,113 @@ export const bookRecs: BookRec[] = [
       '它和第3章的自动化序列、关键词回复那套打法直接呼应——先拿到注意力，再谈成交。' +
       '\n\n' +
       '想搞懂「流量从哪来」，这本是绕不开的。',
+    reason: '',
+  },
+  {
+    title: '《精益创业实战》（原书第3版）',
+    author: '阿什·莫瑞亚（Ash Maurya） / 王小皓 译',
+    cover: '/images/booklist/running-lean.jpg',
+    doubanIntro:
+      '第2版畅销10年后的第3版，融合精益创业、设计思维、JTBD 与系统思维，按设计—验证—增长三阶段讲怎么用精益画布、90天周期法验证创业点子。作者是「精益画布」发明人。',
+    reasonBlocks:
+      '第5章讲「去和用户建联、拿反馈」，这本书把这件事拆成了能照着做的动作：先画精益画布，再用 90 天一轮轮验证，别爱上自己的解决方案。' +
+      '\n\n' +
+      '全书最狠的一句就是那句「你应该爱上的是客户的问题，而非自己的解决方案」。' +
+      '\n\n' +
+      '想把一个点子变成能卖的东西，别先写商业计划书，先去验证。',
+    wrBadge: '神作/潜力',
+    reason: '',
+  },
+  {
+    title: '《How to Get Paid for What You Know》',
+    author: 'Graham Cochrane',
+    cover: '/images/booklist/get-paid-for-what-you-know.jpg',
+    doubanIntro:
+      '把知识、热情和经验在业余时间变成在线收入流的六步系统：找到能赚钱的点子、建立受众、打包成数字产品、真诚地卖、用简单工具营销、把流程自动化。',
+    reasonBlocks:
+      '和《闭环》里「把解决问题的能力打包成产品」是同一件事，这本直接给了六步，一步不多。' +
+      '\n\n' +
+      '作者自己把一个小众音乐博客做成了每周只花 5 小时的七位数生意，所以他讲的不是理论。' +
+      '\n\n' +
+      '适合已经有一技之长、却不知道怎么开始收钱的人。',
+    reason: '',
+  },
+  {
+    title: '《人类之旅：财富与不平等的起源》',
+    author: '奥戴德·盖勒（Oded Galor） / 余江 译',
+    cover: '/images/booklist/journey-of-humanity.jpg',
+    doubanIntro:
+      '用「统一增长」框架回溯智人走出非洲以来的人类发展史，解释地理、迁徙、制度与文化如何作用于人口与技术，最终形成今天国与国之间的财富差距。',
+    reasonBlocks:
+      '和《人类简史》《枪炮、病菌与钢铁》放一起读，它补上的是「为什么有的国家富、有的国家穷」这一层。' +
+      '\n\n' +
+      '盖勒把几万年的历史装进一个模型，最后落到地理、制度、文化怎么一点点把差距拉开。' +
+      '\n\n' +
+      '读大历史不是为了预测，是为了知道自己站在哪一段。',
+    wrScore: '78.4',
+    reason: '',
+  },
+  {
+    title: '《巨人的工具》',
+    author: '蒂姆·费里斯 / 杨清波 译',
+    cover: '/images/booklist/tools-of-titans.jpg',
+    doubanIntro:
+      '从「蒂姆·费里斯秀」对 200 多位顶尖人物的访谈里，提炼出他亲自试过的健康、财富、智慧三类工具；不是采访合集，是一本可随手取用的工具包。',
+    reasonBlocks:
+      '这不是采访合集，是费里斯把自己真正试过的方法挑出来，按健康、财富、智慧分了三类。' +
+      '\n\n' +
+      '它的用法不是从头读到尾，而是当工具箱翻——碰到具体问题，再去找那些人当时是怎么做的。' +
+      '\n\n' +
+      '一本可以读很多年、每次只翻几页的书。',
+    wrScore: '74.4',
+    wrBadge: '值得一读',
+    reason: '',
+  },
+  {
+    title: '《斯坦福大学创业成长课》',
+    author: '李笑来',
+    cover: '/images/booklist/stanford-growth-course.jpg',
+    doubanIntro:
+      '李笑来看完 YC 与斯坦福合开的「年轻人如何创业」课程后写下的笔记，围绕创见、产品、团队、执行四要素，讲团队军规、产品灵魂、融资与沟通。',
+    reasonBlocks:
+      '中文语境里讲创业，这本比翻译过来的硅谷书更贴地。' +
+      '\n\n' +
+      '它把创见、产品、团队、执行四件事讲得很直白，尤其是「传教士与雇佣兵」那个类比，讲清了怎么搭班子。' +
+      '\n\n' +
+      '书里那句「每个人都有足够大的成长空间，除非他自己放弃」，我记了很久。',
+    wrScore: '72.5',
+    wrBadge: '值得一读',
+    reason: '',
+  },
+  {
+    title: '《这才是营销：只有学会看，才会被看见》',
+    author: '赛斯·高汀（Seth Godin） / 李兰杰、陈治宇 译',
+    cover: '/images/booklist/this-is-marketing.jpg',
+    doubanIntro:
+      '伟大的营销不是让消费者来解决公司的问题，而是用营销去解决消费者的问题。高汀讲最小有效市场、信号与标志、信任与许可，以及「像我们一样的人做这样的事」。',
+    reasonBlocks:
+      '第3章讲「引导磁铁」、第5章讲「价值公式」，这本是把背后的道理讲透的那本：营销不是抢注意力，是帮一小群人完成他们想要的改变。' +
+      '\n\n' +
+      '高汀说要找「最小有效市场」，和《闭环》里先服务一小撮人、再慢慢长大是同一个思路。' +
+      '\n\n' +
+      '「像我们一样的人做这样的事」——记住这一句，就够用很久。',
+    wrScore: '64.2',
+    reason: '',
+  },
+  {
+    title: '《高效能人士的七个习惯》（30周年纪念版）（全新增订版）',
+    author: '史蒂芬·柯维 / 高新勇、王亦兵、葛雪蕾 译',
+    cover: '/images/booklist/seven-habits.jpg',
+    doubanIntro:
+      '30周年全新增订版，新增肖恩·柯维对「七个习惯」的全新观点，吉姆·柯林斯作序。柯维用一套基于原则的效能体系讲由内而外的改变：积极主动、以终为始、要事第一，直到双赢思维与不断更新。',
+    reasonBlocks:
+      '这本书几乎是「个人成长」这个类别的起点，后来讲习惯、讲主动性的书，多少都在跟它对话。' +
+      '\n\n' +
+      '柯维最要紧的一句是「由内而外」：先改自己的思维模式与品格，再谈技巧。忙乱低效的人缺的往往不是时间管理，是没想清楚什么才是要事。' +
+      '\n\n' +
+      '适合隔几年重读一次，对照看看自己现在卡在哪一个习惯上。',
+    wrScore: '86.2',
+    wrBadge: '好评如潮',
     reason: '',
   },
 ];
