@@ -64,7 +64,8 @@ const isEmpty =
       </div>
       <a class="rp-crumb-next" href={`/resources/${nextTab.slug}/`}>下一个：{nextTab.label} →</a>
     </nav>
-    <p class="rp-sub">{tab.sub}</p>
+    {/* 书单页 A 版页头自带说明，避免两句同义副标题重复 */}
+    {tab.slug !== 'recommended' && <p class="rp-sub">{tab.sub}</p>}
 
     {tab.slug === 'recommended' && (
       <div class="rp-sec-body">
@@ -373,8 +374,14 @@ const isEmpty =
      hover 只做轻反馈，点击开底部抽屉读完整推荐语。
      独立前缀 bw-，不影响其他 tab 与其他页面；全站 navbar z-index=100，故遮罩/抽屉用 200/201。 */
   .rp-booklist-wall { max-width: 960px; }
-  /* 标题 / 说明沿用全站 680px 居中，与面包屑、副标题对齐；只有书墙铺到 960px */
-  .rp-booklist-wall .rp-bl-hd, .rp-booklist-wall .rp-bl-sub { max-width: 680px; margin-left: auto; margin-right: auto; }
+  /* A 版页头：去掉重复的 tab 副标题，标题与书墙同宽左对齐，底部细线收口。
+     标题字体沿用全站 --font-serif（霞鹜文楷），不再硬写 Georgia。 */
+  .rp-booklist-wall .rp-bl-hd { max-width: none; margin: 0; align-items: baseline; }
+  .rp-booklist-wall .rp-bl-title { font-family: var(--font-serif, 'LXGW WenKai', 'Noto Serif SC', serif);
+    font-size: 1.9rem; font-weight: 600; letter-spacing: .02em; }
+  .rp-booklist-wall .rp-bl-meta { font-size: .78rem; white-space: nowrap; }
+  .rp-booklist-wall .rp-bl-sub { max-width: none; margin: 10px 0 0; font-size: .88rem;
+    line-height: 1.9; padding-bottom: 22px; border-bottom: 1px solid #e5e5e5; }
   .bw-wall { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 22px; align-items: start; }
   .bw-card { position: relative; min-width: 0; background: transparent; border: 0; padding: 0;
     cursor: pointer; outline: none; text-align: left; }
@@ -393,7 +400,8 @@ const isEmpty =
   .bw-card:hover .bw-cov img, .bw-card:focus-visible .bw-cov img { transform: scale(1.035); box-shadow: 0 12px 26px rgba(28,25,23,.2); }
   .bw-card:focus-visible .bw-cov img { outline: 2px solid #c8940f; outline-offset: 3px; }
   .bw-meta { padding: 12px 2px 0; }
-  .bw-meta h3 { font-family: Georgia, serif; font-size: .98rem; font-weight: 700; line-height: 1.45;
+  .bw-meta h3 { font-family: var(--font-serif, 'LXGW WenKai', 'Noto Serif SC', serif);
+    font-size: .98rem; font-weight: 600; line-height: 1.45;
     margin: 0 0 4px; color: var(--color-text, #1c1917); overflow-wrap: anywhere; transition: color .18s; }
   .bw-card:hover .bw-meta h3, .bw-card:focus-visible .bw-meta h3 { color: #a16207; }
   .bw-a { font-size: .73rem; color: #8a837a; margin: 0 0 7px; line-height: 1.5; }
@@ -424,7 +432,8 @@ const isEmpty =
   .bw-dw-cov .bw-cov-ph { width: 150px; }
   .bw-dw-body { flex: 1; min-width: 0; }
   .bw-dw-no { font-family: Georgia, serif; font-size: .78rem; color: #a16207; letter-spacing: .1em; }
-  .bw-dw-body h3 { font-family: Georgia, serif; font-size: 1.24rem; margin: 6px 0 4px;
+  .bw-dw-body h3 { font-family: var(--font-serif, 'LXGW WenKai', 'Noto Serif SC', serif);
+    font-size: 1.24rem; font-weight: 600; margin: 6px 0 4px;
     color: var(--color-text, #1c1917); overflow-wrap: anywhere; }
   .bw-dw-a { font-size: .78rem; color: #8a837a; margin: 0 0 10px; }
   .bw-dw-d { font-size: .85rem; color: #78716c; line-height: 1.8; margin: 0 0 10px; }
@@ -436,6 +445,8 @@ const isEmpty =
     .bw-wall { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (max-width: 640px) {
+    .rp-booklist-wall .rp-bl-hd { flex-direction: column; align-items: flex-start; gap: 6px; }
+    .rp-booklist-wall .rp-bl-title { font-size: 1.6rem; }
     .bw-wall { gap: 20px 14px; }
     .bw-dw-in { flex-direction: column; }
     .bw-dw-cov { flex: none; width: 110px; }
