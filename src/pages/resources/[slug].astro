@@ -57,13 +57,6 @@ const isEmpty =
 
 <BaseLayout title={`${tab.label} — 像企业家一样写作`}>
   <div class:list={["resources-page", tab.slug !== "opensource" && "rp-narrow"]}>
-    {/* 面包屑（当前位置）+ 下一个分类：不用滚到底也能继续翻 */}
-    <nav class="rp-crumb" aria-label="资源分类">
-      <div class="rp-crumb-l">
-        <a href="/#resources">资源中心</a><span class="rp-crumb-sep">›</span><b aria-current="page">{tab.label}</b>
-      </div>
-      <a class="rp-crumb-next" href={`/resources/${nextTab.slug}/`}>下一个：{nextTab.label} →</a>
-    </nav>
     {/* 书单页 A 版页头自带说明，避免两句同义副标题重复 */}
     {tab.slug !== 'recommended' && <p class="rp-sub">{tab.sub}</p>}
 
@@ -215,6 +208,14 @@ const isEmpty =
         </div>
       </>
     )}
+
+    {/* 面包屑（当前位置）+ 下一个分类：移到内容下方，顶部让位给标题与正文 */}
+    <nav class="rp-crumb rp-crumb-foot" aria-label="资源分类">
+      <div class="rp-crumb-l">
+        <a href="/#resources">资源中心</a><span class="rp-crumb-sep">›</span><b aria-current="page">{tab.label}</b>
+      </div>
+      <a class="rp-crumb-next" href={`/resources/${nextTab.slug}/`}>下一个：{nextTab.label} →</a>
+    </nav>
   </div>
 </BaseLayout>
 
@@ -349,6 +350,8 @@ const isEmpty =
   .rp-crumb-l b { color: var(--color-text, #1c1917); font-weight: 700; }
   .rp-crumb-next { flex: none; color: var(--color-accent, #f55000); font-weight: 600; text-decoration: none; }
   .rp-crumb-next:hover { text-decoration: underline; }
+  /* 移到内容下方后的底部导航：与上方内容分隔，保持 680px 居中（rp-narrow） */
+  .rp-crumb-foot { margin-top: 44px; padding-top: 22px; border-top: 1px solid #e8e3da; }
 
   /* 未完工占位块 */
   .rp-wip { margin-top: 32px; border: 1.5px dashed var(--color-border, #e5e5e5); border-radius: 14px; padding: 36px 28px; text-align: center; background: #fffdfa; }
