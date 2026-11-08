@@ -168,7 +168,6 @@ const isEmpty =
                           )}
                           <span class="lay-name">{s.name}</span>
                         </span>
-                        {s.why && <span class="lay-why">{s.why}</span>}
                       </a>
                     ))}
                   </div>
@@ -293,7 +292,6 @@ const isEmpty =
     font-family: var(--font-serif, Georgia, serif); font-weight: 700; font-size: 0.8rem;
     color: #fff; background: var(--color-accent, #f55000); }
   .lay-name { font-size: 0.97rem; font-weight: 600; color: #1c1917; line-height: 1.5; }
-  .lay-why { display: block; margin: 4px 0 0 40px; font-size: 0.8rem; line-height: 1.7; color: #8b837a; }
   .lay-item:hover .lay-name { color: var(--color-accent, #f55000); }
   .lay-item::before { content: ""; position: absolute; left: -14px; top: 14px; bottom: 14px; width: 2px;
     background: var(--color-accent, #f55000); opacity: 0; transition: opacity .18s; }
