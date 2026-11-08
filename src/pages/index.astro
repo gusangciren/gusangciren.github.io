@@ -412,25 +412,21 @@ function titleWithBrackets(name) {
           <div class="rs-count"><span class="rs-n">{bookRecs.length}</span><span class="rs-u">本</span></div>
           <h3>我的书单</h3>
           <p>我读过的书，和我为什么推荐它们</p>
-          <span class="rs-go">查看 →</span>
         </a>
         <a class="rs-card" href="/resources/blogs/">
           <div class="rs-count"><span class="rs-n">{siteRecs.length}</span><span class="rs-u">个</span></div>
           <h3>常读博客</h3>
           <p>我反复打开的网站与博客，不是导航站，是一份清单</p>
-          <span class="rs-go">查看 →</span>
         </a>
         <a class="rs-card" href="/resources/opensource/">
           <div class="rs-count"><span class="rs-n">{openSources.length}</span><span class="rs-u">项</span></div>
           <h3>我的开源</h3>
           <p>教程与作品，都在这</p>
-          <span class="rs-go">查看 →</span>
         </a>
         <a class="rs-card" href="/resources/prompts/">
           <div class="rs-count"><span class="rs-n">{prompts.length}</span><span class="rs-u">条</span></div>
           <h3>写作提示词</h3>
           <p>喂给 AI 的提示词，按写作流程排好，可搜索、筛选、一键复制</p>
-          <span class="rs-go">查看 →</span>
         </a>
       </div>
     </div>
@@ -516,20 +512,17 @@ function titleWithBrackets(name) {
     .rs-card h3{font-family:var(--font-serif);font-size:1.18rem;font-weight:700;margin:0 0 10px;color:#1c1917;transition:color .25s}
     .rs-card:hover h3{color:#F55000}
     .rs-card p{font-size:14.5px;line-height:1.7;color:#78716c;margin:0}
-    .rs-go{display:inline-block;margin-top:20px;font-size:13px;font-weight:600;color:#F55000;transition:transform .25s}
-    .rs-card:hover .rs-go{transform:translateX(5px)}
     @media(max-width:860px){
       .section-resources{padding:44px 20px}
       .rs-head{margin-bottom:30px}
       .rs-grid{grid-template-columns:1fr}
-      /* 手机端压短：数字 | 标题+简介 | 查看 三栏一行式，替代原来的竖排大卡 */
-      .rs-card{display:grid;grid-template-columns:auto 1fr auto;column-gap:14px;align-items:center;padding:18px 0 18px 16px}
+      /* 手机端压短：数字 | 标题+简介 两栏一行式，替代原来的竖排大卡 */
+      .rs-card{display:grid;grid-template-columns:auto 1fr;column-gap:14px;align-items:center;padding:18px 12px 18px 16px}
       .rs-card + .rs-card{border-left:0;border-top:1px solid #e8e3da}
       .rs-count{grid-row:1/3;margin:0}
       .rs-n{font-size:1.9rem}
       .rs-card h3{grid-column:2;grid-row:1;margin:0 0 2px;font-size:1.05rem}
       .rs-card p{grid-column:2;grid-row:2;font-size:13px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-      .rs-go{grid-column:3;grid-row:1/3;margin:0;font-size:12.5px}
       .rs-title{font-size:2rem}
       .rs-sub{font-size:15px}
     }
