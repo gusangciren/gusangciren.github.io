@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionHeader from '../components/SectionHeader.astro';
-import ReaderLetter from '../components/ReaderLetter.astro';
 import { getCollection } from 'astro:content';
 import { columns } from '../data/columns';
 import { bookRecs, siteRecs, openSources } from '../data/resources';
@@ -366,7 +365,6 @@ function titleWithBrackets(name) {
     .cd-btn:hover{transform:translateY(-1px);box-shadow:0 14px 32px rgba(232,160,76,.42)}
     .cd-note{display:block;font-size:12px;color:#9a8f7d;margin-top:10px}
     .cd-note .cd-em{color:#e8a04c;font-weight:700}
-    .letter-gap{margin-top:0}
     @media(max-width:860px){
       .cd-title{font-size:1.6rem}
       .cd-body{display:grid;grid-template-columns:auto auto;justify-content:center;align-items:center;column-gap:28px;row-gap:44px}
@@ -431,11 +429,6 @@ function titleWithBrackets(name) {
       </div>
     </div>
   </section>
-
-  {/* ===== 致读者的一封信（拆信交互 · A2 悬念款） ===== */}
-  <div class="letter-gap">
-    <ReaderLetter />
-  </div>
 
   {/* ===== 年度进度条（灵感：yearsprogress.com —— 一年按 52 周分格，进度按天实时推进） ===== */}
   <section class="yp-section" id="year-progress" aria-label="年度进度">
