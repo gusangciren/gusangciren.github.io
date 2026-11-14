@@ -430,56 +430,97 @@ function titleWithBrackets(name) {
     </div>
   </section>
 
-  {/* ===== 年度进度条（灵感：yearsprogress.com —— 一年按 52 周分格，进度按天实时推进） ===== */}
+  {/* ===== 年度进度条：页面底部通栏 · 时间正在流逝 ===== */}
   <section class="yp-section" id="year-progress" aria-label="年度进度">
-    <div class="yp-wrap">
-      <div class="yp-bar">
-        <span class="yp-label">2026 Progress Bar</span>
-        <div class="yp-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="yp-track">
-          <div class="yp-fill" id="yp-fill"></div>
-          <div class="yp-ticks" aria-hidden="true"></div>
+    <div class="yp-inner">
+      <div class="yp-head">
+        <div class="yp-head-l">
+          <span class="yp-live" aria-hidden="true"></span>
+          <span class="yp-eyebrow">时间正在流逝</span>
+          <span class="yp-clock" id="yp-clock"></span>
         </div>
+        <div class="yp-figure"><span id="yp-figure">0.0</span><i>%</i></div>
       </div>
-      <p class="yp-meta" id="yp-meta"></p>
+
+      <div class="yp-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="yp-track">
+        <div class="yp-fill" id="yp-fill">
+          <div class="yp-shimmer" aria-hidden="true"></div>
+        </div>
+        <div class="yp-ticks" aria-hidden="true"></div>
+        <div class="yp-cursor" id="yp-cursor" aria-hidden="true"><span class="yp-pulse"></span></div>
+      </div>
+
+      <div class="yp-foot">
+        <p class="yp-meta" id="yp-meta"></p>
+        <p class="yp-left" id="yp-left"></p>
+      </div>
     </div>
   </section>
 
   {/* is:inline：脚本原样内联进 HTML，自包含快照（file:// 打开）也能执行，不依赖外部模块 */}
   <script is:inline>
     (function () {
-      var now = new Date();
-      var y = now.getFullYear();
-      var start = new Date(y, 0, 1).getTime();
-      var end = new Date(y + 1, 0, 1).getTime();
-      var totalDays = (end - start) / 864e5;          // 全年天数（365 / 366）
-      var elapsedDays = (now.getTime() - start) / 864e5; // 已过天数（含当天小数）
-      var pct = (elapsedDays / totalDays) * 100;
-      var dayOfYear = Math.floor(elapsedDays) + 1;    // 今天是一年第几天
-      var week = Math.ceil(dayOfYear / 7);            // 第几周
-      var daysLeft = Math.ceil(totalDays - elapsedDays);
-
-      var label = document.querySelector('.yp-label');
       var fill = document.getElementById('yp-fill');
       var track = document.getElementById('yp-track');
+      var cursor = document.getElementById('yp-cursor');
       var meta = document.getElementById('yp-meta');
+      var left = document.getElementById('yp-left');
+      var clock = document.getElementById('yp-clock');
+      var figure = document.getElementById('yp-figure');
+      if (!fill || !track) return;
 
-      if (label) label.textContent = y + ' Progress Bar';
-      if (track) {
+      var SEC = 1000, MIN = 60 * SEC, HOUR = 60 * MIN, DAY = 24 * HOUR;
+      var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+
+      function tick() {
+        var now = new Date();
+        var y = now.getFullYear();
+        var start = new Date(y, 0, 1).getTime();
+        var end = new Date(y + 1, 0, 1).getTime();
+        var total = end - start;
+        var elapsed = now.getTime() - start;
+        var pct = Math.min(100, Math.max(0, (elapsed / total) * 100));
+        var dayOfYear = Math.floor(elapsed / DAY) + 1;
+        var week = Math.min(52, Math.ceil(dayOfYear / 7));
+        var rest = Math.max(0, end - now.getTime());
+        var days = Math.floor(rest / DAY);
+        var hours = Math.floor((rest % DAY) / HOUR);
+        var mins = Math.floor((rest % HOUR) / MIN);
+        var secs = Math.floor((rest % MIN) / SEC);
+
+        if (figure) figure.textContent = pct.toFixed(1);
         track.setAttribute('aria-valuenow', pct.toFixed(1));
         track.setAttribute('aria-valuetext', y + ' 年已过 ' + pct.toFixed(1) + '%');
+        if (clock) clock.textContent = '此刻 ' + pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+        if (meta) {
+          meta.innerHTML = y + ' 年已过 <b>' + pct.toFixed(1) + '%</b>' +
+            ' <span class="yp-dot">·</span> 第 <b>' + week + '</b> 周 / 共 <b>52</b> 周';
+        }
+        if (left) {
+          left.innerHTML = '距 ' + (y + 1) + ' 年还有 <b>' + days + '</b> 天 <b>' + pad(hours) + ':' + pad(mins) + ':' + pad(secs) + '</b>';
+        }
+        return pct;
       }
-      if (fill) {
-        // 双 rAF：确保初始 width:0 先渲染，再过渡到目标值，填充动画才生效
+
+      var pct = tick();
+      var w = pct.toFixed(3) + '%';
+      // 双 rAF：确保初始 width:0 先渲染，再过渡到目标值，入场动画才生效
+      requestAnimationFrame(function () {
         requestAnimationFrame(function () {
-          requestAnimationFrame(function () { fill.style.width = pct.toFixed(2) + '%'; });
+          fill.style.width = w;
+          if (cursor) cursor.style.left = w;
         });
-      }
-      if (meta) {
-        meta.innerHTML =
-          y + ' 年已过 <b>' + pct.toFixed(1) + '%</b>' +
-          ' <span class="yp-dot">·</span> 第 <b>' + week + '</b> 周 / 共 <b>52</b> 周' +
-          ' <span class="yp-dot">·</span> 距 ' + (y + 1) + ' 年还有 <b>' + daysLeft + '</b> 天';
-      }
+      });
+      // 入场动画结束后再开启秒级跟随：先关掉 transition，否则细步更新会被 1.4s 过渡吞掉
+      setTimeout(function () {
+        fill.style.transition = 'none';
+        if (cursor) cursor.style.transition = 'none';
+        setInterval(function () {
+          var ww = tick().toFixed(3) + '%';
+          fill.style.width = ww;
+          if (cursor) cursor.style.left = ww;
+        }, 1000);
+      }, 1500);
     })();
   </script>
 
@@ -520,30 +561,87 @@ function titleWithBrackets(name) {
       .rs-sub{font-size:15px}
     }
 
-    /* ===== 年度进度条：把 yearsprogress 的黄黑翻译成站点语言——黑框 #12100b + 琥珀金 #e8a04c ===== */
-    .yp-section{padding:56px 24px 8px}
-    .yp-wrap{max-width:680px;margin:0 auto} /* 与站内正文阅读宽度一致，视觉重心居中 */
-    .yp-bar{position:relative;background:#12100b;border-radius:16px;padding:26px 14px 14px}
-    .yp-label{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:#12100b;color:#f2ece1;font-family:var(--font-serif);font-size:12px;letter-spacing:.14em;padding:3px 16px;border-radius:999px;white-space:nowrap}
-    .yp-track{position:relative;height:36px;background:#fafaf9;border-radius:8px;overflow:hidden}
-    .yp-fill{position:absolute;top:0;bottom:0;left:0;width:0;background:#e8a04c;transition:width 1.1s cubic-bezier(.22,.61,.36,1)}
-    /* 52 条周刻度：把一年分成 52 格 */
-    .yp-ticks{position:absolute;inset:0;background:repeating-linear-gradient(to right,transparent 0,transparent calc(100%/52 - 1px),rgba(18,16,11,.16) calc(100%/52 - 1px),rgba(18,16,11,.16) calc(100%/52))}
-    .yp-meta{margin:18px 0 0;text-align:center;font-family:var(--font-serif);font-size:13.5px;color:#78716c;letter-spacing:.03em}
-    /* 数字凸显：加粗深色；分隔点弱化后退，让数字更跳（JS 注入元素无 scoped 属性，必须 :global()） */
-    .yp-meta :global(b){font-weight:700;color:#1c1917}
-    .yp-meta :global(.yp-dot){color:#c9c4bc;margin:0 .22em}
-    @media(max-width:640px){
-      .yp-section{padding:40px 16px 0}
-      .yp-bar{padding:22px 10px 10px;border-radius:12px}
-      .yp-track{height:28px}
-      .yp-label{font-size:11px;letter-spacing:.1em;padding:2px 12px;top:-10px}
-      .yp-meta{font-size:12.5px}
+    /* ===== 年度进度条：页面底部通栏 · 时间正在流逝 =====
+       背景 100% 铺满视口，内层 1200px 与上方「资源中心」左右对齐；
+       深色底与 footer 连成一整块，避免在半空里插一条黑框割裂页面。 */
+    .yp-section{
+      --yp-accent:#e8a04c;
+      --yp-rest:#f2ede3;
+      --yp-tick:rgba(18,16,11,.15);
+      position:relative;width:100%;margin:0;padding:72px 0 52px;
+      background:#12100b;overflow:hidden;
     }
-    @media(prefers-reduced-motion:reduce){.yp-fill{transition:none}}
+    /* 1248 = 1200 内容宽 + 左右各 24，与上方 .section-resources 的内容边缘逐像素对齐 */
+    .yp-inner{max-width:1248px;margin:0 auto;padding:0 24px}
+    .yp-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:22px}
+    .yp-head-l{display:flex;align-items:center;gap:14px;min-width:0}
+    .yp-live{position:relative;flex:0 0 auto;width:6px;height:6px;border-radius:50%;background:var(--yp-accent)}
+    .yp-live::after{content:'';position:absolute;inset:-5px;border-radius:50%;border:1px solid var(--yp-accent);opacity:0;animation:yp-ring 2.6s ease-out infinite}
+    .yp-eyebrow{font-family:var(--font-serif);font-size:12px;letter-spacing:.28em;color:#a49c8e;white-space:nowrap}
+    .yp-clock{font-size:12px;letter-spacing:.06em;color:#6f6a60;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .yp-figure{font-family:var(--font-serif);font-size:38px;line-height:1;color:var(--yp-accent);letter-spacing:.01em;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .yp-figure i{font-style:normal;font-size:16px;margin-left:3px;opacity:.75}
+
+    .yp-track{position:relative;height:46px;background:var(--yp-rest);border-radius:3px;overflow:hidden}
+    .yp-fill{position:absolute;top:0;bottom:0;left:0;width:0;background:linear-gradient(90deg,#d98d3a 0%,#e8a04c 100%);transition:width 1.4s cubic-bezier(.22,.61,.36,1);overflow:hidden}
+    /* 极缓流光：像沙在移动，11s 一轮，不抢眼 */
+    .yp-shimmer{position:absolute;top:0;bottom:0;left:0;width:60%;background:linear-gradient(100deg,transparent 0%,rgba(255,255,255,.16) 45%,rgba(255,255,255,.28) 50%,rgba(255,255,255,.16) 55%,transparent 100%);transform:translateX(-160%);animation:yp-flow 11s linear infinite}
+    /* 52 条周刻度贯穿全年 */
+    .yp-ticks{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(to right,transparent 0,transparent calc(100%/52 - 1px),var(--yp-tick) calc(100%/52 - 1px),var(--yp-tick) calc(100%/52))}
+    /* 此刻：填充末端一条亮线 + 顶部呼吸光点 */
+    .yp-cursor{position:absolute;top:0;bottom:0;left:0;width:2px;background:rgba(255,255,255,.9);box-shadow:0 0 12px rgba(255,255,255,.55);transition:left 1.4s cubic-bezier(.22,.61,.36,1);pointer-events:none}
+    .yp-pulse{position:absolute;top:-5px;left:50%;width:9px;height:9px;margin-left:-4px;border-radius:50%;background:#fff;box-shadow:0 0 0 4px rgba(255,255,255,.18);animation:yp-breathe 2.6s ease-in-out infinite}
+
+    @keyframes yp-flow{0%{transform:translateX(-160%)}100%{transform:translateX(260%)}}
+    @keyframes yp-ring{0%{transform:scale(.6);opacity:.7}80%,100%{transform:scale(1.5);opacity:0}}
+    @keyframes yp-breathe{0%,100%{opacity:1;box-shadow:0 0 0 4px rgba(255,255,255,.18)}50%{opacity:.55;box-shadow:0 0 0 8px rgba(255,255,255,.06)}}
+
+    .yp-foot{display:flex;align-items:baseline;justify-content:space-between;gap:20px;margin-top:20px}
+    .yp-meta,.yp-left{margin:0;font-family:var(--font-serif);font-size:13.5px;color:#8f887c;letter-spacing:.03em}
+    .yp-left{font-variant-numeric:tabular-nums;white-space:nowrap}
+    /* 数字凸显：JS 注入元素无 scoped 属性，必须 :global() */
+    .yp-meta :global(b),.yp-left :global(b){font-weight:700;color:#f2ece1}
+    .yp-meta :global(.yp-dot){color:#5c574e;margin:0 .3em}
+
+    @media(max-width:860px){
+      .yp-section{padding:52px 0 40px}
+      .yp-inner{padding:0 20px}
+      .yp-head{margin-bottom:18px}
+      .yp-figure{font-size:30px}
+      .yp-track{height:36px}
+      .yp-eyebrow{font-size:11px;letter-spacing:.2em}
+      .yp-clock{display:none}
+      .yp-foot{flex-direction:column;gap:8px;margin-top:16px}
+      .yp-meta,.yp-left{font-size:12.5px}
+    }
+    @media(max-width:420px){.yp-eyebrow{letter-spacing:.12em}.yp-figure{font-size:26px}}
+    @media(prefers-reduced-motion:reduce){
+      .yp-fill,.yp-cursor{transition:none}
+      .yp-shimmer{display:none}
+      .yp-live::after,.yp-pulse{animation:none}
+    }
   </style>
 
   <style is:global>
+    /* 首页：年度进度条是整页收尾，footer 并入同一块深色底部，避免出现一条割裂的浅色边。
+       :has(#year-progress) 只在首页命中，其他页面不受影响。 */
+    body:has(#year-progress) footer{
+      margin-top:0;padding:22px 24px 30px;
+      background:#12100b;border-top:1px solid rgba(255,255,255,.07);
+    }
+    body:has(#year-progress) footer .footer-inner,
+    body:has(#year-progress) footer .footer-inner p{color:#8f887c}
+    body:has(#year-progress) footer .footer-links button.footer-link-btn{
+      background:transparent;border-color:rgba(232,160,76,.32);color:#e8a04c;
+    }
+    body:has(#year-progress) footer .footer-links button.footer-link-btn:hover{
+      background:rgba(232,160,76,.12);border-color:rgba(232,160,76,.6);color:#f2b877;
+    }
+    /* 深色主题：整块底部本来就是深色，只把强调色对齐主题橙；
+       变量定义在组件自身的 CSS 里，不依赖 dark.css 生成器（避免被自动映射刷色）。 */
+    html[data-theme="dark"] .yp-section{--yp-accent:#f0803f;--yp-rest:#2a2a28;--yp-tick:rgba(255,255,255,.13)}
+    html[data-theme="dark"] .yp-fill{background:linear-gradient(90deg,#c96a2c 0%,#f0803f 100%)}
+    html[data-theme="dark"] body:has(#year-progress) footer .footer-links button.footer-link-btn{color:var(--color-accent)}
     /* ===== Hero 内联搜索（方案 B） ===== */
     .hero-search {
       position: relative;
