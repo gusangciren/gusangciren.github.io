@@ -579,6 +579,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             var fontCss = await getExportFontCss();
             return await html2canvas(clone, { backgroundColor: BG[state.scheme], scale: 2, useCORS: true, logging: false,
               onclone: function (doc) {
+                // 深色主题是页面级样式，导出必须还原成浅色原样
+                doc.documentElement.removeAttribute('data-theme');
                 if (fontCss) { var st = doc.createElement('style'); st.textContent = fontCss; doc.head.appendChild(st); }
                 /* 导出时把 **标记** 渲染成粗体/斜体（编辑中卡片显示的是原文） */
                 var t = doc.querySelector('.t-text');
@@ -727,6 +729,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         return html2canvas(el, {
           backgroundColor: '#1c1917', scale: 2, useCORS: true, logging: false,
           onclone: function (doc) {
+            // 深色主题是页面级样式，导出必须还原成浅色原样
+            doc.documentElement.removeAttribute('data-theme');
             // 导出字体统一走 getExportFontCss（data URI 注入，克隆环境零网络等待）
             if (css) { var st = doc.createElement('style'); st.textContent = css; doc.head.appendChild(st); }
           }

@@ -1247,3 +1247,64 @@ body {
   display: inline-flex;
   align-items: center;
 }
+/* ===== 主题切换：胶囊滑块（一键切换） ===== */
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.theme-trigger {
+  position: relative; flex: 0 0 auto;
+  width: 68px; height: 32px; padding: 0;
+  border: 1px solid rgba(90, 90, 86, .22);
+  border-radius: 999px;
+  background: linear-gradient(90deg, #f7f7f4 0%, #f7f7f4 50%, #262625 50%, #262625 100%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .10), inset 0 1px 2px rgba(0, 0, 0, .06);
+  cursor: pointer; display: block; overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color .2s, box-shadow .2s, transform .2s;
+}
+/* hover：只做中性的轻微加深，不再整圈变橙 */
+.theme-trigger:hover {
+  border-color: rgba(90, 90, 86, .38);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .14), inset 0 1px 2px rgba(0, 0, 0, .06);
+}
+.theme-trigger:hover .tt-thumb {
+  box-shadow: 0 3px 9px rgba(0, 0, 0, .26), inset 0 1px 0 rgba(255, 255, 255, .9), inset 0 0 0 1px rgba(0, 0, 0, .05);
+}
+.theme-trigger:active { transform: scale(.96); }
+/* 键盘焦点：贴边柔光环，不用分离式 outline；鼠标点击后由脚本 blur，不残留 */
+.theme-trigger:focus { outline: none; }
+.theme-trigger:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(245, 80, 0, .38), 0 1px 3px rgba(0, 0, 0, .10), inset 0 1px 2px rgba(0, 0, 0, .06);
+}
+html[data-theme="dark"] .theme-trigger:focus-visible {
+  box-shadow: 0 0 0 2px rgba(240, 128, 63, .55), 0 1px 3px rgba(0, 0, 0, .10), inset 0 1px 2px rgba(0, 0, 0, .06);
+}
+.tt-track { position: absolute; inset: 0; display: block; }
+.tt-sun, .tt-moon {
+  position: absolute; top: 50%; width: 15px; height: 15px;
+  transform: translateY(-50%); z-index: 2; pointer-events: none;
+}
+.tt-sun  { left: 9px;  color: #42423e; }
+.tt-moon { right: 9px; color: #fafaf8; }
+.tt-thumb {
+  position: absolute; top: 2px; left: 2px; z-index: 1;
+  width: 32px; height: 26px; border-radius: 999px;
+  background: linear-gradient(180deg, #ffffff 0%, #f3f3f0 100%);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .20), inset 0 1px 0 rgba(255, 255, 255, .9), inset 0 0 0 1px rgba(0, 0, 0, .05);
+  transition: transform .34s cubic-bezier(.4, 0, .2, 1), background-color .34s ease;
+}
+html[data-theme="dark"] .tt-thumb { transform: translateX(32px); background: linear-gradient(180deg, #3a3a38 0%, #2f2f2d 100%); }
+html[data-theme="dark"] .theme-trigger { border-color: rgba(255, 255, 255, .20); }
+body { transition: background-color .28s ease, color .28s ease; }
+/* 移动端不显示主题切换按钮（断点与「工具」入口的隐藏规则一致） */
+@media (max-width: 767px) {
+  .theme-trigger { display: none; }
+}
+@media (max-width: 520px) {
+  .nav-right { gap: 8px; }
+  .navbar { overflow-x: visible; }
+  .nav-inner { min-width: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body { transition: none; }
+  .theme-trigger, .tt-thumb { transition: none; }
+}
