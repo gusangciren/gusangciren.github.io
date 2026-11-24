@@ -51,6 +51,7 @@ const groups = cats.map((cat) => ({
                       <h3 class="pt-title">{p.title}</h3>
                       <p class="pt-desc">{p.desc}</p>
                       <pre class="pt-prompt">{p.prompt}</pre>
+                      <div class="pt-scroll-hint" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"></path></svg>向下滚动查看全文</div>
                     </article>
                   ))}
                 </div>
@@ -108,7 +109,20 @@ const groups = cats.map((cat) => ({
     .pt-tag { font-size: 11px; color: var(--color-text-secondary); background: #f1f2ee; border-radius: 99px; padding: 3px 9px; white-space: nowrap; }
     .pt-title { font-family: var(--font-serif); font-size: 17px; line-height: 1.4; margin: 0 0 5px; color: var(--color-text); }
     .pt-desc { font-size: 12.5px; color: var(--color-text-secondary); margin: 0 0 12px; line-height: 1.6; }
-    .pt-prompt { white-space: pre-wrap; word-break: break-word; background: #f8f8f5; border: 1px solid #eeeeea; border-radius: 9px; padding: 13px; font-size: 12.5px; line-height: 1.75; color: #343630; font-family: var(--font-sans); margin: 0; }
+    .pt-prompt { white-space: pre-wrap; word-break: break-word; background: #f8f8f5; border: 1px solid #eeeeea; border-radius: 9px; padding: 13px; font-size: 12.5px; line-height: 1.75; color: #343630; font-family: var(--font-sans); margin: 0; max-height: 460px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #c9c2b5 transparent; }
+    .pt-prompt::-webkit-scrollbar { width: 7px; }
+    .pt-prompt::-webkit-scrollbar-track { background: transparent; }
+    .pt-prompt::-webkit-scrollbar-thumb { background: #cfc7b8; border-radius: 4px; border: 1px solid #f8f8f5; }
+    .pt-prompt::-webkit-scrollbar-thumb:hover { background: #b0843f; }
+    .pt-prompt.scrollable { mask-image: linear-gradient(to bottom, #000 calc(100% - 34px), transparent 100%); -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 34px), transparent 100%); }
+    .pt-prompt.scrollable.at-end { mask-image: none; -webkit-mask-image: none; }
+    .pt-scroll-hint { display: none; align-items: center; gap: 5px; font-size: 11px; color: #9a8a70; margin: 7px 0 0 2px; }
+    .pt-scroll-hint.show { display: flex; }
+    .pt-scroll-hint svg { width: 12px; height: 12px; }
+    :global(html[data-theme="dark"]) .pt-prompt { scrollbar-color: #6a6459 transparent; }
+    :global(html[data-theme="dark"]) .pt-prompt::-webkit-scrollbar-thumb { background: #6a6459; border-color: #262625; }
+    :global(html[data-theme="dark"]) .pt-prompt::-webkit-scrollbar-thumb:hover { background: #b0843f; }
+    :global(html[data-theme="dark"]) .pt-scroll-hint { color: #8a8272; }
     .pt-copy { border: 0; background: transparent; color: var(--color-text-secondary); cursor: pointer; padding: 6px; margin: -2px -4px 0 0; border-radius: 8px; display: inline-flex; line-height: 0; transition: color .15s, background .15s; }
     .pt-copy:hover { color: var(--color-accent); background: rgba(245,80,0,.08); }
     .pt-copy.done { color: #277653; }
@@ -228,6 +242,23 @@ const groups = cats.map((cat) => ({
         }, { rootMargin: '-80px 0px -65% 0px', threshold: 0 });
         groups.forEach(function (s) { io.observe(s); });
       }
+      // 长提示词：可滚动时显示渐隐与提示，滚到底后移除渐隐
+      function syncScrollUI(pre) {
+        var card = pre.closest('.pt-card');
+        var hint = card ? card.querySelector('.pt-scroll-hint') : null;
+        var canScroll = pre.scrollHeight > pre.clientHeight + 2;
+        if (hint) hint.classList.toggle('show', canScroll);
+        pre.classList.toggle('scrollable', canScroll);
+        var atEnd = pre.scrollTop + pre.clientHeight >= pre.scrollHeight - 4;
+        pre.classList.toggle('at-end', !canScroll || atEnd);
+      }
+      var pres = Array.prototype.slice.call(pane.querySelectorAll('.pt-prompt'));
+      pres.forEach(function (pre) {
+        syncScrollUI(pre);
+        pre.addEventListener('scroll', function () { syncScrollUI(pre); }, { passive: true });
+      });
+      window.addEventListener('resize', function () { pres.forEach(syncScrollUI); });
+
       apply();
     })();
   </script>
